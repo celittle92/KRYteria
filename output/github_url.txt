@@ -1,0 +1,9 @@
+https://github.com/celittle92/KRYteria
+
+PRIVATE repository, created and first push 2026-11-07.
+
+Before submitting on Canvas, the assignment requires the repo to be either public, or
+private with the GitHub user **zlisto** added as a collaborator
+(Settings -> Collaborators -> Add people).
+
+Christine's instruction, 2026-11-07: do NOT add the professor until the project is done.
