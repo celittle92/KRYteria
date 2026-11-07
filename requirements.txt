@@ -1,0 +1,9 @@
+# PydanticAI slim with only the OpenAI provider — the full pydantic-ai package pulls many
+# extras this app never uses and can stall an install. AGENT.MD, "Dependencies".
+pydantic-ai-slim[openai]>=1.0
+fastapi>=0.115
+uvicorn[standard]>=0.32
+python-dotenv>=1.0
+pwdlib[argon2]>=0.2
+itsdangerous>=2.2
+tiktoken>=0.8

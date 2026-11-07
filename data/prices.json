@@ -1,0 +1,24 @@
+{
+  "_comment": [
+    "Per-1,000,000-token prices in USD, used by backend/costs.py.",
+    "",
+    "Only gpt-6-luna is priced, because it is the only model this project may bill.",
+    "Keeping the pinned model and the priced model the same file means a cost figure and",
+    "the model actually charged cannot drift apart.",
+    "",
+    "source and verified_on must be filled in from the course's published pricing before",
+    "any cost figure goes into report.html. Until then estimate_cost returns 0.0 and the",
+    "app reports the cost as unavailable rather than printing a zero as though the run",
+    "were free."
+  ],
+  "models": {},
+  "pending": {
+    "gpt-6-luna": {
+      "input": null,
+      "cached_input": null,
+      "output": null,
+      "source": "MGT 409 published pricing — to be filled in",
+      "verified_on": null
+    }
+  }
+}

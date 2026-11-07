@@ -1,0 +1,953 @@
+#!/usr/bin/env python3
+"""Offline tests for KRYteria's store layer. Free — no model call, no network.
+
+These cover the rules that are the product rather than the plumbing: criteria versioning,
+the refusal to write an unsupported pattern, the fact/interpretation firewall, and
+postponement counting. Run them to verify an edit; never a live agent run.
+
+    python3 tests/test_offline.py
+
+``pwdlib`` is stubbed so these run before the venv exists. The real hashing is exercised
+by tests/test_security.py once dependencies are installed.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+import tempfile
+import types
+from pathlib import Path
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_DIR))
+
+# --- stub backend.security so these tests need no third-party packages ---------------
+_fake = types.ModuleType("backend.security")
+_fake.hash_passphrase = lambda p: f"stub${p}"          # type: ignore[attr-defined]
+_fake.verify_passphrase = lambda p, h: h == f"stub${p}"  # type: ignore[attr-defined]
+sys.modules["backend.security"] = _fake
+
+from backend.store import MIN_SUPPORT, POSTPONEMENT_PROBE_AT, Store, StoreError  # noqa: E402
+
+PASSED = 0
+FAILED: list[str] = []
+
+
+def check(label: str, condition: bool, detail: str = "") -> None:
+    global PASSED
+    if condition:
+        PASSED += 1
+    else:
+        FAILED.append(f"{label}{(' — ' + detail) if detail else ''}")
+
+
+def expect_raises(label: str, exc: type[Exception], fn, *a, **kw) -> None:
+    try:
+        fn(*a, **kw)
+    except exc:
+        check(label, True)
+    except Exception as e:  # pragma: no cover - diagnostic path
+        check(label, False, f"raised {type(e).__name__}: {e}")
+    else:
+        check(label, False, "no exception raised")
+
+
+def fresh() -> tuple[Store, int, int]:
+    db = Path(tempfile.mkdtemp()) / "t.db"
+    s = Store(db)
+    acct = s.create_account("tester", "a-long-enough-passphrase")
+    dom = s.create_domain(acct, "Dating", "romantic")
+    return s, acct, dom
+
+
+def fresh_profile(name: str = "Boyfriend KRYteria") -> tuple[Store, int, int, int]:
+    s, acct, dom = fresh()
+    prof = s.create_profile(acct, name, objective="Exclusive dating", domain_id=dom)
+    return s, acct, dom, prof
+
+
+# ---------------------------------------------------------------- criteria versioning
+
+def test_criteria_are_versioned_not_overwritten() -> None:
+    s, acct, dom = fresh()
+    c1 = s.create_criterion(
+        acct, value="Follow-through",
+        desired_behavior="Does what they said they would do",
+        why_it_matters="I stop trusting my own judgment when I let this slide",
+    )
+    c2 = s.revise_criterion(
+        c1, revision_note="Decided I was being too rigid",
+        desired_behavior="Tells me when plans change",
+    )
+
+    check("revision returns a new row", c2 != c1)
+
+    active = s.list_criteria(acct, status="active")
+    check("only one active version", len(active) == 1, f"got {len(active)}")
+    check("active row is the new one", active and active[0]["id"] == c2)
+    check("new version is 2", active and active[0]["version"] == 2)
+
+    all_rows = s.list_criteria(acct, status="all")
+    check("both versions survive", len(all_rows) == 2, f"got {len(all_rows)}")
+
+    old = next(r for r in all_rows if r["id"] == c1)
+    check("old row is superseded", old["status"] == "superseded")
+    check("old row keeps its original wording",
+          old["desired_behavior"] == "Does what they said they would do")
+    check("old row stamped with superseded_at", bool(old["superseded_at"]))
+
+    lineage = s.criterion_history(acct, active[0]["lineage_id"])
+    check("history is ordered oldest first",
+          [r["version"] for r in lineage] == [1, 2])
+    check("history shows the standard being softened",
+          [r["desired_behavior"] for r in lineage]
+          == ["Does what they said they would do", "Tells me when plans change"])
+    check("revision note is kept", lineage[1]["revision_note"] == "Decided I was being too rigid")
+
+    # Unchanged fields carry forward rather than blanking out.
+    check("unrevised field carries forward", lineage[1]["value"] == "Follow-through")
+
+    expect_raises("revising a superseded version is refused", StoreError,
+                  s.revise_criterion, c1, value="x")
+    expect_raises("unknown field is refused", StoreError,
+                  s.revise_criterion, c2, nonsense="x")
+
+
+# ---------------------------------------------------------------- pattern evidence
+
+def test_pattern_requires_evidence() -> None:
+    s, acct, dom = fresh()
+    expect_raises("a pattern with no evidence is refused", StoreError,
+                  s.save_pattern, acct, dom, kind="recurring_unmet_need",
+                  statement="They never follow through", evidence=[])
+
+    expect_raises("evidence without entry ids is refused", StoreError,
+                  s.save_pattern, acct, dom, kind="recurring_unmet_need",
+                  statement="They never follow through",
+                  evidence=[{"observation_id": 1}])
+
+
+def test_thin_evidence_is_downgraded() -> None:
+    s, acct, dom = fresh()
+    e1 = s.create_entry(acct, dom, body="Said he'd call, didn't.")
+    e2 = s.create_entry(acct, dom, body="Cancelled again.")
+
+    result = s.save_pattern(
+        acct, dom, kind="recurring_unmet_need",
+        statement="Follow-through has not happened",
+        evidence_strength="strong",          # the model claimed it was sure
+        alternatives=["He may be overwhelmed at work"],
+        evidence=[{"entry_id": e1}, {"entry_id": e2}],
+    )
+    check("two entries is below the bar", MIN_SUPPORT > 2)
+    check("thin evidence is forced to insufficient",
+          result["evidence_strength"] == "insufficient")
+    check("the downgrade is reported", result["downgraded"] is True)
+    check("support_count is the real count", result["support_count"] == 2)
+
+    stored = s.list_patterns(acct, status="all")[0]
+    check("gap note explains what is missing", bool(stored["gap_note"]))
+    check("the finding is still written, not hidden", stored["statement"].startswith("Follow"))
+    check("evidence is retrievable with the finding", len(stored["evidence"]) == 2)
+
+
+def test_support_count_is_counted_not_trusted() -> None:
+    s, acct, dom = fresh()
+    ids = [s.create_entry(acct, dom, body=f"entry {i}") for i in range(4)]
+    # Same entry listed repeatedly must not inflate the count.
+    result = s.save_pattern(
+        acct, dom, kind="repeated_discrepancy", statement="Repeated",
+        evidence=[{"entry_id": ids[0]}] * 5,
+    )
+    check("duplicate entries count once", result["support_count"] == 1)
+    check("one entry cannot be a pattern",
+          result["evidence_strength"] == "insufficient")
+
+    result2 = s.save_pattern(
+        acct, dom, kind="repeated_discrepancy", statement="Repeated",
+        evidence_strength="moderate",
+        alternatives=["Could be a stressful few weeks rather than a habit"],
+        evidence=[{"entry_id": i} for i in ids[:MIN_SUPPORT]],
+    )
+    check("enough distinct entries holds its strength",
+          result2["evidence_strength"] == "moderate")
+    check("support_count matches distinct entries",
+          result2["support_count"] == MIN_SUPPORT)
+
+
+def test_counter_evidence_is_preserved() -> None:
+    s, acct, dom = fresh()
+    ids = [s.create_entry(acct, dom, body=f"entry {i}") for i in range(5)]
+    result = s.save_pattern(
+        acct, dom, kind="recurring_unmet_need",
+        statement="Plans get changed at short notice",
+        evidence_strength="moderate",
+        alternatives=["Shift work may make the notice genuinely unavoidable"],
+        uncertainties=["Unclear how far ahead the plans were made"],
+        evidence=[
+            {"entry_id": ids[0]}, {"entry_id": ids[1]}, {"entry_id": ids[2]},
+            {"entry_id": ids[3], "stance": "contradicts"},
+            {"entry_id": ids[4], "stance": "contradicts"},
+        ],
+    )
+    check("supporting entries counted", result["support_count"] == 3)
+    check("contradicting entries counted separately", result["contra_count"] == 2)
+
+    stored = s.list_patterns(acct, status="all")[0]
+    check("counter-evidence is retrievable", len(stored["counter_evidence"]) == 2)
+    check("counter-evidence is not mixed into support", len(stored["evidence"]) == 3)
+    check("uncertainties survive", stored["uncertainties"] == [
+        "Unclear how far ahead the plans were made"])
+    check("alternatives survive", len(stored["alternatives"]) == 1)
+
+    expect_raises("an unknown stance is refused", StoreError,
+                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  statement="x", evidence=[{"entry_id": ids[0], "stance": "maybe"}])
+
+
+def test_confident_findings_must_offer_an_alternative() -> None:
+    s, acct, dom = fresh()
+    ids = [s.create_entry(acct, dom, body=f"entry {i}") for i in range(4)]
+    ev = [{"entry_id": i} for i in ids]
+
+    for strength in ("moderate", "strong"):
+        expect_raises(
+            f"a '{strength}' finding with no alternative is refused", StoreError,
+            s.save_pattern, acct, dom, kind="repeated_discrepancy",
+            statement="They do not care", evidence_strength=strength, evidence=ev,
+        )
+    expect_raises("blank alternatives do not satisfy the rule", StoreError,
+                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  statement="x", evidence_strength="strong",
+                  alternatives=["  ", ""], evidence=ev)
+
+    ok = s.save_pattern(
+        acct, dom, kind="repeated_discrepancy", statement="A real finding",
+        evidence_strength="strong", alternatives=["Another reading is possible"],
+        evidence=ev,
+    )
+    check("a finding that admits another reading is allowed",
+          ok["evidence_strength"] == "strong")
+
+    # 'limited' is an honest, low-confidence claim and needs no alternative.
+    low = s.save_pattern(acct, dom, kind="repeated_discrepancy",
+                         statement="Might be something here",
+                         evidence_strength="limited", evidence=ev)
+    check("a tentative finding needs no alternative",
+          low["evidence_strength"] == "limited")
+
+    expect_raises("a numeric strength is refused", StoreError,
+                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  statement="x", evidence_strength="0.87", evidence=ev)
+
+
+# ---------------------------------------------------------------- fact/interpretation
+
+def test_observation_kinds_are_validated() -> None:
+    s, acct, dom = fresh()
+    e = s.create_entry(acct, dom, body="He forgot my birthday. He doesn't care.")
+
+    expect_raises("an unknown observation kind is refused", StoreError,
+                  s.save_observations, acct, e, [{"kind": "fact", "text": "x"}])
+    expect_raises("a missing observation kind is refused", StoreError,
+                  s.save_observations, acct, e, [{"text": "x"}])
+
+    ids = s.save_observations(acct, e, [
+        {"kind": "reported_event", "text": "He did not acknowledge her birthday."},
+        {"kind": "interpretation", "text": "She reads this as not caring."},
+        {"kind": "emotional_reaction", "text": "She felt dismissed."},
+        {"kind": "missing_information", "text": "Whether he knew the date."},
+    ])
+    check("four observations stored", len(ids) == 4)
+
+    events = s.list_observations(acct, entry_ids=[e], kinds=["reported_event"])
+    check("reported events are separable", len(events) == 1)
+    check("the interpretation did not become an event",
+          "not caring" not in events[0]["text"])
+
+    interps = s.list_observations(acct, entry_ids=[e], kinds=["interpretation"])
+    check("interpretations are retrievable as such", len(interps) == 1)
+    check("agent-extracted observations are attributed",
+          interps[0]["attributed_to"] == "agent")
+
+    blanks = s.save_observations(acct, e, [{"kind": "uncertainty", "text": "   "}])
+    check("empty observation text is skipped, not stored", blanks == [])
+
+
+# ---------------------------------------------------------------- postponement
+
+def test_postponement_counting() -> None:
+    s, acct, dom = fresh()
+    c = s.create_criterion(acct, value="Follow-through",
+                           desired_behavior="Does what they said")
+    check("no postponements at the start",
+          s.count_postponements(acct, criterion_id=c) == 0)
+    check("no probe at the start",
+          s.should_probe_postponement(acct, criterion_id=c) is False)
+
+    for _ in range(POSTPONEMENT_PROBE_AT - 1):
+        s.record_decision(acct, choice="more_time", criterion_id=c)
+    check("below the threshold, no probe",
+          s.should_probe_postponement(acct, criterion_id=c) is False)
+
+    s.record_decision(acct, choice="more_time", criterion_id=c)
+    check("at the threshold, the probe is allowed",
+          s.should_probe_postponement(acct, criterion_id=c) is True)
+    check("count is exact",
+          s.count_postponements(acct, criterion_id=c) == POSTPONEMENT_PROBE_AT)
+
+    # Other decisions are not postponements.
+    other = s.create_criterion(acct, value="Honesty", desired_behavior="Tells me things")
+    for choice in ("talk", "boundary", "gather_info", "reconsider", "undecided"):
+        s.record_decision(acct, choice=choice, criterion_id=other)
+    check("other choices do not count as postponement",
+          s.count_postponements(acct, criterion_id=other) == 0)
+    check("postponements are scoped per criterion",
+          s.count_postponements(acct, criterion_id=c) == POSTPONEMENT_PROBE_AT)
+
+    expect_raises("an unknown decision is refused", StoreError,
+                  s.record_decision, acct, choice="dump_him")
+
+
+# ---------------------------------------------------------------- entries
+
+def test_entry_modes() -> None:
+    s, acct, dom = fresh()
+    expect_raises("an empty free entry is refused", StoreError,
+                  s.create_entry, acct, dom, entry_mode="free", body="   ")
+    expect_raises("an empty structured entry is refused", StoreError,
+                  s.create_entry, acct, dom, entry_mode="structured")
+
+    free_id = s.create_entry(acct, dom, entry_mode="free",
+                             body="Post-date debrief: nice evening, but the same thing again.")
+    struct_id = s.create_entry(acct, dom, entry_mode="structured",
+                               what_happened="Cancelled an hour before",
+                               what_expected="To be told earlier",
+                               how_it_affected="Felt like an afterthought")
+    check("both entry modes are accepted", free_id and struct_id)
+
+    rows = s.list_entries(acct)
+    check("both entries are listed", len(rows) == 2)
+    modes = {r["entry_mode"] for r in rows}
+    check("neither mode is a second-class citizen", modes == {"free", "structured"})
+
+    found = s.list_entries(acct, search="debrief")
+    check("search finds free text", len(found) == 1 and found[0]["id"] == free_id)
+    found2 = s.list_entries(acct, search="afterthought")
+    check("search finds structured fields", len(found2) == 1 and found2[0]["id"] == struct_id)
+
+
+def test_standards_are_never_judged() -> None:
+    """"Soft hands" is as valid a criterion as "Compatible relationship intentions".
+
+    KRYteria does not rank, score, or second-guess what matters to somebody. If a future
+    change adds validation that rejects a criterion for being trivial, this fails.
+    """
+    s, acct, dom, prof = fresh_profile()
+    for value, tier in [
+        ("Soft hands", "preferred"),
+        ("Beautiful singing voice", "aspirational"),
+        ("Compatible relationship intentions", "mandatory"),
+        ("Independent identity and interests", "mandatory"),
+    ]:
+        cid = s.create_criterion(acct, value=value,
+                                 desired_behavior=f"Shows {value.lower()}")
+        s.add_criterion_to_profile(prof, cid, tier=tier)
+        check(f"{value!r} is accepted as written", bool(cid))
+
+    rows = s.list_criteria(acct)
+    check("all four are in the library", len(rows) == 4)
+    check("the library carries no tier", "tier" not in rows[0])
+    check("no score column leaked in", not any(
+        k in rows[0] for k in ("score", "rating", "importance", "quality")))
+
+    in_profile = s.list_profile_criteria(prof)
+    check("mandatory criteria sort first",
+          [r["tier"] for r in in_profile][:2] == ["mandatory", "mandatory"])
+    check("aspirational sorts last", in_profile[-1]["tier"] == "aspirational")
+
+    expect_raises("an unknown tier is refused", StoreError,
+                  s.add_criterion_to_profile, prof, rows[0]["id"], tier="essential")
+
+
+def test_profiles_are_independent() -> None:
+    """The Jimmy G Principle as an architectural requirement, not a funny example.
+
+    The same criterion carries its own tier in each profile, and changing one profile
+    must never reach into another.
+    """
+    s, acct, dom = fresh()
+    husband = s.create_profile(acct, "Husband KRYteria", objective="Marriage")
+    ons = s.create_profile(acct, "One Night Stand KRYteria", objective="One-time")
+
+    attraction = s.create_criterion(acct, value="Physical attraction",
+                                    desired_behavior="I am drawn to him")
+    kids = s.create_criterion(acct, value="Wants children",
+                              desired_behavior="Wants children within a few years")
+
+    s.add_criterion_to_profile(husband, attraction, tier="preferred")
+    s.add_criterion_to_profile(husband, kids, tier="mandatory")
+    s.add_criterion_to_profile(ons, attraction, tier="mandatory")
+    s.add_criterion_to_profile(ons, kids, relevance="not_applicable")
+
+    def tier_of(profile, criterion):
+        return next(r["tier"] for r in s.list_profile_criteria(profile)
+                    if r["criterion_id"] == criterion)
+
+    check("attraction is Preferred for a husband", tier_of(husband, attraction) == "preferred")
+    check("attraction is Mandatory for a one-night stand",
+          tier_of(ons, attraction) == "mandatory")
+    check("one criterion, one library row", len(s.list_criteria(acct)) == 2)
+
+    # Changing one profile must not touch the other.
+    s.set_profile_tier(husband, attraction, "mandatory")
+    check("the edited profile changed", tier_of(husband, attraction) == "mandatory")
+    check("the other profile did not", tier_of(ons, attraction) == "mandatory")
+    s.set_profile_tier(ons, attraction, "preferred")
+    check("and it works the other way too",
+          tier_of(husband, attraction) == "mandatory"
+          and tier_of(ons, attraction) == "preferred")
+
+    # Copying is explicit, and produces an independent configuration.
+    casual = s.create_profile(acct, "Fuck Buddy KRYteria", objective="Ongoing casual")
+    s.copy_criteria_to_profile(husband, casual)
+    check("copied criteria arrive", len(s.list_profile_criteria(casual)) == 2)
+    check("copied settings come across", tier_of(casual, attraction) == "mandatory")
+    s.set_profile_tier(casual, attraction, "aspirational")
+    check("editing the copy does not touch the source",
+          tier_of(husband, attraction) == "mandatory")
+    check("provenance is recorded",
+          any(r["copied_from_profile_id"] == husband
+              for r in s.list_profile_criteria(casual)))
+
+    expect_raises("a profile cannot copy into itself", StoreError,
+                  s.copy_criteria_to_profile, husband, husband)
+
+
+def test_not_applicable_is_not_fail_or_unknown() -> None:
+    """Three distinct answers that a sloppy implementation would merge."""
+    s, acct, dom = fresh()
+    husband = s.create_profile(acct, "Husband KRYteria")
+    ons = s.create_profile(acct, "One Night Stand KRYteria")
+    kids = s.create_criterion(acct, value="Wants children", desired_behavior="Wants kids")
+    s.add_criterion_to_profile(husband, kids, tier="mandatory")
+    s.add_criterion_to_profile(ons, kids, relevance="not_applicable")
+    p = s.upsert_person(acct, "J")
+
+    husband_board = s.assessment_board(acct, husband, p)
+    ons_board = s.assessment_board(acct, ons, p)
+    check("unassessed under Husband reads unknown",
+          husband_board[0]["assessment"] == "unknown")
+    check("not relevant under One Night Stand reads not_applicable",
+          ons_board[0]["assessment"] == "not_applicable")
+    check("not_applicable is not fail", ons_board[0]["assessment"] != "fail")
+    check("not_applicable is not unknown", ons_board[0]["assessment"] != "unknown")
+    check("the criterion survives in the library untouched",
+          len(s.list_criteria(acct)) == 1)
+
+    # A status set under one profile never leaks into another.
+    s.set_assessment(acct, husband, kids, p, "fail")
+    check("Husband now fails", s.get_assessment(husband, kids, p) == "fail")
+    check("One Night Stand is unaffected",
+          s.assessment_board(acct, ons, p)[0]["assessment"] == "not_applicable")
+
+
+def test_assessment_history_is_kept() -> None:
+    s, acct, dom, prof = fresh_profile()
+    c = s.create_criterion(acct, value="Consistency", desired_behavior="Follows through")
+    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    p = s.upsert_person(acct, "J")
+
+    aid = s.set_assessment(acct, prof, c, p, "unknown", origin="system_initial")
+    s.set_assessment(acct, prof, c, p, "pass", explanation="Three follow-throughs")
+    s.set_assessment(acct, prof, c, p, "unknown", explanation="Changed my mind")
+
+    hist = s.assessment_history(aid)
+    check("every transition is kept", len(hist) == 3)
+    check("transitions record what they came from",
+          [h["previous_status"] for h in hist] == ["unknown", "unknown", "pass"])
+    check("transitions record what they went to",
+          [h["new_status"] for h in hist] == ["unknown", "pass", "unknown"])
+    check("the origin is recorded", hist[0]["origin"] == "system_initial")
+    check("the explanation is kept", hist[1]["explanation"] == "Three follow-throughs")
+
+
+def test_agent_cannot_silently_change_an_assessment() -> None:
+    """The agent proposes; the user decides. Enforced by there being two tables."""
+    s, acct, dom, prof = fresh_profile()
+    c = s.create_criterion(acct, value="Emotional maturity",
+                           desired_behavior="Handles disagreement without hostility")
+    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    p = s.upsert_person(acct, "J", domain_id=dom)
+
+    check("assessment starts unknown", s.get_assessment(prof, c, p) == "unknown")
+
+    pid = s.propose_assessment(acct, prof, c, p, "pass",
+                               rationale="Took time to regulate, came back, apologised")
+    check("the proposal does not move the status",
+          s.get_assessment(prof, c, p) == "unknown")
+    check("the proposal is pending", len(s.list_pending_proposals(acct)) == 1)
+    check("the proposal records what it would change from",
+          s.list_pending_proposals(acct)[0]["current_status"] == "unknown")
+
+    expect_raises("a proposal with no rationale is refused", StoreError,
+                  s.propose_assessment, acct, prof, c, p, "fail", "   ")
+
+    s.resolve_proposal(acct, pid, "accepted")
+    check("accepting applies it", s.get_assessment(prof, c, p) == "pass")
+    check("no proposals left pending", s.list_pending_proposals(acct) == [])
+    expect_raises("a resolved proposal cannot be resolved twice", StoreError,
+                  s.resolve_proposal, acct, pid, "rejected")
+
+    # Rejecting leaves the status alone.
+    pid2 = s.propose_assessment(acct, prof, c, p, "fail",
+                                rationale="One difficult evening")
+    s.resolve_proposal(acct, pid2, "rejected")
+    check("rejecting changes nothing", s.get_assessment(prof, c, p) == "pass")
+
+    # Editing lets the user pick a third answer.
+    pid3 = s.propose_assessment(acct, prof, c, p, "fail",
+                                rationale="Another difficult evening")
+    s.resolve_proposal(acct, pid3, "edited", final_status="unknown")
+    check("editing applies the user's choice, not the agent's",
+          s.get_assessment(prof, c, p) == "unknown")
+
+    # An accepted proposal is recorded as the user's act, not the agent's.
+    aid = s.set_assessment(acct, prof, c, p, "unknown")
+    origins = {h["origin"] for h in s.assessment_history(aid)}
+    check("the history distinguishes accepted from edited proposals",
+          {"user_accepted_proposal", "user_edited_proposal"} <= origins)
+
+    expect_raises("an unknown status is refused", StoreError,
+                  s.set_assessment, acct, prof, c, p, "maybe")
+
+
+def test_assessment_is_per_person() -> None:
+    """Same standard, two people, two answers — this is how 'am I making exceptions
+    for someone I wouldn't make for anyone else' becomes answerable."""
+    s, acct, dom, prof = fresh_profile()
+    c = s.create_criterion(acct, value="Follow-through",
+                           desired_behavior="Does what they said")
+    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    a = s.upsert_person(acct, "A", domain_id=dom)
+    b = s.upsert_person(acct, "B", domain_id=dom)
+
+    s.set_assessment(acct, prof, c, a, "pass")
+    s.set_assessment(acct, prof, c, b, "fail")
+    check("person A passes", s.get_assessment(prof, c, a) == "pass")
+    check("person B fails on the same criterion", s.get_assessment(prof, c, b) == "fail")
+
+    board = s.assessment_board(acct, prof, a)
+    check("the board carries one row per criterion", len(board) == 1)
+    check("the board carries the status", board[0]["assessment"] == "pass")
+
+    s.set_assessment(acct, prof, c, a, "unknown")
+    check("a status can be walked back to unknown",
+          s.get_assessment(prof, c, a) == "unknown")
+
+
+def test_evidence_has_four_relations() -> None:
+    s, acct, dom = fresh()
+    c = s.create_criterion(acct, value="Emotional maturity",
+                           desired_behavior="Handles disagreement well")
+    e = s.create_entry(acct, dom, body="He got upset, took a few minutes, came back "
+                                       "and apologised.")
+    for rel in ("supporting", "contradicting", "complicating", "unrelated"):
+        lid = s.link_evidence(acct, entry_id=e, criterion_id=c, relation=rel)
+        check(f"{rel} is a valid relation", bool(lid))
+
+    check("complicating survives as its own category",
+          len(s.list_evidence_links(acct, criterion_id=c)) == 4)
+
+    expect_raises("an unknown relation is refused", StoreError,
+                  s.link_evidence, acct, entry_id=e, criterion_id=c, relation="bad")
+
+    # Agent-proposed mappings wait for the user.
+    pending = s.list_evidence_links(acct, resolution="pending")
+    check("agent links start pending", len(pending) == 4)
+    s.resolve_evidence_link(acct, pending[0]["id"], "edited", relation="complicating")
+    check("an edited link takes the user's relation",
+          s.list_evidence_links(acct, resolution="edited")[0]["relation"] == "complicating")
+
+    # A user's own link needs no confirmation.
+    own = s.link_evidence(acct, entry_id=e, criterion_id=c, relation="supporting",
+                          proposed_by="user")
+    accepted = [l for l in s.list_evidence_links(acct) if l["id"] == own]
+    check("a user's own mapping is accepted immediately",
+          accepted[0]["resolution"] == "accepted")
+
+
+def test_research_claims_must_cite() -> None:
+    s, acct, dom = fresh()
+    c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
+    e = s.create_entry(acct, dom, body="x")
+
+    expect_raises("a research-backed link with no citation is refused", StoreError,
+                  s.link_evidence, acct, entry_id=e, criterion_id=c,
+                  relation="supporting", source_level="established_research")
+    expect_raises("a research-informed indicator with no citation is refused", StoreError,
+                  s.save_checklist_items, acct, c,
+                  [{"text": "Takes responsibility", "source_level": "research_informed"}])
+
+    ok = s.save_checklist_items(acct, c, [
+        {"text": "Can disagree without becoming contemptuous or hostile",
+         "source_level": "research_informed", "research_ref": "Gottman, contempt research"},
+        {"text": "Takes responsibility for their actions",
+         "source_level": "agent_hypothesis"},
+    ])
+    check("cited indicators are stored", len(ok) == 2)
+    items = s.list_checklist(acct, c)
+    check("the epistemic level travels with the indicator",
+          {i["source_level"] for i in items} ==
+          {"research_informed", "agent_hypothesis"})
+    check("a hypothesis needs no citation", any(
+        i["research_ref"] is None for i in items))
+
+    expect_raises("a note with no citation is refused", StoreError,
+                  s.add_research_note, area="attachment", finding="x", citation="  ")
+
+
+def test_ticking_a_box_does_not_set_pass() -> None:
+    """The rule the UI states and the schema enforces: checking an item records an
+    observation; it does not establish that the criterion passes."""
+    s, acct, dom, prof = fresh_profile()
+    c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
+    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    p = s.upsert_person(acct, "J", domain_id=dom)
+    items = s.save_checklist_items(acct, c, [
+        {"text": f"Indicator {i}", "source_level": "agent_hypothesis"} for i in range(6)
+    ], profile_id=prof)
+
+    for item in items:
+        s.record_checklist_observation(acct, item, person_id=p)
+
+    check("every box ticked", len(items) == 6)
+    check("the criterion is still unknown", s.get_assessment(prof, c, p) == "unknown")
+
+    board = s.list_checklist(acct, c, profile_id=prof, person_id=p)
+    check("observations are counted and shown",
+          all(i["times_observed"] == 1 for i in board))
+    check("there is no pass flag on an indicator",
+          not any("passes" in i for i in board))
+
+    # Four states, because "never had the chance to see" is not "looked and it wasn't
+    # there" — merging them turns absence of evidence into evidence of absence.
+    s.record_checklist_observation(acct, items[0], person_id=p, state="no_opportunity")
+    s.record_checklist_observation(acct, items[1], person_id=p, state="contradicted")
+    board2 = s.list_checklist(acct, c, profile_id=prof, person_id=p)
+    check("no_opportunity is counted separately", board2[0]["no_opportunity"] == 1)
+    check("contradicted is counted separately", board2[1]["times_contradicted"] == 1)
+    check("a contradicted indicator still shows what was observed",
+          board2[1]["times_observed"] == 1)
+    check("the criterion is STILL unknown after all of that",
+          s.get_assessment(prof, c, p) == "unknown")
+
+    expect_raises("an unknown checklist state is refused", StoreError,
+                  s.record_checklist_observation, acct, items[0], state="maybe")
+
+
+# ---------------------------------------------------------------- safety
+
+def _seed_resources(s: Store) -> None:
+    blob = json.loads((PROJECT_DIR / "data" / "resources_us.json").read_text())
+    s.seed_resources(blob["resources"])
+
+
+def test_resources_are_curated_never_invented() -> None:
+    s, acct, _ = fresh()
+    _seed_resources(s)
+
+    all_res = s.list_resources()
+    check("the directory loaded", len(all_res) == 4)
+    check("emergency services sort first", all_res[0]["kind"] == "emergency")
+    check("every resource carries a verification date",
+          all(r["verified_at"] for r in all_res))
+    check("every resource has a way to reach it",
+          all(r["phone"] or r["url"] or r["text_line"] for r in all_res))
+
+    sexual = s.list_resources(category="sexual")
+    check("category filtering works", any("RAINN" in r["name"] for r in sexual))
+    check("a crisis line is not offered for an unrelated concern",
+          not any("988" in r["name"] for r in sexual))
+
+    # A region with no curated entries returns nothing — and nothing is the honest answer.
+    check("an unknown region yields no resources, not a guess",
+          s.list_resources(region="XX") == [])
+
+    expect_raises("an unverified resource is refused", StoreError,
+                  s.seed_resources, [{"name": "Made Up Line", "kind": "confidential_support",
+                                      "phone": "555-0100"}])
+    expect_raises("a resource with no contact route is refused", StoreError,
+                  s.seed_resources, [{"name": "Nowhere", "kind": "information",
+                                      "verified_at": "2026-11-07"}])
+
+
+def test_declining_resources_is_respected() -> None:
+    """Offering support and forcing support are different things.
+
+    Being told "support is available" for the fourth time after saying no teaches
+    somebody that telling the app something hard makes it stop being able to talk to them.
+    """
+    s, acct, _ = fresh()
+    _seed_resources(s)
+
+    check("resources are offered by default",
+          s.should_offer_resources(acct, "disclosure") is True)
+
+    offer = s.record_resource_offer(acct, [1, 2], "disclosure")
+    s.respond_to_offer(acct, offer, "declined")
+
+    check("a decline stops unsolicited re-offering at that level",
+          s.should_offer_resources(acct, "disclosure") is False)
+    check("and at lower levels too",
+          s.should_offer_resources(acct, "potential") is False)
+
+    # The crucial exception.
+    check("IMMEDIATE DANGER still surfaces resources after a decline",
+          s.should_offer_resources(acct, "immediate_danger") is True)
+
+    expect_raises("an unknown concern level is refused", StoreError,
+                  s.should_offer_resources, acct, "a bit worrying")
+
+
+def test_resource_preference_is_honoured() -> None:
+    s, acct, _ = fresh()
+    _seed_resources(s)
+
+    s.set_preferences(acct, resource_offering="on_request")
+    check("on_request suppresses unsolicited offers at disclosure",
+          s.should_offer_resources(acct, "disclosure") is False)
+    check("on_request suppresses them at pattern level too",
+          s.should_offer_resources(acct, "pattern") is False)
+    check("but immediate danger still gets through",
+          s.should_offer_resources(acct, "immediate_danger") is True)
+
+    s.set_preferences(acct, resource_offering="suppressed")
+    check("suppressed still does not disable immediate danger",
+          s.should_offer_resources(acct, "immediate_danger") is True)
+
+    s.set_preferences(acct, resource_offering="proactive")
+    check("the user can turn offering back on",
+          s.should_offer_resources(acct, "disclosure") is True)
+
+    expect_raises("an unknown preference is refused", StoreError,
+                  s.set_preferences, acct, resource_offering="never_ever")
+
+
+def test_safety_layer_is_profile_independent() -> None:
+    """A user never has to list safety as a criterion before the app notices.
+
+    log_safety_event deliberately takes no profile_id. If one is ever added, this fails.
+    """
+    import inspect
+    sig = inspect.signature(Store.log_safety_event)
+    check("log_safety_event takes no profile argument",
+          "profile_id" not in sig.parameters)
+
+    s, acct, dom = fresh()
+    # No profile exists, no criteria exist, nothing is marked Mandatory.
+    e = s.create_entry(acct, dom, body="He grabbed my arm so I couldn't leave.")
+    sid = s.log_safety_event(
+        account_id=acct, entry_id=e, trigger="physical_restraint",
+        category="physical", concern_level="disclosure", action="halt_and_route",
+    )
+    check("a safety event is recorded with no profile at all", bool(sid))
+
+    events = s.list_safety_events(acct)
+    check("the event is retrievable", len(events) == 1)
+    check("the category is kept", events[0]["category"] == "physical")
+    check("the concern level is kept", events[0]["concern_level"] == "disclosure")
+
+    expect_raises("an unknown category is refused", StoreError,
+                  s.log_safety_event, account_id=acct, trigger="x", action="y",
+                  category="bad_vibes")
+    expect_raises("an unknown concern level is refused", StoreError,
+                  s.log_safety_event, account_id=acct, trigger="x", action="y",
+                  concern_level="quite_bad")
+
+
+def test_inference_must_be_hedged() -> None:
+    """Infer, but don't presume.
+
+    The agent may read between the lines — a user should not have to name a behaviour
+    before the app can help them look at it — but a reading is marked as a reading.
+    """
+    s, acct, dom = fresh()
+    e = s.create_entry(
+        acct, dom,
+        body="He kept asking why I didn't want to stay and said I was making him feel "
+             "like he wasn't good enough. I stayed so there wouldn't be another argument.",
+    )
+
+    expect_raises("an unhedged inference is refused", StoreError,
+                  s.save_observations, acct, e,
+                  [{"kind": "interpretation", "text": "She felt pressured",
+                    "certainty": "inferred"}])
+
+    ids = s.save_observations(acct, e, [
+        {"kind": "reported_event",
+         "text": "He repeatedly questioned her decision to leave.",
+         "certainty": "stated"},
+        {"kind": "reported_event",
+         "text": "She stayed rather than have another argument.",
+         "certainty": "stated"},
+        {"kind": "interpretation",
+         "text": "She changed her decision to avoid conflict.",
+         "certainty": "inferred",
+         "hedge": "It sounds like you felt pressured to change your mind. Is that right?"},
+    ])
+    check("stated and inferred observations coexist", len(ids) == 3)
+
+    rows = s.list_observations(acct, entry_ids=[e])
+    stated = [r for r in rows if r["certainty"] == "stated"]
+    inferred = [r for r in rows if r["certainty"] == "inferred"]
+    check("what she described is marked stated", len(stated) == 2)
+    check("what the agent read into it is marked inferred", len(inferred) == 1)
+    check("the inference carries its hedge", bool(inferred[0]["hedge"]))
+    check("the hedge invites correction", "?" in inferred[0]["hedge"])
+
+    expect_raises("an unknown certainty is refused", StoreError,
+                  s.save_observations, acct, e,
+                  [{"kind": "interpretation", "text": "x", "certainty": "pretty sure"}])
+
+
+def test_people_are_aliases() -> None:
+    s, acct, dom = fresh()
+    e = s.create_entry(acct, dom, body="Dinner", people=["J", "J", "  "])
+    full = s.get_entry(acct, e)
+    check("aliases are de-duplicated", full["people"] == ["J"])
+    check("blank aliases are dropped", len(full["people"]) == 1)
+
+
+# ---------------------------------------------------------------- deletion + export
+
+def test_delete_removes_everything() -> None:
+    s, acct, dom = fresh()
+    e = s.create_entry(acct, dom, body="something personal")
+    s.save_observations(acct, e, [{"kind": "reported_event", "text": "x"}])
+    c = s.create_criterion(acct, value="v", desired_behavior="d")
+    s.record_decision(acct, choice="more_time", criterion_id=c)
+    s.save_pattern(acct, dom, kind="recurring_unmet_need", statement="p",
+                   evidence=[{"entry_id": e}])
+
+    s.delete_account(acct)
+
+    with s.read() as conn:
+        counts = {
+            t: conn.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+            for t in ("accounts", "entries", "observations", "criteria",
+                      "decisions", "patterns", "pattern_evidence", "people", "domains")
+        }
+    check("delete removes every trace",
+          all(v == 0 for v in counts.values()),
+          f"left behind: {[t for t, v in counts.items() if v]}")
+
+
+def test_export_omits_the_hash() -> None:
+    s, acct, dom = fresh()
+    s.create_entry(acct, dom, body="x")
+    blob = s.export_account(acct)
+    check("export carries the account", blob["account"]["handle"] == "tester")
+    check("export omits the passphrase hash", "passphrase_hash" not in blob["account"])
+    check("export carries entries", len(blob["entries"]) == 1)
+    flat = repr(blob)
+    check("no hash material anywhere in the export", "stub$" not in flat)
+
+
+def test_auth_round_trip() -> None:
+    s, acct, _ = fresh()
+    check("correct passphrase verifies",
+          s.verify_account("tester", "a-long-enough-passphrase") == acct)
+    check("wrong passphrase is refused",
+          s.verify_account("tester", "wrong") is None)
+    check("unknown handle is refused",
+          s.verify_account("nobody", "a-long-enough-passphrase") is None)
+
+
+# ---------------------------------------------------------------- run log
+
+def test_run_log_totals() -> None:
+    s, acct, _ = fresh()
+    run = s.start_run(acct, "journal_entry")
+    s.log_step(run, 1, "evidence", input_tokens=1000, cached_input_tokens=800,
+               output_tokens=200, estimated_cost_usd=0.0012, model_name="gpt-6-luna",
+               tool_calls=["save_observations"])
+    s.log_step(run, 2, "pattern", input_tokens=1500, cached_input_tokens=1200,
+               output_tokens=300, estimated_cost_usd=0.0018, model_name="gpt-6-luna")
+    s.finish_run(run, "ok")
+
+    trace = s.get_run(acct, run)
+    check("trace has both steps", len(trace["steps"]) == 2)
+    check("trace totals input tokens", trace["input_tokens"] == 2500)
+    check("trace totals cached tokens", trace["cached_input_tokens"] == 2000)
+    check("trace totals output tokens", trace["output_tokens"] == 500)
+    check("trace totals cost", abs(trace["cost_usd"] - 0.003) < 1e-9)
+    check("cost is flagged as estimated", trace["cost_is_estimated"] is True)
+    check("the billed model is recorded", trace["steps"][0]["model_name"] == "gpt-6-luna")
+    check("tool calls survive the round trip",
+          trace["steps"][0]["tool_calls"] == ["save_observations"])
+    check("run is marked ok", trace["status"] == "ok")
+
+
+def test_unreported_cache_is_unknown_not_zero() -> None:
+    """'The provider didn't tell us' and 'the cache was cold' are different facts.
+
+    Merging them understates cache hits and overstates cost, and a tokenomics section
+    built on that is wrong in a way nobody reading it can see.
+    """
+    s, acct, _ = fresh()
+    run = s.start_run(acct, "analysis")
+    s.log_step(run, 1, "pattern", input_tokens=1000, output_tokens=100)  # no cache reported
+    trace = s.get_run(acct, run)
+    check("unreported cache is None, not 0", trace["cached_input_tokens"] is None)
+    check("the gap is flagged", trace["cached_tokens_reported"] is False)
+    check("the raw step is NULL too", trace["steps"][0]["cached_input_tokens"] is None)
+
+    run2 = s.start_run(acct, "analysis")
+    s.log_step(run2, 1, "pattern", input_tokens=1000, cached_input_tokens=0,
+               output_tokens=100)
+    trace2 = s.get_run(acct, run2)
+    check("a genuine zero is recorded as zero", trace2["cached_input_tokens"] == 0)
+    check("a genuine zero counts as reported", trace2["cached_tokens_reported"] is True)
+
+
+def test_simulated_steps_are_excluded_from_cost() -> None:
+    """Demo mode must never contaminate a measured cost figure."""
+    s, acct, _ = fresh()
+    run = s.start_run(acct, "analysis")
+    s.log_step(run, 1, "pattern", input_tokens=1000, output_tokens=100,
+               estimated_cost_usd=0.002, model_name="gpt-6-luna")
+    s.log_step(run, 2, "reflection", input_tokens=9999, output_tokens=9999,
+               estimated_cost_usd=99.0, is_simulated=True, model_name="demo")
+    trace = s.get_run(acct, run)
+    check("simulated tokens are excluded", trace["input_tokens"] == 1000)
+    check("simulated cost is excluded", abs(trace["cost_usd"] - 0.002) < 1e-9)
+    check("simulated steps are still visible in the trace", len(trace["steps"]) == 2)
+    check("simulated steps are counted and labelled", trace["simulated_steps"] == 1)
+
+
+def test_usage_accumulates() -> None:
+    s, acct, _ = fresh()
+    s.add_usage(acct, calls=1, input_tokens=100, output_tokens=50, cost_usd=0.001)
+    s.add_usage(acct, calls=1, input_tokens=200, output_tokens=60, cost_usd=0.002)
+    today = s.usage_today(acct)
+    check("calls accumulate", today["calls"] == 2)
+    check("input tokens accumulate", today["input_tokens"] == 300)
+    check("cost accumulates", abs(today["cost_usd"] - 0.003) < 1e-9)
+    glob = s.usage_all_accounts_today()
+    check("global usage sees the account", glob["input_tokens"] == 300)
+
+
+def main() -> int:
+    tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
+    for t in tests:
+        t()
+    print(f"\n{PASSED} passed, {len(FAILED)} failed  ({len(tests)} test functions)")
+    for f in FAILED:
+        print(f"  FAIL  {f}")
+    return 1 if FAILED else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

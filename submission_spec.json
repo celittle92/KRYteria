@@ -1,0 +1,32 @@
+{
+  "_comment": "Written before any code, per AGENTS.md rule 4. Each backend agent module must load the prompt file named here at runtime. Update as the build names new pieces.",
+  "project": "KRYteria",
+  "course": "MGT 409 Final Project",
+  "due": "2026-11-23T23:59:00",
+  "_due_note": "Extended one week by Prof. Zaman; reported by Christine 2026-11-07. The requirements page still shows 2026-11-16. Confirm on Canvas.",
+  "model": "gpt-6-luna",
+  "_agent_roster_note": "Revised 2026-11-07. Narrative and Evidence were split (extraction is a different job from mapping), Pattern became Reasoning (interrogation + cross-criterion trade-offs), and Safety became a peer that runs alongside Narrative rather than a filter after it. Criteria is off the brain-dump path: it serves the Criteria screen and Checklist Mode.",
+  "scripts": {
+    "backend/agents/orchestrator.py": "backend/prompts/orchestrator.md",
+    "backend/agents/narrative.py": "backend/prompts/narrative.md",
+    "backend/agents/safety.py": "backend/prompts/safety.md",
+    "backend/agents/evidence.py": "backend/prompts/evidence.md",
+    "backend/agents/reasoning.py": "backend/prompts/reasoning.md",
+    "backend/agents/reflection.py": "backend/prompts/reflection.md",
+    "backend/agents/criteria.py": "backend/prompts/criteria.md"
+  },
+  "outputs": [
+    "report.html",
+    "slides.html",
+    "README.md",
+    ".env.example",
+    "output/harness.md",
+    "output/usage_log.json",
+    "output/token_report.md",
+    "output/safety_results.json",
+    "output/safety_results.md",
+    "output/user_test.md",
+    "output/github_url.txt",
+    "output/hosted_url.txt"
+  ]
+}

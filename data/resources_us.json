@@ -1,0 +1,65 @@
+{
+  "_comment": [
+    "Curated support-resource directory. The agent may offer ONLY what is in here.",
+    "",
+    "Nothing in this file may be invented or guessed — not a number, not a service, not",
+    "an availability claim. If a concern has no matching row, the honest answer is that",
+    "KRYteria does not have a resource for it. An invented hotline is worse than none.",
+    "",
+    "verified_at is the date a human last checked the entry against the organisation's",
+    "own published contact details. Re-verify before submission and before any release.",
+    "Figures below are as published by each organisation and were entered on 2026-11-07;",
+    "Christine should confirm each one against the organisation's site before the demo.",
+    "",
+    "Emergency services are listed separately from confidential support, because they are",
+    "different things and conflating them takes a choice away from the user."
+  ],
+  "region": "US",
+  "resources": [
+    {
+      "name": "Emergency services (911)",
+      "kind": "emergency",
+      "region": "US",
+      "categories": ["physical", "sexual", "stalking_harassment", "coercive_control"],
+      "phone": "911",
+      "note": "For immediate danger. Call if you are in danger right now.",
+      "verified_at": "2026-11-07"
+    },
+    {
+      "name": "National Domestic Violence Hotline",
+      "kind": "confidential_support",
+      "region": "US",
+      "categories": ["physical", "emotional_psychological", "coercive_control",
+                     "stalking_harassment", "sexual"],
+      "phone": "1-800-799-SAFE (7233)",
+      "text_line": "Text START to 88788",
+      "url": "https://www.thehotline.org/",
+      "hours": "24/7",
+      "note": "Confidential. You do not have to call anything you are experiencing abuse to talk to them.",
+      "verified_at": "2026-11-07"
+    },
+    {
+      "name": "RAINN National Sexual Assault Hotline",
+      "kind": "confidential_support",
+      "region": "US",
+      "categories": ["sexual"],
+      "phone": "1-800-656-HOPE (4673)",
+      "url": "https://rainn.org/",
+      "hours": "24/7",
+      "note": "Confidential support for sexual assault, coercion, and unwanted contact.",
+      "verified_at": "2026-11-07"
+    },
+    {
+      "name": "988 Suicide & Crisis Lifeline",
+      "kind": "confidential_support",
+      "region": "US",
+      "categories": ["self_harm"],
+      "phone": "988",
+      "text_line": "Text 988",
+      "url": "https://988lifeline.org/",
+      "hours": "24/7",
+      "note": "For emotional crisis or suicidal distress. Offer only when that is what the person is describing — not as a reaction to any difficult feeling.",
+      "verified_at": "2026-11-07"
+    }
+  ]
+}

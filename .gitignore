@@ -1,0 +1,24 @@
+# Secrets — never commit these.
+.env
+.env.*
+!.env.example
+
+# Real user data. The seeded demo database is built by a script, not committed.
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/export_*.json
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.tiktoken_cache/
+
+# Node / Vite
+node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS
+.DS_Store
