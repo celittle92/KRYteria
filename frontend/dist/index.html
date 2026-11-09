@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <!-- Private by design: nothing here should end up in a browser's history preview,
+         a link unfurl, or a search index. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <title>KRYteria</title>
+    <script>
+      // Applied before first paint so the chosen theme never flashes the other one.
+      try {
+        var t = localStorage.getItem("kryteria-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="/assets/index-Dge_CwWH.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DrAxrf86.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

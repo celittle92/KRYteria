@@ -160,6 +160,17 @@ class StructuredEntry(BaseModel):
     people: list[str] = Field(default_factory=list)
 
 
+class UserEvidenceLink(BaseModel):
+    """A mapping the user made themselves, rather than one an agent proposed."""
+
+    entry_id: int
+    criterion_id: int
+    relation: Relation
+    profile_id: int | None = None
+    person_id: int | None = None
+    rationale: str | None = None
+
+
 class EvidenceLinkDecision(BaseModel):
     """The user accepts, rejects or edits every agent-proposed mapping."""
 

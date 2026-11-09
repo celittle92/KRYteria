@@ -710,6 +710,66 @@ def test_store_refuses_cross_account_reach() -> None:
           s.get_assessment(bob, a_prof, a_crit, a_person) == "unknown")
 
 
+def test_sql_constraints_match_the_python_constants() -> None:
+    """A CHECK constraint duplicated across tables must not drift from the code.
+
+    The `reflections.tone_mode` CHECK was left on the old gentle/direct/no_bs values when
+    the triad became Clarity/Tough Love, and nothing caught it until a brain dump with a
+    reflection returned a 500 in the browser. The column-drift guard compares columns,
+    not constraints, so this is the test that closes that gap.
+    """
+    import re
+
+    from backend.store import (
+        ASSESSMENT_STATUSES, CHECKLIST_STATES, CONCERN_LEVELS, EVIDENCE_RELATIONS,
+        GAP_KINDS, OBSERVATION_KINDS, RETENTION_MODES, SCHEMA_PATH, SOURCE_LEVELS,
+        TIERS, TONE_MODES,
+    )
+
+    sql = SCHEMA_PATH.read_text(encoding="utf-8")
+
+    def values_in(column: str) -> list[set[str]]:
+        """Every CHECK over this column name, as sets of allowed values."""
+        found = []
+        for m in re.finditer(rf"CHECK \({re.escape(column)} IN \(([^)]*)\)\)", sql):
+            found.append({v.strip().strip("'") for v in m.group(1).split(",")})
+        return found
+
+    expected = {
+        "tone_mode": set(TONE_MODES),
+        "tier": set(TIERS),
+        "status": None,                      # reused across tables with different sets
+        "retention": set(RETENTION_MODES),
+        "certainty": {"stated", "inferred"},
+        "relation": set(EVIDENCE_RELATIONS),
+        "state": set(CHECKLIST_STATES),
+        "concern_level": set(CONCERN_LEVELS),
+        "gap_kind": set(GAP_KINDS),
+        "kind": None,                        # likewise
+        "source_level": set(SOURCE_LEVELS),
+    }
+
+    for column, allowed in expected.items():
+        if allowed is None:
+            continue
+        constraints = values_in(column)
+        check(f"schema declares a CHECK for {column}", bool(constraints))
+        for i, found in enumerate(constraints):
+            check(f"{column} CHECK #{i + 1} matches the Python constant",
+                  found == allowed, f"sql={sorted(found)} python={sorted(allowed)}")
+
+    # The assessment statuses appear on two tables and must agree with each other.
+    status_sets = [s for s in values_in("status") if "pass" in s]
+    for i, s in enumerate(status_sets):
+        check(f"assessment status CHECK #{i + 1} matches the constant",
+              s == set(ASSESSMENT_STATUSES), f"sql={sorted(s)}")
+
+    kinds = [s for s in values_in("kind") if "reported_event" in s]
+    for s in kinds:
+        check("observation kind CHECK matches the constant",
+              s == set(OBSERVATION_KINDS), f"sql={sorted(s)}")
+
+
 def test_stale_database_fails_with_an_answer() -> None:
     """A database predating a column change must not fail later with 'no such column'.
 

@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  KRYteria's design system.
+
+  TWO THEMES, ONE TOKEN SET. Every colour in the app resolves through these variables, so
+  dark and warm cannot drift apart. Switching theme swaps the values; no component knows
+  which theme it is in.
+
+  THE DARK THEME is the near-black of the mockups, warmed toward navy (#18253A) so it
+  reads as considered rather than as a terminal. THE WARM THEME is the editorial ivory
+  (#F7F5EF) on deep navy ink. Sage (#A4B29F) is the single accent in both.
+
+  WHY THE STATUS COLOURS ARE QUIET. The spec says: no excessive badges, no alarmist
+  colours, and the product must never feel like it is grading people. So "contradicting"
+  is a muted clay, not a red, and nothing pulses, flashes, or shouts. A person reading
+  that a pattern contradicts something they wanted should not also be looking at a
+  warning triangle.
+*/
+
+:root,
+[data-theme="dark"] {
+  --ground: 14 18 26;          /* near-black, warmed toward navy */
+  --raised: 22 28 39;          /* cards */
+  --sunken: 10 13 19;          /* quoted blocks, inputs */
+  --line: 42 51 66;
+  --ink: 236 238 241;
+  --muted: 154 163 176;
+  --faint: 108 117 132;
+  --accent: 164 178 159;       /* sage */
+  --accent-ink: 14 18 26;      /* text on an accent fill */
+  --support: 143 176 142;
+  --contradict: 196 139 120;   /* clay, deliberately not red */
+  --complicate: 199 169 112;   /* ochre */
+}
+
+[data-theme="warm"] {
+  --ground: 247 245 239;       /* ivory */
+  --raised: 255 255 255;
+  --sunken: 241 238 230;
+  --line: 219 214 202;
+  --ink: 24 37 58;             /* navy */
+  --muted: 101 110 124;
+  --faint: 138 146 158;
+  --accent: 122 142 116;       /* sage, darkened for contrast on ivory */
+  --accent-ink: 255 255 255;
+  --support: 94 126 94;
+  --contradict: 158 94 72;
+  --complicate: 148 116 48;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-ground text-ink font-sans antialiased;
+    /* Editorial spacing starts here: generous line height everywhere by default. */
+    line-height: 1.6;
+  }
+
+  /* The product's own voice is serif. Interface chrome stays sans. */
+  h1, h2, .voice {
+    @apply font-serif;
+    line-height: 1.3;
+  }
+
+  ::selection {
+    background: rgb(var(--accent) / 0.3);
+  }
+
+  /* Focus is always visible. Somebody navigating this by keyboard is often somebody
+     who has to. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+  }
+
+  textarea { line-height: 1.7; }
+}
+
+@layer components {
+  .card {
+    @apply bg-raised border border-line rounded-card;
+  }
+
+  /* The label above a quoted block — "YOUR STATED CRITERIA", "WHAT YOU'VE RECORDED". */
+  .eyebrow {
+    @apply text-[11px] font-sans font-medium uppercase text-faint;
+    letter-spacing: 0.12em;
+  }
+
+  /* A pill. Quiet by default; see the warning in the file header. */
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5
+           text-[11px] font-medium whitespace-nowrap;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5
+           text-sm font-medium transition-colors duration-200
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-ink text-ground hover:opacity-90;
+  }
+
+  .btn-accent {
+    @apply btn bg-accent text-accent-ink hover:opacity-90;
+  }
+
+  .btn-quiet {
+    @apply btn border border-line text-muted hover:text-ink hover:border-muted;
+  }
+
+  .field {
+    @apply w-full bg-sunken border border-line rounded-xl px-4 py-3
+           placeholder:text-faint focus:border-accent outline-none
+           transition-colors duration-200;
+  }
+
+  /* A choice the user makes — decision options, retention, profiles. Radio-like, but
+     the whole card is the target. */
+  .choice {
+    @apply w-full text-left border border-line rounded-xl px-4 py-3.5
+           transition-colors duration-200 hover:border-muted;
+  }
+
+  .choice[aria-checked="true"],
+  .choice[data-selected="true"] {
+    @apply border-accent bg-accent/[0.07];
+  }
+
+  .divider { @apply border-t border-line; }
+}
+
+/* Respect the system preference. Somebody who has asked for less motion has asked. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* A single, slow entrance. Subtle animation, not a product tour. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.rise { animation: rise 400ms ease-out both; }

@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-08.3"
+SCHEMA_VERSION = "2026-11-09.1"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -466,6 +466,69 @@ class Store:
                 (account_id, domain_id, alias, role_label, _now()),
             )
             return int(cur.lastrowid)
+
+    def person_footprint(self, account_id: int, person_id: int) -> dict[str, Any]:
+        """What removing this person would take with them.
+
+        Shown before the deletion, not after. Somebody removing a person from a journal
+        like this may be doing it after a breakup, or for their own safety — either way
+        they are entitled to know what disappears before it does.
+        """
+        with self.read() as conn:
+            self._assert_owns(conn, "people", person_id, account_id)
+            counts = {
+                "entries": conn.execute(
+                    "SELECT COUNT(*) AS n FROM entry_people ep JOIN entries e"
+                    " ON e.id = ep.entry_id WHERE ep.person_id = ?"
+                    " AND e.deleted_at IS NULL", (person_id,)
+                ).fetchone()["n"],
+                "assessments": conn.execute(
+                    "SELECT COUNT(*) AS n FROM assessments WHERE person_id = ?",
+                    (person_id,)
+                ).fetchone()["n"],
+                "evidence_links": conn.execute(
+                    "SELECT COUNT(*) AS n FROM evidence_links WHERE person_id = ?",
+                    (person_id,)
+                ).fetchone()["n"],
+            }
+        return counts
+
+    def delete_person(self, account_id: int, person_id: int,
+                      *, delete_entries: bool = False) -> dict[str, Any]:
+        """Remove a person.
+
+        Their **assessments always go** — a Pass or Fail is about them specifically and
+        means nothing without them.
+
+        Their **entries survive by default**, because an entry is the user's own writing
+        about their own life, and losing a month of journal because somebody tidied up a
+        name would be a cruel default. ``delete_entries=True`` removes those too, for
+        when the point is that nothing about them remains.
+        """
+        footprint = self.person_footprint(account_id, person_id)
+        removed_entries = 0
+
+        with self.write() as conn:
+            if delete_entries:
+                rows = conn.execute(
+                    "SELECT entry_id FROM entry_people WHERE person_id = ?", (person_id,)
+                ).fetchall()
+                for row in rows:
+                    conn.execute(
+                        "DELETE FROM entries WHERE id = ? AND account_id = ?",
+                        (row["entry_id"], account_id),
+                    )
+                    removed_entries += 1
+            # Cascades handle entry_people, assessments and proposals; evidence_links
+            # keep the entry and lose only the person reference.
+            conn.execute("DELETE FROM people WHERE id = ? AND account_id = ?",
+                         (person_id, account_id))
+
+        return {
+            "assessments_removed": footprint["assessments"],
+            "entries_removed": removed_entries,
+            "entries_kept": 0 if delete_entries else footprint["entries"],
+        }
 
     def list_people(self, account_id: int):
         with self.read() as conn:
@@ -1285,6 +1348,7 @@ class Store:
         how_it_affected: str | None = None,
         witness: str = "firsthand",
         people: Sequence[str] = (),
+        person_id: int | None = None,
         criterion_ids: Sequence[int] = (),
     ) -> int:
         """Free text and structured fields are both first-class; neither is a fallback."""
@@ -1299,6 +1363,13 @@ class Store:
 
         person_ids = [self.upsert_person(account_id, a, domain_id=domain_id)
                       for a in people if a and a.strip()]
+        # An already-known person, chosen from the picker rather than typed. Without
+        # this the entry is never linked to them, and "what recurs with this person"
+        # silently has nothing to work from.
+        if person_id is not None:
+            with self.read() as conn:
+                self._assert_owns(conn, "people", person_id, account_id)
+            person_ids.append(person_id)
 
         with self.write() as conn:
             cur = conn.execute(

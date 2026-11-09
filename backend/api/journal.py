@@ -16,7 +16,7 @@ from .deps import (
 )
 from .schemas import (
     BrainDump, EvidenceLinkDecision, InterrogationAnswer, PersonIn, RetentionChoice,
-    StructuredEntry,
+    StructuredEntry, UserEvidenceLink,
 )
 
 router = APIRouter(prefix="/api", tags=["journal"])
@@ -48,6 +48,41 @@ def create_person(
 
 
 # ---------------------------------------------------------------- entries
+
+@router.get("/people/{person_id}/footprint")
+def person_footprint(
+    person_id: int,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """What removing this person would take with them — asked before, not discovered after."""
+    owned_person(store, account_id, person_id)
+    return store.person_footprint(account_id, person_id)
+
+
+@router.delete("/people/{person_id}")
+def delete_person(
+    person_id: int,
+    delete_entries: bool = False,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Remove a person.
+
+    Their assessments always go — a Pass or Fail means nothing without the person it is
+    about. Entries survive unless ``delete_entries`` is set, because an entry is the
+    user's own writing about their own life.
+    """
+    owned_person(store, account_id, person_id)
+    result = store.delete_person(account_id, person_id, delete_entries=delete_entries)
+    return {
+        **result,
+        "note": ("Removed, along with everything you'd written about them."
+                 if delete_entries else
+                 "Removed. What you wrote is still in your journal, no longer "
+                 "attached to anybody."),
+    }
+
 
 @router.get("/entries")
 def list_entries(
@@ -98,7 +133,7 @@ def create_structured_entry(
             account_id, domain_id, occurred_on=body.occurred_on, entry_mode="structured",
             what_happened=body.what_happened, what_expected=body.what_expected,
             how_it_affected=body.how_it_affected, witness=body.witness,
-            people=body.people,
+            people=body.people, person_id=body.person_id,
         )
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
@@ -131,6 +166,7 @@ async def brain_dump(
         entry_id = store.create_entry(
             account_id, domain_id, occurred_on=body.occurred_on, entry_mode="free",
             body=body.text, witness=body.witness, people=body.people,
+            person_id=body.person_id,
         )
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
@@ -282,6 +318,34 @@ def retention_report(
 ):
     """What KRYteria is actually keeping, counted from the data rather than promised."""
     return store.retention_report(account_id)
+
+
+@router.post("/evidence-links", status_code=status.HTTP_201_CREATED)
+def create_evidence_link(
+    body: UserEvidenceLink,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """The user's own mapping of an entry to a criterion.
+
+    Arrives **accepted**, unlike an agent's: there is nothing to confirm when the person
+    whose life it is made the link themselves. It also costs no model call, which is why
+    Quick Log is both cheaper and more accurate than asking an agent to infer the same
+    thing.
+    """
+    owned_entry(store, account_id, body.entry_id)
+    if body.profile_id is not None:
+        owned_profile(store, account_id, body.profile_id)
+    try:
+        link_id = store.link_evidence(
+            account_id, entry_id=body.entry_id, criterion_id=body.criterion_id,
+            relation=body.relation, profile_id=body.profile_id,
+            person_id=body.person_id, rationale=body.rationale,
+            source_level="user_stated", proposed_by="user",
+        )
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+    return {"id": link_id, "relation": body.relation}
 
 
 @router.get("/evidence-links")

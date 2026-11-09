@@ -427,6 +427,103 @@ def test_no_route_accepts_another_users_identity() -> None:
         check(f"no schema mentions '{forbidden}'", forbidden not in bodies)
 
 
+def test_quick_log_path_costs_nothing() -> None:
+    """The structured alternative: a person, a structured entry, and the user's own
+    mappings — none of which needs a model call."""
+    c = new_client("quicklog-user")
+
+    person = c.post("/api/people", json={"alias": "R.", "role_label": "running club"}).json()
+    check("a person can be added", person["alias"] == "R.")
+    check("only the alias is stored", person["role_label"] == "running club")
+    check("no real-name field exists", "name" not in person and "email" not in person)
+
+    crit = c.post("/api/criteria", json={
+        "value": "Follow-through", "desired_behavior": "Does what they said"}).json()
+    prof = c.post("/api/profiles", json={"name": "Boyfriend KRYteria"}).json()
+    c.post(f"/api/profiles/{prof['id']}/criteria",
+           json={"criterion_id": crit["id"], "tier": "mandatory"})
+
+    entry = c.post("/api/entries/structured", json={
+        "what_happened": "Plans changed at short notice",
+        "how_it_affected": "It landed: mixed",
+        "profile_id": prof["id"], "person_id": person["id"]}).json()
+    check("a structured entry is saved", entry["entry_mode"] == "structured")
+    check("and keeps what was tapped",
+          entry["what_happened"] == "Plans changed at short notice")
+
+    r = c.post("/api/evidence-links", json={
+        "entry_id": entry["id"], "criterion_id": crit["id"],
+        "relation": "contradicting", "profile_id": prof["id"],
+        "person_id": person["id"]})
+    check("the user can map their own evidence", r.status_code == 201)
+
+    links = c.get("/api/evidence-links").json()
+    mine = [l for l in links if l["proposed_by"] == "user"]
+    check("the link is recorded", len(mine) == 1)
+    check("a user's own mapping needs no confirmation",
+          mine[0]["resolution"] == "accepted")
+    check("and is marked as the user's, not research or a guess",
+          mine[0]["source_level"] == "user_stated")
+
+    # The entry must actually be attached to the person, or "what recurs with them"
+    # has nothing to work from. This was broken: person_id was accepted and ignored.
+    full = c.get(f"/api/entries/{entry['id']}").json()
+    check("the entry is linked to the person", full["people"] == ["R."])
+
+    usage = c.get("/api/usage").json()
+    check("none of that spent a model call", usage["today"]["calls"] == 0)
+
+    other = new_client("quicklog-other")
+    r = other.post("/api/evidence-links", json={
+        "entry_id": entry["id"], "criterion_id": crit["id"], "relation": "supporting"})
+    check("another account cannot map against your entry", r.status_code == 404,
+          f"got {r.status_code}")
+
+
+def test_removing_a_person() -> None:
+    """Two different acts: taking a name off the list, and erasing they were here."""
+    c = new_client("remove-user")
+    crit = c.post("/api/criteria", json={"value": "X", "desired_behavior": "Y"}).json()
+    prof = c.post("/api/profiles", json={"name": "P"}).json()
+    c.post(f"/api/profiles/{prof['id']}/criteria", json={"criterion_id": crit["id"]})
+
+    # Keeping the entries, which is the default.
+    a = c.post("/api/people", json={"alias": "A"}).json()
+    c.post("/api/entries/structured",
+           json={"what_happened": "about A", "person_id": a["id"]})
+    c.put("/api/assessments", json={"profile_id": prof["id"], "criterion_id": crit["id"],
+                                    "person_id": a["id"], "status": "pass"})
+
+    fp = c.get(f"/api/people/{a['id']}/footprint").json()
+    check("the footprint is shown before deleting", fp["entries"] == 1)
+    check("and counts the assessments that would go", fp["assessments"] == 1)
+
+    before = len(c.get("/api/entries").json())
+    r = c.delete(f"/api/people/{a['id']}?delete_entries=false").json()
+    check("removing keeps the journal", len(c.get("/api/entries").json()) == before)
+    check("but takes the assessments", r["assessments_removed"] == 1)
+    check("and says which it did", "still in your journal" in r["note"])
+    check("the person is gone", all(p["id"] != a["id"] for p in c.get("/api/people").json()))
+
+    # Erasing everything about them.
+    b = c.post("/api/people", json={"alias": "B"}).json()
+    c.post("/api/entries/structured",
+           json={"what_happened": "about B", "person_id": b["id"]})
+    mid = len(c.get("/api/entries").json())
+    r = c.delete(f"/api/people/{b['id']}?delete_entries=true").json()
+    check("deleting entries too actually removes them", r["entries_removed"] == 1,
+          f"got {r['entries_removed']}")
+    check("and the journal is shorter", len(c.get("/api/entries").json()) == mid - 1)
+    check("and it says so", "everything you'd written" in r["note"])
+
+    other = new_client("remove-other")
+    person = c.post("/api/people", json={"alias": "C"}).json()
+    check("another account cannot see the footprint",
+          other.get(f"/api/people/{person['id']}/footprint").status_code == 404)
+    check("nor remove them",
+          other.delete(f"/api/people/{person['id']}").status_code == 404)
+
+
 def test_export_and_delete() -> None:
     c = new_client("export-user")
     c.post("/api/criteria", json={"value": "X", "desired_behavior": "Y"})

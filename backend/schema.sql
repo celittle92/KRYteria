@@ -638,7 +638,11 @@ CREATE TABLE IF NOT EXISTS reflections (
     question   TEXT    NOT NULL,
     context    TEXT,                            -- the "let's examine the discrepancy" framing
     tone_mode  TEXT    NOT NULL
-                       CHECK (tone_mode IN ('gentle', 'direct', 'no_bs')),
+    -- Must match accounts.tone_mode and store.TONE_MODES. This was left on the old
+    -- gentle/direct/no_bs values when the triad became Clarity/Tough Love, and the
+    -- column-drift guard cannot see a changed CHECK — so any constraint duplicated
+    -- across tables needs changing in both places by hand.
+                       CHECK (tone_mode IN ('clarity', 'tough_love')),
     is_postponement_probe INTEGER NOT NULL DEFAULT 0,  -- the signature question
     run_id     INTEGER,
     created_at TEXT    NOT NULL

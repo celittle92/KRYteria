@@ -28,6 +28,31 @@ from .api.deps import get_provider, get_store
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIST = PROJECT_DIR / "frontend" / "dist"
 
+def _announce_mode() -> None:
+    """Say loudly, at startup, whether this process will spend money.
+
+    `resolve_mode()` falls back to LIVE whenever a key is reachable — right for a hosted
+    deployment, a footgun on a laptop where the workspace .env is always reachable. On
+    2026-11-09 starting this server for a UI check made eleven real billed calls before
+    anybody noticed. Silence was the bug; this is the fix that does not depend on
+    remembering.
+    """
+    import logging
+
+    from .provider import Mode, resolve_mode
+
+    log = logging.getLogger("kryteria")
+    mode = resolve_mode()
+    if mode is Mode.LIVE:
+        log.warning(
+            "\n%s\n  KRYteria is in LIVE mode. Every brain dump spends real credits.\n"
+            "  Set KRYTERIA_MODE=demo for UI work — it needs no key and bills nothing.\n%s",
+            "=" * 74, "=" * 74,
+        )
+    else:
+        log.warning("KRYteria is in %s mode — nothing is billed.", mode.value.upper())
+
+
 app = FastAPI(
     title="KRYteria",
     description=(
@@ -40,6 +65,8 @@ app = FastAPI(
 for router in (auth.router, criteria.router, journal.router, assess.router,
                account.router):
     app.include_router(router)
+
+_announce_mode()
 
 
 @app.get("/api/health")

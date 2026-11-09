@@ -82,6 +82,23 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `ok <ref> --url <what you opened> --by <name>`. Citations are drafted coarse
   deliberately; see the rules file for why. Do not claim anywhere that KRYteria uses
   research until some are verified.
+- **The front end is React + Vite + TypeScript + Tailwind in `frontend/`.** Build it with
+  the workspace Node (nvm's npm is sandbox-blocked):
+
+  ```bash
+  cd "/Users/christinelittle/Yale SOM_Old/AI Foundations/KRYteria/frontend" && PATH="../../.tools/node/bin:$PATH" npm_config_cache="../../.tools/npm-cache" npm run build
+  ```
+
+  **`frontend/dist/` is committed on purpose** so a grader needs no Node at all — see the
+  note in `.gitignore`. That means **after any change under `frontend/src` you must
+  rebuild and commit `dist`**, or the served app is stale.
+- **Run it with `preview_start` on the `kryteria` entry** in `.claude/launch.json`, which
+  pins `KRYTERIA_MODE=demo`. **This matters:** `provider.resolve_mode()` falls back to
+  LIVE whenever a key is reachable, and the workspace-root `.env` always is on this
+  machine — starting the server without that env var on 2026-11-09 made eleven real
+  billed calls before anyone noticed. The app now logs its mode loudly at startup; read
+  that line before using the UI.
+- Sandboxed Bash cannot write `.claude/launch.json`; use the Terminal panel.
 - **Privacy is P0 and `docs/privacy.md` is its record.** Read it before touching the
   store, the API, or anything that logs. Three things are load-bearing: every store method
   taking a row id also takes `account_id` (`_assert_owns` → `NotOwned` → **404, never
