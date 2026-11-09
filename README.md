@@ -66,6 +66,23 @@ There is no browser interface yet, so `/` returns a short JSON status rather tha
 
 The demo account is `demo` / `kryteria-demo-account`. Everything in it is invented.
 
+### The research knowledge base
+
+KRYteria can suggest behavioural indicators informed by published research — but only
+from a curated set somebody has checked. **A citation must resolve to a verified entry**,
+so the agent cannot invent a reference: `research_ref` is matched against the knowledge
+base and anything else is rejected.
+
+19 findings are drafted and **none is verified yet**, so the agents currently cite
+nothing and mark every suggestion as their own hypothesis. To verify them:
+
+```bash
+.venv/bin/python -m backend.verify_research list
+```
+
+`show <ref>` prints an entry with what to check; `ok <ref> --url <what you opened> --by
+<name>` promotes it, and refuses without a URL.
+
 ### Tests — free, no API key, no network
 
 ```bash
@@ -296,5 +313,8 @@ cost as *unavailable* rather than printing a zero as though a run were free.
 - **No live model call has ever been made from this project.** Everything is verified
   against `TestModel` and the deterministic demo provider.
 - Support resources and model prices are both unverified placeholders.
+- The research knowledge base is drafted but unverified, so no agent cites it yet.
+- No database migrations. A schema change means deleting the database and re-seeding;
+  the store refuses to open a stale one and says exactly how to fix it.
 - Single-region (US) resource directory.
 - Tough Love communication mode is specified but deliberately not built.

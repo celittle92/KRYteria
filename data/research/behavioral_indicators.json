@@ -1,0 +1,457 @@
+{
+  "_comment": [
+    "KRYteria's curated behavioural-indicator knowledge base.",
+    "",
+    "HOW TO READ verification_status, because it is the point of this file:",
+    "",
+    "  pending  — drafted but NOT yet checked against a primary source. The agent CANNOT",
+    "             cite it. store.list_research_notes() filters these out by default and",
+    "             link_evidence() rejects a research_ref that does not resolve to a",
+    "             verified row. A pending entry is invisible to the product.",
+    "  verified — a human opened the source, confirmed the finding is characterised",
+    "             fairly, and recorded the URL and the date.",
+    "",
+    "Every entry below is PENDING. Nothing here reaches a user until somebody checks it.",
+    "",
+    "WHY THE CITATIONS ARE COARSE. They name a concept, the researchers associated with",
+    "it, and a work that certainly exists — not a year, journal, volume and page I would",
+    "be reconstructing from memory. A web search on 2026-11-08 for two of the most famous",
+    "findings here (Gottman's Four Horsemen, Rusbult's Investment Model) could not settle",
+    "which primary paper to cite, and secondary sources contradicted each other on the",
+    "sample and the date. A confidently wrong bibliographic detail is exactly the failure",
+    "this whole layer exists to prevent, so the drafts stop where the confidence stops.",
+    "",
+    "WHAT A GOOD ENTRY DOES. It suggests what might be worth NOTICING. It never defines a",
+    "good partner, never settles a criterion, and never licenses a label. `caveat` is not",
+    "decoration: it states what this finding cannot tell you about one person, and the",
+    "agent is required to carry it.",
+    "",
+    "`do_not` is the specific misuse this particular finding invites. Those are the",
+    "sentences a model would otherwise generate."
+  ],
+  "version": "0.1-draft",
+  "drafted_on": "2026-11-08",
+  "areas": [
+    "attachment",
+    "emotional_regulation",
+    "interpersonal_communication",
+    "conflict_resolution",
+    "relationship_satisfaction_commitment",
+    "social_psychology_reciprocity",
+    "personality_behavior"
+  ],
+  "universal_caveats": [
+    "A research finding describes a tendency across many people. It does not predict one person.",
+    "Behaviour observed a handful of times is not a trait.",
+    "A finding may suggest what is worth noticing. It never settles whether a criterion is met.",
+    "Nothing here licenses naming a person's type, style, disorder, or character."
+  ],
+  "notes": [
+    {
+      "id": "gottman-four-horsemen",
+      "area": "interpersonal_communication",
+      "concept": "The Four Horsemen",
+      "finding": "Gottman's conflict research identifies four communication patterns associated with relationship distress: criticism (attacking character rather than naming a behaviour), contempt (speaking from a position of superiority — mockery, sneering, name-calling), defensiveness (counter-attacking or playing the victim rather than taking any part of the point), and stonewalling (withdrawing from the interaction and stopping responding).",
+      "attribution": "John Gottman and colleagues",
+      "citation": "Gottman, J. M., & Silver, N. (1994). Why Marriages Succeed or Fail: And How You Can Make Yours Last. New York: Simon & Schuster.",
+      "citation_confidence": "bibliography_partial_2026-11-08",
+      "source_url": "https://en.wikipedia.org/wiki/John_Gottman",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Names a specific behaviour rather than generalising about who you are",
+        "Can hear a complaint without immediately counter-attacking",
+        "Stays in the conversation rather than going silent and leaving it unresolved"
+      ],
+      "caveat": "These describe patterns across many couples, observed over time. One sharp evening is not a horseman. Gottman's predictive claims are also widely cited at precision levels the underlying studies may not support — treat this as a lens for noticing, never as a forecast.",
+      "do_not": [
+        "Never tell a user their partner 'shows contempt' as an established fact from one entry.",
+        "Never quote a divorce-prediction percentage. The popular figures do not trace cleanly to primary sources."
+      ],
+      "citation_checked_against": "PARTIAL AND DELIBERATELY COARSE. Searching on 2026-11-07 could not establish a single primary paper defining the Four Horsemen: sources variously credited a 1992 Gottman & Buehlman study (disagreeing on its sample) and Carrère & Gottman (1999). The popular book is the safest attribution. DO NOT cite a divorce-prediction percentage — the widely-quoted 94% traces only to lifestyle blogs."
+    },
+    {
+      "id": "gottman-repair-attempts",
+      "area": "conflict_resolution",
+      "concept": "Repair attempts",
+      "finding": "Gottman's work describes 'repair attempts' — a joke, a softened tone, an apology, a step back mid-argument — and observes that whether a couple makes and accepts them tracks with how conflict resolves, somewhat independently of how heated the conflict gets.",
+      "attribution": "John Gottman and colleagues",
+      "citation": "Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. New York: Crown Publishers.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://libcat.library.tamu.edu/Record/in00002670224",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Can step back mid-argument and change the temperature",
+        "Accepts a repair attempt rather than pressing the advantage",
+        "Comes back to a conversation after cooling off"
+      ],
+      "caveat": "Whether something was a repair attempt is a judgement, and the user is better placed to make it than a model reading a paragraph. Someone may also make repair attempts and still not meet the user's standard.",
+      "do_not": [
+        "Never score a person on how often they repair.",
+        "Never treat an apology as settling a criterion — the charter names apologies as something that must not be read as evidence that earlier behaviour was harmless."
+      ],
+      "citation_checked_against": "A library record gives 'New York : Crown Publishers, c1999' for the first edition. A revised edition was published by Harmony in 2015 — cite whichever edition was actually read."
+    },
+    {
+      "id": "gottman-bids",
+      "area": "interpersonal_communication",
+      "concept": "Bids for connection and turning toward",
+      "finding": "Gottman describes small 'bids' for attention or connection, and the response as turning toward, turning away, or turning against. The pattern of ordinary small responses is argued to matter more cumulatively than conduct during big conversations.",
+      "attribution": "John Gottman and colleagues",
+      "citation": "Gottman, J. M., & DeClaire, J. (2001). The Relationship Cure: A Five-Step Guide for Building Better Connections with Family, Friends, and Lovers. New York: Crown Publishers. ISBN 978-0-609-60809-8.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://catalog.lib.msu.edu/Record/folio.in00006491422/Description",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Responds to small things you mention, not just the important ones",
+        "Notices when something is off without being told",
+        "Follows up unprompted on something you said earlier"
+      ],
+      "caveat": "Useful precisely because it points at the ordinary and unremarkable — which is also what a journal entry is least likely to record. Absence of bid-related evidence means the journal did not capture it, not that it did not happen.",
+      "do_not": [
+        "Never infer that someone 'turns away' from an entry that simply did not mention small moments."
+      ],
+      "citation_checked_against": "The 2001 Crown hardcover (ISBN 9780609608098) is the first edition. The commonly-seen subtitle 'A 5 Step Guide to Strengthening Your Marriage, Family, and Friendships' belongs to the later paperback (ISBN 9780609809532) — the drafted citation previously used the wrong subtitle."
+    },
+    {
+      "id": "gottman-flooding",
+      "area": "emotional_regulation",
+      "concept": "Physiological flooding",
+      "finding": "Gottman's research describes 'flooding' — a state of physiological arousal during conflict in which people become much less able to take in new information or de-escalate, and often withdraw. It offers a non-character explanation for why someone shuts down mid-argument.",
+      "attribution": "John Gottman and colleagues",
+      "citation": "Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. New York: Crown Publishers.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://libcat.library.tamu.edu/Record/in00002670224",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Can say they need a break rather than simply disappearing",
+        "Comes back after taking time, rather than leaving it unresolved",
+        "Takes time without using the silence as a punishment"
+      ],
+      "caveat": "This is a mechanism, not an excuse. Needing a break and using silence as leverage look similar from outside and are different things; only the user can tell which they experienced.",
+      "do_not": [
+        "Never offer flooding as a reason the user should not be bothered by withdrawal.",
+        "Never diagnose anyone as flooded. It is a physiological state nobody can see from a journal entry."
+      ],
+      "citation_checked_against": "Same work as gottman-repair-attempts; first edition Crown, 1999, revised edition Harmony, 2015."
+    },
+    {
+      "id": "attachment-adult-romantic",
+      "area": "attachment",
+      "concept": "Adult romantic attachment",
+      "finding": "Attachment research, extended from Bowlby and Ainsworth's work on children to adult romantic relationships by Hazan and Shaver and others, describes individual differences in how people seek and respond to closeness — broadly, more secure, more anxious, and more avoidant tendencies.",
+      "attribution": "John Bowlby; Mary Ainsworth; Cindy Hazan and Phillip Shaver",
+      "citation": "Hazan, C., & Shaver, P. R. (1987). Romantic love conceptualized as an attachment process. Journal of Personality and Social Psychology, 52(3), 511–524. https://doi.org/10.1037/0022-3514.52.3.511",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "citation_checked_against": "PubMed record 3572722 (1987 Mar;52(3):511-24), corroborated by a Springer reference list giving the same volume, pages and DOI.",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/3572722/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Can say what they need directly rather than testing whether you notice",
+        "Closeness after a disagreement is restored rather than withheld",
+        "Does not treat a request for space, or for reassurance, as an accusation"
+      ],
+      "caveat": "THE HIGHEST-RISK ENTRY IN THIS FILE. Attachment language is the most over-applied vocabulary in popular relationship writing, and the charter names it explicitly: attachment theory must not let the agent diagnose somebody's attachment style from three text messages. Tendencies are measured with instruments, over time, with the person's participation — none of which a journal provides.",
+      "do_not": [
+        "NEVER assign an attachment style to anybody, in any wording, however hedged.",
+        "Never say 'this sounds like anxious attachment' or 'that is avoidant behaviour'.",
+        "Never use attachment language about the user either.",
+        "Use this only to suggest behaviours worth noticing — never as an explanation of who somebody is."
+      ]
+    },
+    {
+      "id": "gross-emotion-regulation",
+      "area": "emotional_regulation",
+      "concept": "Emotion regulation strategies",
+      "finding": "Gross's process model distinguishes strategies for handling emotion — among them reappraisal (changing how a situation is construed) and suppression (inhibiting the outward expression of a feeling already present). The two are associated with different outcomes, and suppression tends to carry more interpersonal cost.",
+      "attribution": "James Gross",
+      "citation": "Gross, J. J. (Ed.). (2014). Handbook of Emotion Regulation (2nd ed.). New York: Guilford Press.",
+      "citation_confidence": "bibliography_partial_2026-11-08",
+      "source_url": "https://www.guilford.com/books/Handbook-of-Emotion-Regulation/Gross/9781462520732",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Can name what they are feeling rather than acting it out sideways",
+        "Does not make the other person responsible for managing their feeling",
+        "Can be upset and still be fair in the same conversation"
+      ],
+      "caveat": "Someone appearing calm may be regulating well or suppressing heavily, and those look identical from outside. Do not read composure as maturity.",
+      "do_not": [
+        "Never treat visible calm as evidence a criterion about emotional maturity is met."
+      ],
+      "citation_checked_against": "PARTIAL. Gross as editor and Guilford as publisher are confirmed across editions; the 2nd edition (2014) is confirmed. The FIRST edition's 2007 date is NOT confirmed — one listing gives 08/2009. A 3rd edition (Gross & Ford, 2024) now exists. Cite the edition actually read."
+    },
+    {
+      "id": "rusbult-investment-model",
+      "area": "relationship_satisfaction_commitment",
+      "concept": "The Investment Model",
+      "finding": "Rusbult's Investment Model proposes that commitment is shaped by three factors that vary independently: satisfaction with the relationship, the perceived quality of alternatives, and the size of what has already been invested. It accounts for why commitment and satisfaction can come apart — someone may stay while unhappy because investment is high or perceived alternatives are poor.",
+      "attribution": "Caryl Rusbult and colleagues",
+      "citation": "Rusbult, C. E. (1980). Commitment and satisfaction in romantic associations: A test of the investment model. Journal of Experimental Social Psychology, 16(2), 172–186. https://doi.org/10.1016/0022-1031(80)90007-4",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://faculty.wcas.northwestern.edu/eli-finkel/documents/6_Rusbult1980_JournalOfExperimentalSocialPsychology.pdf",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "What you say you want, set against what you are choosing to do",
+        "Reasons for staying that are about what has already been spent rather than about the relationship now"
+      ],
+      "caveat": "This is the entry most relevant to KRYteria's own thesis, and therefore the one most likely to be over-applied. It is a framework for the USER to examine their own reasoning with — never a reason to tell somebody they are staying for the wrong reasons.",
+      "do_not": [
+        "Never tell a user they are only staying because of sunk cost.",
+        "Never use this to argue toward leaving. The charter is explicit: no automatic stay/leave recommendations."
+      ],
+      "citation_checked_against": "A Northwestern-hosted PDF reproduces the journal header ('JOURNAL OF EXPERIMENTAL SOCIAL PSYCHOLOGY 16, 172-186 (1980)'); Scilit gives the same volume, issue and pages. An earlier search on 2026-11-07 could NOT settle this; a targeted search did."
+    },
+    {
+      "id": "reis-shaver-responsiveness",
+      "area": "interpersonal_communication",
+      "concept": "Perceived partner responsiveness",
+      "finding": "Reis and Shaver's intimacy process model describes intimacy as built through a cycle of disclosure and response, where what matters is the discloser's perception that they were understood, validated, and cared for. Perceived responsiveness, rather than disclosure alone, is the active ingredient.",
+      "attribution": "Harry Reis and Phillip Shaver",
+      "citation": "Reis, H. T., & Shaver, P. (1988). Intimacy as an interpersonal process. In S. W. Duck (Ed.), Handbook of Personal Relationships. Chichester: Wiley.",
+      "citation_confidence": "bibliography_partial_2026-11-08",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/9599440/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "You feel understood rather than merely heard out",
+        "Remembers what matters to you without prompting",
+        "Responds to the thing you actually said"
+      ],
+      "caveat": "Responsiveness is defined by the discloser's experience. That makes the user the authority here, and the model emphatically not.",
+      "do_not": [
+        "Never tell a user whether their partner was responsive. Ask them."
+      ],
+      "citation_checked_against": "PARTIAL. Authors, year, chapter title, editor, book and publisher are corroborated; THE PAGE RANGE IS NOT CONFIRMED. Do not confuse this with Laurenceau, Barrett & Pietromonaco (1998), JPSP 74(5), 1238–1251, which shares the title and is a different work."
+    },
+    {
+      "id": "gable-capitalization",
+      "area": "relationship_satisfaction_commitment",
+      "concept": "Capitalization — responses to good news",
+      "finding": "Gable and colleagues studied how people respond to a partner's good news, distinguishing active-constructive responses (engaged, enthusiastic) from passive or destructive ones. How good news is received is associated with relationship wellbeing, in some work more strongly than how bad news is handled.",
+      "attribution": "Shelly Gable and colleagues",
+      "citation": "Gable, S. L., Reis, H. T., Impett, E. A., & Asher, E. R. (2004). What do you do when things go right? The intrapersonal and interpersonal benefits of sharing positive events. Journal of Personality and Social Psychology, 87(2), 228–245. https://doi.org/10.1037/0022-3514.87.2.228",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "citation_checked_against": "PubMed record 15301629, corroborated by the author-hosted PDF at Rochester reproducing the journal header. One coaching site lists a different title, 'Capitalizing on Daily Positive Events' — that appears to be an error.",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/15301629/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Is visibly pleased when something goes well for you",
+        "Asks about the good thing rather than changing the subject",
+        "Does not compete with or deflate your news"
+      ],
+      "caveat": "A useful counterweight: most relationship journalling records problems, so a criterion assessed only from conflict entries is assessed from half the evidence. Worth suggesting the user notice, not worth inferring from absence.",
+      "do_not": [
+        "Never read the absence of good-news entries as evidence of poor responses."
+      ]
+    },
+    {
+      "id": "overall-direct-influence",
+      "area": "conflict_resolution",
+      "concept": "Direct versus indirect influence attempts",
+      "finding": "Overall and colleagues' work on how partners attempt change distinguishes direct strategies (stating the problem and the request openly) from indirect ones (hinting, withdrawing, sulking). Direct approaches can feel worse in the moment while being associated with more actual change over time.",
+      "attribution": "Nickola Overall and colleagues",
+      "citation": "Overall, N. C., Fletcher, G. J. O., Simpson, J. A., & Sibley, C. G. (2009). Regulating partners in intimate relationships: The costs and benefits of different communication strategies. Journal of Personality and Social Psychology, 96(3).",
+      "citation_confidence": "bibliography_partial_2026-11-08",
+      "source_url": "https://experts.umn.edu/en/publications/regulating-partners-in-intimate-relationships-the-costs-and-benef/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Says what they want rather than expecting it to be inferred",
+        "A raised concern is engaged with rather than waited out",
+        "Change that was agreed to actually happens"
+      ],
+      "caveat": "Directness is not universally safe or available. Where a safety concern exists, encouraging a user to be more direct may be actively dangerous — the charter prohibits encouraging confrontation where safety may be at risk.",
+      "do_not": [
+        "Never suggest a user be more direct when the safety layer has fired.",
+        "Never frame a user's indirectness as their failing."
+      ],
+      "citation_checked_against": "PARTIAL. A University of Minnesota listing confirms volume 96, issue 3, March 2009, and the full title (note the subtitle, which the draft omitted). THE PAGE RANGE IS NOT CONFIRMED — it is commonly given as 620–639, but no source in the search stated it. Find the pages before citing them."
+    },
+    {
+      "id": "baumeister-leary-belonging",
+      "area": "social_psychology_reciprocity",
+      "concept": "The need to belong",
+      "finding": "Baumeister and Leary argued that the need for frequent, stable, caring connection is a fundamental human motivation, and that much social behaviour is better explained by it than by preference.",
+      "attribution": "Roy Baumeister and Mark Leary",
+      "citation": "Baumeister, R. F., & Leary, M. R. (1995). The need to belong: Desire for interpersonal attachments as a fundamental human motivation. Psychological Bulletin, 117(3), 497–529. https://doi.org/10.1037/0033-2909.117.3.497",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "citation_checked_against": "PubMed record 7777651 (1995 May;117(3):497-529), corroborated by the Duke Scholars listing.",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/7777651/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "Context rather than an indicator. Useful as a reason not to treat somebody's reluctance to end a relationship as weakness — the pull toward connection is not a character flaw. No behavioural indicator should be generated from this.",
+      "do_not": [
+        "Never generate a checklist item from this.",
+        "Never use it to explain a user's choices back to them."
+      ]
+    },
+    {
+      "id": "reciprocity-norm",
+      "area": "social_psychology_reciprocity",
+      "concept": "The norm of reciprocity",
+      "finding": "Gouldner described reciprocity as a near-universal social norm: a benefit received generates an obligation to return one. The obligation operates whether or not the benefit was wanted.",
+      "attribution": "Alvin Gouldner",
+      "citation": "Gouldner, A. W. (1960). The norm of reciprocity: A preliminary statement. American Sociological Review, 25(2), 161–178. https://doi.org/10.2307/2092623",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://doi.org/10.2307/2092623",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "Generosity that carries no expectation attached to it",
+        "A gift or favour is not referred back to later as leverage"
+      ],
+      "caveat": "Directly relevant to KRYteria's worked example about paying for dinner. Reciprocity explains why a gesture creates a feeling of obligation — which is a reason to be MORE careful about reading generosity as evidence of care, not less.",
+      "do_not": [
+        "Never map a gift, a payment, or a favour as supporting a criterion about care or character on its own."
+      ],
+      "citation_checked_against": "Multiple citation databases agree on 25(2), 161–178, April 1960, DOI 10.2307/2092623. One Scinapse record shows '161-161', which looks like a truncated entry rather than a conflict."
+    },
+    {
+      "id": "fundamental-attribution-error",
+      "area": "personality_behavior",
+      "concept": "Correspondence bias",
+      "finding": "People systematically over-attribute others' behaviour to stable character and under-weight situational causes, while explaining their own behaviour the opposite way. The asymmetry is one of the most replicated findings in social psychology.",
+      "attribution": "Lee Ross; Edward Jones and Victor Harris",
+      "citation": "Ross, L. (1977). The intuitive psychologist and his shortcomings: Distortions in the attribution process. In L. Berkowitz (Ed.), Advances in Experimental Social Psychology (Vol. 10, pp. 173–220). New York: Academic Press.",
+      "citation_confidence": "bibliography_mostly_confirmed_2026-11-08",
+      "source_url": "https://www.gwern.net/doc/psychology/1977-ross.pdf",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "This one governs the agent's own behaviour more than the user's. It is the research basis for the charter's rule against treating an isolated event as a personality trait — including when the model is the one doing it.",
+      "do_not": [
+        "Never generate a checklist item from this.",
+        "Use it as a check on the agent's own output: a finding that explains behaviour by character, with a situational reading unconsidered, is probably this error."
+      ],
+      "citation_checked_against": "Volume 10, 1977, Berkowitz as editor, and the full title are corroborated. The page range 173–220 rests on a SINGLE citation guide — confirm it against ScienceDirect before relying on the page numbers."
+    },
+    {
+      "id": "confirmation-bias-relationships",
+      "area": "personality_behavior",
+      "concept": "Confirmation bias in evidence gathering",
+      "finding": "People preferentially seek, notice, and recall information consistent with what they already believe, and weigh disconfirming evidence less. The effect operates without awareness and is not reduced by caring about accuracy.",
+      "attribution": "Peter Wason; Raymond Nickerson",
+      "citation": "Nickerson, R. S. (1998). Confirmation bias: A ubiquitous phenomenon in many guises. Review of General Psychology, 2(2), 175–220.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "citation_checked_against": "The UCSD-hosted PDF reproduces the journal header (1998, Vol. 2, No. 2, 175-220); Scinapse and CiNii give the same volume, issue and pages.",
+      "source_url": "https://pages.ucsd.edu/~cmckenzie/nickersonConfirmationBias.pdf",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "The research basis for storing counter-evidence as a first-class row rather than a footnote, and for interrogating favourable conclusions as hard as unfavourable ones. It applies to the agent exactly as much as to the user.",
+      "do_not": [
+        "Never tell a user they are exhibiting confirmation bias. Show them the counter-evidence and let them look at it."
+      ]
+    },
+    {
+      "id": "stark-coercive-control",
+      "area": "conflict_resolution",
+      "safety_adjacent": true,
+      "concept": "Coercive control",
+      "finding": "Stark's work reframes much intimate-partner abuse as a pattern of control over a person's autonomy — monitoring, isolation from support, restriction of money and movement, and rule-setting — rather than as discrete violent incidents. The pattern can be present with little or no physical violence.",
+      "attribution": "Evan Stark",
+      "citation": "Stark, E. (2007). Coercive Control: How Men Entrap Women in Personal Life. New York: Oxford University Press. ISBN 978-0-19-515427-6.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://libcat.simmons.edu/Record/b1408707/Description",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "SAFETY-ADJACENT AND TIGHTLY BOUNDED. This may inform the language the safety layer uses to describe a behaviour — 'that behaviour may be a form of coercive control' — and nothing else. It must never be used to classify a person, to assess a criterion, or to tell a user what their situation is. The charter is explicit that recognising a behaviour and labelling an individual are different acts.",
+      "do_not": [
+        "NEVER conclude that a relationship is coercively controlling.",
+        "NEVER say a person is an abuser, in any wording.",
+        "Never generate a checklist item from this. Nobody should be ticking boxes about whether they are being abused.",
+        "Never use it to pressure a user toward leaving or reporting."
+      ],
+      "citation_checked_against": "Library and bookseller records agree on Oxford University Press, 2007, hardback ISBN 978-0-19-515427-6, Interpersonal Violence series. Page counts differ (452 vs 464) and one catalogue inverts the title and subtitle; neither affects the citation."
+    },
+    {
+      "id": "johnson-attachment-injury",
+      "area": "conflict_resolution",
+      "concept": "Attachment injuries and repair",
+      "finding": "Johnson's work on emotionally focused therapy describes 'attachment injuries' — moments of abandonment or betrayal at a point of need that remain live and resurface in later conflict until addressed directly.",
+      "attribution": "Susan Johnson",
+      "citation": "Johnson, S. (2008). Hold Me Tight: Seven Conversations for a Lifetime of Love. New York: Little, Brown. ISBN 978-0-316-11300-7.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://www.hachettebookgroup.com/titles/dr-sue-johnson/hold-me-tight/9780316031998/",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [
+        "A hurt that was raised is acknowledged rather than argued down",
+        "The same unresolved moment stops resurfacing after it is addressed"
+      ],
+      "caveat": "Drawn from a clinical framework. KRYteria is explicitly not therapy, and this must inform noticing only — never anything resembling a treatment suggestion.",
+      "do_not": [
+        "Never suggest a therapeutic intervention or exercise.",
+        "Never tell a user they have an attachment injury."
+      ],
+      "citation_checked_against": "Publisher and retailer records agree on Little, Brown, April 2008, hardcover ISBN 9780316113007. Some list the imprint as Little, Brown Spark, which is the same publisher."
+    },
+    {
+      "id": "sunk-cost",
+      "area": "relationship_satisfaction_commitment",
+      "concept": "The sunk cost effect",
+      "finding": "Arkes and Blumer showed people continue investing in a course of action because of what has already been spent, even when future prospects alone would not justify it. The effect is robust and operates in time and effort as well as money.",
+      "attribution": "Hal Arkes and Catherine Blumer",
+      "citation": "Arkes, H. R., & Blumer, C. (1985). The psychology of sunk cost. Organizational Behavior and Human Decision Processes, 35(1), 124–140. https://doi.org/10.1016/0749-5978(85)90049-4",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://cognition.aau.at/bg/BA/Arkes%20%26%20Blumer%201985.pdf",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "Pairs with the Investment Model and carries the same risk. A long investment is a legitimate reason to want something to work; it is not automatically an error. Offer it as a question the user can ask themselves, never as a diagnosis of their reasoning.",
+      "do_not": [
+        "Never tell a user they are falling for sunk cost.",
+        "Never generate a checklist item from this."
+      ],
+      "citation_checked_against": "The university-hosted PDF reproduces the journal header: 'ORGANIZATIONAL BEHAVIOR AND HUMAN DECISION PROCESSES 35, 124-140 (1985)'. A bibliographic record gives the same volume, pages and DOI."
+    },
+    {
+      "id": "intermittent-reinforcement",
+      "area": "personality_behavior",
+      "concept": "Intermittent reinforcement",
+      "finding": "Behaviour reinforced unpredictably is more persistent than behaviour reinforced consistently. The finding is foundational in learning research and well replicated across species and settings.",
+      "attribution": "B. F. Skinner and the operant conditioning literature",
+      "citation": "Ferster, C. B., & Skinner, B. F. (1957). Schedules of Reinforcement. New York: Appleton-Century-Crofts.",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://search.worldcat.org/oclc/4596140",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "HIGH MISUSE RISK. This is popularly deployed to tell people their inconsistent partner is conditioning them, which is both unfalsifiable from a journal and insulting. It may inform why an inconsistent pattern is worth noticing. It may not explain a user's feelings back to them.",
+      "do_not": [
+        "Never tell a user they are being intermittently reinforced.",
+        "Never attribute intent to an inconsistent pattern.",
+        "Never generate a checklist item from this."
+      ],
+      "citation_checked_against": "Library catalogue records agree: New York, Appleton-Century-Crofts, 1957, 741 pages, Century Psychology Series, LCCN 57006418. One Goodreads edition lists Prentice-Hall, which appears to be a catalogue error."
+    },
+    {
+      "id": "stated-vs-revealed-preference",
+      "area": "personality_behavior",
+      "concept": "Stated versus revealed preference",
+      "finding": "What people say they value and what their choices reveal frequently diverge. The gap is well documented across economics and psychology and is not generally explained by dishonesty.",
+      "attribution": "Paul Samuelson (revealed preference); subsequent behavioural literature",
+      "citation": "Samuelson, P. A. (1938). A note on the pure theory of consumer's behaviour. Economica (New Series), 5(17), 61–71. https://doi.org/10.2307/2548836",
+      "citation_confidence": "bibliography_confirmed_2026-11-08",
+      "source_url": "https://doi.org/10.2307/2548836",
+      "verification_status": "pending",
+      "verified_at": null,
+      "indicator_hints": [],
+      "caveat": "KRYteria's founding premise, so it needs the most careful handling. The gap is ordinary and human, not a failing. The product exists to make it visible to the user — never to point it out as a verdict about them.",
+      "do_not": [
+        "Never tell a user their actions reveal they do not really want what they said.",
+        "Show the record and let them draw it."
+      ],
+      "citation_checked_against": "Several sources agree on 5(17), February 1938, 61–71, DOI 10.2307/2548836, JSTOR 2548836. Note the fuller treatment is the 1948 Economica paper 'Consumption Theory in Terms of Revealed Preference', 15(60), 243–253 — cite the 1938 paper only for the original framing."
+    }
+  ]
+}

@@ -578,6 +578,142 @@ def test_evidence_has_four_relations() -> None:
           accepted[0]["resolution"] == "accepted")
 
 
+def test_stale_database_fails_with_an_answer() -> None:
+    """A database predating a column change must not fail later with 'no such column'.
+
+    ``CREATE TABLE IF NOT EXISTS`` silently leaves an existing table alone, so a schema
+    change does not reach a database that already exists. This caught Christine on
+    2026-11-08 after the research_notes rewrite, and would catch a grader after any pull.
+    """
+    import sqlite3
+
+    db = Path(tempfile.mkdtemp()) / "stale.db"
+    conn = sqlite3.connect(db)
+    # A plausible older shape: the table exists, but without the columns added later.
+    conn.executescript(
+        "CREATE TABLE research_notes (id INTEGER PRIMARY KEY, area TEXT NOT NULL,"
+        " finding TEXT NOT NULL, citation TEXT NOT NULL, caveat TEXT,"
+        " created_at TEXT NOT NULL);"
+        "CREATE TABLE schema_meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);"
+    )
+    conn.close()
+
+    try:
+        Store(db)
+    except StoreError as e:
+        message = str(e)
+        check("a stale database is refused at open time", True)
+        # Names columns, not a specific one — which column sorts first changes as the
+        # schema grows, and the test should not break every time it does.
+        check("the message names the missing columns", "research_notes." in message)
+        check("it gives the exact command to fix it", "seed_demo" in message)
+        check("it says what is lost", "rebuilds the demo account" in message)
+        check("and warns about real data first", "export" in message.lower())
+    else:
+        check("a stale database is refused at open time", False, "opened without error")
+
+    # A stamp alone must not satisfy the check — the shape is what matters.
+    conn = sqlite3.connect(db)
+    from backend.store import SCHEMA_VERSION
+    conn.execute("INSERT OR REPLACE INTO schema_meta VALUES ('version', ?)",
+                 (SCHEMA_VERSION,))
+    conn.commit()
+    conn.close()
+    expect_raises("a current version stamp does not excuse a wrong shape", StoreError,
+                  Store, db)
+
+    fresh_db = Path(tempfile.mkdtemp()) / "fresh.db"
+    Store(fresh_db)
+    Store(fresh_db)
+    check("a fresh database opens and re-opens cleanly", True)
+
+
+def test_unverified_research_is_invisible_and_uncitable() -> None:
+    """The defence against a fabricated citation.
+
+    Requiring a non-empty citation string only guarantees the model wrote something, and
+    a model told to cite always writes something. Requiring the ref to resolve to a
+    VERIFIED row makes fabrication impossible rather than discouraged.
+    """
+    s, acct, dom = fresh()
+    pack = PROJECT_DIR / "data" / "research" / "behavioral_indicators.json"
+    result = s.load_research_pack(pack)
+    check("the curated pack loads", result["added"] >= 15, f"got {result['added']}")
+    check("nothing is citable on load", result["citable"] == 0)
+    check("and nothing is visible to agents", s.list_research_notes() == [])
+
+    everything = s.list_research_notes(include_pending=True, include_safety_adjacent=True)
+    check("but the entries are there", len(everything) == result["added"])
+    check("every entry has a caveat", all(n["caveat"].strip() for n in everything))
+    check("every entry has a citation", all(n["citation"].strip() for n in everything))
+    check("the high-risk ones carry a do_not list",
+          all(n["do_not"] for n in everything if "attachment" in n["ref"]))
+
+    c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
+    e = s.create_entry(acct, dom, body="x")
+
+    # An invented ref cannot get through, however plausible it looks.
+    expect_raises("a citation that resolves to nothing is refused", StoreError,
+                  s.link_evidence, acct, entry_id=e, criterion_id=c,
+                  relation="supporting", source_level="research_informed",
+                  research_ref="Gottman, J. M. (1994), p. 42")
+    expect_raises("a real-but-pending ref is still refused", StoreError,
+                  s.link_evidence, acct, entry_id=e, criterion_id=c,
+                  relation="supporting", source_level="research_informed",
+                  research_ref="gottman-bids")
+    expect_raises("an indicator citing a pending ref is refused", StoreError,
+                  s.save_checklist_items, acct, c,
+                  [{"text": "Responds to small bids", "source_level": "research_informed",
+                    "research_ref": "gottman-bids"}])
+
+    # Verification requires that somebody actually opened something.
+    expect_raises("verifying without a source is refused", StoreError,
+                  s.verify_research_note, "gottman-bids", source_url="  ",
+                  verified_by="christine")
+    expect_raises("verifying an unknown ref is refused", StoreError,
+                  s.verify_research_note, "not-a-real-ref",
+                  source_url="https://example.org", verified_by="christine")
+
+    s.verify_research_note("gottman-bids", source_url="https://example.org/checked",
+                           verified_by="christine")
+    check("a verified entry becomes citable", "gottman-bids" in s.citable_refs())
+    check("and becomes visible to agents",
+          any(n["ref"] == "gottman-bids" for n in s.list_research_notes()))
+    check("its caveat travels with it",
+          s.list_research_notes()[0]["caveat"].strip() != "")
+
+    lid = s.link_evidence(acct, entry_id=e, criterion_id=c, relation="supporting",
+                          source_level="research_informed", research_ref="gottman-bids")
+    check("a verified citation is accepted", bool(lid))
+
+    # Safety-adjacent findings never reach the criteria or evidence agents.
+    s.verify_research_note("stark-coercive-control", source_url="https://example.org/s",
+                           verified_by="christine")
+    check("a safety-adjacent entry stays hidden from the default view",
+          not any(n["ref"] == "stark-coercive-control" for n in s.list_research_notes()))
+    check("but is reachable when explicitly asked for",
+          any(n["ref"] == "stark-coercive-control"
+              for n in s.list_research_notes(include_safety_adjacent=True)))
+
+    # Reloading the pack refreshes PENDING rows — that is how a corrected citation
+    # reaches the database — but must never touch one a human signed off on, because the
+    # approval was given for specific wording.
+    before = s.load_research_pack(pack)
+    check("reloading refreshes pending entries", before["refreshed"] >= 15)
+    check("and leaves verified ones alone", before["kept_verified"] == 2,
+          f"got {before['kept_verified']}")
+    check("the verified one is still citable", "gottman-bids" in s.citable_refs())
+    check("its verification survived the reload",
+          s.list_research_notes()[0]["verified_by"] == "christine")
+
+    expect_raises("a note with no caveat is refused", StoreError,
+                  s.add_research_note, ref="x", area="attachment", finding="f",
+                  citation="c", caveat="   ")
+    expect_raises("a note marked verified with no source is refused", StoreError,
+                  s.add_research_note, ref="y", area="attachment", finding="f",
+                  citation="c", caveat="k", verified_at="2026-11-08")
+
+
 def test_research_claims_must_cite() -> None:
     s, acct, dom = fresh()
     c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
@@ -590,22 +726,37 @@ def test_research_claims_must_cite() -> None:
                   s.save_checklist_items, acct, c,
                   [{"text": "Takes responsibility", "source_level": "research_informed"}])
 
+    # Free-text citations no longer pass. A reference the agent composed is exactly what
+    # a fabricated one looks like, so it has to resolve to a verified row instead.
+    expect_raises("a plausible free-text citation is refused", StoreError,
+                  s.save_checklist_items, acct, c,
+                  [{"text": "Can disagree without becoming contemptuous",
+                    "source_level": "research_informed",
+                    "research_ref": "Gottman, contempt research"}])
+
+    s.load_research_pack(PROJECT_DIR / "data" / "research" / "behavioral_indicators.json")
+    s.verify_research_note("gottman-four-horsemen", source_url="https://example.org/g",
+                           verified_by="tester")
+
     ok = s.save_checklist_items(acct, c, [
         {"text": "Can disagree without becoming contemptuous or hostile",
-         "source_level": "research_informed", "research_ref": "Gottman, contempt research"},
+         "source_level": "research_informed", "research_ref": "gottman-four-horsemen"},
         {"text": "Takes responsibility for their actions",
          "source_level": "agent_hypothesis"},
     ])
-    check("cited indicators are stored", len(ok) == 2)
+    check("an indicator citing a verified entry is stored", len(ok) == 2)
     items = s.list_checklist(acct, c)
     check("the epistemic level travels with the indicator",
           {i["source_level"] for i in items} ==
           {"research_informed", "agent_hypothesis"})
     check("a hypothesis needs no citation", any(
         i["research_ref"] is None for i in items))
+    check("the cited one carries the resolvable ref",
+          any(i["research_ref"] == "gottman-four-horsemen" for i in items))
 
     expect_raises("a note with no citation is refused", StoreError,
-                  s.add_research_note, area="attachment", finding="x", citation="  ")
+                  s.add_research_note, ref="z", area="attachment", finding="x",
+                  citation="  ", caveat="k")
 
 
 def test_ticking_a_box_does_not_set_pass() -> None:

@@ -377,7 +377,9 @@ class Orchestrator:
         self.store_account = account_id
         self.check_budget(account_id)
         run_id = self.store.start_run(account_id, "criteria")
-        step = await criteria_agent.run(self.model, self.info, **kw)
+        # The store is handed in so the agent gets its research tool. It reads only
+        # verified knowledge-base rows; it has no access to user data.
+        step = await criteria_agent.run(self.model, self.info, store=self.store, **kw)
         self._record(run_id, 1, step)
         self.store.finish_run(run_id, "ok" if step.ok else "failed", step.error)
         return step

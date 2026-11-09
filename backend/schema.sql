@@ -526,16 +526,41 @@ CREATE INDEX IF NOT EXISTS idx_interrogations_entry
 -- A curated knowledge base, seeded from data/research/. Findings INFORM possible
 -- behavioural indicators; they never become deterministic rules. Nothing in this table
 -- may be used to diagnose a person, assign them a type, or decide an assessment.
+--
+-- `verified_at` IS THE LOAD-BEARING COLUMN. A row is invisible to the agents until a
+-- human has opened the source, confirmed the finding is characterised fairly, and
+-- recorded the URL. `list_research_notes` filters unverified rows out by default and
+-- `link_evidence` refuses a research_ref that does not resolve to a verified row — so a
+-- citation the agent produces must correspond to something somebody actually checked.
+--
+-- That is the whole defence against a fabricated citation, which for this product would
+-- be worse than having no research layer at all.
 CREATE TABLE IF NOT EXISTS research_notes (
-    id         INTEGER PRIMARY KEY,
-    area       TEXT    NOT NULL,                 -- attachment | emotional_regulation | ...
-    finding    TEXT    NOT NULL,                 -- what the literature reports
-    citation   TEXT    NOT NULL,                 -- so the user can see why
-    caveat     TEXT,                             -- the limits of applying it to one person
-    created_at TEXT    NOT NULL
+    id          INTEGER PRIMARY KEY,
+    ref         TEXT    NOT NULL UNIQUE,         -- stable id the agent cites, e.g. 'gottman-bids'
+    area        TEXT    NOT NULL,                -- attachment | emotional_regulation | ...
+    concept     TEXT,
+    finding     TEXT    NOT NULL,                -- what the literature reports
+    attribution TEXT,
+    citation    TEXT    NOT NULL,                -- so the user can see why
+    -- How well the bibliography settled when it was looked up, and what it rests on.
+    -- Surfaced by the verification tool so nobody promotes an entry whose page range was
+    -- never actually confirmed.
+    citation_confidence TEXT,
+    citation_checked_against TEXT,
+    source_url  TEXT,                            -- what the verifier actually opened
+    caveat      TEXT    NOT NULL,                -- the limits of applying it to one person
+    do_not_json TEXT    NOT NULL DEFAULT '[]',   -- the misuse this finding invites
+    indicator_hints_json TEXT NOT NULL DEFAULT '[]',
+    -- True for findings that may only inform how the safety layer DESCRIBES a behaviour.
+    -- Never a checklist item, never an assessment, never a label for a person.
+    safety_adjacent INTEGER NOT NULL DEFAULT 0,
+    verified_at TEXT,                            -- NULL = pending = invisible to agents
+    verified_by TEXT,
+    created_at  TEXT    NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_research_area ON research_notes (area);
+CREATE INDEX IF NOT EXISTS idx_research_area ON research_notes (area, verified_at);
 
 -- ---------------------------------------------------------------- patterns
 

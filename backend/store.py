@@ -27,6 +27,7 @@ journal entry:
 from __future__ import annotations
 
 import json
+import re
 import secrets
 import sqlite3
 import uuid
@@ -40,6 +41,11 @@ BACKEND_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = BACKEND_DIR.parent
 SCHEMA_PATH = BACKEND_DIR / "schema.sql"
 DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
+
+#: Bump whenever schema.sql changes shape. An existing database with a different version
+#: is refused at open time with the command to rebuild it, rather than failing later with
+#: "no such column" somewhere unrelated.
+SCHEMA_VERSION = "2026-11-08.2"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -130,6 +136,51 @@ class StoreError(RuntimeError):
     """A rule this module enforces was broken. Not a database failure."""
 
 
+_CREATE_TABLE = re.compile(
+    r"CREATE TABLE IF NOT EXISTS\s+(\w+)\s*\((.*?)\n\);", re.DOTALL | re.IGNORECASE
+)
+
+
+def _declared_columns(schema_sql: str) -> dict[str, set[str]]:
+    """Column names schema.sql declares, per table.
+
+    A deliberately simple parser: it reads the first identifier of each line inside a
+    CREATE TABLE body and skips table-level constraints. It only needs to be right about
+    column *names*, because its one job is spotting a column the live database lacks.
+    """
+    tables: dict[str, set[str]] = {}
+    for name, body in _CREATE_TABLE.findall(schema_sql):
+        columns: set[str] = set()
+        for raw in body.split("\n"):
+            line = raw.strip()
+            if not line or line.startswith("--"):
+                continue
+            first = line.split()[0].strip(",").strip()
+            if first.upper() in {
+                "PRIMARY", "UNIQUE", "FOREIGN", "CHECK", "CONSTRAINT", ")",
+            }:
+                continue
+            if first.isidentifier():
+                columns.add(first)
+        if columns:
+            tables[name] = columns
+    return tables
+
+
+def _missing_columns(conn: sqlite3.Connection, schema_sql: str) -> list[tuple[str, str]]:
+    """Columns schema.sql declares that the live database does not have."""
+    missing: list[tuple[str, str]] = []
+    for table, declared in _declared_columns(schema_sql).items():
+        try:
+            live = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
+        except sqlite3.OperationalError:
+            continue
+        if not live:
+            continue
+        missing.extend((table, c) for c in sorted(declared - live))
+    return missing
+
+
 # --------------------------------------------------------------------- connection
 
 
@@ -169,9 +220,79 @@ class Store:
             conn.close()
 
     def _init_schema(self) -> None:
+        """Create the schema, and refuse to run against a stale database.
+
+        ``CREATE TABLE IF NOT EXISTS`` silently does nothing to a table that already
+        exists, so a database created before a column was added keeps the old shape and
+        fails later with an unhelpful ``no such column``. This catches that at open time
+        and says what to do about it.
+
+        There is no migration framework yet, and with no real users that is the right
+        trade — but it is a real gap, and it needs Alembic or equivalent before anybody's
+        journal depends on it.
+        """
         conn = self._connect()
         try:
-            conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))
+            # Was this database already populated before we touched it? Checked BEFORE
+            # the script runs, because executescript creates the tables and would make
+            # every database look brand new.
+            pre_existing = conn.execute(
+                "SELECT COUNT(*) AS n FROM sqlite_master WHERE type = 'table'"
+            ).fetchone()["n"] > 0
+            found = None
+            if pre_existing:
+                try:
+                    row = conn.execute(
+                        "SELECT value FROM schema_meta WHERE key = 'version'"
+                    ).fetchone()
+                    found = row["value"] if row else "pre-versioning"
+                except sqlite3.OperationalError:
+                    found = "pre-versioning"
+
+            schema_sql = SCHEMA_PATH.read_text(encoding="utf-8")
+
+            # Checked BEFORE running the script, because an index declared over a column
+            # the old table lacks makes executescript itself fail with a bare
+            # "no such column" — which is the unhelpful error this guard exists to
+            # replace. A brand-new database has no tables, so nothing is missing.
+            #
+            # The version stamp alone is not enough either: a stamp can be written to a
+            # database whose tables are already the wrong shape. The columns are what
+            # matter, so drift is caught however it arose.
+            missing = _missing_columns(conn, schema_sql) if pre_existing else []
+            if missing or (found not in (None, SCHEMA_VERSION)):
+                detail = ""
+                if missing:
+                    shown = ", ".join(f"{t}.{c}" for t, c in missing[:6])
+                    more = f" (and {len(missing) - 6} more)" if len(missing) > 6 else ""
+                    detail = f"\nMissing columns: {shown}{more}"
+                raise StoreError(
+                    f"{self.db_path} does not match the current schema "
+                    f"({SCHEMA_VERSION}). KRYteria has no migrations yet.{detail}\n\n"
+                    f"  rm {self.db_path}*\n"
+                    f"  .venv/bin/python -m backend.seed_demo\n\n"
+                    "Nothing of value is lost: that command rebuilds the demo account. "
+                    "If this database holds real journal entries, export them first "
+                    "with GET /api/export."
+                )
+
+            try:
+                conn.executescript(schema_sql)
+            except sqlite3.OperationalError as e:
+                # Backstop for drift the column check cannot see, such as a changed
+                # CHECK constraint. Still better than a bare SQL error.
+                raise StoreError(
+                    f"{self.db_path} could not be brought up to the current schema "
+                    f"({SCHEMA_VERSION}): {e}\n\n"
+                    f"  rm {self.db_path}*\n"
+                    f"  .venv/bin/python -m backend.seed_demo"
+                ) from e
+
+            if found is None:
+                conn.execute(
+                    "INSERT OR REPLACE INTO schema_meta (key, value) VALUES ('version', ?)",
+                    (SCHEMA_VERSION,),
+                )
         finally:
             conn.close()
 
@@ -724,11 +845,31 @@ class Store:
             )
         if source_level not in SOURCE_LEVELS:
             raise StoreError(f"Unknown source_level: {source_level!r}")
-        if source_level in ("established_research", "research_informed") and not research_ref:
-            raise StoreError(
-                "A research-backed link must carry a citation, so the user can see why "
-                "the behaviour was suggested."
-            )
+        if source_level in ("established_research", "research_informed"):
+            # A citation must RESOLVE, not merely exist.
+            #
+            # Requiring a non-empty string only guaranteed the model wrote something, and
+            # a model told to cite will always write something — plausible, specific, and
+            # possibly invented. Requiring the ref to match a verified row makes
+            # fabrication impossible rather than discouraged: the agent can only cite
+            # what a human checked and put here.
+            #
+            # The cost is that the research layer is exactly as broad as the curated set.
+            # For a product whose whole position is evidence over assumption, that is the
+            # right trade.
+            if not research_ref:
+                raise StoreError(
+                    "A research-backed link must cite a knowledge-base entry, so the "
+                    "user can see why the behaviour was suggested."
+                )
+            citable = self.citable_refs()
+            if research_ref not in citable:
+                raise StoreError(
+                    f"research_ref {research_ref!r} does not match a verified entry in "
+                    f"the knowledge base. {len(citable)} entries are currently citable. "
+                    "An unverifiable citation is worse than none — mark this "
+                    "'agent_hypothesis' instead, which needs no citation and is honest."
+                )
         resolution = "accepted" if proposed_by == "user" else "pending"
         with self.write() as conn:
             cur = conn.execute(
@@ -792,10 +933,20 @@ class Store:
                 if level not in SOURCE_LEVELS:
                     raise StoreError(f"Unknown source_level: {level!r}")
                 ref = item.get("research_ref")
-                if level in ("established_research", "research_informed") and not ref:
-                    raise StoreError(
-                        f"Indicator {text!r} claims a research basis but cites nothing."
-                    )
+                if level in ("established_research", "research_informed"):
+                    if not ref:
+                        raise StoreError(
+                            f"Indicator {text!r} claims a research basis but cites nothing."
+                        )
+                    # Same rule as evidence links: the citation must resolve to a
+                    # verified entry, so a confident-sounding invented reference cannot
+                    # reach a checklist the user will tick.
+                    if ref not in self.citable_refs():
+                        raise StoreError(
+                            f"Indicator {text!r} cites {ref!r}, which is not a verified "
+                            "knowledge-base entry. Use 'agent_hypothesis' instead — it "
+                            "needs no citation and does not overstate what this is."
+                        )
                 polarity = item.get("polarity", "demonstrates")
                 if polarity not in ("demonstrates", "contradicts"):
                     raise StoreError(f"Unknown polarity: {polarity!r}")
@@ -910,27 +1061,146 @@ class Store:
 
     # ----------------------------------------------------------------- research layer
 
-    def add_research_note(self, *, area: str, finding: str, citation: str,
-                          caveat: str | None = None) -> int:
+    def add_research_note(
+        self, *, ref: str, area: str, finding: str, citation: str, caveat: str,
+        concept: str | None = None, attribution: str | None = None,
+        citation_confidence: str | None = None,
+        citation_checked_against: str | None = None,
+        source_url: str | None = None, do_not: Sequence[str] = (),
+        indicator_hints: Sequence[str] = (), safety_adjacent: bool = False,
+        verified_at: str | None = None, verified_by: str | None = None,
+    ) -> int:
+        """Add a finding to the knowledge base.
+
+        ``caveat`` is required, not optional. A finding without a statement of what it
+        cannot tell you about one person is exactly the shape that gets misused, and this
+        product's whole position is that research informs noticing and never decides.
+
+        A note is **pending** unless ``verified_at`` is supplied, and a pending note is
+        invisible to the agents.
+        """
         if not (citation or "").strip():
             raise StoreError("A research note without a citation is just an assertion.")
+        if not (caveat or "").strip():
+            raise StoreError(
+                f"Research note {ref!r} has no caveat. Every finding must say what it "
+                "cannot tell you about one person."
+            )
+        if verified_at and not (source_url or "").strip():
+            raise StoreError(
+                f"Research note {ref!r} is marked verified but records no source_url. "
+                "Verification means somebody opened something."
+            )
         with self.write() as conn:
             cur = conn.execute(
-                "INSERT INTO research_notes (area, finding, citation, caveat, created_at)"
-                " VALUES (?, ?, ?, ?, ?)",
-                (area, finding.strip(), citation.strip(), caveat, _now()),
+                "INSERT INTO research_notes (ref, area, concept, finding, attribution,"
+                " citation, citation_confidence, citation_checked_against, source_url,"
+                " caveat, do_not_json, indicator_hints_json,"
+                " safety_adjacent, verified_at, verified_by, created_at)"
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (ref, area, concept, finding.strip(), attribution, citation.strip(),
+                 citation_confidence, citation_checked_against,
+                 source_url, caveat.strip(), json.dumps(list(do_not)),
+                 json.dumps(list(indicator_hints)), int(safety_adjacent),
+                 verified_at, verified_by, _now()),
             )
             return int(cur.lastrowid)
 
-    def list_research_notes(self, area: str | None = None):
+    def list_research_notes(self, area: str | None = None, *,
+                            include_pending: bool = False,
+                            include_safety_adjacent: bool = False):
+        """Findings the agents may use.
+
+        **Unverified notes are filtered out by default.** ``include_pending=True`` exists
+        for the verification UI and for tests, never for an agent.
+
+        Safety-adjacent notes are also withheld unless asked for: they may inform how the
+        safety layer describes a behaviour and nothing else, so the Criteria and Evidence
+        agents must not see them at all.
+        """
         sql = "SELECT * FROM research_notes"
+        clauses: list[str] = []
         args: list[Any] = []
         if area:
-            sql += " WHERE area = ?"
+            clauses.append("area = ?")
             args.append(area)
-        sql += " ORDER BY area, id"
+        if not include_pending:
+            clauses.append("verified_at IS NOT NULL")
+        if not include_safety_adjacent:
+            clauses.append("safety_adjacent = 0")
+        if clauses:
+            sql += " WHERE " + " AND ".join(clauses)
+        sql += " ORDER BY area, ref"
         with self.read() as conn:
-            return [dict(r) for r in conn.execute(sql, args)]
+            rows = [dict(r) for r in conn.execute(sql, args)]
+        for r in rows:
+            r["do_not"] = json.loads(r.pop("do_not_json") or "[]")
+            r["indicator_hints"] = json.loads(r.pop("indicator_hints_json") or "[]")
+        return rows
+
+    def citable_refs(self) -> set[str]:
+        """Exactly what a research-backed claim may cite: verified refs, nothing else."""
+        with self.read() as conn:
+            return {
+                r["ref"] for r in conn.execute(
+                    "SELECT ref FROM research_notes WHERE verified_at IS NOT NULL"
+                )
+            }
+
+    def verify_research_note(self, ref: str, *, source_url: str, verified_by: str) -> None:
+        """Promote a pending note. Only a human does this, and it records what they opened."""
+        if not (source_url or "").strip():
+            raise StoreError("Verification must record the source that was opened.")
+        with self.write() as conn:
+            cur = conn.execute(
+                "UPDATE research_notes SET verified_at = ?, verified_by = ?,"
+                " source_url = ? WHERE ref = ?",
+                (_now(), verified_by, source_url.strip(), ref),
+            )
+            if cur.rowcount == 0:
+                raise StoreError(f"No research note {ref!r}.")
+
+    def load_research_pack(self, path: Path | str) -> dict[str, int]:
+        """Load ``data/research/*.json``. Everything arrives pending unless the file
+        says otherwise, and the file is not trusted to mark its own work verified
+        without a source URL."""
+        blob = json.loads(Path(path).read_text(encoding="utf-8"))
+        added, refreshed, kept = 0, 0, 0
+        rows = self.list_research_notes(include_pending=True, include_safety_adjacent=True)
+        pending = {r["ref"] for r in rows if not r["verified_at"]}
+        verified_already = {r["ref"] for r in rows if r["verified_at"]}
+
+        for note in blob.get("notes", []):
+            ref = note["id"]
+            if ref in verified_already:
+                # Never silently overwrite something a human signed off on. Re-verify
+                # deliberately instead: an edit to the file must not change the meaning
+                # of an approval that was given for different wording.
+                kept += 1
+                continue
+            if ref in pending:
+                # Safe to refresh: nobody has approved this yet, so there is no judgement
+                # to preserve. This is how a corrected citation reaches the database.
+                with self.write() as conn:
+                    conn.execute("DELETE FROM research_notes WHERE ref = ?", (ref,))
+                refreshed += 1
+            verified = note.get("verification_status") == "verified"
+            self.add_research_note(
+                ref=note["id"], area=note["area"], concept=note.get("concept"),
+                finding=note["finding"], attribution=note.get("attribution"),
+                citation=note["citation"],
+                citation_confidence=note.get("citation_confidence"),
+                citation_checked_against=note.get("citation_checked_against"),
+                source_url=note.get("source_url"),
+                caveat=note["caveat"], do_not=note.get("do_not", []),
+                indicator_hints=note.get("indicator_hints", []),
+                safety_adjacent=bool(note.get("safety_adjacent")),
+                verified_at=note.get("verified_at") if verified else None,
+                verified_by=note.get("verified_by") if verified else None,
+            )
+            added += 1
+        return {"added": added - refreshed, "refreshed": refreshed,
+                "kept_verified": kept, "citable": len(self.citable_refs())}
 
     # ----------------------------------------------------------------- entries
 

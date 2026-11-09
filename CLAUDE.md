@@ -46,10 +46,15 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   Export `KRYTERIA_MODE=demo` for any UI poking that does not need a real model.
 - Sandboxed Bash cannot reach a local port, so verify HTTP with `TestClient` in-process
   rather than `curl localhost`.
-- **Schema changes do not migrate an existing database.** `_init_schema` uses
-  `CREATE TABLE IF NOT EXISTS`, so after editing `schema.sql` delete `data/kryteria.db`
-  and re-seed. There is no Alembic yet; with no real users that is the right trade, but
-  it will need one before anybody's data matters.
+- **Schema changes do not migrate an existing database**, and `Store()` now refuses to
+  open a stale one. `CREATE TABLE IF NOT EXISTS` silently leaves an existing table alone,
+  so after editing `schema.sql` you must delete `data/kryteria.db` and re-seed. The guard
+  compares the live columns against what `schema.sql` declares and raises a `StoreError`
+  naming the missing columns and the exact two commands to fix it — a version stamp alone
+  does not satisfy it, because a stamp can be written to a database that is already the
+  wrong shape. **Bump `store.SCHEMA_VERSION` whenever `schema.sql` changes shape.**
+  There is no Alembic yet; with no real users that is the right trade, but it needs one
+  before anybody's journal depends on it.
 
 - `PYDANTIC_AI_NO_BANNER=1` silences pydantic-ai's startup banner in test output.
 - **`pydantic_ai` 2.x made `RunResult.usage` a property** that is still callable for
@@ -62,6 +67,21 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `pending`. Until they are filled in from the course's published pricing,
   `estimate_cost` returns 0.0 and the app must report cost as *unavailable* rather than
   printing a zero as though a run were free.
+- **The research knowledge base is drafted but 0 entries are citable.**
+  `data/research/behavioral_indicators.json` holds 19 findings across the seven areas.
+  Every one is **pending**, which means invisible to the agents and unusable as a
+  citation — `research_ref` must resolve to a *verified* row or the write is refused.
+  Verify them by hand — **these must run from `KRYteria/`, not the workspace root**,
+  which has its own unrelated `.venv`:
+
+  ```bash
+  cd "/Users/christinelittle/Yale SOM_Old/AI Foundations/KRYteria" && .venv/bin/python -m backend.verify_research list
+  ```
+
+  then `show <ref>` to see what to check, then
+  `ok <ref> --url <what you opened> --by <name>`. Citations are drafted coarse
+  deliberately; see the rules file for why. Do not claim anywhere that KRYteria uses
+  research until some are verified.
 - **`data/resources_us.json` is unverified.** The hotline numbers and URLs were entered
   from the charter text on 2026-11-07 and have not been checked against each
   organisation's own site. Do that before the demo and before submission.
