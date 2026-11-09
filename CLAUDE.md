@@ -23,15 +23,33 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
-- **Three test suites, all free, no API calls, no network:**
+- **Four test suites, all free, no API calls, no network:**
 
   | Suite | Interpreter | Covers |
   |---|---|---|
   | `tests/test_offline.py` | system `python3` | the store layer; stubs `backend.security` so it runs with nothing installed |
   | `tests/test_contracts.py` | `.venv/bin/python` | the Pydantic output contracts and the demo provider |
   | `tests/test_wiring.py` | `.venv/bin/python` | real Argon2id, provider resolution, agent construction on `TestModel`, budget enforcement |
+  | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** |
 
-  371 checks in total as of 2026-11-07. Run all three after any change to `backend/`.
+  476 checks in total as of 2026-11-07. Run all four after any change to `backend/`.
+
+- **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
+  `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
+  `.venv/bin/python -m backend.seed_demo` — handle `demo`, passphrase
+  `kryteria-demo-account`, all synthetic.
+- **The running server defaults to LIVE mode on this machine**, because `app_config`
+  finds `PORTKEY_API_KEY` in the workspace-root `.env` one level up. Verified 2026-11-07:
+  `/api/health` reported `"mode":"live"` with `env_source` pointing at that file — which
+  is exactly the staff `.env`-one-level-up case the assignment grades, confirmed in
+  practice rather than assumed. **A brain dump against a live server spends credits.**
+  Export `KRYTERIA_MODE=demo` for any UI poking that does not need a real model.
+- Sandboxed Bash cannot reach a local port, so verify HTTP with `TestClient` in-process
+  rather than `curl localhost`.
+- **Schema changes do not migrate an existing database.** `_init_schema` uses
+  `CREATE TABLE IF NOT EXISTS`, so after editing `schema.sql` delete `data/kryteria.db`
+  and re-seed. There is no Alembic yet; with no real users that is the right trade, but
+  it will need one before anybody's data matters.
 
 - `PYDANTIC_AI_NO_BANNER=1` silences pydantic-ai's startup banner in test output.
 - **`pydantic_ai` 2.x made `RunResult.usage` a property** that is still callable for

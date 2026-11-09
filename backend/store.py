@@ -1106,8 +1106,9 @@ class Store:
     def save_pattern(
         self,
         account_id: int,
-        domain_id: int,
         *,
+        profile_id: int | None = None,
+        domain_id: int | None = None,
         kind: str,
         statement: str,
         evidence: Sequence[dict[str, Any]],
@@ -1177,12 +1178,13 @@ class Store:
 
         with self.write() as conn:
             cur = conn.execute(
-                "INSERT INTO patterns (account_id, domain_id, kind, statement, criterion_id,"
-                " support_count, contra_count, evidence_strength, gap_note,"
+                "INSERT INTO patterns (account_id, profile_id, domain_id, kind, statement,"
+                " criterion_id, support_count, contra_count, evidence_strength, gap_note,"
                 " uncertainties_json, alternatives_json, run_id, created_at)"
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
-                    account_id, domain_id, kind, statement.strip(), criterion_id,
+                    account_id, profile_id, domain_id, kind, statement.strip(),
+                    criterion_id,
                     support_count, contra_count, evidence_strength, gap_note,
                     json.dumps([u for u in uncertainties if (u or "").strip()]),
                     json.dumps([a for a in alternatives if (a or "").strip()]),
@@ -1210,10 +1212,13 @@ class Store:
             "downgraded": downgraded,
         }
 
-    def list_patterns(self, account_id: int, *, domain_id: int | None = None,
-                      status: str = "open"):
+    def list_patterns(self, account_id: int, *, profile_id: int | None = None,
+                      domain_id: int | None = None, status: str = "open"):
         sql = "SELECT * FROM patterns WHERE account_id = ?"
         args: list[Any] = [account_id]
+        if profile_id is not None:
+            sql += " AND profile_id = ?"
+            args.append(profile_id)
         if domain_id is not None:
             sql += " AND domain_id = ?"
             args.append(domain_id)

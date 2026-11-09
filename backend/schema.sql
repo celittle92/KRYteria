@@ -542,7 +542,12 @@ CREATE INDEX IF NOT EXISTS idx_research_area ON research_notes (area);
 CREATE TABLE IF NOT EXISTS patterns (
     id             INTEGER PRIMARY KEY,
     account_id     INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
-    domain_id      INTEGER NOT NULL REFERENCES domains(id) ON DELETE CASCADE,
+    -- A finding is interpreted within one profile, for the same reason an evidence link
+    -- is: the same behaviour reads differently depending on what the user is looking for.
+    -- Nullable because a finding can be about the user's own decisions rather than about
+    -- one objective.
+    profile_id     INTEGER REFERENCES profiles(id) ON DELETE CASCADE,
+    domain_id      INTEGER REFERENCES domains(id) ON DELETE CASCADE,
     kind           TEXT    NOT NULL
                            CHECK (kind IN ('recurring_unmet_need', 'repeated_discrepancy',
                                            'shifting_expectation', 'stated_vs_chosen',

@@ -119,11 +119,11 @@ def test_criteria_are_versioned_not_overwritten() -> None:
 def test_pattern_requires_evidence() -> None:
     s, acct, dom = fresh()
     expect_raises("a pattern with no evidence is refused", StoreError,
-                  s.save_pattern, acct, dom, kind="recurring_unmet_need",
+                  s.save_pattern, acct, domain_id=dom, kind="recurring_unmet_need",
                   statement="They never follow through", evidence=[])
 
     expect_raises("evidence without entry ids is refused", StoreError,
-                  s.save_pattern, acct, dom, kind="recurring_unmet_need",
+                  s.save_pattern, acct, domain_id=dom, kind="recurring_unmet_need",
                   statement="They never follow through",
                   evidence=[{"observation_id": 1}])
 
@@ -134,7 +134,7 @@ def test_thin_evidence_is_downgraded() -> None:
     e2 = s.create_entry(acct, dom, body="Cancelled again.")
 
     result = s.save_pattern(
-        acct, dom, kind="recurring_unmet_need",
+        acct, domain_id=dom, kind="recurring_unmet_need",
         statement="Follow-through has not happened",
         evidence_strength="strong",          # the model claimed it was sure
         alternatives=["He may be overwhelmed at work"],
@@ -157,7 +157,7 @@ def test_support_count_is_counted_not_trusted() -> None:
     ids = [s.create_entry(acct, dom, body=f"entry {i}") for i in range(4)]
     # Same entry listed repeatedly must not inflate the count.
     result = s.save_pattern(
-        acct, dom, kind="repeated_discrepancy", statement="Repeated",
+        acct, domain_id=dom, kind="repeated_discrepancy", statement="Repeated",
         evidence=[{"entry_id": ids[0]}] * 5,
     )
     check("duplicate entries count once", result["support_count"] == 1)
@@ -165,7 +165,7 @@ def test_support_count_is_counted_not_trusted() -> None:
           result["evidence_strength"] == "insufficient")
 
     result2 = s.save_pattern(
-        acct, dom, kind="repeated_discrepancy", statement="Repeated",
+        acct, domain_id=dom, kind="repeated_discrepancy", statement="Repeated",
         evidence_strength="moderate",
         alternatives=["Could be a stressful few weeks rather than a habit"],
         evidence=[{"entry_id": i} for i in ids[:MIN_SUPPORT]],
@@ -180,7 +180,7 @@ def test_counter_evidence_is_preserved() -> None:
     s, acct, dom = fresh()
     ids = [s.create_entry(acct, dom, body=f"entry {i}") for i in range(5)]
     result = s.save_pattern(
-        acct, dom, kind="recurring_unmet_need",
+        acct, domain_id=dom, kind="recurring_unmet_need",
         statement="Plans get changed at short notice",
         evidence_strength="moderate",
         alternatives=["Shift work may make the notice genuinely unavoidable"],
@@ -202,7 +202,7 @@ def test_counter_evidence_is_preserved() -> None:
     check("alternatives survive", len(stored["alternatives"]) == 1)
 
     expect_raises("an unknown stance is refused", StoreError,
-                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  s.save_pattern, acct, domain_id=dom, kind="repeated_discrepancy",
                   statement="x", evidence=[{"entry_id": ids[0], "stance": "maybe"}])
 
 
@@ -214,16 +214,16 @@ def test_confident_findings_must_offer_an_alternative() -> None:
     for strength in ("moderate", "strong"):
         expect_raises(
             f"a '{strength}' finding with no alternative is refused", StoreError,
-            s.save_pattern, acct, dom, kind="repeated_discrepancy",
+            s.save_pattern, acct, domain_id=dom, kind="repeated_discrepancy",
             statement="They do not care", evidence_strength=strength, evidence=ev,
         )
     expect_raises("blank alternatives do not satisfy the rule", StoreError,
-                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  s.save_pattern, acct, domain_id=dom, kind="repeated_discrepancy",
                   statement="x", evidence_strength="strong",
                   alternatives=["  ", ""], evidence=ev)
 
     ok = s.save_pattern(
-        acct, dom, kind="repeated_discrepancy", statement="A real finding",
+        acct, domain_id=dom, kind="repeated_discrepancy", statement="A real finding",
         evidence_strength="strong", alternatives=["Another reading is possible"],
         evidence=ev,
     )
@@ -231,14 +231,14 @@ def test_confident_findings_must_offer_an_alternative() -> None:
           ok["evidence_strength"] == "strong")
 
     # 'limited' is an honest, low-confidence claim and needs no alternative.
-    low = s.save_pattern(acct, dom, kind="repeated_discrepancy",
+    low = s.save_pattern(acct, domain_id=dom, kind="repeated_discrepancy",
                          statement="Might be something here",
                          evidence_strength="limited", evidence=ev)
     check("a tentative finding needs no alternative",
           low["evidence_strength"] == "limited")
 
     expect_raises("a numeric strength is refused", StoreError,
-                  s.save_pattern, acct, dom, kind="repeated_discrepancy",
+                  s.save_pattern, acct, domain_id=dom, kind="repeated_discrepancy",
                   statement="x", evidence_strength="0.87", evidence=ev)
 
 
@@ -828,7 +828,7 @@ def test_delete_removes_everything() -> None:
     s.save_observations(acct, e, [{"kind": "reported_event", "text": "x"}])
     c = s.create_criterion(acct, value="v", desired_behavior="d")
     s.record_decision(acct, choice="more_time", criterion_id=c)
-    s.save_pattern(acct, dom, kind="recurring_unmet_need", statement="p",
+    s.save_pattern(acct, domain_id=dom, kind="recurring_unmet_need", statement="p",
                    evidence=[{"entry_id": e}])
 
     s.delete_account(acct)

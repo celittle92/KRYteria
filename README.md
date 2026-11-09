@@ -30,9 +30,12 @@ suites and the Python API; there is no browser UI to open yet.
 | Agent output contracts | built, 94 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
 | Deterministic demo mode (no API key) | built |
-| HTTP API | not started |
+| HTTP API | built, 105 checks |
+| Synthetic demo account | built |
 | Front end | not started |
 | `report.html`, `slides.html` | not started |
+
+**476 checks in total**, none of which call a model.
 
 ---
 
@@ -44,6 +47,24 @@ Requires Python 3.12+ (developed on 3.14.7). No database server, no external ser
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
+
+### Start it
+
+```bash
+.venv/bin/python -m backend.seed_demo
+```
+
+```bash
+.venv/bin/python -m uvicorn backend.main:app --port 8000
+```
+
+Then open **http://localhost:8000/api/health** — it reports the mode, the model, whether a
+key was found and *where it looked*, and whether prices are loaded. Interactive API docs
+are at **/docs**.
+
+There is no browser interface yet, so `/` returns a short JSON status rather than a page.
+
+The demo account is `demo` / `kryteria-demo-account`. Everything in it is invented.
 
 ### Tests — free, no API key, no network
 
@@ -59,8 +80,14 @@ python3 tests/test_offline.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_wiring.py
 ```
 
-371 checks in total. The first suite needs no installed packages at all — it stubs the
-password hasher so the data layer can be verified on a bare Python.
+```bash
+PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
+```
+
+476 checks in total. The first needs no installed packages at all — it stubs the password
+hasher so the data layer can be verified on a bare Python. The last runs the whole HTTP
+layer in demo mode, and its most important test is two accounts trying to reach each
+other's rows every way the API allows.
 
 ### Where KRYteria looks for an API key
 

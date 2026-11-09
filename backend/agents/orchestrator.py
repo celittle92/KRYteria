@@ -350,7 +350,8 @@ class Orchestrator:
                 continue
             try:
                 self.store.save_pattern(
-                    account_id, profile_id or 0, kind=p.kind, statement=p.statement,
+                    account_id, profile_id=profile_id,
+                    kind=p.kind, statement=p.statement,
                     evidence=evidence_rows, criterion_id=p.criterion_id,
                     evidence_strength=p.evidence_strength, gap_note=p.gap_note,
                     uncertainties=p.uncertainties, alternatives=p.alternatives,
