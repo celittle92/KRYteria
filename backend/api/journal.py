@@ -15,7 +15,8 @@ from .deps import (
     resolve_domain,
 )
 from .schemas import (
-    BrainDump, EvidenceLinkDecision, InterrogationAnswer, PersonIn, StructuredEntry,
+    BrainDump, EvidenceLinkDecision, InterrogationAnswer, PersonIn, RetentionChoice,
+    StructuredEntry,
 )
 
 router = APIRouter(prefix="/api", tags=["journal"])
@@ -134,10 +135,28 @@ async def brain_dump(
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
 
-    entry = store.get_entry(account_id, entry_id)
     if not body.analyze:
-        return {"entry": entry, "analysis": None,
-                "note": "Saved without analysis, as requested."}
+        # Retention describes what survives PROCESSING. With nothing processed,
+        # `analysis_only` would erase the narrative and leave no analysis behind it —
+        # destroying the only thing the user just created, which cannot be what "save
+        # without analysing" means. So the default collapses to keeping it.
+        #
+        # An explicit `discard` is still honoured: somebody may genuinely want to write
+        # something down and have it gone.
+        retention = (
+            store.apply_retention(account_id, entry_id, "discard")
+            if body.retention == "discard"
+            else store.apply_retention(account_id, entry_id, "keep_all")
+        )
+        return {
+            "entry": store.get_entry(account_id, entry_id),
+            "analysis": None,
+            "retention": retention,
+            "note": ("Saved without analysis. Nothing was processed, so the entry is "
+                     "kept as written." if body.retention != "discard" else
+                     "Saved, then discarded as requested. Nothing remains."),
+        }
+    entry = store.get_entry(account_id, entry_id)
 
     model, info = get_provider()
     orch = Orchestrator(store, model, info)
@@ -156,10 +175,17 @@ async def brain_dump(
             "note": f"Your entry is saved. {e}",
         }
 
+    # Retention is applied AFTER processing: the agents need the narrative to read it,
+    # and the user's choice governs what survives that reading. Doing it here rather
+    # than relying on a later sweep means the window in which an unwanted original sits
+    # in the database is the length of one request.
+    retention = store.apply_retention(account_id, entry_id, body.retention)
+
     return {
-        "entry": entry,
+        "entry": store.get_entry(account_id, entry_id) or entry,
         "analysis": _present(result),
         "simulated": info.simulated,
+        "retention": retention,
     }
 
 
@@ -212,6 +238,51 @@ def _present(result) -> dict:
 
 
 # ---------------------------------------------------------------- reviewing the agent
+
+@router.post("/entries/{entry_id}/retention")
+def choose_retention(
+    entry_id: int,
+    body: RetentionChoice,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Change the mind after the fact: *"What would you like KRYteria to keep?"*
+
+    Offered once the analysis is on screen, so somebody can see what the reflection
+    produced before deciding whether the 1 a.m. narrative behind it is worth keeping.
+
+    Only ever erases further. There is no path back from a discarded narrative, and the
+    response says so plainly rather than letting somebody discover it later.
+    """
+    owned_entry(store, account_id, entry_id)
+    try:
+        result = store.apply_retention(account_id, entry_id, body.retention)
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+
+    swept = 0
+    if body.apply_to_past:
+        store.set_preferences(account_id, retention=body.retention)
+        swept = store.erase_originals(account_id)
+
+    return {
+        "entry_id": entry_id,
+        **result,
+        "also_erased": swept,
+        "note": ("The original has been erased and cannot be recovered."
+                 if result["original_erased"] else
+                 "The original is kept until you delete it."),
+    }
+
+
+@router.get("/retention")
+def retention_report(
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """What KRYteria is actually keeping, counted from the data rather than promised."""
+    return store.retention_report(account_id)
+
 
 @router.get("/evidence-links")
 def list_evidence_links(

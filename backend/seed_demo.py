@@ -84,7 +84,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
 
     # A revision, so My Progress has a changed priority to show. The old version survives.
     store.revise_criterion(
-        lib["followthrough"],
+        account_id, lib["followthrough"],
         revision_note="I was treating a changed plan the same as a broken promise. "
                       "They're not the same thing.",
         desired_behavior="Tells me in advance when something changes",
@@ -147,7 +147,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
                                    context_label=label, domain_id=dating)
         profiles[name] = pid
         for key, tier, relevance in rows:
-            store.add_criterion_to_profile(pid, lib[key], tier=tier, relevance=relevance)
+            store.add_criterion_to_profile(account_id, pid, lib[key], tier=tier, relevance=relevance)
 
     # ---------------------------------------------------------------- people
     sam = store.upsert_person(account_id, "Sam", domain_id=dating,

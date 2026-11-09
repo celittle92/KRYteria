@@ -10,7 +10,7 @@ from typing import Sequence
 from pydantic_ai import Agent
 
 from ..models import ReasoningOutput, ReflectionOutput
-from .base import AgentResult, load_prompt, run_agent
+from .base import AgentResult, demo_result, load_prompt, run_agent
 
 PROMPT_PATH = "reflection.md"
 AGENT_NAME = "reflection"
@@ -97,6 +97,8 @@ def compose_input(
 
 
 async def run(model, info, **kw) -> AgentResult:
+    if info.mode.value == "demo":
+        return demo_result(AGENT_NAME, ReflectionOutput, kw.get("entry_text", ""))
     return await run_agent(
         build(model), compose_input(**kw), name=AGENT_NAME, info=info,
     )

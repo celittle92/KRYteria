@@ -13,7 +13,7 @@ from __future__ import annotations
 from pydantic_ai import Agent
 
 from ..models import SafetyOutput
-from .base import AgentResult, load_prompt, run_agent
+from .base import AgentResult, demo_result, load_prompt, run_agent
 
 PROMPT_PATH = "safety.md"
 AGENT_NAME = "safety"
@@ -45,6 +45,8 @@ def compose_input(entry_text: str) -> str:
 
 async def run(model, info, entry_text: str) -> AgentResult:
     """Note the signature: no profile, by design."""
+    if info.mode.value == "demo":
+        return demo_result(AGENT_NAME, SafetyOutput, entry_text)
     return await run_agent(
         build(model), compose_input(entry_text), name=AGENT_NAME, info=info,
     )

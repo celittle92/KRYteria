@@ -30,9 +30,9 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_offline.py` | system `python3` | the store layer; stubs `backend.security` so it runs with nothing installed |
   | `tests/test_contracts.py` | `.venv/bin/python` | the Pydantic output contracts and the demo provider |
   | `tests/test_wiring.py` | `.venv/bin/python` | real Argon2id, provider resolution, agent construction on `TestModel`, budget enforcement |
-  | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** |
+  | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
 
-  476 checks in total as of 2026-11-07. Run all four after any change to `backend/`.
+  566 checks in total as of 2026-11-09. Run all four after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
@@ -82,6 +82,16 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `ok <ref> --url <what you opened> --by <name>`. Citations are drafted coarse
   deliberately; see the rules file for why. Do not claim anywhere that KRYteria uses
   research until some are verified.
+- **Privacy is P0 and `docs/privacy.md` is its record.** Read it before touching the
+  store, the API, or anything that logs. Three things are load-bearing: every store method
+  taking a row id also takes `account_id` (`_assert_owns` → `NotOwned` → **404, never
+  403**); retention (`discard` / `analysis_only` / `keep_all`) runs in the same request as
+  processing and overwrites text with NULL; and error strings go through
+  `agents/base.redact_error` before reaching `agent_steps`. **Never add a route, field or
+  feature that could signal one user about another.**
+- **Do not claim the provider retains nothing.** Erasure governs this database only.
+  Portkey's and the upstream provider's retention and training policies are unconfirmed —
+  `docs/privacy.md` §5 lists the open questions.
 - **`data/resources_us.json` is unverified.** The hotline numbers and URLs were entered
   from the charter text on 2026-11-07 and have not been checked against each
   organisation's own site. Do that before the demo and before submission.

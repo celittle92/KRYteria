@@ -14,6 +14,7 @@ execution log and error handling cannot be forgotten by an individual agent.
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -39,6 +40,26 @@ def load_prompt(name: str) -> str:
     return path.read_text(encoding="utf-8")
 
 
+#: Error text is written to agent_steps.error_message, shown in the trace view, and
+#: pasted into reports. A Pydantic ValidationError embeds the offending `input_value` —
+#: which for these models is agent output paraphrasing the user's narrative. So the
+#: message is reduced to its shape before it is stored: exception type, which field
+#: failed, and the rule that was broken. Never the value.
+_INPUT_VALUE = re.compile(r"input_value=.*?(?=,\s*input_type=|\n|$)", re.DOTALL)
+_LONG_QUOTED = re.compile(r"'[^']{80,}'|\"[^\"]{80,}\"")
+
+
+def redact_error(message: str | None, limit: int = 400) -> str | None:
+    """Strip anything that could carry a user's own words out of an error string."""
+    if not message:
+        return message
+    cleaned = _INPUT_VALUE.sub("input_value=<redacted>", message)
+    cleaned = _LONG_QUOTED.sub("'<redacted>'", cleaned)
+    if len(cleaned) > limit:
+        cleaned = cleaned[:limit] + f"… [truncated, {len(message)} chars]"
+    return cleaned
+
+
 @dataclass
 class AgentResult:
     """One agent's run: its validated output, what it cost, and what went wrong."""
@@ -55,6 +76,37 @@ class AgentResult:
     @property
     def simulated(self) -> bool:
         return bool(self.usage and self.usage.simulated)
+
+
+def demo_result(agent_name: str, output_type: Any, entry_text: str = "",
+                criteria: list[dict] | None = None) -> AgentResult:
+    """A scripted result for demo mode, with no model and no API key.
+
+    Demo mode is a product mode, not a test double: a grader whose key expired still sees
+    the whole journey. The scripted output goes through the **same Pydantic contract** as
+    a real response, so the demo cannot show something the real path would reject.
+
+    Usage is reported as zero and flagged simulated, so nothing here can reach a cost
+    figure.
+    """
+    from ..demo_provider import build_demo_output
+
+    payload = build_demo_output(agent_name, entry_text, criteria)
+    try:
+        output = output_type(**payload)
+    except Exception as exc:
+        return AgentResult(
+            agent=agent_name, ok=False,
+            error=redact_error(f"demo output failed its own contract: {exc}"),
+            usage=costs.Usage(model_name="kryteria-demo", simulated=True),
+        )
+    return AgentResult(
+        agent=agent_name,
+        output=output,
+        usage=costs.Usage(model_name="kryteria-demo", simulated=True),
+        cost_usd=0.0,
+        tool_calls=[],
+    )
 
 
 async def run_agent(
@@ -78,7 +130,8 @@ async def run_agent(
     except Exception as exc:  # validation failure, provider error, timeout
         elapsed = int((time.perf_counter() - started) * 1000)
         return AgentResult(
-            agent=name, ok=False, error=f"{type(exc).__name__}: {exc}",
+            agent=name, ok=False,
+            error=redact_error(f"{type(exc).__name__}: {exc}"),
             latency_ms=elapsed,
             usage=costs.Usage(model_name=info.model_name, simulated=info.simulated),
         )

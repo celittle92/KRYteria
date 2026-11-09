@@ -35,6 +35,13 @@ CREATE TABLE IF NOT EXISTS accounts (
     resource_offering TEXT  NOT NULL DEFAULT 'proactive'
                             CHECK (resource_offering IN ('proactive', 'on_request',
                                                          'suppressed')),
+    -- What KRYteria keeps after a brain dump has been processed. The user's default,
+    -- settable once in settings rather than answered every time; each dump may override
+    -- it. `analysis_only` is the interesting one: somebody may want to keep the fact
+    -- that they noticed a pattern without keeping the intimate 2,000-word account they
+    -- wrote at 1 a.m.
+    retention       TEXT    NOT NULL DEFAULT 'analysis_only'
+                            CHECK (retention IN ('discard', 'analysis_only', 'keep_all')),
     created_at      TEXT    NOT NULL,
     updated_at      TEXT,
     last_seen_at    TEXT
@@ -236,6 +243,13 @@ CREATE TABLE IF NOT EXISTS entries (
     how_it_affected  TEXT,
     witness          TEXT    NOT NULL DEFAULT 'firsthand'
                              CHECK (witness IN ('firsthand', 'inferred', 'secondhand')),
+    -- What was decided for THIS entry, which may differ from the account default.
+    retention        TEXT    NOT NULL DEFAULT 'analysis_only'
+                             CHECK (retention IN ('discard', 'analysis_only', 'keep_all')),
+    -- When the original narrative was actually erased. The row survives so its
+    -- observations, mappings and assessments keep something to point at — the entry
+    -- becomes a dated placeholder rather than disappearing and orphaning its evidence.
+    original_erased_at TEXT,
     created_at       TEXT    NOT NULL,
     deleted_at       TEXT
 );

@@ -11,7 +11,7 @@ from __future__ import annotations
 from pydantic_ai import Agent
 
 from ..models import NarrativeOutput
-from .base import AgentResult, load_prompt, run_agent
+from .base import AgentResult, demo_result, load_prompt, run_agent
 
 PROMPT_PATH = "narrative.md"
 AGENT_NAME = "narrative"
@@ -54,6 +54,8 @@ def compose_input(entry_text: str, *, occurred_on: str | None = None,
 
 
 async def run(model, info, entry_text: str, **kw) -> AgentResult:
+    if info.mode.value == "demo":
+        return demo_result(AGENT_NAME, NarrativeOutput, entry_text)
     return await run_agent(
         build(model), compose_input(entry_text, **kw),
         name=AGENT_NAME, info=info,

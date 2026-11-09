@@ -10,7 +10,7 @@ from __future__ import annotations
 from pydantic_ai import Agent
 
 from ..models import CriteriaOutput
-from .base import AgentResult, load_prompt, run_agent
+from .base import AgentResult, demo_result, load_prompt, run_agent
 
 PROMPT_PATH = "criteria.md"
 AGENT_NAME = "criteria"
@@ -130,6 +130,8 @@ def compose_input(*, value: str, desired_behavior: str, why_it_matters: str | No
 
 
 async def run(model, info, *, store=None, **kw) -> AgentResult:
+    if info.mode.value == "demo":
+        return demo_result(AGENT_NAME, CriteriaOutput, kw.get("entry_text", ""))
     return await run_agent(
         build(model, store), compose_input(**kw, has_research=store is not None),
         name=AGENT_NAME, info=info,

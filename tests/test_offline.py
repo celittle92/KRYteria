@@ -77,7 +77,7 @@ def test_criteria_are_versioned_not_overwritten() -> None:
         why_it_matters="I stop trusting my own judgment when I let this slide",
     )
     c2 = s.revise_criterion(
-        c1, revision_note="Decided I was being too rigid",
+        acct, c1, revision_note="Decided I was being too rigid",
         desired_behavior="Tells me when plans change",
     )
 
@@ -109,9 +109,9 @@ def test_criteria_are_versioned_not_overwritten() -> None:
     check("unrevised field carries forward", lineage[1]["value"] == "Follow-through")
 
     expect_raises("revising a superseded version is refused", StoreError,
-                  s.revise_criterion, c1, value="x")
+                  s.revise_criterion, acct, c1, value="x")
     expect_raises("unknown field is refused", StoreError,
-                  s.revise_criterion, c2, nonsense="x")
+                  s.revise_criterion, acct, c2, nonsense="x")
 
 
 # ---------------------------------------------------------------- pattern evidence
@@ -353,7 +353,7 @@ def test_standards_are_never_judged() -> None:
     ]:
         cid = s.create_criterion(acct, value=value,
                                  desired_behavior=f"Shows {value.lower()}")
-        s.add_criterion_to_profile(prof, cid, tier=tier)
+        s.add_criterion_to_profile(acct, prof, cid, tier=tier)
         check(f"{value!r} is accepted as written", bool(cid))
 
     rows = s.list_criteria(acct)
@@ -362,13 +362,13 @@ def test_standards_are_never_judged() -> None:
     check("no score column leaked in", not any(
         k in rows[0] for k in ("score", "rating", "importance", "quality")))
 
-    in_profile = s.list_profile_criteria(prof)
+    in_profile = s.list_profile_criteria(acct, prof)
     check("mandatory criteria sort first",
           [r["tier"] for r in in_profile][:2] == ["mandatory", "mandatory"])
     check("aspirational sorts last", in_profile[-1]["tier"] == "aspirational")
 
     expect_raises("an unknown tier is refused", StoreError,
-                  s.add_criterion_to_profile, prof, rows[0]["id"], tier="essential")
+                  s.add_criterion_to_profile, acct, prof, rows[0]["id"], tier="essential")
 
 
 def test_profiles_are_independent() -> None:
@@ -386,13 +386,13 @@ def test_profiles_are_independent() -> None:
     kids = s.create_criterion(acct, value="Wants children",
                               desired_behavior="Wants children within a few years")
 
-    s.add_criterion_to_profile(husband, attraction, tier="preferred")
-    s.add_criterion_to_profile(husband, kids, tier="mandatory")
-    s.add_criterion_to_profile(ons, attraction, tier="mandatory")
-    s.add_criterion_to_profile(ons, kids, relevance="not_applicable")
+    s.add_criterion_to_profile(acct, husband, attraction, tier="preferred")
+    s.add_criterion_to_profile(acct, husband, kids, tier="mandatory")
+    s.add_criterion_to_profile(acct, ons, attraction, tier="mandatory")
+    s.add_criterion_to_profile(acct, ons, kids, relevance="not_applicable")
 
     def tier_of(profile, criterion):
-        return next(r["tier"] for r in s.list_profile_criteria(profile)
+        return next(r["tier"] for r in s.list_profile_criteria(acct, profile)
                     if r["criterion_id"] == criterion)
 
     check("attraction is Preferred for a husband", tier_of(husband, attraction) == "preferred")
@@ -401,28 +401,28 @@ def test_profiles_are_independent() -> None:
     check("one criterion, one library row", len(s.list_criteria(acct)) == 2)
 
     # Changing one profile must not touch the other.
-    s.set_profile_tier(husband, attraction, "mandatory")
+    s.set_profile_tier(acct, husband, attraction, "mandatory")
     check("the edited profile changed", tier_of(husband, attraction) == "mandatory")
     check("the other profile did not", tier_of(ons, attraction) == "mandatory")
-    s.set_profile_tier(ons, attraction, "preferred")
+    s.set_profile_tier(acct, ons, attraction, "preferred")
     check("and it works the other way too",
           tier_of(husband, attraction) == "mandatory"
           and tier_of(ons, attraction) == "preferred")
 
     # Copying is explicit, and produces an independent configuration.
     casual = s.create_profile(acct, "Fuck Buddy KRYteria", objective="Ongoing casual")
-    s.copy_criteria_to_profile(husband, casual)
-    check("copied criteria arrive", len(s.list_profile_criteria(casual)) == 2)
+    s.copy_criteria_to_profile(acct, husband, casual)
+    check("copied criteria arrive", len(s.list_profile_criteria(acct, casual)) == 2)
     check("copied settings come across", tier_of(casual, attraction) == "mandatory")
-    s.set_profile_tier(casual, attraction, "aspirational")
+    s.set_profile_tier(acct, casual, attraction, "aspirational")
     check("editing the copy does not touch the source",
           tier_of(husband, attraction) == "mandatory")
     check("provenance is recorded",
           any(r["copied_from_profile_id"] == husband
-              for r in s.list_profile_criteria(casual)))
+              for r in s.list_profile_criteria(acct, casual)))
 
     expect_raises("a profile cannot copy into itself", StoreError,
-                  s.copy_criteria_to_profile, husband, husband)
+                  s.copy_criteria_to_profile, acct, husband, husband)
 
 
 def test_not_applicable_is_not_fail_or_unknown() -> None:
@@ -431,8 +431,8 @@ def test_not_applicable_is_not_fail_or_unknown() -> None:
     husband = s.create_profile(acct, "Husband KRYteria")
     ons = s.create_profile(acct, "One Night Stand KRYteria")
     kids = s.create_criterion(acct, value="Wants children", desired_behavior="Wants kids")
-    s.add_criterion_to_profile(husband, kids, tier="mandatory")
-    s.add_criterion_to_profile(ons, kids, relevance="not_applicable")
+    s.add_criterion_to_profile(acct, husband, kids, tier="mandatory")
+    s.add_criterion_to_profile(acct, ons, kids, relevance="not_applicable")
     p = s.upsert_person(acct, "J")
 
     husband_board = s.assessment_board(acct, husband, p)
@@ -448,7 +448,7 @@ def test_not_applicable_is_not_fail_or_unknown() -> None:
 
     # A status set under one profile never leaks into another.
     s.set_assessment(acct, husband, kids, p, "fail")
-    check("Husband now fails", s.get_assessment(husband, kids, p) == "fail")
+    check("Husband now fails", s.get_assessment(acct, husband, kids, p) == "fail")
     check("One Night Stand is unaffected",
           s.assessment_board(acct, ons, p)[0]["assessment"] == "not_applicable")
 
@@ -456,14 +456,14 @@ def test_not_applicable_is_not_fail_or_unknown() -> None:
 def test_assessment_history_is_kept() -> None:
     s, acct, dom, prof = fresh_profile()
     c = s.create_criterion(acct, value="Consistency", desired_behavior="Follows through")
-    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    s.add_criterion_to_profile(acct, prof, c, tier="mandatory")
     p = s.upsert_person(acct, "J")
 
     aid = s.set_assessment(acct, prof, c, p, "unknown", origin="system_initial")
     s.set_assessment(acct, prof, c, p, "pass", explanation="Three follow-throughs")
     s.set_assessment(acct, prof, c, p, "unknown", explanation="Changed my mind")
 
-    hist = s.assessment_history(aid)
+    hist = s.assessment_history(acct, aid)
     check("every transition is kept", len(hist) == 3)
     check("transitions record what they came from",
           [h["previous_status"] for h in hist] == ["unknown", "unknown", "pass"])
@@ -478,15 +478,15 @@ def test_agent_cannot_silently_change_an_assessment() -> None:
     s, acct, dom, prof = fresh_profile()
     c = s.create_criterion(acct, value="Emotional maturity",
                            desired_behavior="Handles disagreement without hostility")
-    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    s.add_criterion_to_profile(acct, prof, c, tier="mandatory")
     p = s.upsert_person(acct, "J", domain_id=dom)
 
-    check("assessment starts unknown", s.get_assessment(prof, c, p) == "unknown")
+    check("assessment starts unknown", s.get_assessment(acct, prof, c, p) == "unknown")
 
     pid = s.propose_assessment(acct, prof, c, p, "pass",
                                rationale="Took time to regulate, came back, apologised")
     check("the proposal does not move the status",
-          s.get_assessment(prof, c, p) == "unknown")
+          s.get_assessment(acct, prof, c, p) == "unknown")
     check("the proposal is pending", len(s.list_pending_proposals(acct)) == 1)
     check("the proposal records what it would change from",
           s.list_pending_proposals(acct)[0]["current_status"] == "unknown")
@@ -495,7 +495,7 @@ def test_agent_cannot_silently_change_an_assessment() -> None:
                   s.propose_assessment, acct, prof, c, p, "fail", "   ")
 
     s.resolve_proposal(acct, pid, "accepted")
-    check("accepting applies it", s.get_assessment(prof, c, p) == "pass")
+    check("accepting applies it", s.get_assessment(acct, prof, c, p) == "pass")
     check("no proposals left pending", s.list_pending_proposals(acct) == [])
     expect_raises("a resolved proposal cannot be resolved twice", StoreError,
                   s.resolve_proposal, acct, pid, "rejected")
@@ -504,18 +504,18 @@ def test_agent_cannot_silently_change_an_assessment() -> None:
     pid2 = s.propose_assessment(acct, prof, c, p, "fail",
                                 rationale="One difficult evening")
     s.resolve_proposal(acct, pid2, "rejected")
-    check("rejecting changes nothing", s.get_assessment(prof, c, p) == "pass")
+    check("rejecting changes nothing", s.get_assessment(acct, prof, c, p) == "pass")
 
     # Editing lets the user pick a third answer.
     pid3 = s.propose_assessment(acct, prof, c, p, "fail",
                                 rationale="Another difficult evening")
     s.resolve_proposal(acct, pid3, "edited", final_status="unknown")
     check("editing applies the user's choice, not the agent's",
-          s.get_assessment(prof, c, p) == "unknown")
+          s.get_assessment(acct, prof, c, p) == "unknown")
 
     # An accepted proposal is recorded as the user's act, not the agent's.
     aid = s.set_assessment(acct, prof, c, p, "unknown")
-    origins = {h["origin"] for h in s.assessment_history(aid)}
+    origins = {h["origin"] for h in s.assessment_history(acct, aid)}
     check("the history distinguishes accepted from edited proposals",
           {"user_accepted_proposal", "user_edited_proposal"} <= origins)
 
@@ -529,14 +529,14 @@ def test_assessment_is_per_person() -> None:
     s, acct, dom, prof = fresh_profile()
     c = s.create_criterion(acct, value="Follow-through",
                            desired_behavior="Does what they said")
-    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    s.add_criterion_to_profile(acct, prof, c, tier="mandatory")
     a = s.upsert_person(acct, "A", domain_id=dom)
     b = s.upsert_person(acct, "B", domain_id=dom)
 
     s.set_assessment(acct, prof, c, a, "pass")
     s.set_assessment(acct, prof, c, b, "fail")
-    check("person A passes", s.get_assessment(prof, c, a) == "pass")
-    check("person B fails on the same criterion", s.get_assessment(prof, c, b) == "fail")
+    check("person A passes", s.get_assessment(acct, prof, c, a) == "pass")
+    check("person B fails on the same criterion", s.get_assessment(acct, prof, c, b) == "fail")
 
     board = s.assessment_board(acct, prof, a)
     check("the board carries one row per criterion", len(board) == 1)
@@ -544,7 +544,7 @@ def test_assessment_is_per_person() -> None:
 
     s.set_assessment(acct, prof, c, a, "unknown")
     check("a status can be walked back to unknown",
-          s.get_assessment(prof, c, a) == "unknown")
+          s.get_assessment(acct, prof, c, a) == "unknown")
 
 
 def test_evidence_has_four_relations() -> None:
@@ -576,6 +576,138 @@ def test_evidence_has_four_relations() -> None:
     accepted = [l for l in s.list_evidence_links(acct) if l["id"] == own]
     check("a user's own mapping is accepted immediately",
           accepted[0]["resolution"] == "accepted")
+
+
+def test_retention_erases_what_was_not_asked_for() -> None:
+    """The user decides what KRYteria keeps, and erasure actually erases.
+
+    Somebody may want to keep the fact that they noticed a pattern without keeping the
+    intimate 2,000-word account they wrote at 1 a.m.
+    """
+    s, acct, dom = fresh()
+    account = s.get_account(acct)
+    check("the default keeps analysis but not the original",
+          account["retention"] == "analysis_only")
+
+    # keep_all leaves everything alone.
+    e1 = s.create_entry(acct, dom, body="A long private account.")
+    s.save_observations(acct, e1, [{"kind": "reported_event", "text": "He was late."}])
+    r1 = s.apply_retention(acct, e1, "keep_all")
+    check("keep_all erases nothing", r1["original_erased"] is False)
+    check("and the narrative survives", s.get_entry(acct, e1)["body"] is not None)
+
+    # analysis_only erases the narrative, keeps what was learned from it.
+    e2 = s.create_entry(acct, dom, body="Another private account, 2000 words of it.")
+    s.save_observations(acct, e2, [{"kind": "reported_event", "text": "He cancelled."}])
+    r2 = s.apply_retention(acct, e2, "analysis_only")
+    check("analysis_only erases the original", r2["original_erased"] is True)
+    check("the body is NULL, not blanked",
+          s.get_entry(acct, e2)["body"] is None)
+    check("the observations survive",
+          len(s.list_observations(acct, entry_ids=[e2])) == 1)
+    check("the entry row survives as a placeholder",
+          s.get_entry(acct, e2) is not None)
+    check("and records when it was erased",
+          bool(s.get_entry(acct, e2)["original_erased_at"]))
+
+    # discard takes the derived records too — an observation can be a near-quotation.
+    e3 = s.create_entry(acct, dom, body="The most private one.")
+    s.save_observations(acct, e3, [{"kind": "reported_event", "text": "Near-quotation."}])
+    s.save_interrogation(acct, entry_id=e3, claim="He's always late.",
+                         gap_kind="frequency", question="How often?")
+    r3 = s.apply_retention(acct, e3, "discard")
+    check("discard erases the original", r3["original_erased"] is True)
+    check("and removes what was derived from it", r3["derived_removed"] >= 2)
+    check("no observations are left",
+          s.list_observations(acct, entry_ids=[e3]) == [])
+    check("no quoted claims are left",
+          s.list_interrogations(acct, entry_id=e3) == [])
+
+    # Structured fields are erased too, not just the free-text body.
+    e4 = s.create_entry(acct, dom, entry_mode="structured",
+                        what_happened="Something private", what_expected="Something else")
+    s.apply_retention(acct, e4, "analysis_only")
+    row = s.get_entry(acct, e4)
+    check("structured fields are erased as well",
+          row["what_happened"] is None and row["what_expected"] is None)
+
+    expect_raises("an unknown retention mode is refused", StoreError,
+                  s.apply_retention, acct, e1, "keep_forever")
+    expect_raises("retention cannot be applied to another account's entry", StoreError,
+                  s.apply_retention, acct + 999, e1, "discard")
+
+    report = s.retention_report(acct)
+    check("the report counts what is actually kept",
+          report["originals_erased"] == 3, f"got {report['originals_erased']}")
+    check("and names the account default",
+          report["default_retention"] == "analysis_only")
+
+    # Changing the default and sweeping applies it to what was already written.
+    s.set_preferences(acct, retention="analysis_only")
+    e5 = s.create_entry(acct, dom, body="Written before the sweep.")
+    swept = s.erase_originals(acct)
+    check("the sweep erases entries that were still holding originals", swept >= 1)
+    check("including the new one", s.get_entry(acct, e5)["body"] is None)
+    check("but never one marked keep_all",
+          s.get_entry(acct, e1)["body"] is not None)
+
+    expect_raises("an unknown default is refused", StoreError,
+                  s.set_preferences, acct, retention="whatever")
+
+
+def test_store_refuses_cross_account_reach() -> None:
+    """Enforced at the database layer, not only in the API.
+
+    The API's ownership guards are the first line. These are the line that holds when
+    somebody adds a route and forgets — and for this product a leak would tell one
+    person that another is journalling about them.
+    """
+    from backend.store import NotOwned
+
+    s, alice, alice_dom = fresh()
+    bob = s.create_account("bob", "a long enough passphrase")
+    bob_dom = s.create_domain(bob, "Dating", "romantic")
+
+    a_crit = s.create_criterion(alice, value="Follow-through", desired_behavior="x")
+    a_prof = s.create_profile(alice, "Boyfriend KRYteria")
+    s.add_criterion_to_profile(alice, a_prof, a_crit, tier="mandatory")
+    a_person = s.upsert_person(alice, "J", domain_id=alice_dom)
+    a_entry = s.create_entry(alice, alice_dom, body="private")
+    a_assess = s.set_assessment(alice, a_prof, a_crit, a_person, "pass")
+
+    b_crit = s.create_criterion(bob, value="Honesty", desired_behavior="y")
+    b_prof = s.create_profile(bob, "Bob's profile")
+
+    for label, fn, args in [
+        ("read her profile's criteria", s.list_profile_criteria, (bob, a_prof)),
+        ("revise her criterion", s.revise_criterion, (bob, a_crit)),
+        ("retire her criterion", s.retire_criterion, (bob, a_crit)),
+        ("read her assessment history", s.assessment_history, (bob, a_assess)),
+        ("erase her entry", s.apply_retention, (bob, a_entry, "discard")),
+    ]:
+        try:
+            fn(*args)
+        except NotOwned:
+            check(f"bob cannot {label}", True)
+        except Exception as e:
+            check(f"bob cannot {label}", False, f"raised {type(e).__name__}: {e}")
+        else:
+            check(f"bob cannot {label}", False, "it succeeded")
+
+    expect_raises("bob cannot add her criterion to his profile", StoreError,
+                  s.add_criterion_to_profile, bob, b_prof, a_crit)
+    expect_raises("bob cannot add his criterion to her profile", StoreError,
+                  s.add_criterion_to_profile, bob, a_prof, b_crit)
+    expect_raises("bob cannot retier her profile", StoreError,
+                  s.set_profile_tier, bob, a_prof, a_crit, "preferred")
+    expect_raises("bob cannot copy from her profile", StoreError,
+                  s.copy_criteria_to_profile, bob, a_prof, b_prof)
+
+    check("her assessment is untouched",
+          s.get_assessment(alice, a_prof, a_crit, a_person) == "pass")
+    check("her entry is untouched", s.get_entry(alice, a_entry)["body"] == "private")
+    check("bob reading her assessment gets unknown, not her answer",
+          s.get_assessment(bob, a_prof, a_crit, a_person) == "unknown")
 
 
 def test_stale_database_fails_with_an_answer() -> None:
@@ -764,7 +896,7 @@ def test_ticking_a_box_does_not_set_pass() -> None:
     observation; it does not establish that the criterion passes."""
     s, acct, dom, prof = fresh_profile()
     c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
-    s.add_criterion_to_profile(prof, c, tier="mandatory")
+    s.add_criterion_to_profile(acct, prof, c, tier="mandatory")
     p = s.upsert_person(acct, "J", domain_id=dom)
     items = s.save_checklist_items(acct, c, [
         {"text": f"Indicator {i}", "source_level": "agent_hypothesis"} for i in range(6)
@@ -774,7 +906,7 @@ def test_ticking_a_box_does_not_set_pass() -> None:
         s.record_checklist_observation(acct, item, person_id=p)
 
     check("every box ticked", len(items) == 6)
-    check("the criterion is still unknown", s.get_assessment(prof, c, p) == "unknown")
+    check("the criterion is still unknown", s.get_assessment(acct, prof, c, p) == "unknown")
 
     board = s.list_checklist(acct, c, profile_id=prof, person_id=p)
     check("observations are counted and shown",
@@ -792,7 +924,7 @@ def test_ticking_a_box_does_not_set_pass() -> None:
     check("a contradicted indicator still shows what was observed",
           board2[1]["times_observed"] == 1)
     check("the criterion is STILL unknown after all of that",
-          s.get_assessment(prof, c, p) == "unknown")
+          s.get_assessment(acct, prof, c, p) == "unknown")
 
     expect_raises("an unknown checklist state is refused", StoreError,
                   s.record_checklist_observation, acct, items[0], state="maybe")
@@ -1021,12 +1153,12 @@ def test_auth_round_trip() -> None:
 def test_run_log_totals() -> None:
     s, acct, _ = fresh()
     run = s.start_run(acct, "journal_entry")
-    s.log_step(run, 1, "evidence", input_tokens=1000, cached_input_tokens=800,
+    s.log_step(acct, run, 1, "evidence", input_tokens=1000, cached_input_tokens=800,
                output_tokens=200, estimated_cost_usd=0.0012, model_name="gpt-6-luna",
                tool_calls=["save_observations"])
-    s.log_step(run, 2, "pattern", input_tokens=1500, cached_input_tokens=1200,
+    s.log_step(acct, run, 2, "pattern", input_tokens=1500, cached_input_tokens=1200,
                output_tokens=300, estimated_cost_usd=0.0018, model_name="gpt-6-luna")
-    s.finish_run(run, "ok")
+    s.finish_run(acct, run, "ok")
 
     trace = s.get_run(acct, run)
     check("trace has both steps", len(trace["steps"]) == 2)
@@ -1049,14 +1181,14 @@ def test_unreported_cache_is_unknown_not_zero() -> None:
     """
     s, acct, _ = fresh()
     run = s.start_run(acct, "analysis")
-    s.log_step(run, 1, "pattern", input_tokens=1000, output_tokens=100)  # no cache reported
+    s.log_step(acct, run, 1, "pattern", input_tokens=1000, output_tokens=100)  # no cache reported
     trace = s.get_run(acct, run)
     check("unreported cache is None, not 0", trace["cached_input_tokens"] is None)
     check("the gap is flagged", trace["cached_tokens_reported"] is False)
     check("the raw step is NULL too", trace["steps"][0]["cached_input_tokens"] is None)
 
     run2 = s.start_run(acct, "analysis")
-    s.log_step(run2, 1, "pattern", input_tokens=1000, cached_input_tokens=0,
+    s.log_step(acct, run2, 1, "pattern", input_tokens=1000, cached_input_tokens=0,
                output_tokens=100)
     trace2 = s.get_run(acct, run2)
     check("a genuine zero is recorded as zero", trace2["cached_input_tokens"] == 0)
@@ -1067,9 +1199,9 @@ def test_simulated_steps_are_excluded_from_cost() -> None:
     """Demo mode must never contaminate a measured cost figure."""
     s, acct, _ = fresh()
     run = s.start_run(acct, "analysis")
-    s.log_step(run, 1, "pattern", input_tokens=1000, output_tokens=100,
+    s.log_step(acct, run, 1, "pattern", input_tokens=1000, output_tokens=100,
                estimated_cost_usd=0.002, model_name="gpt-6-luna")
-    s.log_step(run, 2, "reflection", input_tokens=9999, output_tokens=9999,
+    s.log_step(acct, run, 2, "reflection", input_tokens=9999, output_tokens=9999,
                estimated_cost_usd=99.0, is_simulated=True, model_name="demo")
     trace = s.get_run(acct, run)
     check("simulated tokens are excluded", trace["input_tokens"] == 1000)

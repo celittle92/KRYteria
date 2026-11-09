@@ -12,7 +12,7 @@ from typing import Sequence
 from pydantic_ai import Agent
 
 from ..models import EvidenceOutput, NarrativeOutput
-from .base import AgentResult, load_prompt, run_agent
+from .base import AgentResult, demo_result, load_prompt, run_agent
 
 PROMPT_PATH = "evidence.md"
 AGENT_NAME = "evidence"
@@ -85,6 +85,8 @@ def compose_input(profile_name: str, criteria: Sequence[dict],
 
 async def run(model, info, *, profile_name: str, criteria: Sequence[dict],
               narrative: NarrativeOutput) -> AgentResult:
+    if info.mode.value == "demo":
+        return demo_result(AGENT_NAME, EvidenceOutput, "", list(criteria))
     return await run_agent(
         build(model), compose_input(profile_name, criteria, narrative),
         name=AGENT_NAME, info=info,

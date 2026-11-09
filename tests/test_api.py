@@ -338,6 +338,95 @@ def test_checklist_tick_does_not_set_pass() -> None:
 
 # ---------------------------------------------------------------- account
 
+def test_retention_over_http() -> None:
+    """The choice from the post-dump screen, and what it actually erases."""
+    c = new_client("retention-user")
+
+    # analyze=True runs the real workflow — demo mode needs no key and bills nothing.
+    r = c.post("/api/brain-dump", json={
+        "text": "A long private account of a difficult evening.",
+        "retention": "keep_all"})
+    kept = r.json()["entry"]["id"]
+    check("keep_all leaves the narrative", r.json()["entry"]["body"] is not None)
+    check("the response says what was kept",
+          r.json()["retention"]["original_erased"] is False)
+
+    r = c.post("/api/brain-dump", json={
+        "text": "Another private account, written at 1am.",
+        "retention": "analysis_only"})
+    erased = r.json()["entry"]["id"]
+    check("analysis_only erases the narrative in the same request",
+          r.json()["entry"]["body"] is None)
+    check("and says so", r.json()["retention"]["original_erased"] is True)
+
+    check("the erased entry is still listed as a placeholder",
+          any(e["id"] == erased for e in c.get("/api/entries").json()))
+    check("but holds no text",
+          c.get(f"/api/entries/{erased}").json()["body"] is None)
+
+    # Changing the mind afterwards, from the screen that shows the analysis.
+    r = c.post(f"/api/entries/{kept}/retention", json={"retention": "analysis_only"})
+    check("retention can be changed after the fact", r.status_code == 200)
+    check("the warning is explicit", "cannot be recovered" in r.json()["note"])
+    check("the narrative is gone",
+          c.get(f"/api/entries/{kept}").json()["body"] is None)
+
+    report = c.get("/api/retention").json()
+    check("the report counts erased originals", report["originals_erased"] == 2)
+    check("and none still stored", report["originals_still_stored"] == 0)
+
+    r = c.patch("/api/auth/preferences", json={"retention": "discard"})
+    check("the default is settable", r.json()["retention"] == "discard")
+    r = c.patch("/api/auth/preferences", json={"retention": "forever"})
+    check("an invalid default is refused", r.status_code == 422)
+
+    # A dump with no explicit choice follows the account default.
+    r = c.post("/api/brain-dump", json={"text": "Follows the default."})
+    check("the account default applies when none is given",
+          r.json()["retention"]["retention"] == "discard")
+
+    # Saving without analysis keeps what was written: there was no processing, so
+    # analysis_only would erase the only thing the user created.
+    c.patch("/api/auth/preferences", json={"retention": "analysis_only"})
+    r = c.post("/api/brain-dump", json={"text": "Just a note.", "analyze": False})
+    check("an unanalysed entry is kept as written",
+          r.json()["entry"]["body"] == "Just a note.")
+    check("and says why", "kept as written" in r.json()["note"])
+    r = c.post("/api/brain-dump", json={
+        "text": "Write it down and let it go.", "analyze": False, "retention": "discard"})
+    check("but an explicit discard is still honoured",
+          r.json()["entry"]["body"] is None)
+
+    other = new_client("retention-other")
+    r = other.post(f"/api/entries/{kept}/retention", json={"retention": "discard"})
+    check("another account cannot erase your entry", r.status_code == 404,
+          f"got {r.status_code}")
+
+
+def test_no_route_accepts_another_users_identity() -> None:
+    """There is no mechanism that could signal one user about another.
+
+    Asserted against the OpenAPI schema rather than by reading the code, so a route added
+    later with a user-identifying parameter fails this.
+    """
+    c = new_client("schema-user")
+    spec = c.get("/openapi.json").json()
+
+    offenders = []
+    for path, methods in spec["paths"].items():
+        for method, op in methods.items():
+            for param in op.get("parameters", []):
+                name = param["name"].lower()
+                if name in {"account_id", "user_id", "handle", "email", "owner_id"}:
+                    offenders.append(f"{method.upper()} {path} ?{param['name']}")
+    check("no route takes another user's identifier as a parameter",
+          not offenders, "; ".join(offenders))
+
+    bodies = repr(spec.get("components", {}).get("schemas", {})).lower()
+    for forbidden in ("share", "invite", "collaborat", "notify_person", "mention_user"):
+        check(f"no schema mentions '{forbidden}'", forbidden not in bodies)
+
+
 def test_export_and_delete() -> None:
     c = new_client("export-user")
     c.post("/api/criteria", json={"value": "X", "desired_behavior": "Y"})

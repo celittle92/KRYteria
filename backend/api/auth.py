@@ -62,6 +62,6 @@ def set_preferences(
 ):
     store.set_preferences(
         account_id, tone_mode=body.tone_mode, theme=body.theme,
-        resource_offering=body.resource_offering,
+        resource_offering=body.resource_offering, retention=body.retention,
     )
     return store.get_account(account_id)

@@ -35,10 +35,34 @@ class SignIn(BaseModel):
     passphrase: str
 
 
+Retention = Literal["discard", "analysis_only", "keep_all"]
+
+
 class Preferences(BaseModel):
     tone_mode: Literal["clarity", "tough_love"] | None = None
     theme: Literal["dark", "warm"] | None = None
     resource_offering: Literal["proactive", "on_request", "suppressed"] | None = None
+    retention: Retention | None = Field(
+        default=None,
+        description="What KRYteria keeps after processing a brain dump. Set once here "
+                    "rather than answered every time; each dump can still override it.",
+    )
+
+
+class RetentionChoice(BaseModel):
+    """The choice offered after a brain dump has been processed.
+
+    discard       — the narrative and everything derived from it go
+    analysis_only — the narrative is erased; observations and mappings survive
+    keep_all      — everything stays until the user deletes it
+    """
+
+    retention: Retention
+    apply_to_past: bool = Field(
+        default=False,
+        description="Also apply this to entries already written whose originals have "
+                    "not yet been erased.",
+    )
 
 
 # ---------------------------------------------------------------- criteria library
@@ -111,6 +135,12 @@ class BrainDump(BaseModel):
     witness: Literal["firsthand", "inferred", "secondhand"] = "firsthand"
     people: list[str] = Field(default_factory=list)
     want_reflection: bool = False
+    retention: Literal["discard", "analysis_only", "keep_all"] | None = Field(
+        default=None,
+        description="Override the account default for this dump only. Null uses the "
+                    "account's setting. Applied AFTER processing, so the agents still "
+                    "see the narrative they need to read.",
+    )
     analyze: bool = Field(
         default=True,
         description="False saves the entry without spending a model call. Writing "

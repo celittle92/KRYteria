@@ -30,8 +30,9 @@ suites and the Python API; there is no browser UI to open yet.
 | Agent output contracts | built, 94 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
 | Deterministic demo mode (no API key) | built |
-| HTTP API | built, 105 checks |
-| Synthetic demo account | built |
+| HTTP API | built, 129 checks |
+| Privacy architecture | built — isolation, retention, redaction |
+| Synthetic demo account | built, runs with no API key |
 | Front end | not started |
 | `report.html`, `slides.html` | not started |
 
@@ -245,6 +246,40 @@ KRYteria may say *"that behaviour may be a form of coercive control."* It may ne
 ---
 
 ## Privacy
+
+> **KRYteria is a private space between a person and their AI agent. No other person can
+> know whether they have been discussed, assessed, or entered into KRYteria.**
+
+Full detail in [`docs/privacy.md`](docs/privacy.md). The short version:
+
+**Nothing can signal anybody.** There is no sharing, no collaborative assessment, no
+partner invitation, and no "you've been mentioned" mechanism of any kind. No API route
+accepts another user's identifier — every route resolves the account from a signed
+session cookie, so a route *cannot* be pointed at somebody else's rows. Being mentioned
+here is indistinguishable, to the person mentioned, from never having been mentioned.
+
+**You decide what is kept.** Three retention modes, set once and overridable per entry:
+
+| | |
+|---|---|
+| `discard` | the narrative **and everything derived from it** are erased |
+| `analysis_only` *(default)* | the narrative is erased; observations and mappings survive |
+| `keep_all` | everything stays until you delete it |
+
+Erasure overwrites the text with `NULL` and runs in the same request as processing. The
+default keeps the analysis and not the original, because keeping the most sensitive thing
+in the product should not require an opt-out.
+
+**Telemetry carries no private writing.** The execution log holds tool names, token
+counts, latency and model versions — never argument values. Error messages are redacted
+before storage, because a validation error embeds the value that failed it.
+
+**What we do not control:** the model provider received your reflection in order to
+process it. Our erasure governs our database, not theirs. Their retention policy is
+**not yet established**, so KRYteria does not claim your data is never retained anywhere.
+See `docs/privacy.md` §5.
+
+### The rest
 
 - Accounts are **anonymous** — a handle of your choosing, no email, no name.
 - Passphrases are hashed with **Argon2id** (`pwdlib`). Never stored, returned, logged or

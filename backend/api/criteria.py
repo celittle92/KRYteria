@@ -77,7 +77,7 @@ def revise_criterion(
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, "Nothing to revise.")
     try:
         new_id = store.revise_criterion(
-            criterion_id, revision_note=body.revision_note, **changes
+            account_id, criterion_id, revision_note=body.revision_note, **changes
         )
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
@@ -104,7 +104,7 @@ def retire_criterion(
 ):
     """Retire, not delete. The history and any evidence linked to it survive."""
     owned_criterion(store, account_id, criterion_id)
-    store.retire_criterion(criterion_id)
+    store.retire_criterion(account_id, criterion_id)
     return {"retired": criterion_id}
 
 
@@ -118,7 +118,7 @@ def list_profiles(
 ):
     profiles = store.list_profiles(account_id, include_archived=include_archived)
     for p in profiles:
-        p["criteria_count"] = len(store.list_profile_criteria(p["id"]))
+        p["criteria_count"] = len(store.list_profile_criteria(account_id, p['id']))
     return profiles
 
 
@@ -149,7 +149,7 @@ def list_profile_criteria(
     store: Store = Depends(get_store),
 ):
     owned_profile(store, account_id, profile_id)
-    return store.list_profile_criteria(profile_id)
+    return store.list_profile_criteria(account_id, profile_id)
 
 
 @router.post("/profiles/{profile_id}/criteria", status_code=status.HTTP_201_CREATED)
@@ -163,14 +163,14 @@ def add_criterion_to_profile(
     owned_criterion(store, account_id, body.criterion_id)
     try:
         store.add_criterion_to_profile(
-            profile_id, body.criterion_id, tier=body.tier, relevance=body.relevance,
+            account_id, profile_id, body.criterion_id, tier=body.tier, relevance=body.relevance,
         )
     except sqlite3.IntegrityError:
         raise HTTPException(status.HTTP_409_CONFLICT,
                             "That criterion is already on this profile.")
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
-    return store.list_profile_criteria(profile_id)
+    return store.list_profile_criteria(account_id, profile_id)
 
 
 @router.patch("/profiles/{profile_id}/criteria/{criterion_id}")
@@ -189,10 +189,10 @@ def set_tier(
     owned_profile(store, account_id, profile_id)
     owned_criterion(store, account_id, criterion_id)
     try:
-        store.set_profile_tier(profile_id, criterion_id, body.tier)
+        store.set_profile_tier(account_id, profile_id, criterion_id, body.tier)
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
-    return store.list_profile_criteria(profile_id)
+    return store.list_profile_criteria(account_id, profile_id)
 
 
 @router.post("/profiles/{profile_id}/copy-criteria")
@@ -211,11 +211,11 @@ def copy_criteria(
     owned_profile(store, account_id, body.source_profile_id)
     try:
         created = store.copy_criteria_to_profile(
-            body.source_profile_id, profile_id, body.criterion_ids
+            account_id, body.source_profile_id, profile_id, body.criterion_ids
         )
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
-    return {"copied": len(created), "criteria": store.list_profile_criteria(profile_id)}
+    return {"copied": len(created), "criteria": store.list_profile_criteria(account_id, profile_id)}
 
 
 # ---------------------------------------------------------------- checklist mode

@@ -62,7 +62,7 @@ def set_assessment(
     return {
         "assessment_id": assessment_id,
         "status": body.status,
-        "history": store.assessment_history(assessment_id),
+        "history": store.assessment_history(account_id, assessment_id),
     }
 
 
@@ -72,7 +72,7 @@ def assessment_history(
     account_id: int = Depends(current_account_id),
     store: Store = Depends(get_store),
 ):
-    history = store.assessment_history(assessment_id)
+    history = store.assessment_history(account_id, assessment_id)
     if not history:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "No such assessment.")
     return history

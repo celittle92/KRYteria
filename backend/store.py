@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-08.2"
+SCHEMA_VERSION = "2026-11-08.3"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -77,6 +77,16 @@ DECISION_CHOICES = (
 #: V1 ships Clarity Mode only; Tough Love is V2 and not an MVP priority. Tone changes
 #: presentation, never reasoning, evidence, or an assessment outcome.
 TONE_MODES = ("clarity", "tough_love")
+
+#: What KRYteria keeps once a brain dump has been processed.
+#:
+#:   discard        the narrative and everything derived from it go
+#:   analysis_only  the narrative is erased; observations and mappings survive
+#:   keep_all       everything stays until the user deletes it
+#:
+#: ``analysis_only`` is the default. Keeping the intimate original by default would make
+#: the most sensitive thing in the product the thing that requires an opt-out.
+RETENTION_MODES = ("discard", "analysis_only", "keep_all")
 
 #: What was seen against one behavioural indicator. Four states, not a checkbox —
 #: "no opportunity to observe" is not the same as "looked and it wasn't there".
@@ -134,6 +144,18 @@ def _today() -> str:
 
 class StoreError(RuntimeError):
     """A rule this module enforces was broken. Not a database failure."""
+
+
+class NotOwned(StoreError):
+    """A row was reached that does not belong to the account asking for it.
+
+    Raised rather than returning empty, so a caller that forgot to scope a query fails
+    loudly in development instead of silently reading nothing — or, worse, something.
+
+    The HTTP layer turns this into 404, never 403: confirming a row exists but belongs to
+    somebody else is itself a disclosure, and in this application that disclosure could
+    tell one person that another person is journalling about them.
+    """
 
 
 _CREATE_TABLE = re.compile(
@@ -218,6 +240,29 @@ class Store:
             raise
         finally:
             conn.close()
+
+    # ----------------------------------------------------------------- ownership
+    #
+    # Privacy is enforced HERE as well as in the API layer, deliberately. The API's
+    # ownership guards are the first line; these are the one that holds when somebody
+    # adds a route and forgets. For an application where a leak would tell one person
+    # that another is journalling about them, one line of defence is not enough.
+
+    @staticmethod
+    def _owns(conn: sqlite3.Connection, table: str, row_id: int, account_id: int,
+              *, via: str | None = None) -> bool:
+        """Does ``account_id`` own this row? ``via`` names a table to join through."""
+        if via:
+            sql = (f"SELECT 1 FROM {table} t JOIN {via} p ON p.id = t.{via[:-1]}_id"
+                   f" WHERE t.id = ? AND p.account_id = ?")
+        else:
+            sql = f"SELECT 1 FROM {table} WHERE id = ? AND account_id = ?"
+        return conn.execute(sql, (row_id, account_id)).fetchone() is not None
+
+    def _assert_owns(self, conn: sqlite3.Connection, table: str, row_id: int,
+                     account_id: int, *, via: str | None = None) -> None:
+        if not self._owns(conn, table, row_id, account_id, via=via):
+            raise NotOwned(f"No {table[:-1]} {row_id} for this account.")
 
     def _init_schema(self) -> None:
         """Create the schema, and refuse to run against a stale database.
@@ -340,15 +385,16 @@ class Store:
     def get_account(self, account_id: int) -> dict[str, Any] | None:
         with self.read() as conn:
             row = conn.execute(
-                "SELECT id, handle, tone_mode, theme, resource_offering, timezone, is_demo,"
-                " created_at, last_seen_at FROM accounts WHERE id = ?",
+                "SELECT id, handle, tone_mode, theme, resource_offering, retention,"
+                " timezone, is_demo, created_at, last_seen_at"
+                " FROM accounts WHERE id = ?",
                 (account_id,),
             ).fetchone()
         return dict(row) if row else None
 
     def set_preferences(
         self, account_id: int, *, tone_mode: str | None = None, theme: str | None = None,
-        resource_offering: str | None = None,
+        resource_offering: str | None = None, retention: str | None = None,
     ) -> None:
         if tone_mode and tone_mode not in TONE_MODES:
             raise StoreError(f"Unknown tone mode: {tone_mode}")
@@ -358,9 +404,12 @@ class Store:
             "proactive", "on_request", "suppressed"
         ):
             raise StoreError(f"Unknown resource_offering: {resource_offering}")
+        if retention and retention not in RETENTION_MODES:
+            raise StoreError(f"Unknown retention: {retention}")
         with self.write() as conn:
             for column, value in (("tone_mode", tone_mode), ("theme", theme),
-                                  ("resource_offering", resource_offering)):
+                                  ("resource_offering", resource_offering),
+                                  ("retention", retention)):
                 if value:
                     conn.execute(
                         f"UPDATE accounts SET {column} = ? WHERE id = ?",
@@ -491,8 +540,9 @@ class Store:
             return [dict(r) for r in conn.execute(sql, (account_id,))]
 
     def add_criterion_to_profile(
-        self, profile_id: int, criterion_id: int, *, tier: str = "preferred",
-        relevance: str = "relevant", copied_from_profile_id: int | None = None,
+        self, account_id: int, profile_id: int, criterion_id: int, *,
+        tier: str = "preferred", relevance: str = "relevant",
+        copied_from_profile_id: int | None = None,
     ) -> int:
         """Select a library criterion into a profile, with this profile's own tier."""
         if tier not in TIERS:
@@ -500,6 +550,8 @@ class Store:
         if relevance not in ("relevant", "not_applicable"):
             raise StoreError(f"Unknown relevance: {relevance!r}")
         with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
+            self._assert_owns(conn, "criteria", criterion_id, account_id)
             cur = conn.execute(
                 "INSERT INTO profile_criteria (profile_id, criterion_id, tier, relevance,"
                 " copied_from_profile_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
@@ -507,11 +559,13 @@ class Store:
             )
             return int(cur.lastrowid)
 
-    def set_profile_tier(self, profile_id: int, criterion_id: int, tier: str) -> None:
+    def set_profile_tier(self, account_id: int, profile_id: int, criterion_id: int,
+                         tier: str) -> None:
         """Change a criterion's tier **in this profile only**."""
         if tier not in TIERS:
             raise StoreError(f"tier must be one of {TIERS}, got {tier!r}")
         with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
             conn.execute(
                 "UPDATE profile_criteria SET tier = ? WHERE profile_id = ?"
                 " AND criterion_id = ?",
@@ -519,7 +573,7 @@ class Store:
             )
 
     def copy_criteria_to_profile(
-        self, source_profile_id: int, target_profile_id: int,
+        self, account_id: int, source_profile_id: int, target_profile_id: int,
         criterion_ids: Sequence[int] | None = None,
     ) -> list[int]:
         """Copy criteria and their settings from one profile to another.
@@ -532,6 +586,9 @@ class Store:
         if source_profile_id == target_profile_id:
             raise StoreError("Cannot copy a profile's criteria into itself.")
         with self.read() as conn:
+            # Both ends, so a copy can never pull another account's configuration in.
+            self._assert_owns(conn, "profiles", source_profile_id, account_id)
+            self._assert_owns(conn, "profiles", target_profile_id, account_id)
             sql = "SELECT * FROM profile_criteria WHERE profile_id = ?"
             args: list[Any] = [source_profile_id]
             if criterion_ids:
@@ -543,14 +600,18 @@ class Store:
         for row in rows:
             try:
                 created.append(self.add_criterion_to_profile(
-                    target_profile_id, row["criterion_id"], tier=row["tier"],
-                    relevance=row["relevance"], copied_from_profile_id=source_profile_id,
+                    account_id, target_profile_id, row["criterion_id"],
+                    tier=row["tier"], relevance=row["relevance"],
+                    copied_from_profile_id=source_profile_id,
                 ))
             except sqlite3.IntegrityError:
                 continue  # already in the target; leave the target's own setting alone
         return created
 
-    def list_profile_criteria(self, profile_id: int, *, include_na: bool = True):
+    def list_profile_criteria(self, account_id: int, profile_id: int, *,
+                              include_na: bool = True):
+        with self.read() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
         sql = ("SELECT pc.*, c.value, c.desired_behavior, c.why_it_matters,"
                " c.examples_json, c.lineage_id, c.version, c.status"
                " FROM profile_criteria pc JOIN criteria c ON c.id = pc.criterion_id"
@@ -568,8 +629,8 @@ class Store:
                 out.append(d)
             return out
 
-    def revise_criterion(self, criterion_id: int, *, revision_note: str | None = None,
-                         **changes: Any) -> int:
+    def revise_criterion(self, account_id: int, criterion_id: int, *,
+                         revision_note: str | None = None, **changes: Any) -> int:
         """Write a NEW version and supersede the old row. Never an UPDATE of the text.
 
         The old version keeps its own ``created_at`` and gains ``superseded_at``, so the My
@@ -583,10 +644,11 @@ class Store:
 
         with self.write() as conn:
             old = conn.execute(
-                "SELECT * FROM criteria WHERE id = ?", (criterion_id,)
+                "SELECT * FROM criteria WHERE id = ? AND account_id = ?",
+                (criterion_id, account_id),
             ).fetchone()
             if old is None:
-                raise StoreError(f"No criterion {criterion_id}")
+                raise NotOwned(f"No criterion {criterion_id} for this account.")
             if old["status"] == "superseded":
                 raise StoreError(
                     f"Criterion {criterion_id} is already superseded; revise its current "
@@ -618,13 +680,17 @@ class Store:
             )
             return int(cur.lastrowid)
 
-    def retire_criterion(self, criterion_id: int, note: str | None = None) -> None:
+    def retire_criterion(self, account_id: int, criterion_id: int,
+                         note: str | None = None) -> None:
         with self.write() as conn:
-            conn.execute(
+            cur = conn.execute(
                 "UPDATE criteria SET status = 'retired', superseded_at = ?,"
-                " revision_note = COALESCE(?, revision_note) WHERE id = ?",
-                (_now(), note, criterion_id),
+                " revision_note = COALESCE(?, revision_note)"
+                " WHERE id = ? AND account_id = ?",
+                (_now(), note, criterion_id, account_id),
             )
+            if cur.rowcount == 0:
+                raise NotOwned(f"No criterion {criterion_id} for this account.")
 
     def list_criteria(self, account_id: int, *, status: str = "active"):
         """The Master Criteria Library. No tiers here — those belong to profiles."""
@@ -682,7 +748,7 @@ class Store:
         if origin not in ("user", "user_accepted_proposal", "user_edited_proposal",
                           "system_initial"):
             raise StoreError(f"Unknown origin: {origin!r}")
-        previous = self.get_assessment(profile_id, criterion_id, person_id)
+        previous = self.get_assessment(account_id, profile_id, criterion_id, person_id)
         with self.write() as conn:
             conn.execute(
                 "INSERT INTO assessments (account_id, profile_id, criterion_id, person_id,"
@@ -706,7 +772,8 @@ class Store:
             )
             return assessment_id
 
-    def get_assessment(self, profile_id: int, criterion_id: int, person_id: int) -> str:
+    def get_assessment(self, account_id: int, profile_id: int, criterion_id: int,
+                       person_id: int) -> str:
         """Unknown until somebody says otherwise.
 
         Note what this does NOT do: it never falls back to another profile's answer.
@@ -715,14 +782,15 @@ class Store:
         """
         with self.read() as conn:
             row = conn.execute(
-                "SELECT status FROM assessments WHERE profile_id = ? AND criterion_id = ?"
-                " AND person_id = ?",
-                (profile_id, criterion_id, person_id),
+                "SELECT status FROM assessments WHERE account_id = ? AND profile_id = ?"
+                " AND criterion_id = ? AND person_id = ?",
+                (account_id, profile_id, criterion_id, person_id),
             ).fetchone()
         return row["status"] if row else "unknown"
 
-    def assessment_history(self, assessment_id: int):
+    def assessment_history(self, account_id: int, assessment_id: int):
         with self.read() as conn:
+            self._assert_owns(conn, "assessments", assessment_id, account_id)
             return [
                 dict(r) for r in conn.execute(
                     "SELECT * FROM assessment_history WHERE assessment_id = ?"
@@ -737,13 +805,13 @@ class Store:
         Criteria the user marked ``not_applicable`` for the profile report that status
         rather than ``unknown`` — Not Applicable is a real answer, not missing evidence.
         """
-        rows = self.list_profile_criteria(profile_id)
+        rows = self.list_profile_criteria(account_id, profile_id)
         for r in rows:
             if r["relevance"] == "not_applicable":
                 r["assessment"] = "not_applicable"
             else:
                 r["assessment"] = self.get_assessment(
-                    profile_id, r["criterion_id"], person_id
+                    account_id, profile_id, r["criterion_id"], person_id
                 )
         return rows
 
@@ -763,7 +831,7 @@ class Store:
                 "A proposed status change must say why, in evidence terms. "
                 "An unexplained proposal is a silent change with extra steps."
             )
-        current = self.get_assessment(profile_id, criterion_id, person_id)
+        current = self.get_assessment(account_id, profile_id, criterion_id, person_id)
         with self.write() as conn:
             cur = conn.execute(
                 "INSERT INTO assessment_proposals (account_id, profile_id, criterion_id,"
@@ -1303,6 +1371,127 @@ class Store:
                 (_now(), entry_id, account_id),
             )
 
+    # ----------------------------------------------------------------- retention
+
+    def apply_retention(self, account_id: int, entry_id: int,
+                        retention: str | None = None) -> dict[str, Any]:
+        """Erase what the user did not ask KRYteria to keep.
+
+        Three outcomes:
+
+          ``keep_all``       the narrative stays, with everything derived from it.
+          ``analysis_only``  the narrative is erased; observations, mappings and
+                             assessments survive. Somebody can keep the fact that they
+                             noticed a pattern without keeping the 1 a.m. account of it.
+          ``discard``        the narrative AND everything derived from it go. Nothing is
+                             left to reconstruct it from.
+
+        The entry row survives an erasure as a dated placeholder rather than being
+        deleted, so surviving evidence still has something to point at. ``body`` and the
+        structured fields are overwritten with NULL — not blanked, not tombstoned with
+        their length, not kept "just in case".
+
+        ``discard`` deliberately removes the derived records too. An observation reading
+        "She stayed rather than have another argument" is a near-quotation; keeping it
+        after someone asked for the narrative to be discarded would honour the letter and
+        break the promise.
+        """
+        if retention is None:
+            account = self.get_account(account_id)
+            retention = (account or {}).get("retention", "analysis_only")
+        if retention not in RETENTION_MODES:
+            raise StoreError(
+                f"retention must be one of {RETENTION_MODES}, got {retention!r}")
+
+        with self.write() as conn:
+            self._assert_owns(conn, "entries", entry_id, account_id)
+            conn.execute("UPDATE entries SET retention = ? WHERE id = ?",
+                         (retention, entry_id))
+
+            if retention == "keep_all":
+                return {"retention": retention, "original_erased": False,
+                        "derived_removed": 0}
+
+            removed = 0
+            if retention == "discard":
+                for table in ("observations", "evidence_links", "interrogations"):
+                    cur = conn.execute(
+                        f"DELETE FROM {table} WHERE entry_id = ? AND account_id = ?",
+                        (entry_id, account_id),
+                    )
+                    removed += cur.rowcount
+                conn.execute("DELETE FROM pattern_evidence WHERE entry_id = ?",
+                             (entry_id,))
+                conn.execute(
+                    "DELETE FROM reconciliations WHERE entry_id = ? AND account_id = ?",
+                    (entry_id, account_id),
+                )
+
+            conn.execute(
+                "UPDATE entries SET body = NULL, what_happened = NULL,"
+                " what_expected = NULL, how_it_affected = NULL, original_erased_at = ?"
+                " WHERE id = ?",
+                (_now(), entry_id),
+            )
+            return {"retention": retention, "original_erased": True,
+                    "derived_removed": removed}
+
+    def erase_originals(self, account_id: int, *, older_than: str | None = None) -> int:
+        """Erase the narrative from every entry whose retention says not to keep it.
+
+        A sweep, for a user who changes their default and wants it applied to what they
+        already wrote, and as the backstop if an erasure was ever missed at write time.
+        """
+        with self.read() as conn:
+            rows = [
+                dict(r) for r in conn.execute(
+                    "SELECT id, retention FROM entries WHERE account_id = ?"
+                    " AND retention != 'keep_all' AND original_erased_at IS NULL"
+                    + (" AND created_at < ?" if older_than else ""),
+                    (account_id, older_than) if older_than else (account_id,),
+                )
+            ]
+        for row in rows:
+            self.apply_retention(account_id, row["id"], row["retention"])
+        return len(rows)
+
+    def retention_report(self, account_id: int) -> dict[str, Any]:
+        """What is actually being kept, in the user's own terms.
+
+        Exists so the Transparency principle is answerable from the data rather than
+        from a paragraph somebody wrote once and never checked again.
+        """
+        with self.read() as conn:
+            total = conn.execute(
+                "SELECT COUNT(*) AS n FROM entries WHERE account_id = ?"
+                " AND deleted_at IS NULL", (account_id,)
+            ).fetchone()["n"]
+            with_text = conn.execute(
+                "SELECT COUNT(*) AS n FROM entries WHERE account_id = ?"
+                " AND deleted_at IS NULL AND body IS NOT NULL", (account_id,)
+            ).fetchone()["n"]
+            erased = conn.execute(
+                "SELECT COUNT(*) AS n FROM entries WHERE account_id = ?"
+                " AND original_erased_at IS NOT NULL", (account_id,)
+            ).fetchone()["n"]
+            observations = conn.execute(
+                "SELECT COUNT(*) AS n FROM observations WHERE account_id = ?",
+                (account_id,)
+            ).fetchone()["n"]
+        account = self.get_account(account_id) or {}
+        return {
+            "default_retention": account.get("retention"),
+            "entries": total,
+            "originals_still_stored": with_text,
+            "originals_erased": erased,
+            "observations_kept": observations,
+            "note": (
+                "Erasing an original overwrites the text with NULL. The entry row stays "
+                "as a dated placeholder so surviving observations still have something "
+                "to point at."
+            ),
+        }
+
     # ----------------------------------------------------------------- observations
 
     def save_observations(
@@ -1617,15 +1806,18 @@ class Store:
             )
             return int(cur.lastrowid)
 
-    def finish_run(self, run_id: int, status: str, detail: str | None = None) -> None:
+    def finish_run(self, account_id: int, run_id: int, status: str,
+                   detail: str | None = None) -> None:
         with self.write() as conn:
             conn.execute(
-                "UPDATE agent_runs SET status = ?, detail = ?, finished_at = ? WHERE id = ?",
-                (status, detail, _now(), run_id),
+                "UPDATE agent_runs SET status = ?, detail = ?, finished_at = ?"
+                " WHERE id = ? AND account_id = ?",
+                (status, detail, _now(), run_id, account_id),
             )
 
     def log_step(
-        self, run_id: int, seq: int, agent: str, *, tool_calls: Sequence[Any] = (),
+        self, account_id: int, run_id: int, seq: int, agent: str, *,
+        tool_calls: Sequence[Any] = (),
         model_name: str | None = None, input_tokens: int = 0,
         cached_input_tokens: int | None = None, output_tokens: int = 0,
         estimated_cost_usd: float = 0.0, actual_cost_usd: float | None = None,
@@ -1639,6 +1831,7 @@ class Store:
         and argument keys only; **never pass raw journal text into this table.**
         """
         with self.write() as conn:
+            self._assert_owns(conn, "agent_runs", run_id, account_id)
             conn.execute(
                 "INSERT INTO agent_steps (run_id, seq, agent, model_name, tool_calls_json,"
                 " input_tokens, cached_input_tokens, output_tokens, estimated_cost_usd,"

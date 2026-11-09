@@ -136,7 +136,7 @@ class Orchestrator:
     def _record(self, run_id: int, seq: int, step: AgentResult) -> None:
         usage = step.usage
         self.store.log_step(
-            run_id, seq, step.agent,
+            self.store_account, run_id, seq, step.agent,
             tool_calls=step.tool_calls,           # names only; never argument values
             model_name=self.info.model_name,
             input_tokens=usage.input_tokens if usage else 0,
@@ -214,12 +214,12 @@ class Orchestrator:
                 result.halted = True
                 result.halt_reason = result.safety.rationale
                 result.status = "safety_halt"
-                self.store.finish_run(run_id, "safety_halt", result.halt_reason)
+                self.store.finish_run(account_id, run_id, "safety_halt", result.halt_reason)
                 return result
 
         if result.narrative is None:
             result.status = "failed"
-            self.store.finish_run(run_id, "failed", "; ".join(result.errors))
+            self.store.finish_run(account_id, run_id, "failed", "; ".join(result.errors))
             return result
 
         # --- persist the narrative -----------------------------------------
@@ -231,7 +231,7 @@ class Orchestrator:
 
         # --- Evidence ------------------------------------------------------
         if profile_id is not None:
-            criteria_rows = self.store.list_profile_criteria(profile_id)
+            criteria_rows = self.store.list_profile_criteria(account_id, profile_id)
             evidence_step = await evidence_agent.run(
                 self.model, self.info, profile_name=profile_name,
                 criteria=criteria_rows, narrative=result.narrative,
@@ -255,7 +255,7 @@ class Orchestrator:
             reasoning_step = await reasoning_agent.run(
                 self.model, self.info,
                 profile_name=profile_name,
-                criteria=self.store.list_profile_criteria(profile_id) if profile_id else [],
+                criteria=self.store.list_profile_criteria(account_id, profile_id) if profile_id else [],
                 narrative=result.narrative,
                 evidence=result.evidence,
                 entries=self.store.list_entries(account_id, limit=20),
@@ -306,7 +306,7 @@ class Orchestrator:
                 result.errors.append(f"reflection: {reflection_step.error}")
 
         result.status = "ok" if not result.errors else "partial"
-        self.store.finish_run(run_id, result.status, "; ".join(result.errors) or None)
+        self.store.finish_run(account_id, run_id, result.status, "; ".join(result.errors) or None)
         return result
 
     # ------------------------------------------------------------- persistence
@@ -381,5 +381,5 @@ class Orchestrator:
         # verified knowledge-base rows; it has no access to user data.
         step = await criteria_agent.run(self.model, self.info, store=self.store, **kw)
         self._record(run_id, 1, step)
-        self.store.finish_run(run_id, "ok" if step.ok else "failed", step.error)
+        self.store.finish_run(account_id, run_id, "ok" if step.ok else "failed", step.error)
         return step
