@@ -864,9 +864,9 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
                   verified_by="christine")
     expect_raises("verifying an unknown ref is refused", StoreError,
                   s.verify_research_note, "not-a-real-ref",
-                  source_url="https://example.org", verified_by="christine")
+                  source_url="https://doi.org/10.2307/2092623", verified_by="christine")
 
-    s.verify_research_note("gottman-bids", source_url="https://example.org/checked",
+    s.verify_research_note("gottman-bids", source_url="https://pubmed.ncbi.nlm.nih.gov/3572722/",
                            verified_by="christine")
     check("a verified entry becomes citable", "gottman-bids" in s.citable_refs())
     check("and becomes visible to agents",
@@ -879,7 +879,7 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
     check("a verified citation is accepted", bool(lid))
 
     # Safety-adjacent findings never reach the criteria or evidence agents.
-    s.verify_research_note("stark-coercive-control", source_url="https://example.org/s",
+    s.verify_research_note("stark-coercive-control", source_url="https://libcat.simmons.edu/Record/b1408707/",
                            verified_by="christine")
     check("a safety-adjacent entry stays hidden from the default view",
           not any(n["ref"] == "stark-coercive-control" for n in s.list_research_notes()))
@@ -906,6 +906,86 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
                   citation="c", caveat="k", verified_at="2026-11-08")
 
 
+def test_only_reputable_sources_are_accepted() -> None:
+    """Christine's rule: .gov, .edu, published papers. Nothing like Goop.
+
+    An allowlist rather than a blocklist, because a blocklist is a list of the bad sites
+    somebody already thought of and the one that matters is the one nobody listed.
+    """
+    from backend.sources import UnacceptableSource, check_source, is_acceptable
+
+    for good in [
+        "https://pubmed.ncbi.nlm.nih.gov/3572722/",
+        "https://doi.org/10.2307/2092623",
+        "https://pages.ucsd.edu/~cmckenzie/paper.pdf",
+        "https://libcat.library.tamu.edu/Record/in00002670224",
+        "https://search.worldcat.org/oclc/4596140",
+        "https://www.guilford.com/books/Handbook/",
+        "https://journals.sagepub.com/doi/10.1177/0265407595124001",
+        "https://www.cambridge.org/core/books/x",
+        "https://www.who.int/publications/x",
+    ]:
+        check(f"accepts {good.split('/')[2]}", is_acceptable(good), good)
+
+    for bad, why in [
+        ("https://goop.com/wellness/relationships/", "a lifestyle brand"),
+        ("https://en.wikipedia.org/wiki/John_Gottman", "an encyclopaedia"),
+        ("https://www.psychologytoday.com/us/blog/x", "popular psychology"),
+        ("https://www.gwern.net/doc/psychology/1977-ross.pdf", "a personal site"),
+        ("https://www.scribd.com/document/123", "an upload"),
+        ("https://www.researchgate.net/publication/123", "an author upload"),
+        ("https://medium.com/@someone/attachment-styles", "a blog"),
+        ("https://www.goodreads.com/book/show/123", "a bookseller"),
+        ("https://somecoach.com/blog/red-flags", "an unknown site"),
+        ("ftp://example.edu/paper.pdf", "not a web address"),
+        ("", "empty"),
+    ]:
+        check(f"refuses {why}", not is_acceptable(bad), bad)
+
+    # academia.edu is why a naive .edu suffix test is not enough — the .edu belongs to
+    # the company, not to a university.
+    check("refuses academia.edu despite the .edu",
+          not is_acceptable("https://www.academia.edu/9549293/"))
+
+    # A refusal says why, so somebody can tell a missing publisher from a bad source.
+    try:
+        check_source("https://goop.com/x")
+    except UnacceptableSource as e:
+        check("the refusal names the problem", "lifestyle brand" in str(e))
+    try:
+        check_source("https://some-journal-we-forgot.org/x")
+    except UnacceptableSource as e:
+        check("an unknown host is told how to be added",
+              "add it to backend/sources.py" in str(e))
+
+
+def test_verification_requires_a_reputable_source() -> None:
+    """The gate is on the door into the citable set, not on a style guide."""
+    s, acct, _ = fresh()
+    s.load_research_pack(PROJECT_DIR / "data" / "research" / "behavioral_indicators.json")
+
+    expect_raises("a wellness site cannot verify a note", StoreError,
+                  s.verify_research_note, "gottman-bids",
+                  source_url="https://goop.com/conscious-uncoupling",
+                  verified_by="someone")
+    expect_raises("nor can an encyclopaedia", StoreError,
+                  s.verify_research_note, "gottman-bids",
+                  source_url="https://en.wikipedia.org/wiki/John_Gottman",
+                  verified_by="someone")
+    check("and it is still not citable", "gottman-bids" not in s.citable_refs())
+
+    s.verify_research_note("gottman-bids",
+                           source_url="https://catalog.lib.msu.edu/Record/x",
+                           verified_by="christine")
+    check("a library catalogue works", "gottman-bids" in s.citable_refs())
+
+    # A pack cannot mark its own work verified against a source we would not cite.
+    expect_raises("a pack cannot smuggle in a bad source", StoreError,
+                  s.add_research_note, ref="smuggled", area="attachment",
+                  finding="f", citation="c", caveat="k",
+                  verified_at="2026-11-09", source_url="https://goop.com/x")
+
+
 def test_research_claims_must_cite() -> None:
     s, acct, dom = fresh()
     c = s.create_criterion(acct, value="Emotional maturity", desired_behavior="x")
@@ -927,7 +1007,7 @@ def test_research_claims_must_cite() -> None:
                     "research_ref": "Gottman, contempt research"}])
 
     s.load_research_pack(PROJECT_DIR / "data" / "research" / "behavioral_indicators.json")
-    s.verify_research_note("gottman-four-horsemen", source_url="https://example.org/g",
+    s.verify_research_note("gottman-four-horsemen", source_url="https://catalog.lib.msu.edu/Record/x",
                            verified_by="tester")
 
     ok = s.save_checklist_items(acct, c, [

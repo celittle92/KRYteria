@@ -67,7 +67,22 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `pending`. Until they are filled in from the course's published pricing,
   `estimate_cost` returns 0.0 and the app must report cost as *unavailable* rather than
   printing a zero as though a run were free.
-- **The research knowledge base is drafted but 0 entries are citable.**
+- **Sources must be reputable, and `backend/sources.py` enforces it.** `.gov`/`.edu`,
+  scholarly publishers, `doi.org`/PubMed, library catalogues. An allowlist, not a
+  blocklist; refusals explain why. **To add a publisher, edit that file deliberately —
+  never work around the gate.** Note `academia.edu` is explicitly refused: the `.edu`
+  belongs to the company.
+- **15 of 19 research entries are verified and citable** (14 to the criteria/evidence
+  agents; `stark-coercive-control` is safety-adjacent and withheld from them). Four stay
+  pending because no qualifying source has been found: `gottman-four-horsemen`,
+  `fundamental-attribution-error`, `johnson-attachment-injury`,
+  `reis-shaver-responsiveness`. What each still needs is in its
+  `citation_checked_against`.
+- **What "verified" currently means here:** the work exists at that reference, confirmed
+  against a qualifying source, and the drafted finding is a fair summary of what it is
+  known for. It does **not** mean somebody read the full paper. Entries verified by
+  `claude-bibliography-only` are the ones where that distinction matters most.
+- **(Historical) The research knowledge base was drafted with 0 entries citable.**
   `data/research/behavioral_indicators.json` holds 19 findings across the seven areas.
   Every one is **pending**, which means invisible to the agents and unusable as a
   citation — `research_ref` must resolve to a *verified* row or the write is refused.

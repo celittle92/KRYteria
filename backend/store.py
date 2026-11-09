@@ -1217,11 +1217,21 @@ class Store:
                 f"Research note {ref!r} has no caveat. Every finding must say what it "
                 "cannot tell you about one person."
             )
-        if verified_at and not (source_url or "").strip():
-            raise StoreError(
-                f"Research note {ref!r} is marked verified but records no source_url. "
-                "Verification means somebody opened something."
-            )
+        if verified_at:
+            # A pack file cannot mark its own work verified against a source KRYteria
+            # would not cite. Same gate as verify_research_note, so there is no second
+            # door into the citable set.
+            from .sources import UnacceptableSource, check_source
+
+            if not (source_url or "").strip():
+                raise StoreError(
+                    f"Research note {ref!r} is marked verified but records no "
+                    "source_url. Verification means somebody opened something."
+                )
+            try:
+                check_source(source_url)
+            except UnacceptableSource as e:
+                raise StoreError(f"Research note {ref!r}: {e}") from e
         with self.write() as conn:
             cur = conn.execute(
                 "INSERT INTO research_notes (ref, area, concept, finding, attribution,"
@@ -1279,9 +1289,18 @@ class Store:
             }
 
     def verify_research_note(self, ref: str, *, source_url: str, verified_by: str) -> None:
-        """Promote a pending note. Only a human does this, and it records what they opened."""
-        if not (source_url or "").strip():
-            raise StoreError("Verification must record the source that was opened.")
+        """Promote a pending note. Only a human does this, and it records what they opened.
+
+        The URL must pass ``sources.check_source``: a .gov or .edu domain, a scholarly
+        publisher, a permanent identifier, or a library catalogue. A well-meaning
+        verification against a wellness blog is refused rather than quietly admitted.
+        """
+        from .sources import UnacceptableSource, check_source
+
+        try:
+            check_source(source_url)
+        except UnacceptableSource as e:
+            raise StoreError(str(e)) from e
         with self.write() as conn:
             cur = conn.execute(
                 "UPDATE research_notes SET verified_at = ?, verified_by = ?,"

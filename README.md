@@ -74,8 +74,16 @@ from a curated set somebody has checked. **A citation must resolve to a verified
 so the agent cannot invent a reference: `research_ref` is matched against the knowledge
 base and anything else is rejected.
 
-19 findings are drafted and **none is verified yet**, so the agents currently cite
-nothing and mark every suggestion as their own hypothesis. To verify them:
+**Sources must be reputable, and that is enforced rather than promised.**
+`backend/sources.py` accepts `.gov` and `.edu` domains, scholarly publishers, permanent
+identifiers such as `doi.org` and PubMed, and library catalogues. It refuses encyclopedias,
+popular-psychology sites, upload sites, blogs, retailers and wellness brands — by
+allowlist, so a source nobody thought of is refused rather than admitted. `academia.edu`
+is explicitly refused: the `.edu` belongs to the company, not a university.
+
+**15 of 19 entries are verified and citable.** Four stay pending because no qualifying
+source has been found for them, and each records what it still needs. To work through
+them:
 
 ```bash
 .venv/bin/python -m backend.verify_research list
