@@ -81,30 +81,31 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
     down for the one thing it is built to do. There is a regression test with the
     verbatim string that caught this.
 
-- **THE OPEN FINDING FROM THE FIRST LIVE RUN (2026-11-11): a ROUTING bug, not a model
-  one.** In `ab-contradiction` KRYteria did not surface the counter-evidence in the
-  user's own record. **The Reasoning agent never ran.**
-  `reasoning.needs_interrogation()` is a substring test over an 18-word `GENERALISING`
-  list, and *"He's completely unreliable. I can't count on him for anything."* contains
-  none of them — not `completely`, not `can't count on`. So the orchestrator skipped
-  Reasoning, and `format_history` (which is only reached inside
-  `reasoning.compose_input`) was never called. **The three prior entries were never sent
-  to any model.** The question visible in that run's output came from Reflection, which
-  ran because the A/B passes `want_reflection=True`.
-  An earlier note here said "the data was there and the model did not use it" — that was
-  wrong, and the correction matters: this is deterministic code, cheap to fix, and does
-  not need a prompt change or a model re-measurement to diagnose.
-  **The deeper problem is the keyword list itself.** A hand-written list of generalising
-  words decides whether to run the agent whose entire job is interrogating generalising
-  claims. "He's completely unreliable" is about as plain a generalisation as English
-  offers and it misses. Routing on something structural — e.g. `user_conclusions` being
-  non-empty, which the Narrative agent already produces — is the candidate fix, but it
-  changes cost per entry, so **decide it with Christine before changing it.**
-  Archived at `output/live_runs/ab_comparison_2026-11-11_first-live-run.json` — 11 calls,
-  11,549 input / 3,096 output tokens, **$0.0027**.
-- **Secondary bug, same diagnosis session:** `reasoning.format_history` lists the entry
-  currently being analysed among "Earlier entries", because `list_entries` returns it
-  too. Harmless today only because the agent it feeds was not running.
+- **Reasoning routes on STATED CONCLUSIONS, not keywords** (fixed 2026-11-11, Christine's
+  call). `needs_interrogation` returns True when the Narrative agent extracted any
+  `user_conclusions`; the `GENERALISING` keyword list survives only as a fallback for a
+  thin narrative result, and can add runs but never suppress one.
+  **Why:** the first live A/B found the product's most load-bearing claim absent, and the
+  cause was here. *"He's completely unreliable. I can't count on him for anything."*
+  matches none of the 18 keywords, so Reasoning was skipped and the three contradicting
+  entries were never sent to any model. Measured across the 36-text eval corpus, the old
+  rule fired **4 times**, and **only 3 of the 13 adversarial reasoning cases ever reached
+  the agent they were written to test.**
+  **Do not re-introduce a keyword gate here.** A hand-written list of generalising words
+  cannot gate the agent whose job is interrogating generalising claims; it catches the
+  phrasings somebody thought of. There is a regression test carrying the verbatim
+  sentence.
+  **Cost, accepted deliberately:** Reasoning now runs on most entries containing an
+  opinion. A brain dump goes **$0.00136 → $0.00208 (+53%)**; at 10,000 users and 12 dumps
+  a month, **$162.88 → $249.62**.
+- **`format_history` excludes the entry under analysis** (`current_entry_id`).
+  `list_entries` returns it along with the rest, and presenting today's claim as an
+  *earlier* entry lets a conclusion corroborate itself. Latent until the routing fix made
+  the agent actually run.
+- The first live run is archived at
+  `output/live_runs/ab_comparison_2026-11-11_first-live-run.json` — 11 calls, 11,549
+  input / 3,096 output tokens, **$0.0027**. **Its scores predate both the grader fixes
+  and this routing fix; do not quote them.**
 - **`output/live_runs/` is the archive of real runs and must not be overwritten.** A
   re-run writes `output/ab_comparison.*`; copy it in with a date before the next one.
 

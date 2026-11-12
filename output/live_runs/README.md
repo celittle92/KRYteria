@@ -48,6 +48,11 @@ An earlier version of this note said the data reached the model and the model ig
 the useful part: a live result shows a symptom, and it is tempting to attribute a symptom
 to the expensive component. The cause was deterministic code that cost nothing to check.
 
-Still unfixed, deliberately. The fix is not more keywords — that is the same mistake
-again — but routing on something structural, which changes cost per entry and is a
-decision rather than a patch.
+**Fixed later the same day**, on Christine's decision: Reasoning now routes on whether
+the Narrative agent extracted any `user_conclusions`, with the keyword list demoted to a
+fallback that can only add runs. Measured across the 36-text eval corpus, the old rule
+fired 4 times, and only 3 of the 13 adversarial reasoning cases reached the agent they
+were written to test. Cost accepted: +53% per brain dump.
+
+**So the scores in this file predate both the grader fixes and the routing fix. Do not
+quote them.** It is kept as the record of the run that found all three.

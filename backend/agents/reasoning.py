@@ -17,9 +17,7 @@ from .evidence import format_criteria, format_observations
 PROMPT_PATH = "reasoning.md"
 AGENT_NAME = "reasoning"
 
-#: Language that usually hides the detail which would settle the question. Used by the
-#: orchestrator to decide whether this agent is needed at all — a plain report of what
-#: happened has nothing to interrogate, and asking anyway is how this becomes a deposition.
+#: A fallback only. See ``needs_interrogation``.
 GENERALISING = (
     "always", "never", "every time", "constantly", "all the time", "doesn't care",
     "does not care", "doesn't respect", "obsessed with", "terrible at", "clearly",
@@ -29,8 +27,37 @@ GENERALISING = (
 
 
 def needs_interrogation(text: str, conclusions: Sequence[str] = ()) -> bool:
-    haystack = " ".join([text, *conclusions]).lower()
-    return any(marker in haystack for marker in GENERALISING)
+    """Does this entry contain something to interrogate?
+
+    **The primary signal is structural: did the writer state a conclusion?** The
+    Narrative agent already separates conclusions from events — *"he doesn't respect my
+    time"* from *"he arrived 35 minutes late"* — and a stated conclusion is precisely
+    what Evidence Interrogation exists to examine. If there is one, this agent runs.
+
+    WHY IT IS NOT THE KEYWORD LIST ANY MORE. It was, until the first live A/B run on
+    2026-11-11 measured the product's most load-bearing claim and found it absent. The
+    cause was here: ``"He's completely unreliable. I can't count on him for anything."``
+    matches none of ``GENERALISING`` — not *completely*, not *can't count on* — so this
+    returned False, the orchestrator skipped Reasoning, and the three journal entries
+    that contradicted the conclusion were never sent to any model at all.
+
+    A hand-written list of generalising words gating the agent whose entire job is
+    interrogating generalising claims is the blocklist mistake in its purest form: it
+    catches the phrasings somebody thought of, and the one that matters is the one
+    nobody listed. More words would not have fixed it. Routing on a signal the pipeline
+    already produces does.
+
+    The keyword list survives as a **fallback**, for the case where Narrative returned no
+    conclusions but the raw text is sweeping anyway — a thin narrative result should not
+    also cost the user their interrogation. It can only add runs, never suppress one.
+
+    The cost is deliberate: Reasoning now runs on most entries that contain an opinion,
+    which is most entries. That is one extra model call on an entry where the user drew a
+    conclusion, and drawing conclusions is the thing this product exists to examine.
+    """
+    if any((c or "").strip() for c in conclusions):
+        return True
+    return any(marker in (text or "").lower() for marker in GENERALISING)
 
 
 def build(model) -> Agent:
@@ -42,11 +69,22 @@ def build(model) -> Agent:
     )
 
 
-def format_history(entries: Sequence[dict], decisions: Sequence[dict]) -> str:
+def format_history(entries: Sequence[dict], decisions: Sequence[dict],
+                   current_entry_id: int | None = None) -> str:
+    """The record, for citing findings against.
+
+    ``current_entry_id`` is excluded. ``list_entries`` returns the entry being analysed
+    right now along with the rest, and presenting it as an *earlier* entry invites the
+    agent to cite today's claim as its own corroboration — a conclusion supporting
+    itself, which looks exactly like evidence. Latent until 2026-11-11 only because the
+    routing bug above meant this agent was rarely reached.
+    """
+    earlier = [e for e in entries
+               if current_entry_id is None or e.get("id") != current_entry_id]
     lines = []
-    if entries:
+    if earlier:
         lines.append("Earlier entries, by id — a finding must cite these:")
-        for e in entries:
+        for e in earlier:
             excerpt = (e.get("body") or e.get("what_happened") or "").strip()
             lines.append(f"  [{e['id']}] {e['occurred_on']}: {excerpt[:160]}")
     else:
@@ -62,7 +100,7 @@ def format_history(entries: Sequence[dict], decisions: Sequence[dict]) -> str:
 def compose_input(*, profile_name: str, criteria: Sequence[dict],
                   narrative: NarrativeOutput, evidence: EvidenceOutput | None,
                   entries: Sequence[dict], decisions: Sequence[dict],
-                  entry_text: str) -> str:
+                  entry_text: str, current_entry_id: int | None = None) -> str:
     parts = [
         format_criteria(profile_name, criteria),
         "",
@@ -73,7 +111,7 @@ def compose_input(*, profile_name: str, criteria: Sequence[dict],
         entry_text.strip(),
         "<<<END JOURNAL ENTRY>>>",
         "",
-        format_history(entries, decisions),
+        format_history(entries, decisions, current_entry_id),
     ]
     if evidence and evidence.mappings:
         parts += ["", "Mappings the Evidence agent proposed:"]

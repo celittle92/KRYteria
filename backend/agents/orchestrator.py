@@ -270,6 +270,7 @@ class Orchestrator:
                 entries=self.store.list_entries(account_id, limit=20),
                 decisions=self.store.list_decisions(account_id, limit=10),
                 entry_text=entry_text,
+                current_entry_id=entry_id,
             )
             seq += 1
             result.steps.append(reasoning_step)

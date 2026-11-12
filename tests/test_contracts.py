@@ -375,6 +375,65 @@ def test_routing_is_deterministic() -> None:
           is True)
 
 
+def test_a_stated_conclusion_routes_to_reasoning_however_it_is_worded() -> None:
+    """The regression from the first live A/B run, 2026-11-11.
+
+    The first sentence below is verbatim from that run. It matches none of the 18
+    GENERALISING markers, so routing skipped the Reasoning agent entirely and the three
+    journal entries contradicting it were never sent to any model. A keyword list gating
+    the agent whose job is interrogating generalising claims catches the phrasings
+    somebody thought of; the one that matters is the one nobody listed.
+    """
+    from backend.agents.reasoning import GENERALISING, needs_interrogation
+
+    missed = "He's completely unreliable. I can't count on him for anything."
+    check("the sentence genuinely matches no keyword",
+          not any(m in missed.lower() for m in GENERALISING),
+          "if this ever passes, the test below stops proving anything")
+    check("but a conclusion the Narrative agent extracted routes it",
+          needs_interrogation(missed, ["He's completely unreliable."]) is True)
+
+    for wording in ("I don't think he's that into me.",
+                    "He's a good guy, he just has a lot on.",
+                    "Honestly I think I'm the problem here."):
+        check(f"so does {wording!r}",
+              needs_interrogation("Some entry text.", [wording]) is True)
+
+    # The structural signal must not be defeated by whitespace or an empty list.
+    check("an empty conclusion list falls back to the text",
+          needs_interrogation("He is always late.", []) is True)
+    check("blank conclusions do not count as conclusions",
+          needs_interrogation("We had dinner.", ["", "   "]) is False)
+    check("a plain report with no conclusion still does not route",
+          needs_interrogation("We had dinner. He paid.", []) is False)
+
+
+def test_the_entry_under_analysis_is_not_offered_as_earlier_evidence() -> None:
+    """A conclusion must not be able to corroborate itself.
+
+    ``list_entries`` returns the entry being analysed along with the rest, so without
+    this the agent is handed today's claim labelled as an earlier entry — which looks
+    exactly like evidence for it.
+    """
+    from backend.agents.reasoning import format_history
+
+    entries = [
+        {"id": 4, "occurred_on": "2026-11-11", "body": "He's completely unreliable."},
+        {"id": 2, "occurred_on": "2026-11-10", "body": "He rescheduled a day ahead."},
+        {"id": 1, "occurred_on": "2026-11-09", "body": "He showed up on time."},
+    ]
+    history = format_history(entries, [], 4)
+    check("the current entry is excluded", "[4]" not in history)
+    check("the genuinely earlier ones remain",
+          "[2]" in history and "[1]" in history)
+    check("without an id nothing is excluded, as before",
+          "[4]" in format_history(entries, [], None))
+
+    only_today = format_history([entries[0]], [], 4)
+    check("an account's first entry reports an empty record, not a false one",
+          "no earlier entries" in only_today.lower(), only_today)
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:
