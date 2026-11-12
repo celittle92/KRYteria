@@ -6,19 +6,28 @@
     "Keeping the pinned model and the priced model the same file means a cost figure and",
     "the model actually charged cannot drift apart.",
     "",
-    "source and verified_on must be filled in from the course's published pricing before",
-    "any cost figure goes into report.html. Until then estimate_cost returns 0.0 and the",
-    "app reports the cost as unavailable rather than printing a zero as though the run",
-    "were free."
+    "Filled in 2026-11-11 from the course's own published figures (MGT 409 Lecture 11,",
+    "'Cached Token Cost'), and corroborated against the independent copy in this",
+    "workspace's HW6 data pack, which was taken from the same slide. Two sources, same",
+    "numbers.",
+    "",
+    "KNOWN UNDERSTATEMENT. The course also publishes a cache-write price of $0.125/1M —",
+    "the surcharge on the FIRST call that writes a prompt prefix into the cache, at 1.25x",
+    "the input rate. It is recorded below but estimate_cost does not model it, because",
+    "the provider does not report cache writes separately in the usage object. Our cost",
+    "figures are therefore slightly LOW on a cold cache and correct once warm. Say so in",
+    "report.html rather than presenting the number as exact."
   ],
-  "models": {},
-  "pending": {
+  "models": {
     "gpt-6-luna": {
-      "input": null,
-      "cached_input": null,
-      "output": null,
-      "source": "MGT 409 published pricing — to be filled in",
-      "verified_on": null
+      "input": 0.10,
+      "cached_input": 0.01,
+      "output": 0.50,
+      "cache_write": 0.125,
+      "_cache_write_note": "Recorded for the report; not applied by estimate_cost. See the comment above.",
+      "source": "MGT 409 Lecture 11 slides, 'Cached Token Cost' table (zlisto.github.io/mgt_409_fa26/lectures/slides/lec11-slides.html); corroborated by HW6_Campus_Customs_Vendor_Desk_CL/hw6/data/prices.json",
+      "verified_on": "2026-11-11"
     }
-  }
+  },
+  "pending": {}
 }

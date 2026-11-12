@@ -81,18 +81,30 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
     down for the one thing it is built to do. There is a regression test with the
     verbatim string that caught this.
 
-- **THE OPEN FINDING FROM THE FIRST LIVE RUN (2026-11-11), unfixed on purpose.**
-  In the `ab-contradiction` scenario KRYteria **did not surface the counter-evidence in
-  the user's own record** — three prior entries that cut against "he's completely
-  unreliable". `reasoning.format_history` had put all three in the prompt by id and body,
-  so this is not a wiring bug: the data was there and the model did not use it. That is
-  the most load-bearing claim in the project (*it holds your record; a chatbot cannot*),
-  and the first time it was measured it did not happen.
-  **Do not quietly edit `backend/prompts/reasoning.md` to make the eval pass.** Changing
-  the thing under test right after seeing the test is how a benchmark stops measuring
-  anything. Decide the change with Christine, re-run live, and record both numbers.
-  The run is archived at `output/live_runs/ab_comparison_2026-11-11_first-live-run.json`
-  — 11 calls, 11,549 input and 3,096 output tokens.
+- **THE OPEN FINDING FROM THE FIRST LIVE RUN (2026-11-11): a ROUTING bug, not a model
+  one.** In `ab-contradiction` KRYteria did not surface the counter-evidence in the
+  user's own record. **The Reasoning agent never ran.**
+  `reasoning.needs_interrogation()` is a substring test over an 18-word `GENERALISING`
+  list, and *"He's completely unreliable. I can't count on him for anything."* contains
+  none of them — not `completely`, not `can't count on`. So the orchestrator skipped
+  Reasoning, and `format_history` (which is only reached inside
+  `reasoning.compose_input`) was never called. **The three prior entries were never sent
+  to any model.** The question visible in that run's output came from Reflection, which
+  ran because the A/B passes `want_reflection=True`.
+  An earlier note here said "the data was there and the model did not use it" — that was
+  wrong, and the correction matters: this is deterministic code, cheap to fix, and does
+  not need a prompt change or a model re-measurement to diagnose.
+  **The deeper problem is the keyword list itself.** A hand-written list of generalising
+  words decides whether to run the agent whose entire job is interrogating generalising
+  claims. "He's completely unreliable" is about as plain a generalisation as English
+  offers and it misses. Routing on something structural — e.g. `user_conclusions` being
+  non-empty, which the Narrative agent already produces — is the candidate fix, but it
+  changes cost per entry, so **decide it with Christine before changing it.**
+  Archived at `output/live_runs/ab_comparison_2026-11-11_first-live-run.json` — 11 calls,
+  11,549 input / 3,096 output tokens, **$0.0027**.
+- **Secondary bug, same diagnosis session:** `reasoning.format_history` lists the entry
+  currently being analysed among "Earlier entries", because `list_entries` returns it
+  too. Harmless today only because the agent it feeds was not running.
 - **`output/live_runs/` is the archive of real runs and must not be overwritten.** A
   re-run writes `output/ab_comparison.*`; copy it in with a date before the next one.
 
@@ -137,10 +149,13 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   callability, so the logs stay clean. Do not "simplify" that check back to `callable()`.
 - **No live model call has ever been made from this project.** Verify edits with the three
   suites and with `TestModel`; a paid run needs Christine's go-ahead and an estimate first.
-- **`data/prices.json` has no prices yet.** `models` is empty and the figures sit under
-  `pending`. Until they are filled in from the course's published pricing,
-  `estimate_cost` returns 0.0 and the app must report cost as *unavailable* rather than
-  printing a zero as though a run were free.
+- **`data/prices.json` is filled in** (2026-11-11), from MGT 409 Lecture 11's "Cached
+  Token Cost" table and corroborated against this workspace's HW6 data pack — two
+  sources, same numbers. `gpt-6-luna`: **$0.10 input / $0.01 cached / $0.50 output** per
+  1M tokens. **Known understatement:** the course also publishes a $0.125/1M cache-write
+  surcharge, recorded in the file but NOT applied by `estimate_cost` (the provider does
+  not report cache writes separately), so figures are slightly low on a cold cache. Say
+  so in `report.html` rather than presenting the number as exact.
 - **Sources must be reputable, and `backend/sources.py` enforces it.** `.gov`/`.edu`,
   academic country domains by **pattern** (`.ac.<cc>` / `.edu.<cc>`, two letters only, so
   a `.edu.com` lookalike cannot walk in), scholarly publishers, `doi.org`/PubMed, library

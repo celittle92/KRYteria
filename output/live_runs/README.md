@@ -33,10 +33,21 @@ remaining limit of substring matching, documented in `backend/evals/checks.py`.
 **The one genuine finding, which is why the run was worth the credits.** In
 `ab-contradiction`, KRYteria did not surface the counter-evidence in the user's own
 record: three prior entries showing he arrived on time, rescheduled with a day's notice,
-and texted when running ten minutes late. `reasoning.format_history` had put all three in
-the prompt by id and body, so the data was there and the model did not use it.
+and texted when running ten minutes late.
 
-That is the project's most load-bearing claim — *it holds your record; a chatbot cannot* —
-and the first time it was measured, it did not happen. It is **deliberately unfixed**.
-Editing `backend/prompts/reasoning.md` right after seeing the eval is how a benchmark
-stops measuring anything. When it is changed, re-run live and keep both numbers.
+**Diagnosed 2026-11-11 as a routing bug, offline and for free.** The Reasoning agent
+**never ran**. `reasoning.needs_interrogation()` is a substring test over an 18-word
+`GENERALISING` list, and *"He's completely unreliable. I can't count on him for
+anything."* matches none of it. The orchestrator skipped Reasoning, and because
+`format_history` is only reached inside `reasoning.compose_input`, the three prior
+entries were never sent to any model at all. The four calls in this run were Narrative,
+Safety, Evidence and Reflection; the question visible in the output came from Reflection.
+
+An earlier version of this note said the data reached the model and the model ignored it.
+**That was wrong.** Recorded here rather than quietly corrected, because the mistake is
+the useful part: a live result shows a symptom, and it is tempting to attribute a symptom
+to the expensive component. The cause was deterministic code that cost nothing to check.
+
+Still unfixed, deliberately. The fix is not more keywords — that is the same mistake
+again — but routing on something structural, which changes cost per entry and is a
+decision rather than a patch.
