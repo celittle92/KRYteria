@@ -30,5 +30,13 @@ frontend/.vite/
 # `npm run build` and commit the result, or the app serves the old interface. /api/health
 # reports `frontend_built` so at least its absence is visible.
 
+# Demo-mode eval output.
+#
+# Regenerable in seconds with `python -m backend.run_evals all`, and worthless as
+# evidence — a demo run makes no model call, so it grades nothing about the agents.
+# Keeping it out of the repo means the only eval artefacts a reader can find in
+# output/ are ones a live run actually produced.
+output/demo_runs/
+
 # OS
 .DS_Store

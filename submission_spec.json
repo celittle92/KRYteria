@@ -13,8 +13,10 @@
     "backend/agents/evidence.py": "backend/prompts/evidence.md",
     "backend/agents/reasoning.py": "backend/prompts/reasoning.md",
     "backend/agents/reflection.py": "backend/prompts/reflection.md",
-    "backend/agents/criteria.py": "backend/prompts/criteria.md"
+    "backend/agents/criteria.py": "backend/prompts/criteria.md",
+    "backend/evals/ab.py": "backend/prompts/baseline_chatbot.md"
   },
+  "_ab_note": "backend/evals/ab.py is the A/B comparison against the status quo: a general-purpose chatbot on the same model, same entries. Its prompt is declared here like any agent's because it is graded work, not a test fixture — the rubric's Tier 3 bar asks for a measured comparison against how the task is done today. The prompt is deliberately a GOOD generic prompt; a strawman baseline would make the comparison worthless.",
   "outputs": [
     "report.html",
     "slides.html",
@@ -25,8 +27,13 @@
     "output/token_report.md",
     "output/safety_results.json",
     "output/safety_results.md",
+    "output/reasoning_results.json",
+    "output/reasoning_results.md",
+    "output/ab_comparison.json",
+    "output/ab_comparison.md",
     "output/user_test.md",
     "output/github_url.txt",
     "output/hosted_url.txt"
-  ]
+  ],
+  "_evidence_note": "The eval and A/B artefacts are written by `python -m backend.run_evals`. A demo-mode run produces them for free but stamps every page 'NOT EVIDENCE' — only `--mode live` output may be quoted in report.html or slides.html."
 }

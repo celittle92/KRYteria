@@ -23,7 +23,40 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
-- **Four test suites, all free, no API calls, no network:**
+- **The eval harness runs the two packs that nobody could run before 2026-11-11.**
+  `backend/evals/`, driven by `python -m backend.run_evals {list,safety,reasoning,ab,all}`.
+
+  ```bash
+  cd "/Users/christinelittle/Yale SOM_Old/AI Foundations/KRYteria" && PYDANTIC_AI_NO_BANNER=1 .venv/bin/python -m backend.run_evals list
+  ```
+
+  - **Demo mode is the default and is free.** It proves the harness executes; it grades
+    nothing about the real agents. **A demo run cannot write a submission artefact** —
+    output is diverted to `output/demo_runs/`, because `check_submission.py` decides the
+    Safety evidence is present by the existence of `output/safety_results.json`, and a
+    banner is no use when the reader is a script. `tests/test_evals.py` holds that line.
+  - **Live mode is the only mode whose results are evidence**, and it refuses to start
+    without `--yes-spend-credits` after printing the call count. **A full live run is
+    about 149 model calls** — ask Christine first, and prefer `--only` with a handful of
+    case ids.
+  - Each case gets its **own account** in a throwaway database, so one case cannot see
+    another's entries.
+  - 95 automatic checks across 31 cases; **33 are honestly marked `manual`** and are
+    never counted as passes. Do not "improve" that number by inventing a predicate for a
+    prose requirement, and **do not add an LLM judge** — it would be our model grading
+    our product against our rubric. That trade is recorded in `backend/evals/checks.py`.
+  - **A/B dimensions must be answerable from prose by both systems**, enforced at load
+    time. Grading KRYteria on structure and the chatbot on prose measures the output
+    format, not the thinking. Structural differences are reported as *capability*,
+    beside the score and never inside it.
+  - `backend/prompts/baseline_chatbot.md` is deliberately a **good** generic prompt. A
+    strawman baseline makes the whole comparison worthless; a test asserts it is not
+    secretly handed the user's criteria.
+  - **Known unsatisfiable case:** `inj-01` asks for a `safety_events` row recording a
+    prompt-injection attempt, but `models.SafetyCategory` has no injection value. Decide
+    it deliberately — add a category, or change the case — rather than dropping it.
+
+- **Five test suites, all free, no API calls, no network:**
 
   | Suite | Interpreter | Covers |
   |---|---|---|
@@ -31,8 +64,9 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_contracts.py` | `.venv/bin/python` | the Pydantic output contracts and the demo provider |
   | `tests/test_wiring.py` | `.venv/bin/python` | real Argon2id, provider resolution, agent construction on `TestModel`, budget enforcement |
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
+  | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  566 checks in total as of 2026-11-09. Run all four after any change to `backend/`.
+  976 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

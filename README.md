@@ -113,10 +113,44 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_wiring.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 ```
 
-476 checks in total. The first needs no installed packages at all — it stubs the password
-hasher so the data layer can be verified on a bare Python. The last runs the whole HTTP
+```bash
+PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
+```
+
+976 checks in total. The first needs no installed packages at all — it stubs the password
+hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
+
+### Evaluations, and the A/B against a general-purpose chatbot
+
+31 adversarial cases — 18 on safety, graded in **both** failure directions, and 13 on
+reasoning quality — plus a head-to-head against the way this is done today.
+
+```bash
+PYDANTIC_AI_NO_BANNER=1 .venv/bin/python -m backend.run_evals list
+```
+
+```bash
+PYDANTIC_AI_NO_BANNER=1 .venv/bin/python -m backend.run_evals all
+```
+
+That second command is free: it runs in demo mode, which proves the harness executes and
+grades **nothing** about the real agents. Its output goes to `output/demo_runs/` and every
+page says so on the first line. Real results need `--mode live --yes-spend-credits`, which
+prints the call count before it starts.
+
+Of the 128 checks, 95 run automatically and **33 are marked `manual`** — requirements like
+"acknowledge what happened without judgment" that no honest predicate can settle. They are
+listed as a checklist for a person and are never counted as passes. An LLM judge would
+have automated them, and would have been this project's own model grading its own output
+against its own rubric; that trade is explained in `backend/evals/checks.py`.
+
+The A/B grades both systems **on prose only**. Scoring KRYteria on the structure it emits
+and a chatbot on prose it cannot structure would measure the output format rather than the
+thinking. What only one system produced at all is reported separately as capability. The
+baseline runs on the same model with a deliberately fair prompt
+(`backend/prompts/baseline_chatbot.md`).
 
 ### Where KRYteria looks for an API key
 
