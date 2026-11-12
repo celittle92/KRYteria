@@ -504,15 +504,23 @@ def test_the_entry_under_analysis_is_not_offered_as_earlier_evidence() -> None:
         {"id": 1, "occurred_on": "2026-11-09", "body": "He showed up on time."},
     ]
     history = format_history(entries, [], 4)
-    check("the current entry is excluded", "[4]" not in history)
+    # Labelled, not hidden. Excluding it outright meant the agent could find three
+    # occasions and only cite two — it said so itself, in a gap_note, on the first live
+    # run. Today's entry is evidence of today; what it cannot be is prior support.
+    check("the current entry is present so it can be counted", "[4]" in history)
+    check("and is marked as today's", "today's" in history.lower(), history)
+    check("with the self-corroboration warning attached",
+          "cannot corroborate" in history.lower())
     check("the genuinely earlier ones remain",
           "[2]" in history and "[1]" in history)
-    check("without an id nothing is excluded, as before",
-          "[4]" in format_history(entries, [], None))
+    check("earlier entries are still named as the ones a finding must cite",
+          "Earlier entries" in history)
 
     only_today = format_history([entries[0]], [], 4)
     check("an account's first entry reports an empty record, not a false one",
           "no earlier entries" in only_today.lower(), only_today)
+    check("and still offers today's entry to count",
+          "[4]" in only_today)
 
 
 def main() -> int:

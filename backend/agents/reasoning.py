@@ -73,20 +73,41 @@ def format_history(entries: Sequence[dict], decisions: Sequence[dict],
                    current_entry_id: int | None = None) -> str:
     """The record, for citing findings against.
 
-    ``current_entry_id`` is excluded. ``list_entries`` returns the entry being analysed
-    right now along with the rest, and presenting it as an *earlier* entry invites the
-    agent to cite today's claim as its own corroboration — a conclusion supporting
-    itself, which looks exactly like evidence. Latent until 2026-11-11 only because the
-    routing bug above meant this agent was rarely reached.
+    The entry being analysed is **labelled, not hidden.**
+
+    It used to be excluded outright, to stop a conclusion corroborating itself. That was
+    an over-correction, and the first live run said so in its own words — the agent
+    wrote, in a ``gap_note``: *"The current entry supplies a third reported instance, but
+    no entry ID for it is provided, so only two distinct entries can be cited here."* It
+    had found three occasions, could only cite two, and the pattern was pushed below
+    ``MIN_SUPPORT`` as a result.
+
+    Two different things were conflated. Today's entry **is** legitimate evidence of what
+    happened today. What it must not be is *prior* corroboration for the conclusion drawn
+    from it. Labelling it separates those: the agent can count it as an instance and
+    cannot mistake it for independent support.
     """
+    cur = [e for e in entries if e.get("id") == current_entry_id]
     earlier = [e for e in entries
                if current_entry_id is None or e.get("id") != current_entry_id]
+
+    def line(e: dict) -> str:
+        excerpt = (e.get("body") or e.get("what_happened") or "").strip()
+        return f"  [{e['id']}] {e['occurred_on']}: {excerpt[:160]}"
+
     lines = []
+    if cur:
+        lines.append(
+            "The entry you are reading now, so you can cite it as one occasion:")
+        lines.extend(line(e) for e in cur)
+        lines.append(
+            "  NOTE: this one is today's. Count it as an instance if it is one, but it "
+            "cannot corroborate a conclusion drawn from itself — only the earlier "
+            "entries below can do that.")
+        lines.append("")
     if earlier:
         lines.append("Earlier entries, by id — a finding must cite these:")
-        for e in earlier:
-            excerpt = (e.get("body") or e.get("what_happened") or "").strip()
-            lines.append(f"  [{e['id']}] {e['occurred_on']}: {excerpt[:160]}")
+        lines.extend(line(e) for e in earlier)
     else:
         lines.append("There are no earlier entries. Nothing here can be a pattern yet.")
     if decisions:

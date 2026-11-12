@@ -118,7 +118,7 @@ Assumes 12 brain dumps per user per month. The middle row is the common case —
 is opt-in — so **$2.50 and $249.62 are the honest headline, with $4.09 / $408.84 as the
 every-entry-gets-everything ceiling.**
 
-**Total live spend across the whole project to date: $0.0305.**
+**Total live spend across the whole project to date: $0.0337.**
 
 **Cost-cutting steps actually taken, and whether they hurt performance** — this is the
 row's second half and we have a real answer:
@@ -298,14 +298,24 @@ interrogating sweeping claims. *"He's completely unreliable"* matches none of it
 - Cost: **+53% per brain dump.** Worth it, and the honest version of "steps taken to cut
   cost, and whether they hurt performance."
 
-### C. Three grader bugs, one product bug, $0.0065 of credits
+### C. Four of our own bugs, found by measuring, for three cents of credits
 
-Both live runs together cost less than a cent and produced four findings:
+Every live run so far totals **$0.0337** and has produced six findings:
 1. Quotation read as assertion (grader).
 2. A phrase list that could not recognise a question (grader).
 3. A claim inside its own denial (grader) — patching one needle surfaced **four more of
    the same shape**, so the fix went into the check, not the needles.
-4. Reasoning never ran (product).
+4. Reasoning never ran (product) — a keyword gate that fired on 4 of 36 corpus texts.
+5. A safety disclosure was analysed and shown as ordinary compatibility evidence
+   (product) — and, in the opposite direction, a halt discarded the record entirely.
+6. The entry being analysed was hidden from the agent that needed to count it
+   (product), capping a `moderate` finding at `insufficient`.
+
+**Two of the six I first diagnosed wrongly**, and both corrections came from reading what
+the system said about itself rather than what it produced — a routing function, and a
+`gap_note` in which the agent explained precisely what it was missing. That is worth a
+paragraph in the report on its own: the instrument was more often wrong than the thing
+being measured.
 
 **The discipline is the point and should be said out loud in the report:** the needle
 that scored against us was *restored*, not softened, because keeping the sensitive one is

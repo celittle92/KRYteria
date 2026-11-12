@@ -23,14 +23,22 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
-- **OPEN FINDING, live brain dump 2026-11-12 (`run_id=3`):** the Reasoning agent used
-  the record's counter-evidence in its *question* — *"how do you weigh this against the
-  earlier reports that he came through when your car broke down…"* — but saved the
-  pattern with `supporting=[4, 2]` and **`contradicting=[]`**. The prose was right; the
-  structured output left the record one-sided. `reasoning.md` already instructs
-  otherwise and `pattern_has_counter_evidence` exists to catch it. **Unfixed on
-  purpose** — it is the clearest live example of "graded on reasoning, not on sounding
-  good", and it sounded good.
+- **`format_history` LABELS the current entry, it does not hide it.** Excluding it was
+  an over-correction (2026-11-11) that cost real capability: the first live run found
+  three occasions of a pattern, could cite only two, and fell below `MIN_SUPPORT`. The
+  agent reported this itself in a `gap_note` — *"no entry ID for it is provided, so only
+  two distinct entries can be cited here."* Today's entry is evidence of today; what it
+  must not be is *prior* corroboration for the conclusion drawn from it, so it is listed
+  with that warning attached. **Do not go back to excluding it.** Test in
+  `test_contracts.py`.
+  Re-run with the fix: `supporting=[2,4]`→`[2,4,12]`, `contradicting=[]`→`[5]`,
+  strength `insufficient`→`moderate`.
+- **A mis-diagnosis to learn from.** I first called the empty `contradicting_entry_ids` a
+  failure to record counter-evidence. It was not: the agent's claim was deliberately
+  narrow (*"not by itself a conclusion that he is unreliable in every area"*) and the
+  counter-example did not contradict *that*. The symptom was real, the cause was
+  elsewhere, and the system had said so in its own `gap_note`. **Read what the agent
+  says about itself before diagnosing what it produced.**
 - **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
   / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total
   live spend across the project to date: **$0.0305**.

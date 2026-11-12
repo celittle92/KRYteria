@@ -42,18 +42,56 @@ words — *"not by itself a conclusion that he is unreliable in every area."* An
 reflection it produced is the product's signature line: *"What new information are you
 waiting for that you don't already have?"*
 
-### One real flaw, recorded rather than smoothed over
+### What looked like a flaw, and what it actually was
 
-The saved pattern has `supporting=[4, 2]` and **`contradicting=[]`**. The agent used the
-counter-evidence in its *question* but did not attach it to the finding as contradicting
-entry ids — so a reader of the stored pattern sees only the entries that support it.
-`pattern_has_counter_evidence` in the A/B exists precisely to catch this, and `reasoning.md`
-already says *"Record `contradicting_entry_ids` as carefully as supporting ones. A finding
-that only collects agreement is building a case, not holding up a mirror."*
+**First reading, and it was wrong.** The saved pattern had `supporting=[4, 2]` and
+`contradicting=[]`, and I called that a failure to record counter-evidence.
 
-The prose was right and the structured output was incomplete. **Unfixed, and it is the
-honest version of "the agents are evaluated on reasoning, not on sounding good"** — this
-one sounded good and still left the record one-sided.
+**Second reading: the agent was right.** Its statement was deliberately narrow — *"a
+possible recurring scheduling issue, **not by itself a conclusion that he is unreliable
+in every area**"* — and entry 5 (he drove across town at 11pm) does not contradict *that*
+claim. It contradicts the sweeping one the agent had explicitly declined to make. The
+counter-evidence belonged in the interrogation, where the agent put it.
+
+**The real bug was mine, and the agent reported it.** Its `gap_note` read:
+
+> *"The current entry supplies a third reported instance, but no entry ID for it is
+> provided, so only two distinct entries can be cited here."*
+
+`format_history` excluded the entry being analysed — a fix I had made the day before to
+stop a conclusion corroborating itself. That was an over-correction. Today's entry **is**
+evidence of what happened today; what it must not be is *prior* support for the
+conclusion drawn from it. Excluding it outright meant the agent found three occasions,
+could cite two, and fell below `MIN_SUPPORT`.
+
+**Fixed by labelling rather than hiding** — the current entry is listed, marked as
+today's, with a note that it cannot corroborate a conclusion drawn from itself.
+
+### The re-run, same entry text — `run_id=4`
+
+**5 agents · 9,231 in · 4,636 out · $0.00324.**
+
+| | before | after |
+|---|---|---|
+| supporting | `[2, 4]` | **`[2, 4, 12]`** |
+| contradicting | `[]` | **`[5]`** |
+| strength | `insufficient` | **`moderate`** |
+| patterns found | 1 | 2 |
+
+Once it could reach a confident strength, the project's own rule that a `moderate`
+finding must offer alternatives did the rest — it attached the counter-evidence *and*
+wrote:
+
+> *"The entry about driving across town is a counterpoint to the broad claim that he
+> cannot be counted on for anything, though it does not show advance notice about
+> changed plans."*
+
+The second pattern, about texting first, stayed **`insufficient`** on one entry. Correct.
+
+**The lesson worth keeping:** the symptom was "counter-evidence not recorded"; the cause
+was "the agent could not reach a strength at which counter-evidence was required". Two
+mis-diagnoses in this project have now both been fixed by reading the thing the system
+said about itself rather than the thing it produced.
 
 ---
 
