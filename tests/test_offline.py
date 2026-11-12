@@ -257,6 +257,45 @@ def test_a_resource_must_declare_its_country() -> None:
                                       "region": "GB", "url": "https://example.edu/x"}])
 
 
+def test_every_resource_is_dated_and_sourced() -> None:
+    """A number you can see was checked — and when — is one you can judge.
+
+    Verifying six countries on 2026-11-12 found two dead government pages, one
+    organisation's site down, and one organisation contradicting itself about its own
+    phone number. Against that, a bare undated number asks for a trust nobody can earn.
+    """
+    import datetime as _dt
+
+    blob = json.loads(
+        (PROJECT_DIR / "data" / "resources_international.json").read_text())
+    check("the small verified set is present", len(blob["resources"]) >= 8)
+
+    for row in blob["resources"]:
+        name = row.get("name")
+        check(f"{name!r} records the page that was opened", bool(row.get("source_url")))
+        check(f"{name!r} is dated", bool(row.get("verified_at")))
+        check(f"{name!r} has a country or GLOBAL", bool(row.get("region")))
+        check(f"{name!r} has a way to reach it",
+              bool(row.get("phone") or row.get("url") or row.get("text_line")))
+        try:
+            _dt.date.fromisoformat(row["verified_at"])
+        except Exception:
+            check(f"{name!r} date is ISO format", False, row.get("verified_at"))
+
+    names = {r["name"] for r in blob["resources"]}
+    # Each of these was excluded for a specific, recorded reason. Re-adding one without
+    # resolving that reason is the failure this guards.
+    for excluded, why in (
+        ("13YARN", "its own page prints two different numbers for itself"),
+        # Narrow on purpose: Dublin Rape Crisis Centre IS verified and belongs. The
+        # one excluded is Rape Crisis England & Wales, whose site would not load.
+        ("Rape Crisis England", "its site returned HTTP 525 and was never read"),
+        ("WAVE", "an umbrella network's office, not a crisis line"),
+    ):
+        check(f"{excluded} stays out — {why}",
+              not any(excluded.lower() in n.lower() for n in names))
+
+
 def test_the_international_file_invents_nothing() -> None:
     """Empty on purpose, and it has to stay that way until somebody verifies entries.
 

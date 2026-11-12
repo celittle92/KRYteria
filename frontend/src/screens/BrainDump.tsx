@@ -259,13 +259,32 @@ function SafetyNotice({ analysis }: { analysis: Analysis }) {
                      className="text-accent hover:underline">{r.url}</a>
                 )}
                 {r.note && <div className="text-faint text-xs mt-0.5">{r.note}</div>}
+                {/* The date is shown on purpose. A number you can see was checked —
+                    and when — is something you can judge; a bare number asks to be
+                    trusted. Verifying six countries found two dead government pages
+                    and an organisation contradicting itself about its own number. */}
+                {r.verified_at && (
+                  <div className="text-faint text-xs mt-0.5">
+                    Checked {new Date(r.verified_at).toLocaleDateString(undefined, {
+                      day: "numeric", month: "short", year: "numeric",
+                    })}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
+          <p className="text-faint text-xs mt-3 max-w-reading leading-relaxed">
+            Numbers and opening hours change, and services close. If one of these doesn't
+            work, your local emergency number is the fastest route.
+          </p>
           <button className="btn-quiet mt-5 text-xs" onClick={() => setDeclined(true)}>
             I don't need these
           </button>
         </div>
+      )}
+
+      {analysis.emergency_note && (
+        <p className="text-sm text-ink mt-6">{analysis.emergency_note}</p>
       )}
 
       {declined && (

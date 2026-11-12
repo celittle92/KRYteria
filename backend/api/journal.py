@@ -240,6 +240,12 @@ def _present(result) -> dict:
         "errors": result.errors,
     }
 
+    if safety is not None and safety.concern_detected:
+        # The fallback that cannot go stale, carried whenever the safety layer fired —
+        # including when the curated directory has nothing for her country.
+        from .account import EMERGENCY_NOTE
+
+        payload["emergency_note"] = EMERGENCY_NOTE
     if safety is not None:
         payload["safety"] = {
             "concern_detected": safety.concern_detected,

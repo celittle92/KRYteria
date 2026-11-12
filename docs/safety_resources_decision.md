@@ -1,7 +1,15 @@
 # Should KRYteria hold a directory of support numbers at all?
 
-**Open question, 2026-11-12.** Christine: *"maybe a repository of support numbers isn't
-right either. I just don't know what the right answer is."*
+> **SETTLED 2026-11-12: option E.** Christine: *"Let's keep the small set, that is
+> dated, as well as a note that the user can contact their local emergency number if
+> they are in immediate danger."* Nine entries are now in
+> `data/resources_international.json`, each dated and sourced; `verified_at` is shown in
+> the interface; and `EMERGENCY_NOTE` is carried on every resources response and
+> whenever the safety layer fires. The rest of this document is the evidence that led
+> there — keep it, it is the Limits section of the report.
+
+**Originally an open question, 2026-11-12.** Christine: *"maybe a repository of support
+numbers isn't right either. I just don't know what the right answer is."*
 
 This records what an actual verification pass found, so the decision is made on evidence
 rather than instinct. **The data gathered is below and nothing is lost by waiting.**

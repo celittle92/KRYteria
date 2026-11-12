@@ -44,15 +44,25 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   route module to confirm nothing touches the request except `cookies`. `list_resources`
   no longer defaults to `"US"`; unset means `GLOBAL` rows only plus an honest note, and
   a country with nothing curated returns nothing and says so.
-- **`data/resources_international.json` is empty, and whether to fill it is an OPEN
-  DESIGN QUESTION** — see `docs/safety_resources_decision.md`. A verification pass over
-  six countries on 2026-11-12 confirmed eight entries **and found seven problems**:
-  Canada has no national DV line (its own government page routes to ~30 provincial
-  ones), two official pages were dead, one site was down, one organisation contradicts
-  itself about its own number, and WAVE — which looks like a European helpline — is an
-  advocacy office. The verified data is in that document; **do not populate the JSON
-  until Christine decides the shape.** Never fill it from memory.
-  `data/resources_us.json` is unverified too.
+- **The resource directory is deliberately SMALL, DATED, and not comprehensive.**
+  `data/resources_international.json` holds nine entries across five countries plus
+  EU-wide 112, each with `source_url` and `verified_at` from 2026-11-12. The decision
+  and its evidence are in `docs/safety_resources_decision.md`; that document is also the
+  report's Limits section.
+  - **`verified_at` is shown to the user.** A dated number can be judged; a bare one
+    asks for trust nobody earned.
+  - **`api/account.EMERGENCY_NOTE`** — *"If you are in immediate danger, call your local
+    emergency number"* — is carried on every resources response and whenever the safety
+    layer fires. It hard-codes no digits on purpose: it is the one safety line no file
+    of ours can make stale. A test asserts it never gains one.
+  - **Three services are excluded with recorded reasons** (13YARN contradicts itself
+    about its own number; Rape Crisis England & Wales' site was down; WAVE is an
+    advocacy office, not a crisis line). A test keeps them out until the reason is
+    resolved. **Do not re-add one without resolving why it was excluded.**
+  - **Never add an entry from memory**, and **re-verify before the demo and before
+    submission**, updating `verified_at` when you do. A stale date is honest; a fresh
+    date on an unchecked row is not.
+  - `data/resources_us.json` has still NOT been verified this way.
 - **`SCHEMA_VERSION` is `2026-11-12.1`** (added `accounts.region`). Delete
   `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
   verifications now, so they come back.

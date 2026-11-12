@@ -56,6 +56,30 @@ def new_client(handle: str) -> TestClient:
 
 # ---------------------------------------------------------------- isolation
 
+def test_the_emergency_fallback_never_depends_on_our_data() -> None:
+    """The one safety line that cannot go stale, because it is not a number we store.
+
+    She knows her own emergency number better than this app does. Verifying six
+    countries found two dead government pages and an organisation contradicting itself
+    about its own number — against that, the fallback has to be something no file of
+    ours can get wrong.
+    """
+    from backend.api.account import EMERGENCY_NOTE
+
+    check("it points at her own local number",
+          "local emergency number" in EMERGENCY_NOTE)
+    for digits in ("911", "999", "112", "000", "119"):
+        check(f"it does not hard-code {digits}", digits not in EMERGENCY_NOTE)
+
+    c = new_client("fallback-check")
+    # Present even for a country the directory knows nothing about.
+    body = c.get("/api/resources", params={"region": "KE"}).json()
+    check("carried even when nothing is curated",
+          body["emergency_note"] == EMERGENCY_NOTE)
+    check("and the staleness note only appears beside actual entries",
+          body["staleness_note"] is None)
+
+
 def test_location_is_never_inferred_from_the_request() -> None:
     """The privacy line on international resources.
 

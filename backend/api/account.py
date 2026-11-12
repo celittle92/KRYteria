@@ -74,6 +74,26 @@ def projection(
 
 # ---------------------------------------------------------------- safety resources
 
+#: Carried on every resources response, whatever the directory holds.
+#:
+#: The one piece of safety information KRYteria can state without the risk of being
+#: stale, because it does not depend on our data being current — she knows her own
+#: emergency number better than this app does. Verifying six countries on 2026-11-12
+#: found two dead government pages, one organisation's site down, and one organisation
+#: contradicting itself about its own number. Against that, the honest fallback has to
+#: be something no file of ours can get wrong.
+EMERGENCY_NOTE = (
+    "If you are in immediate danger, call your local emergency number."
+)
+
+#: Shown beside the dated entries. A number with a date on it can be judged; a bare
+#: number asks to be trusted.
+STALENESS_NOTE = (
+    "Each entry shows when KRYteria last checked it against the organisation's own "
+    "page. Numbers and opening hours do change, and services close."
+)
+
+
 @router.get("/resources")
 def list_resources(
     category: str | None = None,
@@ -101,6 +121,9 @@ def list_resources(
         "region_source": ("query" if region else
                           "account" if account.get("region") else "unset"),
         "resources": rows,
+        # Always present, never conditional on the directory having anything.
+        "emergency_note": EMERGENCY_NOTE,
+        "staleness_note": STALENESS_NOTE if rows else None,
         # An empty directory is a truthful answer and must read as one. The alternative
         # — quietly serving US numbers to everybody — is the bug this replaced.
         "note": (

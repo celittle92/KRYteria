@@ -106,6 +106,7 @@ export interface Analysis {
     rationale: string | null;
   };
   resources?: Resource[];
+  emergency_note?: string;
   halt_reason?: string;
   observations?: Observation[];
   missing_information?: string[];
@@ -135,6 +136,10 @@ export interface Reflection {
 export interface Resource {
   id: number; name: string; kind: string; phone: string | null;
   text_line: string | null; url: string | null; hours: string | null; note: string | null;
+  /** When KRYteria last checked this against the organisation's own page. Shown to the
+   *  user: a dated number can be judged, a bare one asks to be trusted. */
+  verified_at: string;
+  region: string;
 }
 
 export interface Progress {
@@ -267,6 +272,8 @@ export const api = {
       region_source: "query" | "account" | "unset";
       resources: Resource[];
       note: string | null;
+      emergency_note: string;
+      staleness_note: string | null;
     }>("/api/resources"),
   export: () => get<unknown>("/api/export"),
   deleteAccount: (passphrase: string) =>

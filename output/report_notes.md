@@ -187,7 +187,52 @@ example). State the limit out loud — not therapy, not a substitute — because
 
 ## 7. Limits + next steps
 
-Already honest and documented, which this row rewards:
+### The headline limit — and it is the best thing in this section
+
+Christine, 2026-11-12, on the resource-verification findings:
+
+> *"if part of the value prop of KRYteria is researched, accurate information, and even
+> governments can't be bothered to provide it, how can we?"*
+
+**That is the honest limit of this entire product, stated as a question the report should
+answer rather than dodge.** KRYteria's position is evidence over assumption. So what
+happens when the evidence layer itself cannot be kept current?
+
+The data, from one sitting on 2026-11-12 — six countries, roughly fifteen minutes:
+
+| Finding | |
+|---|---|
+| **Canada has no national domestic-violence line.** Its own government page routes to ~30 provincial and territorial lines across 13 jurisdictions. | A "national hotline" field assumes a shape some countries do not have. |
+| `gov.uk/call-999-if-you-are-not-able-to-speak` → **404** | A UK government page on how to call 999 when you cannot speak. Gone. |
+| `triplezero.gov.au` → redirect → **timed out twice** | Australia's official emergency-number page. |
+| `rapecrisis.org.uk/get-help/` → **HTTP 525** | The organisation's own site, down at the moment of checking. |
+| **13YARN contradicts itself** — `13 92 76` in body text, `13 92 176` in its logo | An organisation's own site, internally wrong about its own number. |
+| **WAVE** looks exactly like a pan-European women's helpline. It is a ~190-NGO umbrella whose numbers are an office, Mon–Thu 9–17. | The error that would actually have reached a user. |
+| **Refuge** prints both "24 hours a day, 365 days a year" and "Mon–Fri, 10am–6pm" | A correct number carrying ambiguous hours. |
+
+**Seven problems. None visible to anyone writing the file from memory. All in the
+direction that hurts: confidently wrong.**
+
+**What we did about it, which is the actual argument of this section:** we narrowed the
+claim instead of widening the dataset.
+
+1. A **small** verified set — nine entries, one or two per country, no attempt at
+   coverage.
+2. **The verification date is shown to the user.** *"Checked 12 Nov 2026."* A dated
+   number can be judged; a bare one asks for trust nobody has earned.
+3. **The one line that cannot go stale is always present**: *"If you are in immediate
+   danger, call your local emergency number."* It is not a number we store, so no file
+   of ours can make it wrong — she knows it better than this app does.
+4. **Three services were excluded and each exclusion is recorded with its reason**, with
+   a test that keeps them out until the reason is resolved.
+
+**The generalisable claim for the report:** a system whose value is accuracy has to be
+honest about its own decay rate. KRYteria's answer is to date everything, keep the set
+small enough to re-check, and make the un-stale-able fallback the thing it always says.
+That is the same move as *"18 of 19 verified"* in the research layer — the number is
+lower than it could be, and it is true.
+
+### The rest, already honest and documented
 - `reis-shaver-responsiveness` stays **pending** — the container is confirmed, the
   chapter placement is not. 18 of 19 verified rather than a rounded 19.
 - Cache writes not modelled in cost figures.
@@ -337,7 +382,6 @@ Both HTML files must open by **double-clicking**, on any computer, with every sc
    `submission_spec.json`, none written.
 9. **Verify `data/resources_us.json`** against each organisation's own site. Unchecked
    since 2026-11-07, and it is the one dataset where being wrong matters most.
-   **And populate `data/resources_international.json`**, which is empty by design — the
-   mechanism (user-set country, never inferred) is built, the content is not. Each entry
-   needs the organisation's own page opened and recorded.
+   `data/resources_international.json` is **done** — nine entries across five countries
+   plus EU-wide 112, each dated and sourced (2026-11-12). Re-check before the demo.
 10. **Add `zlisto`** as collaborator — release day only.
