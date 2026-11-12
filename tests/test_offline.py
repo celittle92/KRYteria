@@ -1422,7 +1422,10 @@ def test_resources_are_curated_never_invented() -> None:
     _seed_resources(s)
 
     all_res = s.list_resources(region="US")
-    check("the directory loaded", len(all_res) == 4)
+    # Not pinned to an exact count: the set grows as entries are verified, and a test
+    # that breaks every time somebody adds a checked resource trains people to edit the
+    # test rather than read it.
+    check("the directory loaded", len(all_res) >= 4, f"got {len(all_res)}")
     check("emergency services sort first", all_res[0]["kind"] == "emergency")
     check("every resource carries a verification date",
           all(r["verified_at"] for r in all_res))

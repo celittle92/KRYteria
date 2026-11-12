@@ -1,20 +1,35 @@
 {
   "_comment": [
-    "Curated support-resource directory. The agent may offer ONLY what is in here.",
+    "US support resources. Originally entered from the charter text on 2026-11-07 and",
+    "NOT verified against any organisation's own site until 2026-11-12.",
     "",
-    "Nothing in this file may be invented or guessed — not a number, not a service, not",
-    "an availability claim. If a concern has no matching row, the honest answer is that",
-    "KRYteria does not have a resource for it. An invented hotline is worse than none.",
+    "RE-VERIFICATION, 2026-11-12. Four entries checked. Two confirmed against the",
+    "organisation's own page, two could not be reached at all:",
     "",
-    "verified_at is the date a human last checked the entry against the organisation's",
-    "own published contact details. Re-verify before submission and before any release.",
-    "Figures below are as published by each organisation and were entered on 2026-11-07;",
-    "Christine should confirm each one against the organisation's site before the demo.",
+    "  thehotline.org      CONFIRMED  phone, text wording and 24/7 all match.",
+    "  988lifeline.org     CONFIRMED with two wording corrections (below).",
+    "  rainn.org           HTTP 403 on every URL tried. The site refuses automated",
+    "                      requests. NOT re-verified.",
+    "  fcc.gov / 911.gov   HTTP 403 on both. 911 NOT re-verified from an official source.",
     "",
-    "Emergency services are listed separately from confidential support, because they are",
-    "different things and conflating them takes a choice away from the user."
+    "WHAT WE DID ABOUT THE TWO WE COULD NOT REACH. They are kept, with their ORIGINAL",
+    "2026-11-07 date left untouched. That is the point of showing the date in the",
+    "interface: a user sees 'Checked 7 Nov' beside those and 'Checked 12 Nov' beside the",
+    "others, and can weigh them accordingly. Back-dating them to today would be a lie,",
+    "and removing them would leave US users with no sexual-assault resource and no",
+    "emergency entry, which is worse than an older date.",
+    "",
+    "To be clear about what is and is not being claimed: a 403 means we could not CHECK",
+    "them, not that we have reason to doubt them. Both are among the most widely known",
+    "numbers in the country. The gap is provenance, not accuracy. Open them in a normal",
+    "browser and update `verified_at` -- that is a two-minute job for a human and",
+    "impossible for an automated fetch.",
+    "",
+    "`source_url` and `verification_note` are recorded here but are not columns in the",
+    "resources table; this file is the provenance record, the database is the serving",
+    "layer."
   ],
-  "region": "US",
+  "version": "2.0",
   "resources": [
     {
       "name": "Emergency services (911)",
@@ -23,20 +38,35 @@
       "categories": ["physical", "sexual", "stalking_harassment", "coercive_control"],
       "phone": "911",
       "note": "For immediate danger. Call if you are in danger right now.",
-      "verified_at": "2026-11-07"
+      "verified_at": "2026-11-07",
+      "verification_note": "NOT re-verified 2026-11-12: both fcc.gov and 911.gov returned HTTP 403 to automated requests. Provenance gap, not an accuracy doubt. Confirm in a browser and update the date.",
+      "source_url": null
     },
     {
       "name": "National Domestic Violence Hotline",
       "kind": "confidential_support",
       "region": "US",
-      "categories": ["physical", "emotional_psychological", "coercive_control",
-                     "stalking_harassment", "sexual"],
+      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment", "sexual"],
       "phone": "1-800-799-SAFE (7233)",
       "text_line": "Text START to 88788",
       "url": "https://www.thehotline.org/",
       "hours": "24/7",
-      "note": "Confidential. You do not have to call anything you are experiencing abuse to talk to them.",
-      "verified_at": "2026-11-07"
+      "note": "Free and confidential. You do not have to call what you are experiencing abuse to talk to them. The service notes that high demand can mean longer waits to reach a live advocate.",
+      "verified_at": "2026-11-12",
+      "verification_note": "Confirmed on the organisation's own page: phone, 'Text START to 88788', and 'Free. Confidential. 24/7.' all match. The site prints the number as 1.800.799.SAFE (7233).",
+      "source_url": "https://www.thehotline.org/"
+    },
+    {
+      "name": "Deaf Hotline (video phone)",
+      "kind": "confidential_support",
+      "region": "US",
+      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment", "sexual"],
+      "phone": "855-812-1001",
+      "url": "https://www.thehotline.org/",
+      "note": "A video phone service for Deaf and hard-of-hearing callers, listed by the National Domestic Violence Hotline.",
+      "verified_at": "2026-11-12",
+      "verification_note": "Added 2026-11-12 after re-verification surfaced it on thehotline.org. Without it the US set had no accessible route for Deaf callers.",
+      "source_url": "https://www.thehotline.org/"
     },
     {
       "name": "RAINN National Sexual Assault Hotline",
@@ -47,7 +77,9 @@
       "url": "https://rainn.org/",
       "hours": "24/7",
       "note": "Confidential support for sexual assault, coercion, and unwanted contact.",
-      "verified_at": "2026-11-07"
+      "verified_at": "2026-11-07",
+      "verification_note": "NOT re-verified 2026-11-12: rainn.org, /get-help and hotline.rainn.org all returned HTTP 403 to automated requests. Provenance gap, not an accuracy doubt. Confirm in a browser and update the date.",
+      "source_url": null
     },
     {
       "name": "988 Suicide & Crisis Lifeline",
@@ -55,11 +87,13 @@
       "region": "US",
       "categories": ["self_harm"],
       "phone": "988",
-      "text_line": "Text 988",
-      "url": "https://988lifeline.org/",
-      "hours": "24/7",
-      "note": "For emotional crisis or suicidal distress. Offer only when that is what the person is describing — not as a reaction to any difficult feeling.",
-      "verified_at": "2026-11-07"
+      "text_line": "988",
+      "url": "https://chat.988lifeline.org/",
+      "hours": "24/7/365",
+      "note": "For emotional crisis or suicidal distress — offered only when that is what someone is describing, never as a reaction to any difficult feeling. Free and confidential. Call, text or chat. Text and chat are also available in Spanish.",
+      "verified_at": "2026-11-12",
+      "verification_note": "Confirmed on 988lifeline.org, with two corrections: hours are stated as '24/7/365', not '24/7'; and the page does not print the wording 'Text 988' anywhere — it exposes an sms:988 link only, so the previous text_line wording was ours, not theirs. Chat URL added.",
+      "source_url": "https://988lifeline.org/"
     }
   ]
 }

@@ -369,6 +369,54 @@ Both HTML files must open by **double-clicking**, on any computer, with every sc
 
 ---
 
+## Demo readiness — walked end to end on 2026-11-12
+
+The app was run in demo mode and clicked through: sign-in → Brain Dump → analysis →
+trace → Patterns → My KRYteria → My Progress. **The substance is there.** What is
+missing is mostly packaging.
+
+### What already works, and is screenshot-ready
+
+- **Sign-in and the landing page.** The privacy promise is stated before anything is
+  typed, which is the onboarding requirement.
+- **Brain Dump → analysis.** Facts and interpretations are visibly separated on screen —
+  *"WHAT HAPPENED"* vs *"WHAT YOU MADE OF IT — kept separate from what happened. These
+  are readings, not events."*
+- **Evidence Interrogation fires.** *"Let's examine that"* → quotes her claim → *"How
+  many times has this happened, and over what period?"*
+- **The trace view renders**, agent by agent, with in/out tokens and latency. This is the
+  Agent Design evidence; it needs a **live** run to show non-zero figures.
+- **Patterns shows counter-evidence**: *"3 entries support this · 2 cut against it"*,
+  plus OTHER EXPLANATIONS and STILL UNKNOWN. The product's whole thesis, visible.
+- **My KRYteria has all four profiles** — Boyfriend (9), Fuck Buddy (7), Husband (10),
+  One Night Stand (6) — with per-profile tiers and two people. The Jimmy G
+  demonstration is one click away.
+- **My Progress is populated**: 11 criteria, 8 entries, decisions postponed, a criterion
+  whose standard *changed* with her reason quoted, and no score anywhere.
+- **Retention is offered after analysis**, with all three options explained.
+
+### Demo gaps, in priority order
+
+1. **No "try the demo" button.** A grader has to already know the handle `demo` and
+   passphrase `kryteria-demo-account`. The requirements ask for **one click to load or
+   reset** the demo. *This is the single highest-value fix on this list* — it is the
+   difference between a grader seeing the app and a grader seeing a sign-in form.
+2. **Themes are invisible.** `/api/progress` returns `themes: []` and no screen renders
+   them. The feature is built, the seed sets none, and nothing shows them. Either seed
+   them and build the panel, or it is dead weight.
+3. **No profile is pre-selected on Brain Dump**, so a first-time demo run skips the
+   Evidence agent entirely and shows a thinner result than the app is capable of.
+4. **Checklist Mode has no UI** — backend complete, 16 route references, nothing to click.
+5. **No trace screenshot from a live run.** Demo mode correctly shows zeros.
+
+### Not demo blockers, but submission blockers
+
+`report.html`, `slides.html`, `output/harness.md`, `output/usage_log.json`,
+`output/token_report.md`, `output/user_test.md`, `output/hosted_url.txt`, and
+`output/reasoning_results.*` at the canonical path (a live reasoning run).
+
+---
+
 ## Still missing — the actual to-do list
 
 1. `report.html` and `slides.html` — **49 points**, not started.

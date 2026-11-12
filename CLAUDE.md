@@ -62,7 +62,18 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   - **Never add an entry from memory**, and **re-verify before the demo and before
     submission**, updating `verified_at` when you do. A stale date is honest; a fresh
     date on an unchecked row is not.
-  - `data/resources_us.json` has still NOT been verified this way.
+  - **`data/resources_us.json` was re-verified 2026-11-12, with mixed results.**
+    thehotline.org **confirmed** (phone, text wording, 24/7 all match). 988lifeline.org
+    **confirmed with corrections** — hours are "24/7/365" and the page never prints
+    "Text 988", it exposes an `sms:988` link only, so our old wording was ours not
+    theirs. **rainn.org returned HTTP 403 on every URL**, and **fcc.gov and 911.gov both
+    403'd**, so RAINN and 911 could NOT be re-verified. Those two keep their original
+    `2026-11-07` date deliberately — back-dating them would be a lie and removing them
+    would leave US users with no sexual-assault resource and no emergency entry. **The
+    gap is provenance, not accuracy.** Open them in a browser and update the date; a
+    human can do in two minutes what an automated fetch cannot do at all.
+  - Added `Deaf Hotline (video phone)` 855-812-1001, surfaced during that check — the US
+    set had no accessible route for Deaf callers.
 - **`SCHEMA_VERSION` is `2026-11-12.1`** (added `accounts.region`). Delete
   `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
   verifications now, so they come back.
