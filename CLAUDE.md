@@ -23,6 +23,19 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
+- **OPEN SAFETY FINDING from the first live safety run (2026-11-11):** a `disclosure`
+  event fires, resources are offered — and the **Evidence agent still runs and maps the
+  incident to a compatibility criterion** (`saf-physical-01`, `saf-threat-01`). The
+  charter says *"Never return to ordinary compatibility analysis as though nothing
+  significant was said."* The orchestrator halts only on `suggested_action ==
+  "halt_and_route"`, so a disclosure classified as `offer_resources` sails through.
+  **The halt condition is too narrow, and it should not depend on the same model call
+  that classified the concern.** Two further cases need a decision rather than a fix —
+  see `output/live_runs/README.md`. Do not change the eval cases to make these pass.
+- **Eval artefacts store the FULL prose** (`produced.prose`, `produced.attributed`). The
+  Markdown truncates at 2,000 characters and once hid the sentence that tripped a
+  `prose_lacks` check, leaving a real failure unadjudicable without paying for the run
+  again. Evidence that cost money must be complete in the machine-readable file.
 - **`output/report_notes.md` is the running evidence record for `report.html` and
   `slides.html`** (49 of the 100 points, five rows evidence-capped at half). **Update it
   as evidence appears, not at the end.** Its rule: nothing goes in that is not already

@@ -81,7 +81,14 @@ def _case_block(case: Any) -> list[str]:
     t = case.transcript
     if t and t.prose:
         lines += ["<details><summary>What the agents produced</summary>", ""]
-        lines += ["```", t.prose[:2000], "```", "", "</details>", ""]
+        shown = t.prose[:2000]
+        lines += ["```", shown, "```"]
+        if len(t.prose) > len(shown):
+            lines += ["", f"*Truncated at 2,000 of {len(t.prose):,} characters for "
+                          "readability. The full text is in the `.json` beside this "
+                          "file, under `produced.prose` — never adjudicate a failure "
+                          "from this excerpt alone.*"]
+        lines += ["", "</details>", ""]
     return lines
 
 
@@ -154,6 +161,14 @@ def _serialisable(report: dict) -> dict:
                 "safety_events": c.transcript.safety_events,
                 "halted": c.transcript.halted,
                 "errors": c.transcript.errors,
+                # The FULL text, untruncated. The Markdown cuts prose at 2,000
+                # characters for readability, and on the first live safety run that
+                # hid the sentence which tripped a `prose_lacks` check — leaving a
+                # real failure unadjudicable without paying for the run again.
+                # Evidence that cost money must be complete in the machine-readable
+                # artefact, whatever the page does for the eye.
+                "prose": c.transcript.prose,
+                "attributed": c.transcript.attributed,
             },
         }
         for c in report["cases"]
