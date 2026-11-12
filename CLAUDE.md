@@ -44,11 +44,15 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   route module to confirm nothing touches the request except `cookies`. `list_resources`
   no longer defaults to `"US"`; unset means `GLOBAL` rows only plus an honest note, and
   a country with nothing curated returns nothing and says so.
-- **`data/resources_international.json` is empty on purpose.** The mechanism is built;
-  the content must come from each organisation's own site with the URL recorded. **Never
-  fill it from memory** — emergency numbers differ (999, 112, 000, 119) and a real
-  number filed under the wrong country is as bad as an invented one.
-  `data/resources_us.json` is still unverified too.
+- **`data/resources_international.json` is empty, and whether to fill it is an OPEN
+  DESIGN QUESTION** — see `docs/safety_resources_decision.md`. A verification pass over
+  six countries on 2026-11-12 confirmed eight entries **and found seven problems**:
+  Canada has no national DV line (its own government page routes to ~30 provincial
+  ones), two official pages were dead, one site was down, one organisation contradicts
+  itself about its own number, and WAVE — which looks like a European helpline — is an
+  advocacy office. The verified data is in that document; **do not populate the JSON
+  until Christine decides the shape.** Never fill it from memory.
+  `data/resources_us.json` is unverified too.
 - **`SCHEMA_VERSION` is `2026-11-12.1`** (added `accounts.region`). Delete
   `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
   verifications now, so they come back.
