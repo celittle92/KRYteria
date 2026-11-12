@@ -192,8 +192,8 @@ export default function Checklist() {
                   {generating ? "Thinking…" : "Suggest things to look for"}
                 </button>
                 <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
-                  One model call. These are starting points to edit or ignore, not a
-                  universal definition of what this standard means.
+                  These are starting points to edit or ignore, not a universal
+                  definition of what this standard means.
                 </p>
               </div>
             </Card>

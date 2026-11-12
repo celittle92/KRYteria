@@ -56,6 +56,18 @@ class Preferences(BaseModel):
     )
 
 
+class AnalyseEntry(BaseModel):
+    """Ask KRYteria to read an entry that is already saved.
+
+    The "I logged it quickly, now actually look at it" path. Never automatic — it spends
+    a model call, so it happens when asked.
+    """
+
+    profile_id: int | None = None
+    person_id: int | None = None
+    want_reflection: bool = False
+
+
 class RetentionChoice(BaseModel):
     """The choice offered after a brain dump has been processed.
 
@@ -110,7 +122,10 @@ class ProfileCriterionIn(BaseModel):
 
 
 class TierChange(BaseModel):
-    tier: Tier
+    """Either or both. Tier and relevance are both per-profile settings."""
+
+    tier: Tier | None = None
+    relevance: Literal["relevant", "not_applicable"] | None = None
 
 
 class CopyCriteria(BaseModel):

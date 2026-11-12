@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   api, type Criterion, type Person, type Profile, type ProfileCriterion, type Status,
-  type Tier,
+  type Tier, type Relevance,
 } from "../api";
 import {
   Card, Empty, ErrorNote, Eyebrow, Pill, Section, Spinner, StatusPill, TierPill,
@@ -26,6 +26,10 @@ export default function Criteria() {
   const [people, setPeople] = useState<Person[]>([]);
   const [personId, setPersonId] = useState<number | "">("");
   const [loading, setLoading] = useState(true);
+  // Bumped whenever something changes this profile's criteria. `setSelected(same id)`
+  // is not a state change, so it never re-ran the loader — which is why adding a
+  // criterion worked on the server and did nothing visible on screen.
+  const [rowsNonce, setRowsNonce] = useState(0);
   const [error, setError] = useState<string | null>(null);
 
   async function refresh() {
@@ -39,12 +43,27 @@ export default function Criteria() {
   useEffect(() => { refresh().catch((e) => setError(String(e))).finally(() => setLoading(false)); }, []);
 
   useEffect(() => {
-    if (selected === null) { setRows([]); return; }
+    // Clear first. Leaving the previous profile's rows in place while the next load is
+    // in flight meant `already` briefly described the WRONG profile — so "Add from your
+    // library" offered criteria that were already there, and the 409 died silently in a
+    // try/finally with no catch. That is the "+ Soft hands does nothing" bug.
+    setRows([]);
+    if (selected === null) return;
+    let cancelled = false;
     const load = personId === ""
       ? api.profileCriteria(selected)
       : api.assessments(selected, personId);
-    load.then(setRows).catch((e) => setError(String(e)));
-  }, [selected, personId]);
+    load.then((r) => { if (!cancelled) setRows(r); })
+      .catch((e) => { if (!cancelled) setError(String(e)); });
+    return () => { cancelled = true; };
+  }, [selected, personId, rowsNonce]);
+
+  async function setRelevance(criterionId: number, relevance: Relevance) {
+    if (selected === null) return;
+    setRows((r) => r.map((x) => (x.criterion_id === criterionId ? { ...x, relevance } : x)));
+    try { await api.setRelevance(selected, criterionId, relevance); }
+    catch (e) { setError(String(e)); setRowsNonce((n) => n + 1); }
+  }
 
   async function setTier(criterionId: number, tier: Tier) {
     if (selected === null) return;
@@ -142,10 +161,18 @@ export default function Criteria() {
                     </div>
 
                     {r.relevance === "not_applicable" ? (
-                      <p className="text-xs text-faint mt-3">
-                        Not relevant to this profile. It stays in your library and is
-                        untouched elsewhere.
-                      </p>
+                      <div className="mt-3">
+                        <p className="text-xs text-faint">
+                          Not relevant to this profile. It stays in your library and is
+                          untouched elsewhere.
+                        </p>
+                        <button
+                          className="btn-quiet text-xs mt-2"
+                          onClick={() => setRelevance(r.criterion_id, "relevant")}
+                        >
+                          Actually, this does matter here
+                        </button>
+                      </div>
                     ) : (
                       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
                         <TierChooser tier={r.tier} onChange={(t) => setTier(r.criterion_id, t)} />
@@ -155,6 +182,12 @@ export default function Criteria() {
                             onChange={(s) => setStatus(r.criterion_id, s)}
                           />
                         )}
+                        <button
+                          className="text-xs text-faint hover:text-muted underline"
+                          onClick={() => setRelevance(r.criterion_id, "not_applicable")}
+                        >
+                          Doesn't apply here
+                        </button>
                       </div>
                     )}
                   </li>
@@ -174,14 +207,15 @@ export default function Criteria() {
             profileId={profile.id}
             library={library}
             already={new Set(rows.map((r) => r.criterion_id))}
-            onAdded={() => { setSelected(profile.id); refresh(); setPersonId((p) => p); }}
+            onAdded={() => { refresh(); setRowsNonce((n) => n + 1); }}
+            onError={setError}
           />
         </Section>
       )}
 
       <Section
         title="Your library"
-        subtitle="Every standard you've written down. Reusable across profiles, and never judged here."
+        subtitle="Every standard you've written down, in alphabetical order. Reusable across profiles, and never judged here."
       >
         {library.length === 0 ? (
           <Empty>Nothing yet. Whatever matters to you belongs here — it is yours to set.</Empty>
@@ -399,8 +433,9 @@ function NewProfile({ onCreated }: { onCreated: () => void }) {
   );
 }
 
-function AddToProfile({ profileId, library, already, onAdded }: {
-  profileId: number; library: Criterion[]; already: Set<number>; onAdded: () => void;
+function AddToProfile({ profileId, library, already, onAdded, onError }: {
+  profileId: number; library: Criterion[]; already: Set<number>;
+  onAdded: () => void; onError: (m: string) => void;
 }) {
   const available = library.filter((c) => !already.has(c.id));
   const [busy, setBusy] = useState<number | null>(null);
@@ -408,7 +443,7 @@ function AddToProfile({ profileId, library, already, onAdded }: {
 
   return (
     <div className="mt-5">
-      <Eyebrow>Add from your library</Eyebrow>
+      <Eyebrow>Add from your library — alphabetical</Eyebrow>
       <div className="flex flex-wrap gap-2">
         {available.map((c) => (
           <button
@@ -417,7 +452,9 @@ function AddToProfile({ profileId, library, already, onAdded }: {
             disabled={busy === c.id}
             onClick={async () => {
               setBusy(c.id);
+              // A silent catch here is how "+ does nothing" happened. Say it instead.
               try { await api.addToProfile(profileId, { criterion_id: c.id }); onAdded(); }
+              catch (e) { onError(e instanceof Error ? e.message : String(e)); }
               finally { setBusy(null); }
             }}
           >

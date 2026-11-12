@@ -656,6 +656,35 @@ class Store:
                 (tier, profile_id, criterion_id),
             )
 
+    def set_profile_relevance(self, account_id: int, profile_id: int,
+                              criterion_id: int, relevance: str) -> None:
+        """Mark a criterion relevant, or not, **in this profile only**.
+
+        Christine, 2026-11-12: *"in ONS KRYteria, 'Compatible Relationship Intentions'
+        could be applicable. Someone may not want a ONS with someone who wants a
+        relationship."* Exactly so — and it is the clearest possible illustration of why
+        relevance belongs to the profile rather than to the criterion. Whether wanting
+        the same thing matters here is the user's call, not a property of the encounter
+        type, and certainly not ours to fix at seed time.
+
+        Changing it here never touches another profile, for the same reason tiers do
+        not: the configurations are independent.
+        """
+        if relevance not in ("relevant", "not_applicable"):
+            raise StoreError(
+                f"relevance must be 'relevant' or 'not_applicable', got {relevance!r}")
+        with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
+            cur = conn.execute(
+                "UPDATE profile_criteria SET relevance = ? WHERE profile_id = ?"
+                " AND criterion_id = ?",
+                (relevance, profile_id, criterion_id),
+            )
+            if cur.rowcount == 0:
+                raise StoreError(
+                    "That criterion is not on this profile, so its relevance here "
+                    "cannot be changed. Add it first.")
+
     def copy_criteria_to_profile(
         self, account_id: int, source_profile_id: int, target_profile_id: int,
         criterion_ids: Sequence[int] | None = None,

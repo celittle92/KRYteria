@@ -178,7 +178,7 @@ export default function BrainDump({ account }: { account: Account }) {
           />
           <span>
             Also give me something to reflect on.
-            <span className="text-faint"> One more model call.</span>
+            <span className="text-faint"> Takes a moment longer.</span>
           </span>
         </label>
 
@@ -543,7 +543,7 @@ function TraceNote({ analysis }: { analysis: Analysis }) {
     <div className="text-xs text-faint">
       {!open ? (
         <button onClick={show} className="hover:text-muted transition-colors">
-          {analysis.model_calls} model calls · see what each agent did
+          See what each part of KRYteria did
         </button>
       ) : (
         <Card className="p-5">

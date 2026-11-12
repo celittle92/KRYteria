@@ -143,6 +143,8 @@ export interface Resource {
 }
 
 /** What ticking means, and the four states are not a 0–3 scale. */
+export type Relevance = "relevant" | "not_applicable";
+
 export type ChecklistState =
   | "observed" | "not_observed" | "contradicted" | "no_opportunity";
 
@@ -264,6 +266,10 @@ export const api = {
     post<ProfileCriterion[]>(`/api/profiles/${id}/criteria`, b),
   setTier: (profileId: number, criterionId: number, tier: Tier) =>
     patch<ProfileCriterion[]>(`/api/profiles/${profileId}/criteria/${criterionId}`, { tier }),
+  /** Relevance is per profile, like the tier. Changing it never touches another. */
+  setRelevance: (profileId: number, criterionId: number, relevance: Relevance) =>
+    patch<ProfileCriterion[]>(
+      `/api/profiles/${profileId}/criteria/${criterionId}`, { relevance }),
   copyCriteria: (targetId: number, sourceId: number) =>
     post<{ copied: number }>(`/api/profiles/${targetId}/copy-criteria`, { source_profile_id: sourceId }),
 
@@ -303,7 +309,19 @@ export const api = {
   recordDecision: (b: { choice: Choice; action_text?: string | null; criterion_id?: number | null }) =>
     post<{ postponements_on_this_concern: number; probe_available: boolean }>("/api/decisions", b),
 
+  /** "I logged it quickly — now actually read it." Never automatic. */
+  analyseEntry: (entryId: number, b: {
+    profile_id?: number | null; person_id?: number | null; want_reflection?: boolean;
+  }) => post<{ entry: Entry; analysis: Analysis | null }>(
+    `/api/entries/${entryId}/analyse`, b),
+
   progress: () => get<Progress>("/api/progress"),
+  themesFor: (personId?: number | null) =>
+    get<{
+      person_id: number | null;
+      themes: { theme_id: string; label: string; about: string; sensitive: boolean;
+                entries: number; first_seen: string | null; last_seen: string | null }[];
+    }>(`/api/themes${personId ? `?person_id=${personId}` : ""}`),
   usage: () => get<Record<string, unknown>>("/api/usage"),
   resources: () =>
     get<{

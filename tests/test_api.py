@@ -140,6 +140,67 @@ def test_location_is_never_inferred_from_the_request() -> None:
     check("clearing works", c.get("/api/resources").json()["region_source"] == "unset")
 
 
+def test_relevance_is_per_profile_and_changeable() -> None:
+    """Christine, 2026-11-12: Compatible Relationship Intentions *could* matter for a
+    one-night stand — somebody may not want one with a person who wants a relationship.
+
+    Which is the point: whether a standard applies here is the user's call, not a
+    property of the encounter type. And changing it must never reach another profile.
+    """
+    c = new_client("relevance-user")
+    a = c.post("/api/profiles", json={"name": "One Night Stand KRYteria"}).json()
+    b = c.post("/api/profiles", json={"name": "Husband KRYteria"}).json()
+    crit = c.post("/api/criteria", json={
+        "value": "Compatible relationship intentions",
+        "desired_behavior": "Wants the same kind of thing I do"}).json()
+
+    c.post(f"/api/profiles/{a['id']}/criteria",
+           json={"criterion_id": crit["id"], "relevance": "not_applicable"})
+    c.post(f"/api/profiles/{b['id']}/criteria",
+           json={"criterion_id": crit["id"], "tier": "mandatory"})
+
+    r = c.patch(f"/api/profiles/{a['id']}/criteria/{crit['id']}",
+                json={"relevance": "relevant", "tier": "mandatory"})
+    check("relevance can be changed", r.status_code == 200, r.text)
+
+    on_a = c.get(f"/api/profiles/{a['id']}/criteria").json()[0]
+    on_b = c.get(f"/api/profiles/{b['id']}/criteria").json()[0]
+    check("it took effect here", on_a["relevance"] == "relevant")
+    check("and the tier came with it", on_a["tier"] == "mandatory")
+    check("the other profile is untouched", on_b["relevance"] == "relevant")
+
+    back = c.patch(f"/api/profiles/{a['id']}/criteria/{crit['id']}",
+                   json={"relevance": "not_applicable"})
+    check("and it can be set back", back.status_code == 200)
+    check("not applicable again",
+          c.get(f"/api/profiles/{a['id']}/criteria").json()[0]["relevance"]
+          == "not_applicable")
+
+    empty = c.patch(f"/api/profiles/{a['id']}/criteria/{crit['id']}", json={})
+    check("an empty change is refused", empty.status_code == 422)
+
+
+def test_a_quick_log_can_be_read_afterwards() -> None:
+    """Choosing the fast path once must not lock somebody out of the considered one."""
+    c = new_client("analyse-later")
+    p = c.post("/api/people", json={"alias": "Alex"}).json()
+    prof = c.post("/api/profiles", json={"name": "Dating KRYteria"}).json()
+    entry = c.post("/api/entries/structured", json={
+        "what_happened": "Plans changed at short notice. They followed through later.",
+        "how_it_affected": "It landed: mixed",
+        "person_id": p["id"], "profile_id": prof["id"]}).json()
+
+    r = c.post(f"/api/entries/{entry['id']}/analyse",
+               json={"profile_id": prof["id"], "person_id": p["id"]})
+    check("a saved entry can be analysed later", r.status_code == 200, r.text)
+    body = r.json()
+    check("and it produced an analysis", body["analysis"] is not None)
+    check("without creating a second entry", body["entry"]["id"] == entry["id"])
+
+    missing = c.post("/api/entries/999999/analyse", json={})
+    check("another account's entry is 404, never 403", missing.status_code == 404)
+
+
 def test_data_isolation() -> None:
     """Two accounts. One must not be able to see or touch the other's anything."""
     alice = new_client("alice")

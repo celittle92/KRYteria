@@ -47,10 +47,15 @@ const LANDED = [
   { key: "bad", label: "Bad" },
 ];
 
-const RELATIONS: { key: Relation; label: string }[] = [
-  { key: "supporting", label: "Supports it" },
-  { key: "contradicting", label: "Cuts against it" },
-  { key: "complicating", label: "Complicated" },
+// Christine, 2026-11-12, on the old wording: "also that is fucking weird phrasing".
+// "Cuts against it" is evidence-speak. These are the words a person would use.
+const RELATIONS: { key: Relation; label: string; hint: string }[] = [
+  { key: "supporting", label: "Shows it",
+    hint: "Something here is what you're looking for." },
+  { key: "contradicting", label: "Goes against it",
+    hint: "Something here is the opposite of it." },
+  { key: "complicating", label: "It's complicated",
+    hint: "Relevant, but it cuts both ways — and that stays a real answer." },
 ];
 
 export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
@@ -63,6 +68,11 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
   const [landed, setLanded] = useState<string | null>(null);
   const [touches, setTouches] = useState<Record<number, Relation>>({});
   const [note, setNote] = useState("");
+  const [custom, setCustom] = useState<string[]>([]);
+  const [ownWhat, setOwnWhat] = useState("");
+  const [savedEntryId, setSavedEntryId] = useState<number | null>(null);
+  const [reading, setReading] = useState(false);
+  const [reflection, setReflection] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
@@ -89,18 +99,61 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
     setHappened((xs) => (xs.includes(h) ? xs.filter((x) => x !== h) : [...xs, h]));
   }
 
-  function cycleRelation(criterionId: number) {
+  /**
+   * One tap sets it, tapping the same one clears it.
+   *
+   * This replaced a four-state cycle on one button — tap once for supports, again for
+   * cuts against, again for complicated, again for nothing. Christine, 2026-11-12:
+   * "I DO NOT like that you have to multiclick... it's NOT intuitive." She is right:
+   * a control that changes meaning each time you press it makes you count presses, and
+   * there is no way to see the options without cycling through them. Three visible
+   * buttons cost more pixels and no thought.
+   */
+  function setRelation(criterionId: number, relation: Relation) {
     setTouches((t) => {
-      const current = t[criterionId];
-      const order: (Relation | undefined)[] = [
-        undefined, "supporting", "contradicting", "complicating",
-      ];
-      const next = order[(order.indexOf(current) + 1) % order.length];
       const copy = { ...t };
+      const next = t[criterionId] === relation ? undefined : relation;
       if (next === undefined) delete copy[criterionId];
       else copy[criterionId] = next;
       return copy;
     });
+  }
+
+  function addOwn() {
+    const v = ownWhat.trim();
+    if (!v) return;
+    setCustom((xs) => (xs.includes(v) ? xs : [...xs, v]));
+    setHappened((xs) => (xs.includes(v) ? xs : [...xs, v]));
+    setOwnWhat("");
+  }
+
+  /**
+   * "Now actually read this."
+   *
+   * Christine, 2026-11-12: *"shouldn't we provide the user the option to ask the agent
+   * to reply if the user DOES want to dig in deeper after the initial log?"* Quick Log
+   * is deliberately free and instant — but choosing the fast path once should not lock
+   * somebody out of the considered one. So it is offered afterwards, as a choice, and
+   * never spent on their behalf.
+   */
+  async function readIt() {
+    if (savedEntryId === null) return;
+    setReading(true); setError(null);
+    try {
+      const r = await api.analyseEntry(savedEntryId, {
+        profile_id: profileId === "" ? null : profileId,
+        person_id: personId === "" ? null : personId,
+      });
+      setReflection(
+        r.analysis?.questions?.[0]?.question
+        ?? r.analysis?.reflection?.question
+        ?? "KRYteria has read this. You'll find what it drew out on this entry.",
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setReading(false);
+    }
   }
 
   async function save() {
@@ -153,12 +206,18 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
           "criteria could not be recorded. You can add them from the entry later.",
         );
       }
+      // No mention of model calls. Christine, 2026-11-12: "I don't think users will
+      // understand what 'no model call' means... Nobody needs to know this except me,
+      // my future investors, and the professor." The cost story belongs in the trace
+      // view and the report, not in the middle of somebody's evening.
       setSaved(
         mapped > 0
-          ? `Logged, and linked to ${mapped} ${mapped === 1 ? "criterion" : "criteria"}. No model call — you did the mapping yourself.`
-          : "Logged. No model call was made.",
+          ? `Logged, and linked to ${mapped} ${mapped === 1 ? "standard" : "standards"} — ${mapped === 1 ? "the one" : "the ones"} you chose.`
+          : "Logged.",
       );
+      setSavedEntryId(entry.id);
       setHappened([]); setLanded(null); setTouches({}); setNote("");
+      setCustom([]); setOwnWhat("");
       onLogged?.();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -171,7 +230,28 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
     return (
       <Card className="p-6">
         <p className="text-muted">{saved}</p>
-        <button className="btn-quiet mt-5" onClick={() => setSaved(null)}>
+
+        {reflection ? (
+          <p className="voice text-ink mt-5 max-w-reading">{reflection}</p>
+        ) : (
+          <div className="mt-5">
+            <button className="btn" onClick={readIt} disabled={reading}>
+              {reading ? <Spinner label="Reading" /> : "Have KRYteria read this too"}
+            </button>
+            <p className="text-xs text-faint mt-2 max-w-reading leading-relaxed">
+              You did the mapping yourself, which is enough. If you'd rather it looked
+              for what you might not have — other standards this touches, or a question
+              worth sitting with — it can.
+            </p>
+          </div>
+        )}
+
+        {error && <div className="mt-4"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
+
+        <button
+          className="btn-quiet mt-5"
+          onClick={() => { setSaved(null); setSavedEntryId(null); setReflection(null); }}
+        >
           Log something else
         </button>
       </Card>
@@ -188,7 +268,7 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
             No writing required. Pick what fits and move on.
           </p>
         </div>
-        <Pill>No model call</Pill>
+        <Pill>A few taps</Pill>
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
@@ -217,7 +297,7 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
       <div className="mt-7">
         <Eyebrow>What happened — tap any that fit</Eyebrow>
         <div className="flex flex-wrap gap-2">
-          {HAPPENED.map((h) => (
+          {[...HAPPENED, ...custom].map((h) => (
             <button
               key={h}
               aria-pressed={happened.includes(h)}
@@ -231,6 +311,22 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
               {h}
             </button>
           ))}
+        </div>
+        {/* Christine, 2026-11-12: the list cannot anticipate everybody's evening.
+            Anything typed here is added like any other item — and if KRYteria is asked
+            to read the entry afterwards, it maps this alongside the rest. */}
+        <div className="flex gap-2 mt-3">
+          <input
+            className="field flex-1"
+            value={ownWhat}
+            onChange={(e) => setOwnWhat(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addOwn(); } }}
+            placeholder="Something else that happened…"
+            aria-label="Add something that happened"
+          />
+          <button className="btn-quiet" onClick={addOwn} disabled={!ownWhat.trim()}>
+            Add
+          </button>
         </div>
       </div>
 
@@ -263,31 +359,50 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
         <div className="mt-7">
           <Eyebrow>Does this touch any of your criteria?</Eyebrow>
           <p className="text-xs text-faint mb-3">
-            Tap once for supports, again for cuts against, again for complicated.
+            Leave a standard alone if this didn't say anything about it. Tap a choice
+            again to undo it.
           </p>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {criteria.map((c) => {
               const rel = touches[c.criterion_id];
               return (
-                <button
-                  key={c.criterion_id}
-                  className="choice flex items-center justify-between gap-3"
-                  data-selected={Boolean(rel)}
-                  onClick={() => cycleRelation(c.criterion_id)}
-                >
-                  <span className="text-sm text-ink">{c.value}</span>
-                  <span className={`pill ${
-                    rel === "supporting" ? "bg-support/15 text-support"
-                    : rel === "contradicting" ? "bg-contradict/15 text-contradict"
-                    : rel === "complicating" ? "bg-complicate/15 text-complicate"
-                    : "text-faint"
-                  }`}>
-                    {rel ? RELATIONS.find((r) => r.key === rel)!.label : "Not this time"}
-                  </span>
-                </button>
+                <div key={c.criterion_id} className="border border-line rounded-xl px-4 py-3">
+                  <div className="text-sm text-ink">{c.value}</div>
+                  <div
+                    className="flex flex-wrap gap-2 mt-2"
+                    role="radiogroup"
+                    aria-label={`How this relates to ${c.value}`}
+                  >
+                    {RELATIONS.map((r) => {
+                      const on = rel === r.key;
+                      const tone =
+                        r.key === "supporting" ? "border-support text-support bg-support/15"
+                        : r.key === "contradicting" ? "border-contradict text-contradict bg-contradict/15"
+                        : "border-complicate text-complicate bg-complicate/15";
+                      return (
+                        <button
+                          key={r.key}
+                          role="radio"
+                          aria-checked={on}
+                          title={r.hint}
+                          onClick={() => setRelation(c.criterion_id, r.key)}
+                          className={`pill border transition-colors ${
+                            on ? tone : "border-line text-muted hover:border-muted"
+                          }`}
+                        >
+                          {r.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
+          <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
+            "It's complicated" is a real answer, not a cop-out. Getting upset and then
+            taking a minute and coming back to apologise is not simply good or bad.
+          </p>
         </div>
       )}
 
@@ -310,8 +425,13 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
         {busy ? <Spinner label="Saving" /> : "Log it"}
       </button>
 
-      <p className="text-xs text-faint mt-4">
-        Nothing is sent to an AI provider. This stays on the server until you delete it.
+      {/* This used to say "Nothing is sent to an AI provider" flatly. Since logging
+          now offers to have KRYteria read the entry afterwards, that would have become
+          a promise the next screen breaks. Saying exactly when it is true keeps it
+          true — and the choice stays the user's either way. */}
+      <p className="text-xs text-faint mt-4 max-w-reading leading-relaxed">
+        Logging this sends nothing to an AI provider. Afterwards you'll be offered the
+        option to have KRYteria read it — only if you want that.
       </p>
     </Card>
   );

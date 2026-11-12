@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type Account, type Retention } from "../api";
+import { COUNTRIES, COUNTRIES_WITH_RESOURCES } from "../countries";
 import { Card, ErrorNote, Eyebrow, RETENTION_COPY, Section, Spinner } from "../components/ui";
 
 /**
@@ -102,37 +103,28 @@ export default function Settings({ account, onChange }: {
             Where should KRYteria look for support services?
           </label>
           <p className="text-xs text-faint mt-1 mb-2 max-w-reading leading-relaxed">
-            Optional. Emergency numbers differ between countries, so without this
-            KRYteria will only show services that work anywhere — it would rather show
-            you nothing than a number that does not work where you are. It never works
-            this out from your connection, and you can clear it at any time.
+            Optional. Emergency numbers and helplines differ by country, so without this
+            KRYteria shows only services that work anywhere — it would rather show you
+            nothing than a number that doesn't work where you are. It never works this
+            out from your connection, and you can clear it at any time.
           </p>
-          <div className="flex items-center gap-2">
-            <input
-              id="region"
-              className="field w-28"
-              defaultValue={account.region ?? ""}
-              placeholder="e.g. GB"
-              maxLength={2}
-              disabled={busy}
-              aria-describedby="region-help"
-              onBlur={(e) => {
-                const v = e.target.value.trim().toUpperCase();
-                if (v !== (account.region ?? "")) save({ region: v });
-              }}
-            />
-            {account.region && (
-              <button
-                className="text-xs underline text-faint"
-                disabled={busy}
-                onClick={() => save({ region: "" })}
-              >
-                Clear
-              </button>
-            )}
-          </div>
-          <p id="region-help" className="text-xs text-faint mt-2">
-            Two-letter country code. Nothing else about your location is stored.
+          <select
+            id="region"
+            className="field max-w-xs"
+            value={account.region ?? ""}
+            disabled={busy}
+            onChange={(e) => save({ region: e.target.value })}
+          >
+            <option value="">Not set — show services that work anywhere</option>
+            {COUNTRIES.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.name}{COUNTRIES_WITH_RESOURCES.has(c.code) ? " ✓" : ""}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-faint mt-2 max-w-reading leading-relaxed">
+            ✓ marks the countries KRYteria currently has a checked resource for. For the
+            rest it will say so plainly rather than show you another country's number.
           </p>
         </div>
       </Section>

@@ -15,8 +15,8 @@ from .deps import (
     resolve_domain,
 )
 from .schemas import (
-    BrainDump, EvidenceLinkDecision, InterrogationAnswer, PersonIn, RetentionChoice,
-    StructuredEntry, UserEvidenceLink,
+    AnalyseEntry, BrainDump, EvidenceLinkDecision, InterrogationAnswer, PersonIn,
+    RetentionChoice, StructuredEntry, UserEvidenceLink,
 )
 
 router = APIRouter(prefix="/api", tags=["journal"])
@@ -302,6 +302,69 @@ def _present(result) -> dict:
 
 
 # ---------------------------------------------------------------- reviewing the agent
+
+@router.post("/entries/{entry_id}/analyse")
+async def analyse_existing_entry(
+    entry_id: int,
+    body: AnalyseEntry,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Read an entry that was already saved — the "actually, dig into this" path.
+
+    Christine, 2026-11-12: *"shouldn't we provide the user the option to ask the agent
+    to reply if the user DOES want to dig in deeper after the initial log?"*
+
+    Quick Log is deliberately instant and costs nothing. But choosing the fast path once
+    should not lock somebody out of the considered one, and making them retype the
+    evening into the Brain Dump to get it would be a silly tax. So the same orchestrator
+    runs over the entry already on file.
+
+    **Never automatic.** It spends a model call, so it happens when asked and not
+    before — the same reason the brain-dump route has an `analyze` flag at all.
+    """
+    from ..agents.orchestrator import BudgetExceeded, Orchestrator
+
+    entry = owned_entry(store, account_id, entry_id)
+    profile = owned_profile(store, account_id, body.profile_id) if body.profile_id else None
+    if body.person_id is not None:
+        owned_person(store, account_id, body.person_id)
+
+    # A structured entry has no `body`; assemble what the user actually recorded so the
+    # agents read the same evening the user logged, not an empty string.
+    text = (entry.get("body") or "\n".join(
+        part for part in (
+            entry.get("what_happened"), entry.get("how_it_affected"),
+            entry.get("what_expected"),
+        ) if part
+    )).strip()
+    if not text:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            "There is nothing left to read on this entry — its text was erased by your "
+            "retention choice.",
+        )
+
+    model, info = get_provider()
+    orch = Orchestrator(store, model, info)
+    try:
+        result = await orch.brain_dump(
+            account_id, entry_id=entry_id, entry_text=text,
+            profile_id=body.profile_id,
+            profile_name=profile["name"] if profile else "",
+            person_id=body.person_id, want_reflection=body.want_reflection,
+            occurred_on=entry.get("occurred_on"),
+        )
+    except BudgetExceeded as e:
+        return {"entry": entry, "analysis": None, "budget_exceeded": True,
+                "note": f"Your entry is safe. {e}"}
+
+    return {
+        "entry": store.get_entry(account_id, entry_id) or entry,
+        "analysis": _present(result),
+        "simulated": info.simulated,
+    }
+
 
 @router.post("/entries/{entry_id}/retention")
 def choose_retention(

@@ -188,8 +188,15 @@ def set_tier(
     """
     owned_profile(store, account_id, profile_id)
     owned_criterion(store, account_id, criterion_id)
+    if body.tier is None and body.relevance is None:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT,
+                            "Send a tier, a relevance, or both.")
     try:
-        store.set_profile_tier(account_id, profile_id, criterion_id, body.tier)
+        if body.tier is not None:
+            store.set_profile_tier(account_id, profile_id, criterion_id, body.tier)
+        if body.relevance is not None:
+            store.set_profile_relevance(account_id, profile_id, criterion_id,
+                                        body.relevance)
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     return store.list_profile_criteria(account_id, profile_id)

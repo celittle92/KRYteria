@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { api, type Progress } from "../api";
+import { api, type Person, type Progress } from "../api";
+import { PersonPicker } from "../components/people";
 import { Card, DECISION_COPY, Empty, Eyebrow, Section, Spinner, StrengthPill } from "../components/ui";
 
 /**
@@ -16,10 +17,29 @@ import { Card, DECISION_COPY, Empty, Eyebrow, Section, Spinner, StrengthPill } f
 export default function ProgressScreen() {
   const [data, setData] = useState<Progress | null>(null);
   const [loading, setLoading] = useState(true);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [themePerson, setThemePerson] = useState<number | "">("");
+  const [themes, setThemes] = useState<Progress["themes"]>([]);
 
   useEffect(() => {
-    api.progress().then(setData).catch(() => {}).finally(() => setLoading(false));
+    api.progress().then((d) => { setData(d); setThemes(d.themes ?? []); })
+      .catch(() => {}).finally(() => setLoading(false));
+    api.people().then(setPeople).catch(() => {});
   }, []);
+
+  // Christine, 2026-11-12: "it would be helpful to be able to filter on different
+  // partners to see if you have different patterns with different people — i.e. you let
+  // a hottie get away with a lot more than someone you're attracted to but not as
+  // much."
+  //
+  // That is the brand's own fourth question — *am I making exceptions for someone that
+  // I wouldn't make for anyone else?* — made answerable instead of rhetorical. Counts
+  // only: it shows what differs and never says which person is being treated correctly.
+  useEffect(() => {
+    api.themesFor(themePerson === "" ? null : themePerson)
+      .then((r) => setThemes(r.themes.filter((x) => x.entries > 0)))
+      .catch(() => {});
+  }, [themePerson]);
 
   if (loading) return <Spinner label="Looking back over your record" />;
   if (!data) return <Empty>Nothing to show yet.</Empty>;
@@ -107,14 +127,28 @@ export default function ProgressScreen() {
         </Section>
       )}
 
-      {(data.themes ?? []).length > 0 && (
+      {((themes ?? []).length > 0 || themePerson !== "") && (
         <Section
           title="What you keep coming back to"
           subtitle="The subjects your entries have been about. Recognised as you wrote — you never had to label anything."
+          action={
+            people.length > 1 ? (
+              <div className="w-56">
+                <PersonPicker
+                  label="For"
+                  people={people}
+                  value={themePerson}
+                  onChange={setThemePerson}
+                  onAdded={(p) => setPeople((xs) => [...xs, p])}
+                  onRemoved={(id) => setPeople((xs) => xs.filter((x) => x.id !== id))}
+                />
+              </div>
+            ) : undefined
+          }
         >
           <Card>
             <ul className="divide-y divide-[rgb(var(--line))]">
-              {(data.themes ?? []).map((t) => (
+              {(themes ?? []).map((t) => (
                 <li key={t.theme_id} className="px-5 py-3 flex items-baseline justify-between gap-4">
                   <span className="text-ink text-sm flex-1">{t.label}</span>
                   <span className="text-muted text-sm tabular-nums">
@@ -131,10 +165,17 @@ export default function ProgressScreen() {
           </Card>
           {/* Counts and dates only. A theme says a subject came up — never that
               anybody did well or badly at it, and never a score. */}
+          {(themes ?? []).length === 0 && (
+            <Empty>Nothing recorded about this person yet.</Empty>
+          )}
           <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
             A count, not a verdict. That something comes up often says it matters to
             you, not that it is going wrong — and you may not have made it a criterion
             yet.
+            {people.length > 1 && (
+              <> Switching between people is worth doing: what you write about with one
+              person and not another is often the more interesting question.</>
+            )}
           </p>
         </Section>
       )}
