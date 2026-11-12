@@ -26,14 +26,24 @@ NOT ON THE LIST, ON PURPOSE:
 
 from __future__ import annotations
 
+import re
 from urllib.parse import urlparse
 
 #: Academic and government top-level domains. A university or a public health body is
 #: acceptable on the strength of its domain alone.
 TRUSTED_SUFFIXES = (
-    ".gov", ".edu", ".ac.uk", ".edu.au", ".ac.nz", ".edu.sg", ".ac.jp",
-    ".gov.uk", ".gc.ca", ".europa.eu", ".who.int", ".nih.gov",
+    ".gov", ".edu", ".gov.uk", ".gc.ca", ".europa.eu", ".who.int", ".nih.gov",
 )
+
+#: Most of the world's universities sit under a country-coded academic second level —
+#: ``.ac.uk``, ``.ac.nz``, ``.edu.au``, ``.ac.ke``, ``.edu.ph`` and so on. Enumerating
+#: them one country at a time means the list grows every time somebody needs a source
+#: from a country nobody happened to think of, which is how an allowlist decays into
+#: being worked around. The pattern is the rule.
+#:
+#: It is deliberately strict about shape: a two-letter country code only, so a
+#: ``.edu.com``-style lookalike does not match.
+ACADEMIC_CC = re.compile(r"\.(ac|edu)\.[a-z]{2}$")
 
 #: Specific hosts that are neither .gov nor .edu but are the publisher of record, a
 #: permanent identifier, or a library catalogue. Each one is here because a human put it
@@ -114,6 +124,8 @@ def check_source(url: str) -> str:
     if host in TRUSTED_HOSTS:
         return host
     if any(host == s.lstrip(".") or host.endswith(s) for s in TRUSTED_SUFFIXES):
+        return host
+    if ACADEMIC_CC.search(host):
         return host
 
     raise UnacceptableSource(

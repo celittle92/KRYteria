@@ -959,6 +959,40 @@ def test_only_reputable_sources_are_accepted() -> None:
               "add it to backend/sources.py" in str(e))
 
 
+def test_academic_country_domains_are_a_pattern_not_a_list() -> None:
+    """Universities outside the US sit under ``.ac.<cc>`` and ``.edu.<cc>``.
+
+    This started as an enumerated list — ``.ac.uk``, ``.edu.au``, ``.ac.nz`` and a few
+    more — and was generalised on 2026-11-11 when a Kenyan university's catalogue record
+    (``.ac.ke``) turned out to be the only qualifying source for one entry. Adding one
+    country at a time is how an allowlist decays into something people route around, so
+    the shape is the rule.
+
+    The shape is strict on purpose: a two-letter country code only, so a ``.edu.com``
+    lookalike cannot walk in behind it.
+    """
+    from backend.sources import is_acceptable
+
+    for good in [
+        "https://vufind.daystar.ac.ke/Record/0000047085",     # Kenya
+        "https://www.lib.cam.ac.uk/record/42",                 # United Kingdom
+        "https://library.sydney.edu.au/record/42",             # Australia
+        "https://catalogue.auckland.ac.nz/record/42",          # New Zealand
+        "https://opac.lib.u-tokyo.ac.jp/record/42",            # Japan
+        "https://library.up.ac.za/record/42",                  # South Africa
+        "https://catalogue.iitb.ac.in/record/42",              # India
+    ]:
+        check(f"accepts the academic domain {good.split('/')[2]}", is_acceptable(good), good)
+
+    for bad, why in [
+        ("https://thing.edu.com/fake", "a .com wearing an edu label"),
+        ("https://notes.ac.xyz/fake", "a novelty TLD, not a country code"),
+        ("https://blog.edu.technology/fake", "a long TLD behind an edu label"),
+        ("https://acme.ac/fake", "a bare .ac domain, which is Ascension Island"),
+    ]:
+        check(f"refuses {why}", not is_acceptable(bad), bad)
+
+
 def test_verification_requires_a_reputable_source() -> None:
     """The gate is on the door into the citable set, not on a style guide."""
     s, acct, _ = fresh()

@@ -68,16 +68,24 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `estimate_cost` returns 0.0 and the app must report cost as *unavailable* rather than
   printing a zero as though a run were free.
 - **Sources must be reputable, and `backend/sources.py` enforces it.** `.gov`/`.edu`,
-  scholarly publishers, `doi.org`/PubMed, library catalogues. An allowlist, not a
-  blocklist; refusals explain why. **To add a publisher, edit that file deliberately —
-  never work around the gate.** Note `academia.edu` is explicitly refused: the `.edu`
-  belongs to the company.
-- **15 of 19 research entries are verified and citable** (14 to the criteria/evidence
-  agents; `stark-coercive-control` is safety-adjacent and withheld from them). Four stay
-  pending because no qualifying source has been found: `gottman-four-horsemen`,
-  `fundamental-attribution-error`, `johnson-attachment-injury`,
-  `reis-shaver-responsiveness`. What each still needs is in its
-  `citation_checked_against`.
+  academic country domains by **pattern** (`.ac.<cc>` / `.edu.<cc>`, two letters only, so
+  a `.edu.com` lookalike cannot walk in), scholarly publishers, `doi.org`/PubMed, library
+  catalogues. An allowlist, not a blocklist; refusals explain why. **To add a publisher,
+  edit that file deliberately — never work around the gate.** Note `academia.edu` is
+  explicitly refused: the `.edu` belongs to the company.
+- **18 of 19 research entries are verified and citable** (17 to the criteria/evidence
+  agents; `stark-coercive-control` is safety-adjacent and withheld from them). One stays
+  pending: `reis-shaver-responsiveness`. Its containing volume is confirmed (Duck's
+  *Handbook of Personal Relationships*, Wiley, 1988, LCCN 87022168) but nothing found
+  shows the Reis & Shaver chapter is in it, or at what pages — Open Library carries no
+  table of contents and `lccn.loc.gov` is unreachable from this machine. What it still
+  needs is in its `citation_checked_against`.
+- **When a page about a work is blocked, ask the registry instead.** ScienceDirect 403s
+  automated fetching; the Ross 1977 chapter was settled from the DOI's own registered
+  metadata — `curl -LH "Accept: application/x-bibtex" https://doi.org/<doi>` — which
+  returns author, title, container, year and page range. Open Library's
+  `openlibrary.org/books/<id>.json` and `search.json` are likewise reachable and
+  authoritative for books.
 - **What "verified" currently means here:** the work exists at that reference, confirmed
   against a qualifying source, and the drafted finding is a fair summary of what it is
   known for. It does **not** mean somebody read the full paper. Entries verified by

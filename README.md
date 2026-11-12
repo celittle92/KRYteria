@@ -75,15 +75,18 @@ so the agent cannot invent a reference: `research_ref` is matched against the kn
 base and anything else is rejected.
 
 **Sources must be reputable, and that is enforced rather than promised.**
-`backend/sources.py` accepts `.gov` and `.edu` domains, scholarly publishers, permanent
-identifiers such as `doi.org` and PubMed, and library catalogues. It refuses encyclopedias,
-popular-psychology sites, upload sites, blogs, retailers and wellness brands — by
-allowlist, so a source nobody thought of is refused rather than admitted. `academia.edu`
-is explicitly refused: the `.edu` belongs to the company, not a university.
+`backend/sources.py` accepts `.gov` and `.edu` domains, academic country domains matching
+`.ac.<cc>` / `.edu.<cc>`, scholarly publishers, permanent identifiers such as `doi.org`
+and PubMed, and library catalogues. It refuses encyclopedias, popular-psychology sites,
+upload sites, blogs, retailers and wellness brands — by allowlist, so a source nobody
+thought of is refused rather than admitted. `academia.edu` is explicitly refused: the
+`.edu` belongs to the company, not a university.
 
-**15 of 19 entries are verified and citable.** Four stay pending because no qualifying
-source has been found for them, and each records what it still needs. To work through
-them:
+**18 of 19 entries are verified and citable** (17 reach the criteria and evidence agents;
+`stark-coercive-control` is safety-adjacent and withheld from them). One stays pending —
+`reis-shaver-responsiveness`, where the containing handbook is confirmed but nothing found
+shows the chapter is in that volume or at what pages. It records exactly that. To work
+through it:
 
 ```bash
 .venv/bin/python -m backend.verify_research list

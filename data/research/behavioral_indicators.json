@@ -53,9 +53,9 @@
       "concept": "The Four Horsemen",
       "finding": "Gottman's conflict research identifies four communication patterns associated with relationship distress: criticism (attacking character rather than naming a behaviour), contempt (speaking from a position of superiority — mockery, sneering, name-calling), defensiveness (counter-attacking or playing the victim rather than taking any part of the point), and stonewalling (withdrawing from the interaction and stopping responding).",
       "attribution": "John Gottman and colleagues",
-      "citation": "Gottman, J. M., & Silver, N. (1994). Why Marriages Succeed or Fail: And How You Can Make Yours Last. New York: Simon & Schuster.",
-      "citation_confidence": "bibliography_partial_2026-11-08",
-      "source_url": null,
+      "citation": "Gottman, J. M. (1994). Why Marriages Succeed or Fail: What You Can Learn from the Breakthrough Research to Make Your Marriage Last. New York: Simon & Schuster. ISBN 0-671-86748-2.",
+      "citation_confidence": "bibliography_confirmed_2026-11-11",
+      "source_url": "https://openlibrary.org/books/OL1424938M",
       "verification_status": "pending",
       "verified_at": null,
       "indicator_hints": [
@@ -68,7 +68,7 @@
         "Never tell a user their partner 'shows contempt' as an established fact from one entry.",
         "Never quote a divorce-prediction percentage. The popular figures do not trace cleanly to primary sources."
       ],
-      "citation_checked_against": "PARTIAL, AND NO QUALIFYING SOURCE YET. Searching could not establish a single primary paper defining the Four Horsemen: sources variously credit a 1992 Gottman & Buehlman study (disagreeing on its sample) or Carrere & Gottman (1999). The popular book is the safest attribution, but the only corroboration found was an encyclopaedia, which KRYteria will not cite. Needs a library catalogue record for the 1994 Simon & Schuster edition (ISBN 9780671867485). DO NOT cite a divorce-prediction percentage: the widely-quoted 94% traces only to lifestyle blogs."
+      "citation_checked_against": "Open Library edition OL1424938M, a MARC-derived catalogue record: Simon & Schuster, New York, 1994, 234 p., ISBN-10 0671867482 / ISBN-13 9780671867485, LCCN 93035891, OCLC 28962710 and 34081834, LC call number HQ536 .G68 1994. TWO CORRECTIONS the record forced on the earlier draft. (1) The subtitle. The draft used 'And How You Can Make Yours Last', which belongs to a later edition; the 1994 Simon & Schuster edition reads 'what you can learn from the breakthrough research to make your marriage last'. (2) The authorship. The draft credited 'Gottman, J. M., & Silver, N.'; this record names John Mordechai Gottman alone, so Silver has been dropped. STILL NOT ESTABLISHED: which primary paper first defined the Four Horsemen. Sources variously credit Gottman & Buehlman (1992) or Carrere & Gottman (1999) and disagree on the samples, so the book remains the attribution. DO NOT cite a divorce-prediction percentage: the widely-quoted 94% traces only to lifestyle blogs."
     },
     {
       "id": "gottman-repair-attempts",
@@ -214,8 +214,8 @@
       "finding": "Reis and Shaver's intimacy process model describes intimacy as built through a cycle of disclosure and response, where what matters is the discloser's perception that they were understood, validated, and cared for. Perceived responsiveness, rather than disclosure alone, is the active ingredient.",
       "attribution": "Harry Reis and Phillip Shaver",
       "citation": "Reis, H. T., & Shaver, P. (1988). Intimacy as an interpersonal process. In S. W. Duck (Ed.), Handbook of Personal Relationships. Chichester: Wiley.",
-      "citation_confidence": "bibliography_partial_2026-11-08",
-      "source_url": null,
+      "citation_confidence": "container_confirmed_chapter_unconfirmed_2026-11-11",
+      "source_url": "https://openlibrary.org/books/OL2392678M",
       "verification_status": "pending",
       "verified_at": null,
       "indicator_hints": [
@@ -227,7 +227,7 @@
       "do_not": [
         "Never tell a user whether their partner was responsive. Ask them."
       ],
-      "citation_checked_against": "PARTIAL, AND THE SOURCE WAS WRONG. Authors, year, chapter title, editor, book and publisher are corroborated; the page range is not. The URL previously recorded here was PubMed 9599440, which is Laurenceau, Barrett & Pietromonaco (1998), JPSP 74(5), 1238-1251 -- a different work that shares the title. Do not confuse them. Needs a catalogue record for the Duck handbook."
+      "citation_checked_against": "STILL PENDING, but further along than it was. The CONTAINER is now confirmed against a qualifying source: Open Library edition OL2392678M is Duck, S. (ed.), 'Handbook of personal relationships: theory, research, and interventions', Wiley, Chichester [England] and New York, 1988, 702 p., ISBN-10 0471914916, LCCN 87022168, OCLC 16527128. That settles editor, book, publisher, place and year. WHAT IS STILL MISSING: that the Reis & Shaver chapter sits in THIS volume, and at what pages. The Open Library record carries no table of contents, and the Library of Congress catalogue, whose MARC record would carry a 505 contents note, is not reachable from this machine (both lccn.loc.gov/87022168 and its marcxml endpoint time out). This entry needs a catalogue record or publisher table of contents listing the chapter. AND THE EARLIER SOURCE WAS WRONG. The URL once recorded here was PubMed 9599440, which is Laurenceau, Barrett & Pietromonaco (1998), JPSP 74(5), 1238-1251 -- a different work that shares the title. Do not confuse them."
     },
     {
       "id": "gable-capitalization",
@@ -321,8 +321,8 @@
       "finding": "People systematically over-attribute others' behaviour to stable character and under-weight situational causes, while explaining their own behaviour the opposite way. The asymmetry is one of the most replicated findings in social psychology.",
       "attribution": "Lee Ross; Edward Jones and Victor Harris",
       "citation": "Ross, L. (1977). The intuitive psychologist and his shortcomings: Distortions in the attribution process. In L. Berkowitz (Ed.), Advances in Experimental Social Psychology (Vol. 10, pp. 173–220). New York: Academic Press.",
-      "citation_confidence": "bibliography_mostly_confirmed_2026-11-08",
-      "source_url": null,
+      "citation_confidence": "bibliography_confirmed_2026-11-11",
+      "source_url": "https://doi.org/10.1016/S0065-2601(08)60357-3",
       "verification_status": "pending",
       "verified_at": null,
       "indicator_hints": [],
@@ -331,7 +331,7 @@
         "Never generate a checklist item from this.",
         "Use it as a check on the agent's own output: a finding that explains behaviour by character, with a situational reading unconsidered, is probably this error."
       ],
-      "citation_checked_against": "PARTIAL, AND NO QUALIFYING SOURCE YET. Volume 10, 1977, Berkowitz as editor and the full title are corroborated. The page range 173-220 rests on a single citation guide, and the probable DOI 10.1016/S0065-2601(08)60357-3 was inferred from a PII on a third-party page rather than read from the publisher. Confirm on ScienceDirect."
+      "citation_checked_against": "Settled from the DOI's own registered metadata, retrieved by content negotiation against doi.org (Accept: application/x-bibtex) rather than from a page about the work. The registration returns: author Lee Ross; title 'The Intuitive Psychologist And His Shortcomings: Distortions in the Attribution Process'; booktitle 'Advances in Experimental Social Psychology Volume 10'; year 1977; pages 173-220; ISBN 9780120152100; ISSN 0065-2601. That confirms the page range, which had previously rested on a single citation guide, and confirms the DOI itself, which had been inferred from a PII on a third-party page. The publisher's own page (ScienceDirect) returns HTTP 403 to automated fetching, which is why the registry was used instead. ONE DIFFERENCE, not an error: the registration names the publisher as Elsevier, its present owner. The citation keeps 'New York: Academic Press', the imprint that actually published the 1977 volume."
     },
     {
       "id": "confirmation-bias-relationships",
@@ -379,9 +379,9 @@
       "concept": "Attachment injuries and repair",
       "finding": "Johnson's work on emotionally focused therapy describes 'attachment injuries' — moments of abandonment or betrayal at a point of need that remain live and resurface in later conflict until addressed directly.",
       "attribution": "Susan Johnson",
-      "citation": "Johnson, S. (2008). Hold Me Tight: Seven Conversations for a Lifetime of Love. New York: Little, Brown. ISBN 978-0-316-11300-7.",
-      "citation_confidence": "bibliography_confirmed_2026-11-08",
-      "source_url": null,
+      "citation": "Johnson, S. (2008). Hold Me Tight: Seven Conversations for a Lifetime of Love (1st ed.). New York: Little, Brown. ISBN 978-0-316-11300-7.",
+      "citation_confidence": "bibliography_confirmed_2026-11-11",
+      "source_url": "https://vufind.daystar.ac.ke/Record/0000047085",
       "verification_status": "pending",
       "verified_at": null,
       "indicator_hints": [
@@ -393,7 +393,7 @@
         "Never suggest a therapeutic intervention or exercise.",
         "Never tell a user they have an attachment injury."
       ],
-      "citation_checked_against": "Publisher, year and ISBN are corroborated across publisher and retailer listings, but the only sources found were commercial. Needs a library catalogue record for ISBN 9780316113007."
+      "citation_checked_against": "Daystar University library catalogue record 0000047085: 'Hold me tight : seven conversations for a lifetime of love /', main author 'Johnson, Sue, 1947-', Little, Brown & Co., New York, 2008, 1st ed., LC call number HQ801 .J64 2008. This replaces the publisher and retailer listings the draft rested on, which were all commercial. The '(1st ed.)' in the citation comes from this record. ISBN: the record does not print one in its bibliographic fields; 031611300X appears in its cover-image link, and that ISBN-10 is the same book as the ISBN-13 978-0-316-11300-7 in the citation. A Michigan State catalogue record was tried first and returned HTTP 404. NOTE ON THE SOURCE: a .ac.ke record qualifies under backend/sources.py only because the academic-TLD rule was generalised on 2026-11-11 from an enumerated list to the .ac.<cc> / .edu.<cc> pattern. That was a deliberate widening, recorded in the rules file, not a workaround for this entry."
     },
     {
       "id": "sunk-cost",
