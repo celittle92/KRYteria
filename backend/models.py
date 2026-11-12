@@ -145,6 +145,31 @@ class NarrativeOutput(_NoScoresNoLabels):
         description="Conclusions the user stated, kept separate so Reasoning can "
                     "interrogate them without the app having adopted them.",
     )
+    themes: list[str] = Field(
+        default_factory=list,
+        description="What the entry was ABOUT, from the closed vocabulary in "
+                    "data/themes.json. Not criteria, not judgements — topics. Empty is "
+                    "a valid answer for an entry that fits none of them.",
+    )
+
+    @model_validator(mode="after")
+    def _themes_are_in_the_vocabulary(self):
+        """A closed vocabulary, enforced rather than requested.
+
+        A model free to invent theme labels produces a different taxonomy every run, and
+        "this keeps coming up" over an unstable vocabulary means nothing. Imported here
+        rather than at module load so the contracts stay importable without the data
+        file present.
+        """
+        if not self.themes:
+            return self
+        from .themes import UnknownTheme, validate
+
+        try:
+            object.__setattr__(self, "themes", validate(self.themes))
+        except UnknownTheme as e:
+            raise ValueError(f"themes: {e}") from e
+        return self
 
 
 # ---------------------------------------------------------------- Safety Layer

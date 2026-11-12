@@ -805,6 +805,35 @@ CREATE TABLE IF NOT EXISTS usage_daily (
     PRIMARY KEY (account_id, day)
 );
 
+-- ---------------------------------------------------------------- entry themes
+--
+-- What an entry was ABOUT, from the closed vocabulary in data/themes.json.
+--
+-- Deliberately NOT a criterion and not an assessment. A theme is recognised whether or
+-- not the user has a matching criterion — that is how the app notices what somebody
+-- keeps writing about before they have named it. There is no status column here and
+-- never should be: a theme says a subject came up, not that anybody did well at it.
+--
+-- The label lives in the JSON vocabulary, not in this table. Storing the id alone means
+-- rewording a theme does not require touching anybody's records, and an id that has
+-- vanished from the vocabulary is visible rather than silently fine.
+--
+-- Erased on `discard` along with the other derived records: knowing somebody wrote
+-- about sexual consideration on a given date, about a named person, is exactly the sort
+-- of thing a person asking to discard an entry means to be rid of.
+CREATE TABLE IF NOT EXISTS entry_themes (
+    id         INTEGER PRIMARY KEY,
+    account_id INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+    entry_id   INTEGER NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
+    theme_id   TEXT    NOT NULL,            -- validated against data/themes.json
+    run_id     INTEGER,                     -- which agent run recognised it
+    created_at TEXT    NOT NULL,
+    UNIQUE (entry_id, theme_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_entry_themes_account
+    ON entry_themes (account_id, theme_id);
+
 CREATE TABLE IF NOT EXISTS schema_meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL

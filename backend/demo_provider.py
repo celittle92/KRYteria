@@ -29,6 +29,35 @@ _GENERALISING = ("always", "never", "every time", "constantly", "doesn't care",
                  "doesn't respect")
 
 
+#: Crude keyword routing to a theme id, for demo mode only. The real agent reads the
+#: vocabulary's descriptions and examples; this exists so a keyless clone shows the
+#: Themes panel populated rather than empty. Keep the ids valid — the store validates
+#: them in demo mode exactly as it does live, and a stale id here would surface as a
+#: broken demo rather than a quietly dropped label.
+_THEME_MARKERS = {
+    "reciprocity-and-initiative": ("initiat", "always the one", "texting first",
+                                   "planned", "reach out", "makes an effort"),
+    "communication-preferences": ("text", "call", "reply", "respond", "message"),
+    "expectations-and-commitment": ("serious", "exclusive", "boyfriend", "girlfriend",
+                                    "commit", "define"),
+    "emotional-intimacy": ("opened up", "vulnerab", "told him about",
+                           "really know me", "shut down"),
+    "feeling-valued": ("appreciat", "respect", "an option", "desired", "dismissed"),
+    "expressing-needs": ("didn't want to make it", "bring it up", "say anything",
+                         "asked for"),
+    "affection-and-comfort": ("hold my hand", "cuddl", "affection", "hug"),
+    "attraction-and-chemistry": ("attract", "chemistry", "into him", "into her"),
+    "sexual-consideration": ("sex", "in bed", "what i liked"),
+    "boundaries-and-consent": ("said no", "didn't want to", "kept asking", "boundary"),
+}
+
+
+def _demo_themes(text: str) -> list[str]:
+    low = text.lower()
+    return [tid for tid, markers in _THEME_MARKERS.items()
+            if any(m in low for m in markers)][:3]
+
+
 def _looks_unsafe(text: str) -> bool:
     low = text.lower()
     return any(m in low for m in _SAFETY_MARKERS)
@@ -101,6 +130,7 @@ def build_demo_output(agent_name: str, entry_text: str, criteria: list[dict] | N
             "missing_information": ["Whether anything was said about it afterwards."],
             "user_conclusions": [s for s in sentences
                                  if any(g in s.lower() for g in _GENERALISING)],
+            "themes": _demo_themes(entry_text),
         }
 
     if agent_name == "safety":

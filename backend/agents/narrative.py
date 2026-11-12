@@ -18,10 +18,17 @@ AGENT_NAME = "narrative"
 
 
 def build(model) -> Agent:
+    # The theme vocabulary is appended from data/themes.json rather than written into
+    # the prompt by hand, so the file the store validates against and the list the model
+    # is given cannot drift apart. A theme added to the vocabulary is one the agent is
+    # immediately told about.
+    from ..themes import prompt_block
+
     return Agent(
         model,
         output_type=NarrativeOutput,
-        system_prompt=load_prompt(PROMPT_PATH),
+        system_prompt=load_prompt(PROMPT_PATH).replace(
+            "{{THEME_VOCABULARY}}", prompt_block()),
         retries=1,
     )
 

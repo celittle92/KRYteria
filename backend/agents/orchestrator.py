@@ -228,6 +228,15 @@ class Orchestrator:
             [o.model_dump() for o in result.narrative.observations],
             run_id=run_id,
         )
+        # What the entry was about. Recognised, not asked for — and stored so "this keeps
+        # coming up" can be answered later. A bad theme id is dropped rather than taking
+        # the run down; the entry and its observations matter more than its topic labels.
+        try:
+            self.store.save_themes(
+                account_id, entry_id, result.narrative.themes, run_id=run_id,
+            )
+        except Exception as exc:
+            result.errors.append(f"themes: {exc}")
 
         # --- Evidence ------------------------------------------------------
         if profile_id is not None:

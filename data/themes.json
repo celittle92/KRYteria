@@ -1,0 +1,154 @@
+{
+  "_comment": [
+    "Intimacy & Relationship Experience Mapping. Christine, 2026-11-11.",
+    "",
+    "NOT A QUESTIONNAIRE. These are themes the Narrative agent recognises in an ordinary",
+    "Brain Dump. Nobody opens KRYteria and says 'I would like to discuss emotional",
+    "intimacy now.' They write a messy paragraph about last night, and the agent works",
+    "out that the subject is emotional vulnerability rather than punctuality.",
+    "",
+    "A THEME IS NOT A CRITERION. Criteria are the user's, created by the user, assessed",
+    "against evidence. A theme is a topic label on an entry: what this was ABOUT. The",
+    "agent may recognise 'reciprocity and initiative' in an entry from somebody who has",
+    "no reciprocity criterion at all, and that is the point — it is how the app notices",
+    "what a person keeps writing about before they have named it.",
+    "",
+    "A THEME IS NOT A JUDGEMENT. Recognising 'sexual consideration and mutual",
+    "satisfaction' says the entry touched that subject. It says nothing about whether",
+    "anybody behaved well, and nothing about the person being written about.",
+    "",
+    "AND A THEME IS NEVER THE SAFETY MECHANISM. `boundaries-and-consent` is a topic, not",
+    "a concern. The Safety Layer runs CONCURRENTLY with Narrative on the raw text and",
+    "does not read this file, is not gated on it, and does not wait for it. If theme",
+    "recognition ever became the route into safety handling, a missed label would become",
+    "a missed disclosure. See the roster note in the rules file.",
+    "",
+    "Sensitive themes are flagged. That flag drives presentation — never a notification",
+    "preview, never a surfaced label the user did not ask to see — not whether the theme",
+    "is recognised."
+  ],
+  "version": "1.0",
+  "drafted_on": "2026-11-11",
+  "themes": [
+    {
+      "id": "attraction-and-chemistry",
+      "label": "Physical attraction and sexual chemistry",
+      "about": "Whether the writer is drawn to the other person physically, and whether that is mutual or changing.",
+      "sounds_like": [
+        "I'm not as into him as I thought",
+        "the chemistry was unreal",
+        "I don't feel anything when he touches me"
+      ],
+      "not_this": "Do not use for an entry that merely mentions how somebody looked. The theme is the writer's experience of attraction, not a description.",
+      "sensitive": true
+    },
+    {
+      "id": "affection-and-comfort",
+      "label": "Affection and physical comfort",
+      "about": "Non-sexual physical closeness: whether it is present, wanted, comfortable, or withheld.",
+      "sounds_like": [
+        "he never just holds my hand",
+        "I felt myself pull away",
+        "it's the only time I feel settled"
+      ],
+      "not_this": "Distinct from attraction. Somebody can want more affection and less sex, or the reverse.",
+      "sensitive": true
+    },
+    {
+      "id": "sexual-consideration",
+      "label": "Sexual consideration and mutual satisfaction",
+      "about": "Whether sex is attentive and mutual — whether the writer's experience is being considered.",
+      "sounds_like": [
+        "it's always about what he wants",
+        "he actually asked what I liked",
+        "I stopped saying anything about it"
+      ],
+      "not_this": "NOT the same as consent. An encounter can be fully consensual and entirely one-sided. Do not reach for boundaries-and-consent because the subject is sex.",
+      "sensitive": true
+    },
+    {
+      "id": "emotional-intimacy",
+      "label": "Emotional intimacy and vulnerability",
+      "about": "Whether either person lets the other see something real, and what happens when they do.",
+      "sounds_like": [
+        "I told him about my dad and he changed the subject",
+        "he opened up for the first time",
+        "I don't think he actually knows me"
+      ],
+      "not_this": "Not merely talking a lot. The theme is exposure and what it met.",
+      "sensitive": false
+    },
+    {
+      "id": "feeling-valued",
+      "label": "Feeling desired, appreciated, and respected",
+      "about": "How the writer experiences being regarded by the other person.",
+      "sounds_like": [
+        "I feel like an option",
+        "he told his friends about my promotion",
+        "I don't think he finds me attractive anymore"
+      ],
+      "not_this": "This is the writer's felt experience. It is an emotional_reaction, not a finding about the other person's regard.",
+      "sensitive": false
+    },
+    {
+      "id": "expressing-needs",
+      "label": "Comfort expressing needs",
+      "about": "Whether the writer can say what they want, and what it costs them to try.",
+      "sounds_like": [
+        "I didn't want to make it a thing",
+        "I finally told him and he was fine about it",
+        "it's easier to just not bring it up"
+      ],
+      "not_this": "Recognise the difficulty without characterising why. 'It's easier not to bring it up' may be habit, conflict-avoidance, or something more serious — the theme does not decide which.",
+      "sensitive": false
+    },
+    {
+      "id": "reciprocity-and-initiative",
+      "label": "Reciprocity and initiative",
+      "about": "Who reaches out, who plans, who carries the relationship — and whether that is balanced.",
+      "sounds_like": [
+        "I'm always the one texting first",
+        "he planned the whole weekend",
+        "if I stopped trying I think it would just end"
+      ],
+      "not_this": "A single instance is not an imbalance. The theme marks the subject; the record decides whether there is a pattern.",
+      "sensitive": false
+    },
+    {
+      "id": "expectations-and-commitment",
+      "label": "Relationship expectations and commitment",
+      "about": "What each person thinks this is, and whether those answers match.",
+      "sounds_like": [
+        "we've never actually defined it",
+        "he said he's not looking for anything serious",
+        "I don't know if I'm allowed to call him my boyfriend"
+      ],
+      "not_this": "Never imply which expectation is correct. A person wanting something casual and a person wanting something serious are both fine; the mismatch is the subject.",
+      "sensitive": false
+    },
+    {
+      "id": "communication-preferences",
+      "label": "Communication preferences",
+      "about": "How each person wants to stay in contact, and the friction between those styles.",
+      "sounds_like": [
+        "he takes a day to answer a text",
+        "everything is great in person, the texting is driving me insane",
+        "he wants to call, I'd rather write"
+      ],
+      "not_this": "A different texting style is not evidence of disinterest. Keep the preference separate from what the writer concluded from it.",
+      "sensitive": false
+    },
+    {
+      "id": "boundaries-and-consent",
+      "label": "Boundaries and consent",
+      "about": "Whether a stated limit was heard and respected — in any domain, not only sex.",
+      "sounds_like": [
+        "I said I didn't want to and he kept asking",
+        "I told him not to show up unannounced",
+        "he respected it straight away, which surprised me"
+      ],
+      "not_this": "RECOGNISING THIS THEME IS NOT A SAFETY RESPONSE AND MUST NEVER BE TREATED AS ONE. The Safety Layer runs concurrently on the raw text, independently of themes and of the selected profile. A boundary respected without fuss is this theme too — the label is a subject, not an alarm.",
+      "sensitive": true
+    }
+  ]
+}

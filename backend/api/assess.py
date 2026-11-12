@@ -250,4 +250,63 @@ def progress(
         "unanswered_questions": store.list_interrogations(account_id,
                                                           unanswered_only=True),
         "pending_proposals": store.list_pending_proposals(account_id),
+        # What the user keeps writing about, whether or not they ever made it a
+        # criterion. Counts and dates only — the same no-score rule as everything else
+        # on this screen.
+        "themes": _theme_rows(store.theme_trends(account_id)),
+    }
+
+
+def _theme_rows(trends: list[dict]) -> list[dict]:
+    """Attach the human label and the sensitivity flag to each counted theme.
+
+    ``sensitive`` travels with the row so a client can decide not to put
+    "Sexual consideration" in a notification preview or a shoulder-surfable summary.
+    It never governs whether the theme was recognised — only how it is shown.
+    """
+    from ..themes import is_sensitive, label
+
+    out = []
+    for row in trends:
+        try:
+            out.append({**row, "label": label(row["theme_id"]),
+                        "sensitive": is_sensitive(row["theme_id"])})
+        except KeyError:
+            # An id that has left the vocabulary. Surfaced rather than hidden, because
+            # silently dropping it would make the counts quietly wrong.
+            out.append({**row, "label": f"(retired theme: {row['theme_id']})",
+                        "sensitive": True})
+    return out
+
+
+@router.get("/themes")
+def themes(
+    person_id: int | None = None,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """What this account's entries have been about, optionally for one person.
+
+    The vocabulary ships with the app, so it is returned alongside the counts: a theme
+    with zero entries is meaningful information ("you have never written about this")
+    and a client cannot construct it from the counts alone.
+    """
+    from ..themes import load
+
+    counted = {r["theme_id"]: r for r in store.theme_trends(account_id,
+                                                            person_id=person_id)}
+    return {
+        "themes": [
+            {
+                "theme_id": tid,
+                "label": t["label"],
+                "about": t["about"],
+                "sensitive": bool(t.get("sensitive")),
+                "entries": counted.get(tid, {}).get("entries", 0),
+                "first_seen": counted.get(tid, {}).get("first_seen"),
+                "last_seen": counted.get(tid, {}).get("last_seen"),
+            }
+            for tid, t in load().items()
+        ],
+        "person_id": person_id,
     }

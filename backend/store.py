@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-09.1"
+SCHEMA_VERSION = "2026-11-11.1"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -1504,7 +1504,8 @@ class Store:
 
             removed = 0
             if retention == "discard":
-                for table in ("observations", "evidence_links", "interrogations"):
+                for table in ("observations", "evidence_links", "interrogations",
+                              "entry_themes"):
                     cur = conn.execute(
                         f"DELETE FROM {table} WHERE entry_id = ? AND account_id = ?",
                         (entry_id, account_id),
@@ -1583,6 +1584,72 @@ class Store:
         }
 
     # ----------------------------------------------------------------- observations
+
+    # ------------------------------------------------------------- themes
+
+    def save_themes(self, account_id: int, entry_id: int, theme_ids: Sequence[str],
+                    *, run_id: int | None = None) -> list[str]:
+        """Record what an entry was about. Ids only — the labels live in the vocabulary.
+
+        Validated against ``data/themes.json`` here rather than trusted, for the same
+        reason ``kind`` is validated in ``save_observations``: a vocabulary that accepts
+        whatever arrives is not a vocabulary, and "this keeps coming up" computed over
+        invented labels is worse than no answer.
+        """
+        from .themes import validate
+
+        if not theme_ids:
+            return []
+        valid = validate(list(theme_ids))
+        with self.write() as conn:
+            self._assert_owns(conn, "entries", entry_id, account_id)
+            for theme_id in valid:
+                conn.execute(
+                    "INSERT OR IGNORE INTO entry_themes"
+                    " (account_id, entry_id, theme_id, run_id, created_at)"
+                    " VALUES (?, ?, ?, ?, ?)",
+                    (account_id, entry_id, theme_id, run_id, _now()),
+                )
+        return valid
+
+    def list_entry_themes(self, account_id: int, entry_id: int) -> list[str]:
+        with self.read() as conn:
+            self._assert_owns(conn, "entries", entry_id, account_id)
+            return [r["theme_id"] for r in conn.execute(
+                "SELECT theme_id FROM entry_themes WHERE account_id = ? AND entry_id = ?"
+                " ORDER BY id", (account_id, entry_id),
+            )]
+
+    def theme_trends(self, account_id: int, *, person_id: int | None = None,
+                     limit_entries: int = 200) -> list[dict[str, Any]]:
+        """How often each theme has come up, and when it last did.
+
+        This is the whole reason themes are stored rather than merely recognised. A
+        person who writes about *comfort expressing needs* in nine entries out of twelve
+        is being shown something about themselves that no single entry contains — and
+        crucially, something they may never have created a criterion for.
+
+        Counts and dates only. No score, no trend arrow, no "your intimacy is
+        declining": the dashboard counts and compares, it does not rate.
+        """
+        sql = [
+            "SELECT t.theme_id, COUNT(*) AS entries,",
+            "       MIN(e.occurred_on) AS first_seen, MAX(e.occurred_on) AS last_seen",
+            "  FROM entry_themes t JOIN entries e ON e.id = t.entry_id",
+            " WHERE t.account_id = ? AND e.deleted_at IS NULL",
+        ]
+        params: list[Any] = [account_id]
+        if person_id is not None:
+            # Entries reach people through `entry_people`, not a column: one entry can
+            # involve more than one person, which is ordinary in a journal.
+            sql.append(" AND EXISTS (SELECT 1 FROM entry_people ep"
+                       "             WHERE ep.entry_id = e.id AND ep.person_id = ?)")
+            params.append(person_id)
+        sql.append(" GROUP BY t.theme_id ORDER BY entries DESC, last_seen DESC")
+        with self.read() as conn:
+            if person_id is not None:
+                self._assert_owns(conn, "people", person_id, account_id)
+            return [dict(r) for r in conn.execute("\n".join(sql), params)]
 
     def save_observations(
         self, account_id: int, entry_id: int, observations: Iterable[dict[str, Any]],

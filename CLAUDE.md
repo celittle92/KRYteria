@@ -23,6 +23,22 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
+- **Themes (Intimacy & Relationship Experience Mapping), added 2026-11-11.**
+  `data/themes.json` is a **closed** vocabulary of 10 topics; `backend/themes.py` loads
+  and validates it; `NarrativeOutput.themes` and `store.save_themes` both reject an
+  unknown id. The narrative prompt's `{{THEME_VOCABULARY}}` placeholder is filled from
+  the file at build time, so the list the model sees and the list the store enforces
+  cannot drift. Reachable at `GET /api/themes` and under `themes` on `/api/progress`.
+  - **`entry_themes` has no status/score/relation column and must never gain one** — a
+    theme says a subject came up, not that anybody did well at it. There is a test.
+  - **`boundaries-and-consent` is a topic, not an alarm.** The Safety Layer does not read
+    themes, is not gated on them, and runs concurrently on the raw text as before.
+  - `sensitive: true` governs **presentation only** (no notification previews), never
+    whether a theme is recognised.
+  - Themes are deleted by `discard` and survive `analysis_only`, like observations.
+- **`SCHEMA_VERSION` is now `2026-11-11.1`** (added `entry_themes`). An existing
+  `data/kryteria.db` will be refused until it is deleted and re-seeded.
+
 - **The eval harness runs the two packs that nobody could run before 2026-11-11.**
   `backend/evals/`, driven by `python -m backend.run_evals {list,safety,reasoning,ab,all}`.
 
@@ -90,7 +106,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  976 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
+  1,017 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

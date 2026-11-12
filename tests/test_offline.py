@@ -67,6 +67,121 @@ def fresh_profile(name: str = "Boyfriend KRYteria") -> tuple[Store, int, int, in
     return s, acct, dom, prof
 
 
+# ---------------------------------------------------------------- themes
+
+def test_theme_vocabulary_is_closed() -> None:
+    """A model free to invent labels makes 'this keeps coming up' meaningless."""
+    from backend.themes import UnknownTheme, ids, validate
+
+    check("the vocabulary loads", len(ids()) == 10, str(len(ids())))
+    check("ids are kebab-case slugs, not prose",
+          all(i == i.lower() and " " not in i for i in ids()))
+    expect_raises("an invented theme is refused", UnknownTheme,
+            validate, ["emotional-intimacy", "vibes"])
+    check("duplicates collapse",
+          validate(["emotional-intimacy", "emotional-intimacy"]) == ["emotional-intimacy"])
+    check("order follows the vocabulary, not the caller",
+          validate(["boundaries-and-consent", "attraction-and-chemistry"])
+          == ["attraction-and-chemistry", "boundaries-and-consent"])
+
+
+def test_themes_are_stored_against_entries_and_counted() -> None:
+    s, acct, dom = fresh()
+    person = s.upsert_person(acct, "A")
+    other = s.upsert_person(acct, "B")
+    for body, themes, pid in [
+        ("He never texts first.", ["reciprocity-and-initiative",
+                                   "communication-preferences"], person),
+        ("I didn't want to bring it up again.", ["expressing-needs"], person),
+        ("Same thing, I'm always the one reaching out.",
+         ["reciprocity-and-initiative"], person),
+        ("Completely different person, lovely evening.",
+         ["affection-and-comfort"], other),
+    ]:
+        e = s.create_entry(acct, dom, body=body, person_id=pid)
+        s.save_themes(acct, e, themes)
+
+    trends = {r["theme_id"]: r for r in s.theme_trends(acct)}
+    check("the recurring theme leads", list(trends)[0] == "reciprocity-and-initiative")
+    check("it is counted across entries", trends["reciprocity-and-initiative"]["entries"] == 2)
+    check("a one-off is counted once", trends["expressing-needs"]["entries"] == 1)
+    check("first and last seen are recorded",
+          bool(trends["expressing-needs"]["first_seen"]
+               and trends["expressing-needs"]["last_seen"]))
+
+    per_person = {r["theme_id"] for r in s.theme_trends(acct, person_id=person)}
+    check("per-person trends exclude another person's entries",
+          "affection-and-comfort" not in per_person)
+    check("and keep that person's own", "reciprocity-and-initiative" in per_person)
+
+
+def test_a_theme_is_not_an_assessment() -> None:
+    """Structural, not a style note: there is nowhere to put a verdict.
+
+    A theme says a subject came up. The moment it carries a status it becomes a
+    judgement about a person that the user never confirmed.
+    """
+    s, _, _ = fresh()
+    with s.read() as conn:
+        cols = {r["name"] for r in conn.execute("PRAGMA table_info(entry_themes)")}
+    for forbidden in ("status", "score", "rating", "relation", "evidence_strength"):
+        check(f"entry_themes has no {forbidden} column", forbidden not in cols)
+
+
+def test_themes_are_validated_at_the_store_not_trusted() -> None:
+    from backend.themes import UnknownTheme
+
+    s, acct, dom = fresh()
+    e = s.create_entry(acct, dom, body="x")
+    expect_raises("the store refuses an unknown theme", UnknownTheme,
+            s.save_themes, acct, e, ["not-a-real-theme"])
+    check("nothing was written", s.list_entry_themes(acct, e) == [])
+
+
+def test_discarding_an_entry_removes_its_themes() -> None:
+    """'He wrote about sexual consideration on the 3rd' is exactly what discard means.
+
+    Themes survive analysis_only, like observations — that mode keeps the analysis by
+    definition. They must not survive discard.
+    """
+    s, acct, dom = fresh()
+    kept = s.create_entry(acct, dom, body="Lovely evening.")
+    s.save_themes(acct, kept, ["affection-and-comfort"])
+    s.apply_retention(acct, kept, "analysis_only")
+    check("analysis_only keeps the themes",
+          s.list_entry_themes(acct, kept) == ["affection-and-comfort"])
+
+    gone = s.create_entry(acct, dom, body="Something I'd rather not keep.")
+    s.save_themes(acct, gone, ["sexual-consideration", "boundaries-and-consent"])
+    s.apply_retention(acct, gone, "discard")
+    check("discard removes them", s.list_entry_themes(acct, gone) == [])
+
+
+def test_another_account_cannot_reach_or_count_themes() -> None:
+    from backend.store import NotOwned
+
+    s, acct, dom = fresh()
+    e = s.create_entry(acct, dom, body="x")
+    s.save_themes(acct, e, ["emotional-intimacy"])
+    intruder = s.create_account("intruder", "a-long-enough-passphrase")
+    expect_raises("listing another account's entry themes is refused", NotOwned,
+            s.list_entry_themes, intruder, e)
+    expect_raises("saving against another account's entry is refused", NotOwned,
+            s.save_themes, intruder, e, ["emotional-intimacy"])
+    check("and the intruder's own trends are empty", s.theme_trends(intruder) == [])
+
+
+def test_the_prompt_block_is_built_from_the_vocabulary() -> None:
+    """So the file the store validates against and the list the model sees cannot drift."""
+    from backend.themes import ids, prompt_block
+
+    block = prompt_block()
+    for tid in ids():
+        check(f"{tid} reaches the prompt", f"`{tid}`" in block)
+    check("the consent theme carries its warning into the prompt",
+          "NOT A SAFETY RESPONSE" in block.upper())
+
+
 # ---------------------------------------------------------------- criteria versioning
 
 def test_criteria_are_versioned_not_overwritten() -> None:
