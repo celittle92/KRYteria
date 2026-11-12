@@ -56,6 +56,66 @@ def new_client(handle: str) -> TestClient:
 
 # ---------------------------------------------------------------- isolation
 
+def test_location_is_never_inferred_from_the_request() -> None:
+    """The privacy line on international resources.
+
+    Christine asked whether this needs location-based servicing. It does not, and for
+    this app it must not: a user may be on a monitored device, an IP-derived country is
+    wrong often enough (VPN, travel, a foreign SIM) that acting on it in a crisis is
+    worse than admitting we do not know, and a location quietly derived is a location
+    quietly stored.
+    """
+    c = new_client("geo-check")
+
+    # Headers that a naive implementation would read. None may change the answer.
+    plain = c.get("/api/resources").json()
+    spoofed = c.get("/api/resources", headers={
+        "X-Forwarded-For": "203.0.113.7",
+        "CF-IPCountry": "JP",
+        "X-Real-IP": "203.0.113.7",
+        "Accept-Language": "ja-JP,ja;q=0.9",
+    }).json()
+    check("location headers change nothing", plain == spoofed)
+    check("and the region is reported as unset", plain["region_source"] == "unset")
+    check("an empty directory says so honestly rather than serving US numbers",
+          plain["resources"] == [] or plain["note"] is None)
+
+    # The source must not reach for the client address either. Checked by MECHANISM,
+    # not by header name: the route's own docstring names the headers it refuses to
+    # read, and a test that matched those words would fail on the explanation of the
+    # rule rather than on a breach of it.
+    import ast
+
+    for path in sorted((PROJECT_DIR / "backend" / "api").glob("*.py")):
+        tree = ast.parse(path.read_text())
+        code = {
+            f"{getattr(n.value, 'id', '')}.{n.attr}"
+            for n in ast.walk(tree) if isinstance(n, ast.Attribute)
+        }
+        imported = {
+            alias.name for n in ast.walk(tree)
+            if isinstance(n, ast.ImportFrom) for alias in n.names
+        }
+        # `request.cookies` is legitimate and necessary — it is how a route learns whose
+        # data it is looking at. Everything else on the request object is connection
+        # metadata, which is what this rule is about.
+        reached = {c.split(".", 1)[1] for c in code if c.startswith("request.")}
+        check(f"{path.name} touches only the session cookie on the request",
+              reached <= {"cookies"},
+              f"also reaches: {sorted(reached - {'cookies'})}")
+        assert imported is not None  # (kept: Request may be imported for the cookie)
+
+    # She sets it herself, and can take it back.
+    c.patch("/api/auth/preferences", json={"region": "jp"})
+    after = c.get("/api/resources").json()
+    check("her own setting is used", after["region"] == "JP")
+    check("and is reported as hers", after["region_source"] == "account")
+    bad = c.patch("/api/auth/preferences", json={"region": "somewhere in Kenya"})
+    check("free-text location is refused", bad.status_code == 422, bad.text)
+    c.patch("/api/auth/preferences", json={"region": ""})
+    check("clearing works", c.get("/api/resources").json()["region_source"] == "unset")
+
+
 def test_data_isolation() -> None:
     """Two accounts. One must not be able to see or touch the other's anything."""
     alice = new_client("alice")
@@ -567,16 +627,26 @@ def test_resources_are_always_readable() -> None:
     from backend.api.deps import get_store
 
     store = get_store()
-    if not store.list_resources():
+    if not store.list_resources(region="US"):
         import json
         blob = json.loads((PROJECT_DIR / "data" / "resources_us.json").read_text())
         store.seed_resources(blob["resources"])
 
-    r = c.get("/api/resources").json()
+    # The route answers with the region it used as well as the rows, so a caller can
+    # tell "nothing curated for your country" from "nothing matched your category".
+    body = c.get("/api/resources", params={"region": "US"}).json()
+    r = body["resources"]
     check("resources are readable on request", len(r) > 0)
     check("every one carries a verification date", all(x["verified_at"] for x in r))
     check("emergency is distinguished from confidential support",
           {x["kind"] for x in r} >= {"emergency", "confidential_support"})
+    check("the region used is reported back", body["region"] == "US")
+    check("and where it came from", body["region_source"] == "query")
+
+    empty = c.get("/api/resources", params={"region": "KE"}).json()
+    check("a country with nothing curated returns no rows", empty["resources"] == [])
+    check("and says so rather than substituting another country's numbers",
+          "will not invent one" in (empty["note"] or ""), str(empty["note"]))
 
     account_id = store.verify_account("resources-user", "a long enough passphrase")
     offer = store.record_resource_offer(account_id, [1], "disclosure")

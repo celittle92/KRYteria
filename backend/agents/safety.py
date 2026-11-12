@@ -123,7 +123,11 @@ def resources_to_offer(store, account_id: int, output: SafetyOutput) -> list[dic
         return []
     if not store.should_offer_resources(account_id, output.concern_level):
         return []
-    rows = store.list_resources(category=output.category)
+    # Where SHE says she is — never where an IP suggests. An account that has not said
+    # gets global services only, and an empty list is the honest answer rather than a
+    # US number offered to somebody in Osaka.
+    account = store.get_account(account_id) or {}
+    rows = store.list_resources(region=account.get("region"), category=output.category)
     if output.concern_level == "immediate_danger":
         return rows
     # Emergency numbers are not volunteered for a non-emergency; offering 911 alongside a

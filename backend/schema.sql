@@ -29,6 +29,17 @@ CREATE TABLE IF NOT EXISTS accounts (
                             CHECK (theme IN ('dark', 'warm')),
     is_demo         INTEGER NOT NULL DEFAULT 0,  -- synthetic. Never mixed with real records.
     timezone        TEXT    NOT NULL DEFAULT 'UTC',
+    -- Where to look for support resources. ISO 3166-1 alpha-2, or NULL for "not said".
+    --
+    -- NULL IS THE DEFAULT AND IT IS NOT A PROBLEM TO BE SOLVED. The charter: ask for
+    -- location only when it is needed to find local resources, and never require it.
+    -- This is set by the user, in settings, and it is never inferred from an IP address,
+    -- a timezone, a browser locale, or anything else. For an app that may be used by
+    -- someone whose device is monitored, silently deriving and storing where they are is
+    -- exactly the wrong instinct -- and an IP-derived country is wrong often enough
+    -- (VPN, travel, a phone on a foreign SIM) that acting on it during a crisis is worse
+    -- than admitting we do not know.
+    region          TEXT,
     -- How the user wants support resources handled. Theirs to set, and it is honoured.
     -- `on_request` and `suppressed` still leave the safety layer fully active; they
     -- govern unsolicited offering, nothing else.

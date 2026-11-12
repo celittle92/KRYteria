@@ -182,6 +182,99 @@ def test_the_prompt_block_is_built_from_the_vocabulary() -> None:
           "NOT A SAFETY RESPONSE" in block.upper())
 
 
+def test_resources_match_where_the_user_says_they_are() -> None:
+    """A US number offered to somebody in Osaka is not a smaller failure than an
+    invented one — it is the same failure with a real number attached.
+
+    Christine, 2026-11-12: the agent should be able to pull safety numbers for countries
+    outside the US and Canada.
+    """
+    s, acct, _ = fresh()
+    _seed_resources(s)
+    s.seed_resources([
+        {"name": "A nationwide line in Japan", "kind": "confidential_support",
+         "region": "JP", "categories": [], "phone": "(verified example)",
+         "verified_at": "2026-11-12"},
+        {"name": "A service that really is worldwide", "kind": "information",
+         "region": "GLOBAL", "categories": [], "url": "https://example.edu/global",
+         "verified_at": "2026-11-12"},
+    ])
+
+    us = {r["name"] for r in s.list_resources(region="US")}
+    jp = {r["name"] for r in s.list_resources(region="JP")}
+    check("a US account does not see the Japanese line",
+          "A nationwide line in Japan" not in us)
+    check("a Japanese account does not see US hotlines",
+          not any("National Domestic Violence" in n for n in jp), str(jp))
+    check("but does see its own", "A nationwide line in Japan" in jp)
+    check("global services reach both",
+          "A service that really is worldwide" in us & jp)
+
+    # The default is no longer "US" — that was the bug.
+    unset = {r["name"] for r in s.list_resources()}
+    check("an account that has not said its country gets global only",
+          unset == {"A service that really is worldwide"}, str(unset))
+    check("and a country with nothing curated gets an honest empty list",
+          s.list_resources(region="KE", include_global=False) == [])
+
+    # A country-specific row outranks a global one.
+    ordered = [r["name"] for r in s.list_resources(region="JP", kind="confidential_support")]
+    check("local services are listed before global ones",
+          ordered[0] == "A nationwide line in Japan" if ordered else False, str(ordered))
+
+
+def test_region_is_set_by_the_user_and_can_be_withdrawn() -> None:
+    s, acct, _ = fresh()
+    check("it starts unset", (s.get_account(acct) or {}).get("region") is None)
+
+    s.set_preferences(acct, region="jp")
+    check("it is stored uppercase", s.get_account(acct)["region"] == "JP")
+
+    s.set_preferences(acct, region="")
+    check("an empty string clears it — a location given can be taken back",
+          s.get_account(acct)["region"] is None)
+
+    s.set_preferences(acct, region="GB")
+    s.set_preferences(acct, theme="warm")
+    check("an unrelated preference change leaves it alone",
+          s.get_account(acct)["region"] == "GB")
+
+    expect_raises("free text is refused", StoreError,
+                  s.set_preferences, acct, region="somewhere in east africa")
+    expect_raises("a three-letter code is refused", StoreError,
+                  s.set_preferences, acct, region="JPN")
+
+
+def test_a_resource_must_declare_its_country() -> None:
+    """It used to default to 'US', filing every foreign service under the wrong flag."""
+    s, _, _ = fresh()
+    expect_raises("a resource with no region is refused", StoreError,
+                  s.seed_resources, [{"name": "Nowhere", "kind": "information",
+                                      "url": "https://example.edu/x",
+                                      "verified_at": "2026-11-12"}])
+    expect_raises("still refused without a verification date", StoreError,
+                  s.seed_resources, [{"name": "Unchecked", "kind": "information",
+                                      "region": "GB", "url": "https://example.edu/x"}])
+
+
+def test_the_international_file_invents_nothing() -> None:
+    """Empty on purpose, and it has to stay that way until somebody verifies entries.
+
+    Emergency numbers differ (999, 112, 000, 119), helplines change, and some widely
+    listed online no longer operate. Being confidently wrong here costs more than being
+    empty.
+    """
+    path = PROJECT_DIR / "data" / "resources_international.json"
+    check("the file exists as the place for them", path.is_file())
+    blob = json.loads(path.read_text())
+    for row in blob["resources"]:
+        check(f"{row.get('name')!r} records the source that was opened",
+              bool(row.get("source_url")),
+              "every international entry must name the organisation's own page")
+        check(f"{row.get('name')!r} declares a region", bool(row.get("region")))
+        check(f"{row.get('name')!r} is verified", bool(row.get("verified_at")))
+
+
 def test_verification_survives_a_database_rebuild() -> None:
     """The signature belongs in the committed pack, not in a disposable database.
 
@@ -1289,7 +1382,7 @@ def test_resources_are_curated_never_invented() -> None:
     s, acct, _ = fresh()
     _seed_resources(s)
 
-    all_res = s.list_resources()
+    all_res = s.list_resources(region="US")
     check("the directory loaded", len(all_res) == 4)
     check("emergency services sort first", all_res[0]["kind"] == "emergency")
     check("every resource carries a verification date",
@@ -1297,7 +1390,7 @@ def test_resources_are_curated_never_invented() -> None:
     check("every resource has a way to reach it",
           all(r["phone"] or r["url"] or r["text_line"] for r in all_res))
 
-    sexual = s.list_resources(category="sexual")
+    sexual = s.list_resources(region="US", category="sexual")
     check("category filtering works", any("RAINN" in r["name"] for r in sexual))
     check("a crisis line is not offered for an unrelated concern",
           not any("988" in r["name"] for r in sexual))

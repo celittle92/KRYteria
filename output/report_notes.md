@@ -337,4 +337,7 @@ Both HTML files must open by **double-clicking**, on any computer, with every sc
    `submission_spec.json`, none written.
 9. **Verify `data/resources_us.json`** against each organisation's own site. Unchecked
    since 2026-11-07, and it is the one dataset where being wrong matters most.
+   **And populate `data/resources_international.json`**, which is empty by design — the
+   mechanism (user-set country, never inferred) is built, the content is not. Each entry
+   needs the organisation's own page opened and recorded.
 10. **Add `zlisto`** as collaborator — release day only.

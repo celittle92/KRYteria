@@ -77,7 +77,7 @@ def projection(
 @router.get("/resources")
 def list_resources(
     category: str | None = None,
-    region: str = "US",
+    region: str | None = None,
     account_id: int = Depends(current_account_id),
     store: Store = Depends(get_store),
 ):
@@ -85,8 +85,33 @@ def list_resources(
 
     Declining an offer stops the app volunteering resources; it never stops the user
     asking for them. This route is always open.
+
+    ``region`` falls back to the account's own setting, and to global services if she
+    has not said. **It is never inferred from the request** — no IP lookup, no
+    `X-Forwarded-For`, no timezone guess. For somebody whose device may be monitored,
+    silently working out where they are is the wrong instinct; and a country guessed
+    from an IP is wrong often enough that acting on it in a crisis is worse than saying
+    we do not know.
     """
-    return store.list_resources(region=region, category=category)
+    account = store.get_account(account_id) or {}
+    asked = (region or account.get("region") or "").strip().upper() or None
+    rows = store.list_resources(region=asked, category=category)
+    return {
+        "region": asked,
+        "region_source": ("query" if region else
+                          "account" if account.get("region") else "unset"),
+        "resources": rows,
+        # An empty directory is a truthful answer and must read as one. The alternative
+        # — quietly serving US numbers to everybody — is the bug this replaced.
+        "note": (
+            None if rows else
+            ("KRYteria has no checked resource for that yet, and will not invent one. "
+             + ("Setting your country in Settings may find local services."
+                if not asked else
+                "If you know a service that belongs here, it can be added once somebody "
+                "has verified it against the organisation's own site."))
+        ),
+    }
 
 
 @router.post("/resource-offers/{offer_id}/respond")

@@ -96,6 +96,45 @@ export default function Settings({ account, onChange }: {
           show emergency options. You can always find resources yourself from this page,
           and declining them never stops you asking.
         </p>
+
+        <div className="mt-6">
+          <label htmlFor="region" className="block text-ink text-sm">
+            Where should KRYteria look for support services?
+          </label>
+          <p className="text-xs text-faint mt-1 mb-2 max-w-reading leading-relaxed">
+            Optional. Emergency numbers differ between countries, so without this
+            KRYteria will only show services that work anywhere — it would rather show
+            you nothing than a number that does not work where you are. It never works
+            this out from your connection, and you can clear it at any time.
+          </p>
+          <div className="flex items-center gap-2">
+            <input
+              id="region"
+              className="field w-28"
+              defaultValue={account.region ?? ""}
+              placeholder="e.g. GB"
+              maxLength={2}
+              disabled={busy}
+              aria-describedby="region-help"
+              onBlur={(e) => {
+                const v = e.target.value.trim().toUpperCase();
+                if (v !== (account.region ?? "")) save({ region: v });
+              }}
+            />
+            {account.region && (
+              <button
+                className="text-xs underline text-faint"
+                disabled={busy}
+                onClick={() => save({ region: "" })}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+          <p id="region-help" className="text-xs text-faint mt-2">
+            Two-letter country code. Nothing else about your location is stored.
+          </p>
+        </div>
       </Section>
 
       <Section title="Your data" subtitle="Yours to take, and yours to destroy.">

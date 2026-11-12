@@ -314,13 +314,17 @@ def seed(store: Store, *, reset: bool = False) -> int:
     store.record_decision(account_id, choice="undecided", criterion_id=lib["maturity"])
 
     # ---------------------------------------------------------------- resources
-    if not store.list_resources():
+    # Every resources_*.json, not just the US one — so adding a country's file is the
+    # only step needed, and nobody has to remember to wire it up here.
+    if not store.list_resources(region="US"):
         import json
         from pathlib import Path
 
-        path = Path(__file__).resolve().parent.parent / "data" / "resources_us.json"
-        if path.is_file():
-            store.seed_resources(json.loads(path.read_text())["resources"])
+        data = Path(__file__).resolve().parent.parent / "data"
+        for path in sorted(data.glob("resources_*.json")):
+            rows = json.loads(path.read_text(encoding="utf-8")).get("resources", [])
+            if rows:
+                store.seed_resources(rows)
 
     return account_id
 

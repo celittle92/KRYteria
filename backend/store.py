@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-11.1"
+SCHEMA_VERSION = "2026-11-12.1"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -386,7 +386,7 @@ class Store:
         with self.read() as conn:
             row = conn.execute(
                 "SELECT id, handle, tone_mode, theme, resource_offering, retention,"
-                " timezone, is_demo, created_at, last_seen_at"
+                " timezone, region, is_demo, created_at, last_seen_at"
                 " FROM accounts WHERE id = ?",
                 (account_id,),
             ).fetchone()
@@ -395,7 +395,22 @@ class Store:
     def set_preferences(
         self, account_id: int, *, tone_mode: str | None = None, theme: str | None = None,
         resource_offering: str | None = None, retention: str | None = None,
+        region: str | None = None,
     ) -> None:
+        """Change a preference. ``region`` is the user's own statement of where they are.
+
+        Pass ``""`` to clear it. It is never inferred, and clearing it must always work:
+        somebody who has moved, or who told us once and would rather not have, is
+        entitled to take it back.
+        """
+        if region:
+            region = region.strip().upper()
+            if region != "GLOBAL" and not (len(region) == 2 and region.isalpha()):
+                raise StoreError(
+                    f"region must be a two-letter ISO 3166-1 country code or 'GLOBAL', "
+                    f"got {region!r}. A free-text location is both less useful for "
+                    "matching a directory and more identifying to store."
+                )
         if tone_mode and tone_mode not in TONE_MODES:
             raise StoreError(f"Unknown tone mode: {tone_mode}")
         if theme and theme not in ("dark", "warm"):
@@ -415,6 +430,12 @@ class Store:
                         f"UPDATE accounts SET {column} = ? WHERE id = ?",
                         (value, account_id),
                     )
+            # region is handled separately because "" means CLEAR IT, and the loop above
+            # treats a falsy value as "leave alone". Being unable to withdraw a location
+            # you once gave is not an acceptable shape for this field.
+            if region is not None:
+                conn.execute("UPDATE accounts SET region = ? WHERE id = ?",
+                             (region or None, account_id))
 
     def delete_account(self, account_id: int) -> None:
         """Remove everything. Rows are deleted, not flagged.
@@ -2067,20 +2088,37 @@ class Store:
 
     # ------------------------------------------------- support without coercion
 
-    def list_resources(self, *, region: str = "US", category: str | None = None,
-                       kind: str | None = None):
+    def list_resources(self, *, region: str | None = None, category: str | None = None,
+                       kind: str | None = None, include_global: bool = True):
         """The curated directory. If it is not here, there is nothing to offer.
 
         The agent must never invent a phone number, a service, or an availability claim.
         An empty result means "I don't have a resource for that", which is a truthful
         thing to say and an invented hotline is not.
+
+        ``region`` is an ISO 3166-1 alpha-2 code, or None for somebody who has not said
+        where they are. **The default is no longer "US".** It was, and that meant a user
+        in Osaka reaching for help got a number that does not work there — which is not
+        a smaller failure than inventing one, it is the same failure with a real number
+        attached. Emergency services differ: 999, 112, 000, 119. Getting this wrong
+        during a crisis is the most expensive mistake this directory can make.
+
+        ``GLOBAL`` rows are included by default: services that genuinely operate
+        everywhere, which is a small set and must stay small.
         """
-        sql = "SELECT * FROM resources WHERE is_active = 1 AND region = ?"
-        args: list[Any] = [region]
+        regions = [r for r in (region, "GLOBAL" if include_global else None) if r]
+        if not regions:
+            # Nobody has said where they are and global rows were excluded. Honest empty.
+            return []
+        sql = ("SELECT * FROM resources WHERE is_active = 1 AND region IN ("
+               + ",".join("?" * len(regions)) + ")")
+        args: list[Any] = list(regions)
         if kind:
             sql += " AND kind = ?"
             args.append(kind)
-        sql += " ORDER BY kind = 'emergency' DESC, name"
+        # A country-specific row outranks a global one: if somebody has told us where
+        # they are, the local service is the better answer.
+        sql += (" ORDER BY kind = 'emergency' DESC, region = 'GLOBAL' ASC, name")
         with self.read() as conn:
             rows = [dict(r) for r in conn.execute(sql, args)]
         for r in rows:
@@ -2172,11 +2210,20 @@ class Store:
                     raise StoreError(
                         f"Resource {r.get('name')!r} has no way to reach it."
                     )
+                if not r.get("region"):
+                    raise StoreError(
+                        f"Resource {r.get('name')!r} declares no region. This used to "
+                        "default to 'US', which silently filed every international "
+                        "service under the wrong country — and a number that does not "
+                        "work where somebody is standing is no better than an invented "
+                        "one. Use an ISO 3166-1 alpha-2 code, or 'GLOBAL' for a service "
+                        "that genuinely operates everywhere."
+                    )
                 cur = conn.execute(
                     "INSERT INTO resources (region, name, kind, categories, phone,"
                     " text_line, url, hours, note, verified_at)"
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (r.get("region", "US"), r["name"], r["kind"],
+                    (r["region"].strip().upper(), r["name"], r["kind"],
                      json.dumps(r.get("categories", [])), r.get("phone"),
                      r.get("text_line"), r.get("url"), r.get("hours"), r.get("note"),
                      r["verified_at"]),

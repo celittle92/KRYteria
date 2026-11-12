@@ -7,7 +7,7 @@ import sqlite3
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from ..security import WeakPassphrase
-from ..store import Store
+from ..store import Store, StoreError
 from .deps import (
     clear_session, current_account, current_account_id, get_store, issue_session,
 )
@@ -60,8 +60,12 @@ def set_preferences(
     account_id: int = Depends(current_account_id),
     store: Store = Depends(get_store),
 ):
-    store.set_preferences(
-        account_id, tone_mode=body.tone_mode, theme=body.theme,
-        resource_offering=body.resource_offering, retention=body.retention,
-    )
+    try:
+        store.set_preferences(
+            account_id, tone_mode=body.tone_mode, theme=body.theme,
+            resource_offering=body.resource_offering, retention=body.retention,
+            region=body.region,
+        )
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     return store.get_account(account_id)

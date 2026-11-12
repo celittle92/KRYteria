@@ -47,6 +47,13 @@ class Preferences(BaseModel):
         description="What KRYteria keeps after processing a brain dump. Set once here "
                     "rather than answered every time; each dump can still override it.",
     )
+    region: str | None = Field(
+        default=None,
+        max_length=6,
+        description="Two-letter ISO 3166-1 country code, so support resources match "
+                    "where you are. Optional, never required, and never inferred from "
+                    "your connection. Send an empty string to clear it.",
+    )
 
 
 class RetentionChoice(BaseModel):

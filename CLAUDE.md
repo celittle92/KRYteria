@@ -38,6 +38,20 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   safety step means no safety output at all, i.e. failing open on the cases this layer
   exists for. The root cause was `safety.md` reserving the question for immediate
   danger; that section is rewritten and there is a regression test.
+- **Support resources are matched to `accounts.region`, which the user sets and nothing
+  infers.** ISO 3166-1 alpha-2 or NULL. **No IP lookup, no `X-Forwarded-For`, no
+  timezone guess** — a test sends spoofed location headers and walks the AST of every
+  route module to confirm nothing touches the request except `cookies`. `list_resources`
+  no longer defaults to `"US"`; unset means `GLOBAL` rows only plus an honest note, and
+  a country with nothing curated returns nothing and says so.
+- **`data/resources_international.json` is empty on purpose.** The mechanism is built;
+  the content must come from each organisation's own site with the URL recorded. **Never
+  fill it from memory** — emergency numbers differ (999, 112, 000, 119) and a real
+  number filed under the wrong country is as bad as an invented one.
+  `data/resources_us.json` is still unverified too.
+- **`SCHEMA_VERSION` is `2026-11-12.1`** (added `accounts.region`). Delete
+  `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
+  verifications now, so they come back.
 - **The Safety agent deliberately has no tools and no research lookup.** It runs
   concurrently on the raw text and must stay fast; the behavioural taxonomy lives in its
   prompt. Giving it retrieval is a design change, not a convenience.
@@ -169,7 +183,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,110 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
+  1,158 checks in total as of 2026-11-12. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

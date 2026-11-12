@@ -21,6 +21,8 @@ export interface Account {
   theme: "dark" | "warm";
   resource_offering: "proactive" | "on_request" | "suppressed";
   retention: Retention;
+  /** ISO 3166-1 alpha-2, or null for "not said". Set by her, never inferred. */
+  region: string | null;
   is_demo: number;
 }
 
@@ -197,8 +199,10 @@ export const api = {
   signIn: (handle: string, passphrase: string) =>
     post<Account>("/api/auth/signin", { handle, passphrase }),
   signOut: () => post<{ signed_out: boolean }>("/api/auth/signout"),
-  setPreferences: (p: Partial<Pick<Account, "theme" | "tone_mode" | "resource_offering" | "retention">>) =>
-    patch<Account>("/api/auth/preferences", p),
+  setPreferences: (
+    p: Partial<Pick<Account, "theme" | "tone_mode" | "resource_offering" | "retention">>
+      & { region?: string },
+  ) => patch<Account>("/api/auth/preferences", p),
 
   criteria: () => get<Criterion[]>("/api/criteria"),
   createCriterion: (b: { value: string; desired_behavior: string; why_it_matters?: string | null }) =>
@@ -257,7 +261,13 @@ export const api = {
 
   progress: () => get<Progress>("/api/progress"),
   usage: () => get<Record<string, unknown>>("/api/usage"),
-  resources: () => get<Resource[]>("/api/resources"),
+  resources: () =>
+    get<{
+      region: string | null;
+      region_source: "query" | "account" | "unset";
+      resources: Resource[];
+      note: string | null;
+    }>("/api/resources"),
   export: () => get<unknown>("/api/export"),
   deleteAccount: (passphrase: string) =>
     post<{ deleted: boolean }>("/api/account/delete", { passphrase, confirm: "DELETE EVERYTHING" }),
