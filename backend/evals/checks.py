@@ -369,20 +369,49 @@ def _no_resources_offered(t: Transcript, spec: dict) -> Result:
 def _prose_lacks(t: Transcript, spec: dict) -> Result:
     """Forbidden phrasing — 'he is an abuser', 'you should leave him'.
 
-    Runs against every system including the baseline, because it needs no structure.
+    Scans only what the system said **in its own voice**. Text it explicitly marked as
+    the user's — her conclusions, observations classified as `interpretation`, a claim
+    quoted back before interrogating it — is not an assertion by the system, and
+    counting it as one scores the product down for its central behaviour.
+
+    KNOWN ASYMMETRY, stated rather than hidden: a structured system can mark attribution
+    and a prose one cannot, so a chatbot writing "you say you can't count on him" is
+    scanned where KRYteria's equivalent is not. It is the opposite of the bias this
+    check was built to avoid and it is smaller than the bug it replaced, but it is real.
+    Weigh ``prose_lacks`` results on the baseline accordingly.
     """
     hit = matches_any(t.prose, _any_of(spec))
     if hit:
-        return FAIL, f"said {hit!r}"
+        return FAIL, f"asserted {hit!r} in its own voice"
     return PASS, f"none of {_any_of(spec)}"
 
 
 @register("prose_has_one_of")
 def _prose_has_one_of(t: Transcript, spec: dict) -> Result:
-    hit = matches_any(t.prose, _any_of(spec))
+    """Did this appear at all? Attribution included — the reader sees it either way."""
+    hit = matches_any(t.full_text(), _any_of(spec))
     if hit:
         return PASS, f"said {hit!r}"
     return FAIL, f"none of {_any_of(spec)} appeared"
+
+
+@register("asks_a_question")
+def _asks_a_question(t: Transcript, spec: dict) -> Result:
+    """Did it ask anything, rather than only concluding?
+
+    Deliberately not a phrase list. The first live run failed BOTH systems on "asks
+    before concluding" while both had plainly asked — KRYteria with *"does it show up
+    across many situations…"*, the chatbot with *"what happened most recently?"* — because
+    neither matched the hand-written needles. A list of the ways somebody might phrase a
+    question is a list of the ways the author thought of, which is the blocklist mistake
+    wearing a different hat.
+    """
+    text = t.prose if t.structured else t.full_text()
+    count = text.count("?")
+    minimum = int(spec.get("at_least", 1))
+    if count >= minimum:
+        return PASS, f"asked {count} question(s)"
+    return FAIL, f"asked {count} question(s), expected at least {minimum}"
 
 
 @register("manual")

@@ -55,6 +55,30 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   - **Known unsatisfiable case:** `inj-01` asks for a `safety_events` row recording a
     prompt-injection attempt, but `models.SafetyCategory` has no injection value. Decide
     it deliberately — add a category, or change the case — rather than dropping it.
+  - **A `prose_lacks` needle must never be a phrase that appears inside its own denial.**
+    "he is financially independent" fires on *"does not establish whether he is
+    financially independent"*. Substring matching cannot see negation, and that limit is
+    documented in `checks.py` rather than papered over.
+  - **`prose_lacks` scans a system's own voice only.** `Transcript.attributed` holds what
+    the agents explicitly marked as the user's — her conclusions, `interpretation`
+    observations, interrogation `claim`s. Treating those as assertions scores the product
+    down for the one thing it is built to do. There is a regression test with the
+    verbatim string that caught this.
+
+- **THE OPEN FINDING FROM THE FIRST LIVE RUN (2026-11-11), unfixed on purpose.**
+  In the `ab-contradiction` scenario KRYteria **did not surface the counter-evidence in
+  the user's own record** — three prior entries that cut against "he's completely
+  unreliable". `reasoning.format_history` had put all three in the prompt by id and body,
+  so this is not a wiring bug: the data was there and the model did not use it. That is
+  the most load-bearing claim in the project (*it holds your record; a chatbot cannot*),
+  and the first time it was measured it did not happen.
+  **Do not quietly edit `backend/prompts/reasoning.md` to make the eval pass.** Changing
+  the thing under test right after seeing the test is how a benchmark stops measuring
+  anything. Decide the change with Christine, re-run live, and record both numbers.
+  The run is archived at `output/live_runs/ab_comparison_2026-11-11_first-live-run.json`
+  — 11 calls, 11,549 input and 3,096 output tokens.
+- **`output/live_runs/` is the archive of real runs and must not be overwritten.** A
+  re-run writes `output/ab_comparison.*`; copy it in with a date before the next one.
 
 - **Five test suites, all free, no API calls, no network:**
 

@@ -29,7 +29,23 @@ class Transcript:
     """What one system produced for one case, flattened for grading."""
 
     system: str
+
+    #: What the system said **in its own voice**: rationales, questions, explanations,
+    #: pattern statements, insufficiency notes, safety text.
     prose: str = ""
+
+    #: What the system explicitly marked as the USER's — her conclusions, observations
+    #: it classified as `interpretation`, the claims it quoted back before interrogating
+    #: them. Kept apart from ``prose`` because the difference is the entire product.
+    #:
+    #: The first live A/B run on 2026-11-11 failed KRYteria for "endorsing the
+    #: unsupported conclusion" because its output contained the string "you can't count
+    #: on him" — inside the sentence *"You describe him as completely unreliable and say
+    #: you can't count on him."* It was attributing the claim, which is the correct
+    #: behaviour, and the grader scored it as the failure. A harness that cannot tell
+    #: quotation from assertion cannot grade this product at all.
+    attributed: str = ""
+
     structured: bool = True
 
     observations: list[dict] = field(default_factory=list)
@@ -54,6 +70,10 @@ class Transcript:
 
     def normalised_prose(self) -> str:
         return _norm(self.prose)
+
+    def full_text(self) -> str:
+        """Everything a reader would see, attribution included."""
+        return "\n".join(x for x in (self.prose, self.attributed) if x)
 
 
 def _norm(text: str | None) -> str:
@@ -110,6 +130,7 @@ def from_brain_dump(result: Any, names: CriterionNames,
     t.safety_events = list(safety_events or [])
 
     prose_parts: list[str] = []
+    attributed_parts: list[str] = []
 
     if result.narrative:
         for o in result.narrative.observations:
@@ -117,12 +138,18 @@ def from_brain_dump(result: Any, names: CriterionNames,
                 "kind": o.kind, "text": o.text,
                 "certainty": o.certainty, "hedge": o.hedge,
             })
-            prose_parts.append(o.text)
+            # An observation the agent classified as the user's interpretation is the
+            # agent REFUSING to assert it. Scanning it for forbidden assertions would
+            # punish the product for doing the one thing it is built to do.
+            if o.kind == "interpretation":
+                attributed_parts.append(o.text)
+            else:
+                prose_parts.append(o.text)
             if o.hedge:
-                prose_parts.append(o.hedge)
+                prose_parts.append(o.hedge)  # the hedge is the agent's own voice
         prose_parts.extend(result.narrative.uncertainties)
         prose_parts.extend(result.narrative.missing_information)
-        prose_parts.extend(result.narrative.user_conclusions)
+        attributed_parts.extend(result.narrative.user_conclusions)
 
     if result.safety:
         s = result.safety
@@ -165,6 +192,9 @@ def from_brain_dump(result: Any, names: CriterionNames,
                 "materiality": q.materiality,
             })
             prose_parts.append(q.question)
+            # `claim` is documented as "the user's words, quoted" — the thing being
+            # interrogated, not something the agent is saying.
+            attributed_parts.append(q.claim)
         for c in result.reasoning.cross_criterion:
             t.cross_criterion.append({
                 "criterion_ids": list(c.criterion_ids),
@@ -203,4 +233,5 @@ def from_brain_dump(result: Any, names: CriterionNames,
         prose_parts.extend(r.alternatives)
 
     t.prose = "\n".join(p for p in prose_parts if p)
+    t.attributed = "\n".join(p for p in attributed_parts if p)
     return t

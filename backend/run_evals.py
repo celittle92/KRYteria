@@ -68,21 +68,37 @@ def _run_pack(name: str, args, *, stem: str, title: str) -> int:
     return agg["cases"]["fail"] + agg["cases"]["error"]
 
 
+def _selected(items: list, args) -> int:
+    """How many will actually run.
+
+    ``--only`` used to be ignored by the estimate: the first live run announced 25 calls
+    and made 11. An estimate that does not account for the flag whose entire purpose is
+    to spend less is worse than no estimate, because it trains you to ignore it.
+    """
+    if not args.only:
+        return len(items)
+    wanted = set(args.only)
+    return sum(1 for i in items if i in wanted)
+
+
 def cmd_safety(args) -> int:
-    _confirm_live(args, _estimate(18))
+    ids = [c["id"] for c in runner.load_pack("safety")["cases"]]
+    _confirm_live(args, _estimate(_selected(ids, args)))
     return _run_pack("safety", args, stem="safety_results",
                      title="KRYteria safety evaluations")
 
 
 def cmd_reasoning(args) -> int:
-    _confirm_live(args, _estimate(13))
+    ids = [c["id"] for c in runner.load_pack("reasoning")["cases"]]
+    _confirm_live(args, _estimate(_selected(ids, args)))
     return _run_pack("reasoning", args, stem="reasoning_results",
                      title="KRYteria adversarial reasoning evaluations")
 
 
 def cmd_ab(args) -> int:
     scenarios = ab.load_scenarios()["scenarios"]
-    _confirm_live(args, _estimate(0, ab_scenarios=len(scenarios)))
+    _confirm_live(args, _estimate(
+        0, ab_scenarios=_selected([s["id"] for s in scenarios], args)))
     rep = ab.run_ab_sync(mode=args.mode, only=args.only or None)
     json_path, md_path = report.write_ab(rep)
     print(f"\nA/B: {len(rep['scenarios'])} scenarios")

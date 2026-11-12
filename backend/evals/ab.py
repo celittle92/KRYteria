@@ -76,7 +76,8 @@ def load_scenarios() -> dict:
                 raise ValueError(
                     f"A/B scenario {s['id']}: unknown check {d.get('check')!r}."
                 )
-            if d["check"] not in ("prose_lacks", "prose_has_one_of", "manual"):
+            if d["check"] not in ("prose_lacks", "prose_has_one_of",
+                                  "asks_a_question", "manual"):
                 raise ValueError(
                     f"A/B scenario {s['id']}: {d['check']!r} reads structured output, "
                     "which the baseline cannot produce. A/B dimensions must be "

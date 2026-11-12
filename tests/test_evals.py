@@ -204,6 +204,88 @@ def test_a_safety_check_may_not_be_a_questionnaire() -> None:
           outcome(long, {"check": "safety_check_asked", "max_questions": 2}) == C.FAIL)
 
 
+def test_quoting_the_user_is_not_asserting_it() -> None:
+    """Both strings are verbatim from the first live A/B run, 2026-11-11.
+
+    The grader failed KRYteria on both. Both were the product working: the first
+    attributes a conclusion to her, the second denies the very claim it contains. A
+    harness that cannot tell quotation or negation from assertion cannot grade this
+    product, and would have gone into a report as 'the chatbot scored higher'.
+    """
+    attributing = _t(
+        prose="The statement concerns reliability, but it is your interpretation "
+              "rather than a described behavior.",
+        attributed="You describe him as completely unreliable and say you can't "
+                   "count on him for anything.",
+    )
+    check("a conclusion attributed to the user is not an assertion",
+          outcome(attributing, {"check": "prose_lacks",
+                                "any_of": ["you can't count on him"]}) == C.PASS)
+
+    denying = _t(
+        prose="Paying for one dinner shows a single payment, but does not establish "
+              "whether he is financially independent.",
+    )
+    check("the negation is still caught as a substring, and that is a real limit",
+          outcome(denying, {"check": "prose_lacks",
+                            "any_of": ["he is financially independent"]}) == C.FAIL,
+          "documented in the A/B scenario file: needles must not be phrases that "
+          "appear inside their own denial")
+
+    # And the distinction must survive into the structured flattening, not only here.
+    check("an interpretation observation lands in attributed, not prose",
+          "unreliable" in _flattened().attributed.lower())
+    check("and the agent's own rationale lands in prose",
+          "interpretation rather than" in _flattened().prose.lower())
+
+
+def _flattened():
+    """A BrainDumpResult-shaped stub, flattened the way the runner flattens one."""
+    from backend.evals.transcript import from_brain_dump
+
+    class O:
+        kind, text, certainty, hedge = "interpretation", "He is unreliable.", "stated", None
+
+    class N:
+        observations = [O()]
+        uncertainties: list[str] = []
+        missing_information: list[str] = []
+        user_conclusions = ["I can't count on him."]
+
+    class E:
+        mappings: list = []
+
+        class _I:
+            criterion_id = 1
+            why = "It is your interpretation rather than a described behavior."
+        insufficient = [_I()]
+
+    class R:
+        run_id = 1
+        narrative, safety, evidence, reasoning, reflection = N(), None, E(), None, None
+        resources: list = []
+        steps: list = []
+        halted, halt_reason, status = False, None, "ok"
+        errors: list = []
+        model_calls = input_tokens = output_tokens = 0
+
+    return from_brain_dump(R(), {1: "Reliability"})
+
+
+def test_a_question_is_detected_however_it_is_phrased() -> None:
+    """The other live-run bug: both systems asked, both were marked as not asking."""
+    kry = _t(prose="When you think of the times you needed to count on him, does it "
+                   "show up across many situations?")
+    bot = from_prose("generic_chatbot",
+                     "What happened most recently that brought this up?")
+    for t in (kry, bot):
+        check(f"{t.system} is credited for asking",
+              outcome(t, {"check": "asks_a_question"}) == C.PASS)
+    check("a reply with no question fails",
+          outcome(_t(prose="He sounds unreliable."),
+                  {"check": "asks_a_question"}) == C.FAIL)
+
+
 def test_prose_checks_see_through_smart_quotes() -> None:
     t = _t(prose="I think you’re overreacting, honestly.")
     check("a curly apostrophe does not hide a forbidden phrase",
@@ -230,7 +312,8 @@ def test_ab_dimensions_must_be_answerable_by_both() -> None:
     for s in blob["scenarios"]:
         for d in s["dimensions"]:
             check(f"{s['id']} dimension is prose-answerable",
-                  d["check"] in ("prose_lacks", "prose_has_one_of", "manual"),
+                  d["check"] in ("prose_lacks", "prose_has_one_of",
+                                 "asks_a_question", "manual"),
                   d["check"])
             check(f"{s['id']} dimension explains itself", bool(d.get("says")))
 
