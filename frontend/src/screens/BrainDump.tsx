@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { awaitingChoice, placeholderFor, soleOrNone } from "../choice";
 import {
   api, type Account, type Analysis, type Entry, type Person, type Profile,
   type Retention,
@@ -32,8 +33,11 @@ export default function BrainDump({ account }: { account: Account }) {
   const resultRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    api.profiles().then(setProfiles).catch(() => {});
-    api.people().then(setPeople).catch(() => {});
+    // Choose only where there is nothing to choose between — see src/choice.ts.
+    api.profiles().then((ps) => { setProfiles(ps); setProfileId(soleOrNone(ps)); })
+      .catch(() => {});
+    api.people().then((ps) => { setPeople(ps); setPersonId(soleOrNone(ps)); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -141,11 +145,20 @@ export default function BrainDump({ account }: { account: Account }) {
               value={profileId}
               onChange={(e) => setProfileId(e.target.value === "" ? "" : Number(e.target.value))}
             >
-              <option value="">Not against a profile</option>
+              <option value="">
+                {placeholderFor(profiles.length, "Which one? —", "Not against a profile")}
+              </option>
               {profiles.map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
+            {awaitingChoice(profiles.length, profileId) && (
+              <p className="text-xs text-faint mt-2">
+                Pick one and KRYteria can map this to those criteria. Leave it and it
+                will still read what you wrote — none of your profiles outranks another,
+                so it won't guess.
+              </p>
+            )}
           </div>
           <PersonPicker
             people={people}

@@ -401,13 +401,20 @@ missing is mostly packaging.
    passphrase `kryteria-demo-account`. The requirements ask for **one click to load or
    reset** the demo. *This is the single highest-value fix on this list* — it is the
    difference between a grader seeing the app and a grader seeing a sign-in form.
-2. **Themes are invisible.** `/api/progress` returns `themes: []` and no screen renders
-   them. The feature is built, the seed sets none, and nothing shows them. Either seed
-   them and build the panel, or it is dead weight.
-3. **No profile is pre-selected on Brain Dump**, so a first-time demo run skips the
-   Evidence agent entirely and shows a thinner result than the app is capable of.
-4. **Checklist Mode has no UI** — backend complete, 16 route references, nothing to click.
-5. **No trace screenshot from a live run.** Demo mode correctly shows zeros.
+2. ~~Themes are invisible~~ **DONE 2026-11-12.** Seeded across all eight demo entries
+   and rendered on My Progress as "What you keep coming back to" — reciprocity leads
+   with 3 entries. Counts and dates only.
+3. ~~No profile pre-selected~~ **DONE 2026-11-12**, and the resolution was better than
+   the suggestion. Defaulting to one profile implies it is the normal case, which breaks
+   "no profile ranks above another". So: exactly one option is selected automatically,
+   several are not, and the control asks a question instead. See `src/choice.ts`.
+4. ~~Checklist Mode has no UI~~ **DONE 2026-11-12.** `/checklist` — pick a profile,
+   person and standard, generate indicators, record observations in four states. Ticking
+   never moves a status, and "no chance to see" is kept distinct from "didn't see it".
+5. **No trace screenshot from a live run.** Demo mode correctly shows zeros — the trace
+   table renders with per-agent rows, but every token count is 0 because nothing was
+   billed. **The Agent Design row needs a screenshot of that same table after a LIVE
+   brain dump**, where the figures are real. One live run (~4 calls, under a cent).
 
 ### Not demo blockers, but submission blockers
 

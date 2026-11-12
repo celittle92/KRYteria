@@ -159,7 +159,22 @@ def seed(store: Store, *, reset: bool = False) -> int:
     #
     # Positive, negative and genuinely ambiguous. The recurring theme is Sam's
     # short-notice changes; the counter-evidence is that he does show up when it matters.
+    # Themes are what each entry was ABOUT, from the closed vocabulary in
+    # data/themes.json. Seeded here so the demo shows the thing themes exist for: the
+    # user keeps writing about reciprocity and expectations with Sam, and about
+    # emotional intimacy with Jordan — a pattern across entries that no single entry
+    # contains, and that she never created a criterion for.
     entries = {}
+    themes_by_key: dict[str, list[str]] = {
+        "sam1": ["attraction-and-chemistry"],
+        "sam2": ["reciprocity-and-initiative", "communication-preferences"],
+        "sam3": ["expectations-and-commitment", "expressing-needs"],
+        "sam4": ["reciprocity-and-initiative", "communication-preferences"],
+        "sam5": ["reciprocity-and-initiative", "feeling-valued"],
+        "jordan1": ["emotional-intimacy", "feeling-valued"],
+        "jordan2": ["emotional-intimacy", "expressing-needs"],
+        "jordan3": ["expectations-and-commitment", "emotional-intimacy"],
+    }
     for key, person, days_ago, text in [
         ("sam1", sam, 34,
          "Drinks with Sam. He is genuinely one of the most attractive people I have ever "
@@ -189,7 +204,9 @@ def seed(store: Store, *, reset: bool = False) -> int:
         entries[key] = store.create_entry(
             account_id, dating, occurred_on=_day(days_ago), entry_mode="free",
             body=text, people=[("Sam" if person == sam else "Jordan")],
+            person_id=person,
         )
+        store.save_themes(account_id, entries[key], themes_by_key.get(key, []))
 
     # ---------------------------------------------------------------- observations
     #

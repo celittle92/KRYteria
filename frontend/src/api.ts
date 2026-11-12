@@ -142,11 +142,31 @@ export interface Resource {
   region: string;
 }
 
+/** What ticking means, and the four states are not a 0–3 scale. */
+export type ChecklistState =
+  | "observed" | "not_observed" | "contradicted" | "no_opportunity";
+
+export interface ChecklistItem {
+  id: number;
+  text: string;
+  polarity: "demonstrates" | "contradicts";
+  source_level: string;
+  research_ref: string | null;
+  /** Present only when a person was supplied — counts of what has been recorded. */
+  times_observed?: number;
+  times_contradicted?: number;
+  no_opportunity?: number;
+}
+
 export interface Progress {
   active_criteria: number;
   entries: number;
   recent_entries: Entry[];
   open_patterns: Pattern[];
+  themes: {
+    theme_id: string; label: string; entries: number;
+    first_seen: string | null; last_seen: string | null; sensitive: boolean;
+  }[];
   insufficient_evidence: Pattern[];
   repeatedly_postponed: { criterion_id: number; value: string; count: number }[];
   changed_priorities: { criterion_id: number; value: string; versions: Criterion[] }[];
@@ -221,6 +241,25 @@ export const api = {
   createProfile: (b: { name: string; objective?: string | null; context_label?: string | null }) =>
     post<Profile>("/api/profiles", b),
   profileCriteria: (id: number) => get<ProfileCriterion[]>(`/api/profiles/${id}/criteria`),
+
+  // ---------------------------------------------------------------- checklist mode
+  checklist: (criterionId: number, q: { profile_id?: number; person_id?: number } = {}) => {
+    const p = new URLSearchParams();
+    if (q.profile_id != null) p.set("profile_id", String(q.profile_id));
+    if (q.person_id != null) p.set("person_id", String(q.person_id));
+    const qs = p.toString();
+    return get<ChecklistItem[]>(
+      `/api/criteria/${criterionId}/checklist${qs ? `?${qs}` : ""}`);
+  },
+  generateChecklist: (criterionId: number, profile_id?: number) =>
+    post<{
+      clarification: string | null; ambiguities: string[];
+      indicators: ChecklistItem[]; saved: number;
+    }>(`/api/criteria/${criterionId}/checklist/generate`,
+      { criterion_id: criterionId, profile_id: profile_id ?? null }),
+  observeIndicator: (itemId: number, b: {
+    person_id?: number | null; state: ChecklistState; note?: string | null;
+  }) => post<{ id: number }>(`/api/checklist/${itemId}/observe`, b),
   addToProfile: (id: number, b: { criterion_id: number; tier?: Tier; relevance?: string }) =>
     post<ProfileCriterion[]>(`/api/profiles/${id}/criteria`, b),
   setTier: (profileId: number, criterionId: number, tier: Tier) =>

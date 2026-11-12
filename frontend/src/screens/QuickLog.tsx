@@ -4,6 +4,7 @@ import {
 } from "../api";
 import { Card, ErrorNote, Eyebrow, Pill, Spinner } from "../components/ui";
 import { PersonPicker } from "../components/people";
+import { placeholderFor, soleOrNone } from "../choice";
 
 /**
  * Quick Log — the structured alternative to writing a paragraph.
@@ -67,8 +68,11 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
   const [saved, setSaved] = useState<string | null>(null);
 
   useEffect(() => {
-    api.profiles().then(setProfiles).catch(() => {});
-    api.people().then(setPeople).catch(() => {});
+    // Same rule as the Brain Dump: choose only where there is no choice to make.
+    api.profiles().then((ps) => { setProfiles(ps); setProfileId(soleOrNone(ps)); })
+      .catch(() => {});
+    api.people().then((ps) => { setPeople(ps); setPersonId(soleOrNone(ps)); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -202,7 +206,9 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
             value={profileId}
             onChange={(e) => setProfileId(e.target.value === "" ? "" : Number(e.target.value))}
           >
-            <option value="">Not against a profile</option>
+            <option value="">
+              {placeholderFor(profiles.length, "Which one? —", "Not against a profile")}
+            </option>
             {profiles.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </div>

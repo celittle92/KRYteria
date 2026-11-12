@@ -5,6 +5,7 @@ import { Spinner } from "./components/ui";
 import SignIn from "./screens/SignIn";
 import BrainDump from "./screens/BrainDump";
 import Criteria from "./screens/Criteria";
+import Checklist from "./screens/Checklist";
 import Patterns from "./screens/Patterns";
 import Reflection from "./screens/Reflection";
 import ProgressScreen from "./screens/Progress";
@@ -17,6 +18,7 @@ import Settings from "./screens/Settings";
 const NAV = [
   { to: "/", label: "Brain Dump", end: true },
   { to: "/criteria", label: "My KRYteria" },
+  { to: "/checklist", label: "Checklist" },
   { to: "/patterns", label: "Patterns" },
   { to: "/reflection", label: "Reflection" },
   { to: "/progress", label: "My Progress" },
@@ -128,6 +130,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<BrainDump account={account} />} />
             <Route path="/criteria" element={<Criteria />} />
+            <Route path="/checklist" element={<Checklist />} />
             <Route path="/patterns" element={<Patterns />} />
             <Route path="/reflection" element={<Reflection />} />
             <Route path="/progress" element={<ProgressScreen />} />

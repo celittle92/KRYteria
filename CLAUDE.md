@@ -100,6 +100,17 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   destroyed all 18 signatures — the one part of that knowledge base a human had signed.
   `load_research_pack` honours them and still applies the source gate on the way in, so
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
+- **Defaults: `frontend/src/choice.ts` is the single statement of the rule.** Exactly one
+  profile/person → select it; more than one → select nothing and make the first option a
+  **question**. A default is a soft recommendation, and "no profile ranks above another"
+  means the UI must not imply one is the normal case. Used by BrainDump, QuickLog and
+  Checklist. **The person is never inferred from the text** — names collide, and a
+  misattribution files evidence against the wrong record silently.
+- **Checklist Mode has a UI**: `frontend/src/screens/Checklist.tsx`, route `/checklist`.
+  Generate indicators from a criterion (one model call, off the brain-dump path), then
+  record observations in four states. **Ticking never moves a status**, and
+  `no_opportunity` is deliberately distinct from `not_observed` — both facts are stated
+  on screen, not just enforced in the store.
 - **Themes (Intimacy & Relationship Experience Mapping), added 2026-11-11.**
   `data/themes.json` is a **closed** vocabulary of 10 topics; `backend/themes.py` loads
   and validates it; `NarrativeOutput.themes` and `store.save_themes` both reject an
@@ -113,6 +124,8 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   - `sensitive: true` governs **presentation only** (no notification previews), never
     whether a theme is recognised.
   - Themes are deleted by `discard` and survive `analysis_only`, like observations.
+  - **Seeded in the demo and rendered on My Progress** ("What you keep coming back to").
+    Counts and dates only — never a score, and the copy says so.
 - **`SCHEMA_VERSION` is now `2026-11-11.1`** (added `entry_themes`). An existing
   `data/kryteria.db` will be refused until it is deleted and re-seeded.
 

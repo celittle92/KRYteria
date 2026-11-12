@@ -107,6 +107,38 @@ export default function ProgressScreen() {
         </Section>
       )}
 
+      {(data.themes ?? []).length > 0 && (
+        <Section
+          title="What you keep coming back to"
+          subtitle="The subjects your entries have been about. Recognised as you wrote — you never had to label anything."
+        >
+          <Card>
+            <ul className="divide-y divide-[rgb(var(--line))]">
+              {(data.themes ?? []).map((t) => (
+                <li key={t.theme_id} className="px-5 py-3 flex items-baseline justify-between gap-4">
+                  <span className="text-ink text-sm flex-1">{t.label}</span>
+                  <span className="text-muted text-sm tabular-nums">
+                    {t.entries} {t.entries === 1 ? "entry" : "entries"}
+                  </span>
+                  {t.last_seen && (
+                    <span className="text-faint text-xs tabular-nums w-24 text-right">
+                      last {t.last_seen}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </Card>
+          {/* Counts and dates only. A theme says a subject came up — never that
+              anybody did well or badly at it, and never a score. */}
+          <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
+            A count, not a verdict. That something comes up often says it matters to
+            you, not that it is going wrong — and you may not have made it a criterion
+            yet.
+          </p>
+        </Section>
+      )}
+
       {data.open_patterns.length > 0 && (
         <Section title="What recurs" subtitle="Findings still open, each resting on entries you can inspect.">
           <Card>

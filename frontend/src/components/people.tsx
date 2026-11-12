@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type Person } from "../api";
+import { awaitingChoice, placeholderFor } from "../choice";
 
 /**
  * Choosing a person, and adding one without leaving the page.
@@ -123,13 +124,23 @@ export function PersonPicker({ people, value, onChange, onAdded, onRemoved,
         value={value}
         onChange={(e) => onChange(e.target.value === "" ? "" : Number(e.target.value))}
       >
-        <option value="">Nobody in particular</option>
+        <option value="">
+          {placeholderFor(people.length, "Who are we talking about? —",
+                          "Nobody in particular")}
+        </option>
         {people.map((p) => (
           <option key={p.id} value={p.id}>
             {p.alias}{p.role_label ? ` — ${p.role_label}` : ""}
           </option>
         ))}
       </select>
+      {awaitingChoice(people.length, value) && (
+        <p className="text-xs text-faint mt-2">
+          Choosing someone lets KRYteria notice what recurs with them. It won't work it
+          out from your writing — too many people share a name, and attaching evidence
+          to the wrong person would quietly corrupt the record.
+        </p>
+      )}
       {people.length === 0 && (
         <p className="text-xs text-faint mt-2">
           Add someone to start tracking what recurs with them over time.
