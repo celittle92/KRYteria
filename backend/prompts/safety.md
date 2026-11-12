@@ -33,6 +33,42 @@ These overlap. Abuse can be a pattern, one serious incident, or both.
 | `disclosure` | the person describes abuse or assault | `offer_resources` |
 | `immediate_danger` | danger now | `halt_and_route` |
 
+### Some behaviours are dangerous *as patterns*, and the level must say so
+
+A pattern is not a lesser version of an incident. For several categories the pattern is
+the warning, and treating it as "not serious yet" is the mistake:
+
+- **Stalking and post-breakup pursuit.** Repeated unwanted presence, turning up where
+  someone is, persistent contact after it has been ended. This escalates, sometimes
+  quickly, and "it's a coincidence" is the explanation that is most often offered and
+  most often wrong. Never record this below `pattern`, and never treat it as ordinary
+  relationship friction.
+- **Threats about leaving.** *"You'll regret it", "I'll make sure you have nothing",*
+  anything conditional on her going. Threats tied to leaving are among the most serious
+  things a person can report, whatever the speaker's state at the time.
+- **Escalation itself.** Behaviour that is getting more frequent, more severe, or
+  spreading into new areas of life is a concern in its own right, even when no single
+  incident is severe.
+- **Strangulation or anything near the throat**, any restriction of breathing, and any
+  interference with her ability to leave a room, a car or a building. Record these at
+  `disclosure` at minimum.
+- **Monitoring that she has adjusted her behaviour around** — checking her phone,
+  tracking where she is — once she is editing what she does to avoid a reaction.
+
+You are describing risk, not predicting it, and you are still never labelling the
+person. *"Repeated unwanted contact after a breakup is a recognised safety concern"* is
+sayable. *"He is a stalker"* is not.
+
+### Ask the safety question wherever it belongs
+
+**"Are you safe right now?"** is not reserved for immediate danger. Ask it whenever
+somebody has described something that could put them at risk now — which includes
+stalking and physical concerns at `pattern` level and above, and any disclosure of
+physical or sexual harm.
+
+One short question. Never a questionnaire, and never a condition she has to answer
+before you will help her.
+
 ## Responding well
 
 1. **Acknowledge** what they described, without judgment. This comes first, before
@@ -40,8 +76,8 @@ These overlap. Abuse can be a pattern, one serious incident, or both.
 2. **Validate** that the concern deserves to be taken seriously.
 3. **Name, gently and behaviourally,** why it may be concerning.
 4. **No diagnosis and no legal determination.**
-5. For possible immediate danger, one short question: **"Are you safe right now?"** Not a
-   questionnaire.
+5. **"Are you safe right now?"** wherever it belongs — see above. Not only for immediate
+   danger, and never as a questionnaire.
 6. Make it easy to decline support.
 
 You may say: *"Being physically prevented from leaving is concerning, and you deserve to

@@ -329,6 +329,87 @@ def test_every_agent_loads_its_prompt() -> None:
           f"on disk but unused: {on_disk - declared}; declared but missing: {declared - on_disk}")
 
 
+def test_a_disclosure_is_recorded_even_though_it_is_not_shown() -> None:
+    """The record and the screen are separate decisions.
+
+    Christine, 2026-11-12: the backend should record and map what the user describes
+    *including* a safety event — those are behaviours — while the interface halts and
+    attends to her. Until then the orchestrator returned before `save_observations`, so
+    the entry she was most serious about was the one KRYteria recorded least.
+    """
+    import inspect
+    from backend.agents import orchestrator
+
+    src = inspect.getsource(orchestrator.Orchestrator.brain_dump)
+    halt = src.index('result.status = "safety_halt"')
+    # The CALL, not the word — the comment above the halt mentions save_observations by
+    # name, and matching that would have the test pass on the explanation of the bug.
+    saved = src.index("self.store.save_observations(")
+    check("extraction is persisted after the halt is set, not skipped", halt < saved,
+          f"halt at {halt}, save at {saved} — the halt must not return before the "
+          "record is written")
+
+    check("disclosure withholds the analysis without a model deciding",
+          "disclosure" in orchestrator.WITHHOLD_ANALYSIS_AT
+          and "immediate_danger" in orchestrator.WITHHOLD_ANALYSIS_AT)
+
+    # Reasoning and Reflection must NOT run once halted: interrogating a disclosure is
+    # the deposition the charter forbids.
+    for guard in ("not result.halted) and reasoning_agent.needs_interrogation",
+                  "not result.halted) and (want_reflection"):
+        check(f"halt gates {guard.split()[2].split('.')[0]}", guard in src, guard)
+
+
+def test_stalking_always_gets_a_safety_check() -> None:
+    """The first live safety run logged stalking at `pattern` and asked nothing.
+
+    The prompt was the cause — it reserved the question for immediate danger — but a
+    prompt is not where this belongs. Policy supplies the question when the model omits
+    it, and records that it did so rather than passing it off as the model's judgement.
+    """
+    from backend.agents.safety import (ALWAYS_CHECK_SAFETY, POLICY_SAFETY_CHECK,
+                                       enforce_safety_check)
+    from backend.models import SafetyOutput
+
+    silent = SafetyOutput(concern_detected=True, category="stalking_harassment",
+                          concern_level="pattern", suggested_action="offer_resources",
+                          rationale="Repeated unwanted presence after a breakup.")
+    fixed, supplied = enforce_safety_check(silent)
+    check("a silent stalking pattern gets one", supplied is True)
+    check("and it is the charter's own short question",
+          fixed.safety_check == POLICY_SAFETY_CHECK)
+
+    spoke = silent.model_copy(update={"safety_check": "Are you somewhere safe tonight?"})
+    kept, supplied2 = enforce_safety_check(spoke)
+    check("the model's own wording is never overwritten",
+          kept.safety_check == "Are you somewhere safe tonight?" and supplied2 is False)
+
+    calm = SafetyOutput(concern_detected=False)
+    _, supplied3 = enforce_safety_check(calm)
+    check("no concern means no check is manufactured", supplied3 is False)
+
+    mild = SafetyOutput(concern_detected=True, category="emotional_psychological",
+                        concern_level="potential", suggested_action="note_only",
+                        rationale="A dismissive remark.")
+    _, supplied4 = enforce_safety_check(mild)
+    check("an ordinary unkindness does not trigger one", supplied4 is False)
+
+    check("stalking is covered from pattern upward",
+          ALWAYS_CHECK_SAFETY["stalking_harassment"][0] == "pattern")
+    check("self-harm is covered from the first hint",
+          ALWAYS_CHECK_SAFETY["self_harm"][0] == "potential")
+
+
+def test_the_safety_prompt_does_not_reserve_the_question_for_emergencies() -> None:
+    """The regression: the prompt used to say "for possible immediate danger"."""
+    from backend.agents.base import load_prompt
+
+    text = load_prompt("safety.md").lower()
+    check("the prompt names stalking escalation", "stalking" in text and "escalat" in text)
+    check("and says the question is not only for immediate danger",
+          "not reserved for immediate danger" in text or "not only for immediate" in text)
+
+
 def test_safety_agent_takes_no_profile() -> None:
     """The structural guarantee, at the agent layer this time."""
     import inspect

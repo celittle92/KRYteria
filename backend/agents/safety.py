@@ -43,13 +43,67 @@ def compose_input(entry_text: str) -> str:
     )
 
 
+#: Categories where a concern at `pattern` level or above always gets a safety check,
+#: whatever the model decided.
+#:
+#: Christine, 2026-11-12: *"Stalking is a very concerning behavior that can easily
+#: escalate to violence."* The first live safety run logged `saf-stalking-01` correctly
+#: as `stalking_harassment` / `pattern` — repeated unwanted presence two months after a
+#: breakup — and asked nothing. Reading `pattern` as "not urgent yet" is precisely the
+#: judgement that should not be left to a model call, because these are the categories
+#: where the gap between a pattern and an incident can be days.
+ALWAYS_CHECK_SAFETY = {
+    "stalking_harassment": ("pattern", "disclosure", "immediate_danger"),
+    "physical": ("pattern", "disclosure", "immediate_danger"),
+    "sexual": ("disclosure", "immediate_danger"),
+    "coercive_control": ("disclosure", "immediate_danger"),
+    "self_harm": ("potential", "pattern", "disclosure", "immediate_danger"),
+}
+
+#: The question the charter specifies, verbatim: *"a short, compassionate 'Are you safe
+#: right now?' — not a questionnaire."*
+POLICY_SAFETY_CHECK = "Are you safe right now?"
+
+
+def enforce_safety_check(output: SafetyOutput) -> tuple[SafetyOutput, bool]:
+    """Supply the safety check the policy requires, if the model did not.
+
+    Returns ``(output, supplied_by_policy)``.
+
+    **Why this is code and not a stronger prompt.** The prompt already asks for a check
+    proportionate to the concern, and on a real stalking disclosure the model did not ask
+    one. A second paragraph of instruction would be the same mechanism that just failed.
+
+    **Why it supplies rather than rejects.** Failing validation would make the safety
+    step error, and the orchestrator treats a failed safety step as no safety output at
+    all — a layer that fails *open* on the cases it exists for. Supplying one short,
+    policy-defined question cannot fail open, and the substitution is recorded rather
+    than disguised: this is not the model's judgement and the trace should not pretend
+    otherwise.
+    """
+    if not output.concern_detected or not output.category:
+        return output, False
+    levels = ALWAYS_CHECK_SAFETY.get(output.category, ())
+    if output.concern_level not in levels:
+        return output, False
+    if (output.safety_check or "").strip():
+        return output, False
+    return output.model_copy(update={"safety_check": POLICY_SAFETY_CHECK}), True
+
+
 async def run(model, info, entry_text: str) -> AgentResult:
     """Note the signature: no profile, by design."""
     if info.mode.value == "demo":
-        return demo_result(AGENT_NAME, SafetyOutput, entry_text)
-    return await run_agent(
-        build(model), compose_input(entry_text), name=AGENT_NAME, info=info,
-    )
+        step = demo_result(AGENT_NAME, SafetyOutput, entry_text)
+    else:
+        step = await run_agent(
+            build(model), compose_input(entry_text), name=AGENT_NAME, info=info,
+        )
+    if step.ok and isinstance(step.output, SafetyOutput):
+        step.output, supplied = enforce_safety_check(step.output)
+        if supplied:
+            step.tool_calls = [*step.tool_calls, "policy:safety_check_supplied"]
+    return step
 
 
 def resources_to_offer(store, account_id: int, output: SafetyOutput) -> list[dict]:

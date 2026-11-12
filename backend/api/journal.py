@@ -251,7 +251,29 @@ def _present(result) -> dict:
         }
         payload["resources"] = result.resources
     if result.halted:
+        # **Withheld from this screen, not withheld from her record.**
+        #
+        # Everything the agents extracted has already been written: observations,
+        # themes, evidence mappings. What does not happen is showing a compatibility
+        # analysis in the same breath as "are you safe right now?" — the charter's
+        # *"never return to ordinary compatibility analysis as though nothing
+        # significant was said."*
+        #
+        # It is reported rather than hidden, because a silent omission is its own kind
+        # of dishonesty: she wrote something down and is entitled to know it was kept
+        # and where to find it when she wants it.
         payload["halt_reason"] = result.halt_reason
+        payload["analysis_withheld"] = True
+        payload["analysis_recorded"] = {
+            "observations": len(result.narrative.observations) if result.narrative else 0,
+            "mappings": len(result.evidence.mappings) if result.evidence else 0,
+            "where": f"/api/entries/{result.entry_id}" if result.entry_id else None,
+        }
+        payload["note"] = (
+            "What you wrote has been saved and the details recorded, including what it "
+            "says about your criteria. That part is set aside for now — it is on this "
+            "entry whenever you want it. Right now this is about you."
+        )
         return payload
 
     if result.narrative is not None:

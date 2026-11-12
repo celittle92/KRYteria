@@ -42,6 +42,16 @@ DEFAULT_DAILY_TOKENS_GLOBAL = 2_000_000
 #: Hard ceiling on model calls in one request. No loops, no "one more pass".
 MAX_AGENT_CALLS = 5
 
+#: Concern levels at which the compatibility analysis is still RECORDED but never
+#: SURFACED in the same breath as the safety response.
+#:
+#: Checked in code rather than read off ``suggested_action``, because that field is the
+#: same model call that classified the concern — letting it also decide whether to stop
+#: means one misjudgement loses both. The first live safety run found exactly that: a
+#: `disclosure` returned `offer_resources`, so the workflow carried on and mapped being
+#: grabbed to "Communication".
+WITHHOLD_ANALYSIS_AT = ("disclosure", "immediate_danger")
+
 
 def routing_policy() -> str:
     """The orchestrator's own runtime prompt.
@@ -58,6 +68,10 @@ class BrainDumpResult:
     """Everything one brain dump produced, including what it cost and what failed."""
 
     run_id: int | None = None
+    #: Which entry this was. Carried so the API can tell a user whose analysis was
+    #: withheld after a disclosure exactly where her record is, rather than leaving her
+    #: to assume it was dropped.
+    entry_id: int | None = None
     narrative: NarrativeOutput | None = None
     safety: SafetyOutput | None = None
     evidence: Any = None
@@ -172,7 +186,7 @@ class Orchestrator:
         self.check_budget(account_id)
 
         run_id = self.store.start_run(account_id, "brain_dump")
-        result = BrainDumpResult(run_id=run_id)
+        result = BrainDumpResult(run_id=run_id, entry_id=entry_id)
         seq = 0
 
         # --- Narrative and Safety, together, on the raw text ---------------
@@ -210,12 +224,28 @@ class Orchestrator:
                     account_id, [r["id"] for r in result.resources],
                     result.safety.concern_level,
                 )
-            if result.safety.suggested_action == "halt_and_route":
+            # **The halt is a PRESENTATION decision, not a recording one.**
+            #
+            # Christine, 2026-11-12: *"the agent on the backend should be recording and
+            # mapping what the user tells it INCLUDING if there is a potential safety
+            # event — those are all behaviors. HOWEVER, in the User-Facing UI, the app
+            # should halt and instead make sure that the user feels safe."*
+            #
+            # Until then this returned here, before `save_observations` — so the entry a
+            # user was most serious about was the one KRYteria recorded least. Being
+            # grabbed and prevented from leaving is a behaviour, and refusing to write it
+            # down does not make her safer; it makes her record emptier at exactly the
+            # point she may later need it.
+            #
+            # So extraction and mapping continue. What stops is Reasoning and Reflection
+            # — interrogating *"how often does he grab you?"* is the deposition the
+            # charter forbids, and asking *"what will you do about it?"* on a disclosure
+            # is not a reflective prompt — and what stops is **surfacing any of it**.
+            if (result.safety.suggested_action == "halt_and_route"
+                    or result.safety.concern_level in WITHHOLD_ANALYSIS_AT):
                 result.halted = True
                 result.halt_reason = result.safety.rationale
                 result.status = "safety_halt"
-                self.store.finish_run(account_id, run_id, "safety_halt", result.halt_reason)
-                return result
 
         if result.narrative is None:
             result.status = "failed"
@@ -258,7 +288,9 @@ class Orchestrator:
                 result.errors.append(f"evidence: {evidence_step.error}")
 
         # --- Reasoning, only when there is something to interrogate --------
-        if reasoning_agent.needs_interrogation(
+        # Not after a disclosure. "How often does he grab you?" is the deposition the
+        # charter forbids, and a safety disclosure is not a claim to be interrogated.
+        if (not result.halted) and reasoning_agent.needs_interrogation(
             entry_text, result.narrative.user_conclusions
         ) and len(result.steps) < MAX_AGENT_CALLS:
             reasoning_step = await reasoning_agent.run(
@@ -290,7 +322,9 @@ class Orchestrator:
             postponements = self.store.count_postponements(account_id)
             probe_due = self.store.should_probe_postponement(account_id)
 
-        if (want_reflection or probe_due) and len(result.steps) < MAX_AGENT_CALLS:
+        # Nor a reflective "so what will you do?" on top of a disclosure of harm.
+        if ((not result.halted) and (want_reflection or probe_due)
+                and len(result.steps) < MAX_AGENT_CALLS):
             reflection_step = await reflection_agent.run(
                 self.model, self.info,
                 entry_text=entry_text,
@@ -315,8 +349,13 @@ class Orchestrator:
             else:
                 result.errors.append(f"reflection: {reflection_step.error}")
 
-        result.status = "ok" if not result.errors else "partial"
-        self.store.finish_run(account_id, run_id, result.status, "; ".join(result.errors) or None)
+        # A safety halt is not an error and not an ordinary success. It keeps its own
+        # status so the trace, the run log and the UI all agree on what happened: the
+        # record was written, the analysis was withheld.
+        if not result.halted:
+            result.status = "ok" if not result.errors else "partial"
+        self.store.finish_run(account_id, run_id, result.status,
+                              "; ".join(result.errors) or result.halt_reason or None)
         return result
 
     # ------------------------------------------------------------- persistence

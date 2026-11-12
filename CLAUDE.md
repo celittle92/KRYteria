@@ -23,15 +23,27 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
-- **OPEN SAFETY FINDING from the first live safety run (2026-11-11):** a `disclosure`
-  event fires, resources are offered — and the **Evidence agent still runs and maps the
-  incident to a compatibility criterion** (`saf-physical-01`, `saf-threat-01`). The
-  charter says *"Never return to ordinary compatibility analysis as though nothing
-  significant was said."* The orchestrator halts only on `suggested_action ==
-  "halt_and_route"`, so a disclosure classified as `offer_resources` sails through.
-  **The halt condition is too narrow, and it should not depend on the same model call
-  that classified the concern.** Two further cases need a decision rather than a fix —
-  see `output/live_runs/README.md`. Do not change the eval cases to make these pass.
+- **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
+  call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
+  checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
+  still run and persist; Reasoning and Reflection are skipped; and the response carries
+  `analysis_withheld` + `analysis_recorded` + a sentence telling her it was kept. Before
+  this the orchestrator returned before `save_observations`, so her most serious entry
+  was her least recorded one. **Never restore an early return there**; a test asserts
+  the halt is set before the save.
+- **Stalking and other escalating patterns always get a safety check.**
+  `agents/safety.ALWAYS_CHECK_SAFETY` supplies the charter's question when the model
+  omits it, tagged `policy:safety_check_supplied` in the trace. It **supplies rather
+  than rejects** — a validation error would make the safety step fail, and a failed
+  safety step means no safety output at all, i.e. failing open on the cases this layer
+  exists for. The root cause was `safety.md` reserving the question for immediate
+  danger; that section is rewritten and there is a regression test.
+- **The Safety agent deliberately has no tools and no research lookup.** It runs
+  concurrently on the raw text and must stay fast; the behavioural taxonomy lives in its
+  prompt. Giving it retrieval is a design change, not a convenience.
+- Two live-run findings still need **your decision, not a fix** — the `saf-threat-01`
+  category (the charter's table puts threats under coercive control, so the case may be
+  wrong) and one unadjudicated `prose_lacks`. See `output/live_runs/README.md`.
 - **Eval artefacts store the FULL prose** (`produced.prose`, `produced.attributed`). The
   Markdown truncates at 2,000 characters and once hid the sentence that tripped a
   `prose_lacks` check, leaving a real failure unadjudicable without paying for the run
