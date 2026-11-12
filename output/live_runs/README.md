@@ -10,6 +10,52 @@ call and grades nothing.
 
 ---
 
+## `ab_comparison_2026-11-11_after-routing-fix`
+
+The same two scenarios, after the routing fix. **12 calls · 16,148 input · 4,451 output ·
+$0.0038.**
+
+**The load-bearing claim now holds.** On `ab-contradiction` KRYteria reached into the
+record and produced this, unprompted:
+
+> *"How do you reconcile that conclusion with the earlier notes that he was on time for
+> dinner, rescheduled a day ahead, and texted when he was leaving on the late occasion?"*
+
+All three counter-examples, plus a citation to `Earlier entry [1]` by id. Beside the
+first run, same scenario:
+
+| | first run | after the fix |
+|---|---|---|
+| observations | 1 | 2 |
+| evidence mappings | 0 | **2** |
+| contradicting or complicating | 0 | **2** |
+| questions raised | 0 | **2** |
+| proposals withheld for the user | 0 | **2** |
+| traceable to entry ids | False | **True** |
+
+The chatbot failed exactly the two dimensions it structurally cannot do — naming the
+criterion at stake, and surfacing the record — and passed the three any careful
+assistant would.
+
+**Scores as run: KRYteria 5–3 and 3–4.** The single loss was the grader again, and the
+file is kept with those numbers rather than re-run. *"Paying for one dinner does not
+establish whether he is financially independent"* was marked as asserting the claim it
+denies. Patching that needle immediately surfaced four more of the same shape in
+scenarios that had not run yet, so the fix went into the check: `prose_lacks` now ignores
+a match inside a denial (*"does not establish…"*) or a frame that names a claim without
+making it (*"supports the conclusion that…"*).
+
+**Re-graded on this exact stored text with the fixed check: 5–3 and 4–4.** No credits
+spent; both numbers are on the record. The sensitive needle was deliberately kept rather
+than softened, because keeping it is what tests the fix.
+
+`output/ab_comparison.json` and `.md` are the untouched as-run copies of this same run,
+left exactly as the harness wrote them. **They therefore show 3–4 on `ab-flattering`,
+the pre-fix score.** Nothing was rewritten after the fact; the correction lives here and
+is reproducible offline against the stored text.
+
+---
+
 ## `ab_comparison_2026-11-11_first-live-run`
 
 The first live A/B, two scenarios. **11 calls · 11,549 input · 3,096 output tokens.**

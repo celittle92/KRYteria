@@ -85,20 +85,89 @@ def _norm(text: str | None) -> str:
     return re.sub(r"\s+", " ", flattened).strip().lower()
 
 
-def matches_any(text: str | None, needles: list[str]) -> str | None:
-    """Return the first needle present in ``text``, or None.
+#: Negation cues. A needle preceded by one of these, close enough to be in the same
+#: clause, is being DENIED rather than asserted.
+#:
+#: This exists because the second live run marked KRYteria down for ratifying a leap on
+#: the strength of *"Paying for one dinner does not establish whether he is financially
+#: independent"* — the product doing its job, scored as the failure. Patching that one
+#: needle then surfaced four more of the same shape in scenarios that had not run yet
+#: (`he is unreliable`, `he is controlling`, `he is emotionally mature`, `you can't count
+#: on him`). Five instances of one bug means the bug is in the check, not the needles.
+_NEGATION = (
+    "not ", "n't ", "nothing ", "never ", "no evidence", "rather than", "without ",
+    "doesn't ", "does not ", "cannot ", "can't ", "hasn't ", "isn't ", "aren't ",
+    "little to suggest", "too early to", "stops short of", "insufficient",
+)
+
+#: Frames that name a claim without making it. *"What evidence supports the conclusion
+#: that he is financially secure?"* contains the phrase and asserts nothing — it is a
+#: question about somebody else's conclusion. Found when the second live run's re-grade
+#: still failed after negation handling went in.
+#:
+#: Kept deliberately short and unambiguous. Each entry has to be a frame that cannot
+#: assert what follows it, whichever system it helps — "suggests that" and "evidence
+#: that" are NOT here, because "there is evidence that he is controlling" asserts
+#: plenty.
+_HEDGE_FRAME = (
+    "whether ", "the conclusion that ", "the claim that ", "the idea that ",
+    "the assumption that ", "the question of ", "asking if ", "to establish that ",
+    "would establish that ", "enough to say ", "enough to establish ",
+)
+
+#: How far back to look. Long enough for "does not establish whether he is…", short
+#: enough that a negation in a previous sentence does not excuse a later assertion.
+_NEGATION_WINDOW = 48
+
+
+def _is_negated(hay: str, start: int) -> bool:
+    """Is the match at ``start`` denied, or merely named?
+
+    Two shapes, both of which were real false positives against the product:
+
+      denial  — "does not establish whether he is financially independent"
+      framing — "supports the conclusion that he is financially secure?"
+
+    A heuristic, and it will not catch every rhetorical turn. It catches the ones that
+    actually occurred, and ``test_negation_handling_does_not_make_prose_lacks_toothless``
+    holds the other side of the line.
+    """
+    window = hay[max(0, start - _NEGATION_WINDOW):start]
+    # A sentence boundary ends the clause: a denial does not reach across a full stop.
+    for boundary in (". ", "? ", "! ", "; "):
+        cut = window.rfind(boundary)
+        if cut != -1:
+            window = window[cut + len(boundary):]
+    return any(cue in window for cue in _NEGATION + _HEDGE_FRAME)
+
+
+def matches_any(text: str | None, needles: list[str], *,
+                skip_negated: bool = False) -> str | None:
+    """Return the first needle genuinely present in ``text``, or None.
 
     Substring matching on normalised text. Crude, and deliberately so: the alternative is
     an LLM judge grading our own product, which is a conflict this project should not
     quietly accept. Where a criterion genuinely cannot be reduced to a phrase, the case
     declares a ``manual`` check instead of pretending.
+
+    ``skip_negated`` is used by ``prose_lacks``, where the question is whether the system
+    **asserted** something. It is still a heuristic and it will not catch every rhetorical
+    shape, but it fixes the failure that actually occurred five times over. It is
+    deliberately NOT applied to ``prose_has_one_of``, where the question is only whether
+    a subject was raised at all.
     """
     hay = _norm(text)
     if not hay:
         return None
     for needle in needles:
-        if _norm(needle) in hay:
-            return needle
+        probe = _norm(needle)
+        if not probe:
+            continue
+        start = hay.find(probe)
+        while start != -1:
+            if not (skip_negated and _is_negated(hay, start)):
+                return needle
+            start = hay.find(probe, start + 1)
     return None
 
 

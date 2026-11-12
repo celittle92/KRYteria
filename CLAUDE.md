@@ -102,10 +102,22 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `list_entries` returns it along with the rest, and presenting today's claim as an
   *earlier* entry lets a conclusion corroborate itself. Latent until the routing fix made
   the agent actually run.
-- The first live run is archived at
-  `output/live_runs/ab_comparison_2026-11-11_first-live-run.json` — 11 calls, 11,549
-  input / 3,096 output tokens, **$0.0027**. **Its scores predate both the grader fixes
-  and this routing fix; do not quote them.**
+- **`prose_lacks` ignores denials and claim-naming frames.** A match inside *"does not
+  establish whether…"*, *"nothing here shows…"* or *"supports the conclusion that…"* is
+  not an assertion. This replaced needle-patching after one bad needle turned out to have
+  four siblings in scenarios that had not run yet — five instances of one bug means the
+  bug is in the check. `transcript._is_negated` holds the cue lists; **do not add a cue
+  that could excuse a real assertion** (`suggests that` and `evidence that` are
+  deliberately absent), and
+  `test_negation_handling_does_not_make_prose_lacks_toothless` guards that line.
+- **Two live runs are archived in `output/live_runs/`, both with their real token counts
+  and costs.** The 2026-11-11 **after-routing-fix** run is the one to quote: 12 calls,
+  16,148 / 4,451 tokens, **$0.0038**, and it is where the product's central claim is
+  actually demonstrated — KRYteria cited all three counter-entries and `Earlier entry
+  [1]` by id, with `traceable_to_entry_ids` going False → True. **Its recorded scores
+  (5–3, 3–4) predate the negation fix; the re-grade of the same stored text is 5–3 and
+  4–4, and the README gives both.** The **first-live-run** file predates three fixes —
+  do not quote its scores at all.
 - **`output/live_runs/` is the archive of real runs and must not be overwritten.** A
   re-run writes `output/ab_comparison.*`; copy it in with a date before the next one.
 

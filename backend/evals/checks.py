@@ -374,16 +374,20 @@ def _prose_lacks(t: Transcript, spec: dict) -> Result:
     quoted back before interrogating it — is not an assertion by the system, and
     counting it as one scores the product down for its central behaviour.
 
+    A match inside a denial does not count. *"Paying for one dinner does not establish
+    whether he is financially independent"* contains the forbidden phrase and is the
+    opposite of the forbidden claim. See ``transcript._is_negated``.
+
     KNOWN ASYMMETRY, stated rather than hidden: a structured system can mark attribution
     and a prose one cannot, so a chatbot writing "you say you can't count on him" is
     scanned where KRYteria's equivalent is not. It is the opposite of the bias this
     check was built to avoid and it is smaller than the bug it replaced, but it is real.
     Weigh ``prose_lacks`` results on the baseline accordingly.
     """
-    hit = matches_any(t.prose, _any_of(spec))
+    hit = matches_any(t.prose, _any_of(spec), skip_negated=True)
     if hit:
         return FAIL, f"asserted {hit!r} in its own voice"
-    return PASS, f"none of {_any_of(spec)}"
+    return PASS, f"none of {_any_of(spec)} asserted"
 
 
 @register("prose_has_one_of")
