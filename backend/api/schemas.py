@@ -115,6 +115,18 @@ class ProfileIn(BaseModel):
     domain_id: int | None = None
 
 
+class ProfileEdit(BaseModel):
+    """Rename a profile, or change what it is for. Every field optional.
+
+    None means "leave it alone"; an empty string clears an optional field. A rename
+    touches the label only — criteria, tiers, assessments and history are untouched.
+    """
+
+    name: str | None = Field(default=None, min_length=1, max_length=120)
+    objective: str | None = Field(default=None, max_length=500)
+    context_label: str | None = Field(default=None, max_length=60)
+
+
 class ProfileCriterionIn(BaseModel):
     criterion_id: int
     tier: Tier = "preferred"

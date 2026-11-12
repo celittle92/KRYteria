@@ -623,6 +623,66 @@ class Store:
         with self.read() as conn:
             return [dict(r) for r in conn.execute(sql, (account_id,))]
 
+    def update_profile(self, account_id: int, profile_id: int, *,
+                       name: str | None = None, objective: str | None = None,
+                       context_label: str | None = None) -> None:
+        """Rename a profile, or change what it is for.
+
+        Christine, 2026-11-12: *"users may want to adjust their profiles… as their
+        dating lives change."* They will — a "Boyfriend KRYteria" becomes a "Husband
+        KRYteria", or the name stops fitting the person who wrote it. Nothing about the
+        configuration is invalidated by a rename, so this touches the label only and
+        leaves every criterion, tier, assessment and history row where it is.
+        """
+        fields: list[tuple[str, Any]] = []
+        if name is not None:
+            if not name.strip():
+                raise StoreError("A profile needs a name.")
+            fields.append(("name", name.strip()))
+        if objective is not None:
+            fields.append(("objective", objective.strip() or None))
+        if context_label is not None:
+            fields.append(("context_label", context_label.strip() or None))
+        if not fields:
+            return
+        with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
+            try:
+                conn.execute(
+                    f"UPDATE profiles SET {', '.join(f'{k} = ?' for k, _ in fields)},"
+                    " updated_at = ? WHERE id = ?",
+                    [v for _, v in fields] + [_now(), profile_id],
+                )
+            except sqlite3.IntegrityError:
+                raise StoreError(f"You already have a profile called {name!r}.") from None
+
+    def set_profile_archived(self, account_id: int, profile_id: int,
+                             archived: bool) -> None:
+        """Hide a profile without destroying what it recorded. Reversible.
+
+        The default way to get rid of one. A profile that no longer describes anybody's
+        life still holds the assessments made under it, and those are the record of what
+        the user thought at the time — which is the thing this product exists to keep.
+        """
+        with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
+            conn.execute("UPDATE profiles SET archived_at = ?, updated_at = ?"
+                         " WHERE id = ?",
+                         (_now() if archived else None, _now(), profile_id))
+
+    # NO per-profile hard delete, deliberately. Christine, 2026-11-12: "oh maybe it
+    # should just be an archive then. no deletion."
+    #
+    # Right, and it matches everything else here: criteria are versioned rather than
+    # overwritten, assessment history keeps every transition, and a pattern must cite
+    # the entries it rests on. A profile holds the assessments made under it -- the
+    # record of what somebody thought at the time -- and nine tables reference it, most
+    # cascading. "Delete this profile" would quietly take all of that, and nobody can
+    # consent to that from the word "delete" alone.
+    #
+    # The genuine need to erase is already met, at the level where it belongs:
+    # `delete_account` removes everything, irreversibly, on explicit confirmation.
+
     def add_criterion_to_profile(
         self, account_id: int, profile_id: int, criterion_id: int, *,
         tier: str = "preferred", relevance: str = "relevant",

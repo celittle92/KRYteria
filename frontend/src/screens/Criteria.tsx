@@ -30,17 +30,44 @@ export default function Criteria() {
   // is not a state change, so it never re-ran the loader — which is why adding a
   // criterion worked on the server and did nothing visible on screen.
   const [rowsNonce, setRowsNonce] = useState(0);
+  const [showArchived, setShowArchived] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [draftName, setDraftName] = useState("");
+  const [draftObjective, setDraftObjective] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function refresh() {
-    const [p, l, pe] = await Promise.all([api.profiles(), api.criteria(), api.people()]);
+    const [p, l, pe] = await Promise.all([
+      showArchived ? api.profilesIncludingArchived() : api.profiles(),
+      api.criteria(), api.people(),
+    ]);
     setProfiles(p);
     setLibrary(l);
     setPeople(pe);
     if (selected === null && p.length) setSelected(p[0].id);
   }
 
-  useEffect(() => { refresh().catch((e) => setError(String(e))).finally(() => setLoading(false)); }, []);
+  useEffect(() => { refresh().catch((e) => setError(String(e))).finally(() => setLoading(false)); }, [showArchived]);
+
+  async function saveProfileEdits() {
+    if (!profile) return;
+    try {
+      await api.updateProfile(profile.id, {
+        name: draftName.trim() || undefined,
+        objective: draftObjective,
+      });
+      setRenaming(false);
+      await refresh();
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
+  }
+
+  async function toggleArchived(p: Profile) {
+    try {
+      await api.archiveProfile(p.id, !p.archived_at);
+      if (!p.archived_at && selected === p.id) setSelected(null);
+      await refresh();
+    } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
+  }
 
   useEffect(() => {
     // Clear first. Leaving the previous profile's rows in place while the next load is
@@ -94,7 +121,14 @@ export default function Criteria() {
       <Section
         title="My KRYteria"
         subtitle="Different things matter for different kinds of connection. Each profile is its own configuration — changing one never changes another."
-        action={<Pill tone="accent">Saved profiles</Pill>}
+        action={
+          <button
+            className="text-xs text-faint hover:text-muted underline"
+            onClick={() => setShowArchived((s) => !s)}
+          >
+            {showArchived ? "Hide put-away profiles" : "Show put-away profiles"}
+          </button>
+        }
       >
         {profiles.length === 0 ? (
           <Empty>No profiles yet. A profile is a set of standards for one kind of connection — a partner, a friend, a colleague. You can have as many as you like.</Empty>
@@ -109,7 +143,9 @@ export default function Criteria() {
               >
                 <span className="flex items-start justify-between gap-3">
                   <span className="font-serif text-lg text-ink">{p.name}</span>
-                  {p.context_label && <Pill>{p.context_label}</Pill>}
+                  {p.archived_at
+                    ? <Pill>Put away</Pill>
+                    : p.context_label && <Pill>{p.context_label}</Pill>}
                 </span>
                 {p.objective && (
                   <span className="block text-sm text-muted mt-1">{p.objective}</span>
@@ -126,7 +162,7 @@ export default function Criteria() {
 
       {profile && (
         <Section
-          title={profile.name}
+          title={renaming ? "Edit this profile" : profile.name}
           subtitle="Each criterion carries its own importance here. The same standard can matter differently in another profile."
           action={
             <div className="w-56">
@@ -141,6 +177,63 @@ export default function Criteria() {
             </div>
           }
         >
+          {renaming ? (
+            <Card className="p-5 mb-5">
+              <label className="eyebrow block" htmlFor="pname">Name</label>
+              <input
+                id="pname"
+                className="field mt-2"
+                value={draftName}
+                onChange={(e) => setDraftName(e.target.value)}
+                placeholder="What do you call this?"
+              />
+              <label className="eyebrow block mt-4" htmlFor="pobj">
+                What it's for <span className="text-faint normal-case tracking-normal">(optional)</span>
+              </label>
+              <input
+                id="pobj"
+                className="field mt-2"
+                value={draftObjective}
+                onChange={(e) => setDraftObjective(e.target.value)}
+                placeholder="Exclusive dating, marriage, something casual…"
+              />
+              <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
+                Renaming changes the label only. Every standard, tier, assessment and
+                piece of history stays exactly where it is.
+              </p>
+              <div className="flex gap-3 mt-4">
+                <button className="btn" onClick={saveProfileEdits}>Save</button>
+                <button className="btn-quiet" onClick={() => setRenaming(false)}>
+                  Cancel
+                </button>
+              </div>
+            </Card>
+          ) : (
+            <div className="flex flex-wrap gap-4 mb-5">
+              <button
+                className="text-xs text-faint hover:text-muted underline"
+                onClick={() => {
+                  setDraftName(profile.name);
+                  setDraftObjective(profile.objective ?? "");
+                  setRenaming(true);
+                }}
+              >
+                Rename or edit
+              </button>
+              <button
+                className="text-xs text-faint hover:text-muted underline"
+                onClick={() => toggleArchived(profile)}
+              >
+                {profile.archived_at ? "Bring this back" : "Put this away"}
+              </button>
+              <span className="text-xs text-faint">
+                {profile.archived_at
+                  ? "Put away — hidden everywhere, and nothing assessed under it was lost."
+                  : "Putting a profile away hides it without deleting anything you recorded under it."}
+              </span>
+            </div>
+          )}
+
           {rows.length === 0 ? (
             <Empty>Nothing added to this profile yet. Pick from your library below.</Empty>
           ) : (

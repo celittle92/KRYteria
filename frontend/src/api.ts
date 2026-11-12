@@ -52,6 +52,7 @@ export interface Profile {
   objective: string | null;
   context_label: string | null;
   criteria_count?: number;
+  archived_at: string | null;
 }
 
 export interface Person { id: number; alias: string; role_label: string | null }
@@ -242,6 +243,17 @@ export const api = {
   profiles: () => get<Profile[]>("/api/profiles"),
   createProfile: (b: { name: string; objective?: string | null; context_label?: string | null }) =>
     post<Profile>("/api/profiles", b),
+  /** Rename, or change what it's for. Nothing configured under it is touched. */
+  updateProfile: (id: number, b: {
+    name?: string; objective?: string | null; context_label?: string | null;
+  }) => patch<Profile>(`/api/profiles/${id}`, b),
+  /** Put away or bring back. There is deliberately no per-profile delete. */
+  archiveProfile: (id: number, archived: boolean) =>
+    post<{ profile_id: number; archived: boolean; note: string }>(
+      `/api/profiles/${id}/archive?archived=${archived}`, {}),
+  profilesIncludingArchived: () =>
+    get<Profile[]>("/api/profiles?include_archived=true"),
+
   profileCriteria: (id: number) => get<ProfileCriterion[]>(`/api/profiles/${id}/criteria`),
 
   // ---------------------------------------------------------------- checklist mode

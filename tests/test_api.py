@@ -201,6 +201,55 @@ def test_a_quick_log_can_be_read_afterwards() -> None:
     check("another account's entry is 404, never 403", missing.status_code == 404)
 
 
+def test_profiles_can_be_renamed_and_put_away_but_never_deleted() -> None:
+    """Christine, 2026-11-12: *"users may want to adjust their profiles, or even delete
+    them! as their dating lives change"* — then, on seeing what delete would take:
+    *"oh maybe it should just be an archive then. no deletion."*
+
+    Right, and it matches the rest: criteria are versioned rather than overwritten, and
+    assessment history keeps every transition. A profile holds what somebody thought at
+    the time. Archiving hides it; the genuine need to erase lives at account level.
+    """
+    c = new_client("profile-editor")
+    p = c.post("/api/profiles", json={
+        "name": "Fuck Buddy KRYteria", "objective": "Ongoing casual",
+        "context_label": "Ongoing casual"}).json()
+    crit = c.post("/api/criteria", json={
+        "value": "Discretion", "desired_behavior": "Keeps it between us"}).json()
+    c.post(f"/api/profiles/{p['id']}/criteria",
+           json={"criterion_id": crit["id"], "tier": "mandatory"})
+
+    r = c.patch(f"/api/profiles/{p['id']}", json={"name": "Casual KRYteria"})
+    check("a profile can be renamed", r.status_code == 200, r.text)
+    check("the new name sticks", r.json()["name"] == "Casual KRYteria")
+    check("and the configuration survived the rename",
+          len(c.get(f"/api/profiles/{p['id']}/criteria").json()) == 1)
+
+    other = c.post("/api/profiles", json={"name": "Husband KRYteria"}).json()
+    clash = c.patch(f"/api/profiles/{other['id']}", json={"name": "Casual KRYteria"})
+    check("a duplicate name is refused", clash.status_code == 409, clash.text)
+
+    arch = c.post(f"/api/profiles/{p['id']}/archive?archived=true")
+    check("a profile can be put away", arch.status_code == 200, arch.text)
+    names = [x["name"] for x in c.get("/api/profiles").json()]
+    check("and disappears from the normal list", "Casual KRYteria" not in names)
+    all_names = [x["name"] for x in
+                 c.get("/api/profiles", params={"include_archived": True}).json()]
+    check("but is still there when asked for", "Casual KRYteria" in all_names)
+    check("with everything under it intact",
+          len(c.get(f"/api/profiles/{p['id']}/criteria").json()) == 1)
+
+    back = c.post(f"/api/profiles/{p['id']}/archive?archived=false")
+    check("and it comes back", back.status_code == 200)
+    check("into the normal list",
+          "Casual KRYteria" in [x["name"] for x in c.get("/api/profiles").json()])
+
+    # The structural promise: there is no route that destroys one.
+    gone = c.delete(f"/api/profiles/{p['id']}")
+    check("there is no per-profile delete route", gone.status_code in (404, 405),
+          f"got {gone.status_code} — a destructive route was added")
+
+
 def test_data_isolation() -> None:
     """Two accounts. One must not be able to see or touch the other's anything."""
     alice = new_client("alice")

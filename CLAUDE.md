@@ -119,6 +119,11 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   destroyed all 18 signatures — the one part of that knowledge base a human had signed.
   `load_research_pack` honours them and still applies the source gate on the way in, so
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
+- **Profiles: rename + archive, never delete.** `PATCH /api/profiles/{id}` edits the
+  label; `POST /api/profiles/{id}/archive?archived=` hides or restores. **Do not add a
+  per-profile delete route** — nine tables reference a profile, most cascading, and it
+  holds the assessments made under it. A test asserts the route does not exist. Account
+  deletion remains the way to erase.
 - **Defaults: `frontend/src/choice.ts` is the single statement of the rule.** Exactly one
   profile/person → select it; more than one → select nothing and make the first option a
   **question**. A default is a soft recommendation, and "no profile ranks above another"

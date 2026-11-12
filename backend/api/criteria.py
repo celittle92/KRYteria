@@ -23,7 +23,7 @@ from .deps import (
 )
 from .schemas import (
     ChecklistObservationIn, CopyCriteria, CriterionIn, CriterionRevision, IndicatorRequest,
-    ProfileCriterionIn, ProfileIn, TierChange,
+    ProfileCriterionIn, ProfileEdit, ProfileIn, TierChange,
 )
 
 router = APIRouter(prefix="/api", tags=["criteria"])
@@ -140,6 +140,56 @@ def create_profile(
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     return owned_profile(store, account_id, pid)
+
+
+@router.patch("/profiles/{profile_id}")
+def update_profile(
+    profile_id: int,
+    body: ProfileEdit,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Rename a profile, or change what it is for.
+
+    A rename invalidates nothing — every criterion, tier, assessment and history row
+    stays exactly where it is. People's lives move and the labels they chose months ago
+    stop fitting; a product built on "your standards are yours" has no business making
+    that permanent.
+    """
+    owned_profile(store, account_id, profile_id)
+    try:
+        store.update_profile(account_id, profile_id, name=body.name,
+                             objective=body.objective,
+                             context_label=body.context_label)
+    except StoreError as e:
+        raise HTTPException(status.HTTP_409_CONFLICT, str(e))
+    return owned_profile(store, account_id, profile_id)
+
+
+@router.post("/profiles/{profile_id}/archive")
+def archive_profile(
+    profile_id: int,
+    archived: bool = True,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Put a profile away, or bring it back. **Nothing is destroyed.**
+
+    There is deliberately no per-profile delete. A profile holds the assessments made
+    under it — the record of what somebody thought at the time — and that is the thing
+    this product exists to keep. Archiving hides it everywhere and is reversible; the
+    genuine need to erase is met by `POST /api/account/delete`, at the level where
+    consent to it is meaningful.
+    """
+    owned_profile(store, account_id, profile_id)
+    store.set_profile_archived(account_id, profile_id, archived)
+    return {
+        "profile_id": profile_id,
+        "archived": archived,
+        "note": ("Put away. Everything assessed under it is kept, and you can bring it "
+                 "back whenever you like." if archived
+                 else "Back in use, exactly as you left it."),
+    }
 
 
 @router.get("/profiles/{profile_id}/criteria")
