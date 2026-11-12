@@ -16,10 +16,16 @@ us back where we started: a plausible reference nobody checked.
 from __future__ import annotations
 
 import argparse
+import datetime as _dt
+import json
 import textwrap
 from pathlib import Path
 
 from .store import Store
+
+
+def _now_iso() -> str:
+    return _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds")
 
 PACK = Path(__file__).resolve().parent.parent / "data" / "research"
 
@@ -111,10 +117,49 @@ def cmd_show(store: Store, args) -> None:
         print(f"\n  ok {note['ref']} --url <what you opened> --by <your name>")
 
 
+def record_in_pack(ref: str, *, source_url: str, verified_by: str,
+                   verified_at: str) -> Path | None:
+    """Write the verification into the pack file, not only into the database.
+
+    **Why this exists.** Until 2026-11-11 ``ok`` wrote to the database alone, and
+    ``CLAUDE.md`` instructs you to delete that database whenever the schema changes.
+    Adding the ``entry_themes`` table did exactly that, and eighteen verifications — the
+    only part of this knowledge base a human actually signed — vanished with it. The
+    curated pack is the committed artefact; the database is disposable. Verification
+    belongs in the artefact.
+
+    ``load_research_pack`` already honours ``verification_status: verified`` and applies
+    the same source gate on the way in, so nothing is weakened by storing it here: a pack
+    still cannot mark its own work verified against a source KRYteria would not cite.
+    """
+    for path in sorted(PACK.glob("*.json")):
+        blob = json.loads(path.read_text(encoding="utf-8"))
+        for note in blob.get("notes", []):
+            if note.get("id") != ref:
+                continue
+            note["verification_status"] = "verified"
+            note["verified_at"] = verified_at
+            note["verified_by"] = verified_by
+            note["source_url"] = source_url
+            path.write_text(json.dumps(blob, indent=2, ensure_ascii=False) + "\n",
+                            encoding="utf-8")
+            return path
+    return None
+
+
 def cmd_ok(store: Store, args) -> None:
     store.verify_research_note(args.ref, source_url=args.url, verified_by=args.by)
+    row = next((n for n in store.list_research_notes(
+        include_pending=True, include_safety_adjacent=True) if n["ref"] == args.ref), None)
+    written = record_in_pack(args.ref, source_url=args.url, verified_by=args.by,
+                             verified_at=row["verified_at"] if row else _now_iso())
     citable = store.citable_refs()
     print(f"✓ {args.ref} verified by {args.by}")
+    if written:
+        print(f"  recorded in {written.name} — survives a database rebuild")
+    else:
+        print("  WARNING: not found in any pack file; this verification lives only in "
+              "the database and will be lost on the next schema change.")
     print(f"  source: {args.url}")
     print(f"\n{len(citable)} entries are now citable.")
 

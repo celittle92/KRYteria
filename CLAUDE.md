@@ -23,6 +23,19 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
+- **`output/report_notes.md` is the running evidence record for `report.html` and
+  `slides.html`** (49 of the 100 points, five rows evidence-capped at half). **Update it
+  as evidence appears, not at the end.** Its rule: nothing goes in that is not already
+  true and locatable, every figure names its source file, and intentions live under
+  *Still missing*. It is a working record, deliberately **not** in
+  `submission_spec.json`.
+- **Research verification lives in the committed pack, not only the database.**
+  `verify_research ok` writes `verification_status` / `verified_at` / `verified_by` back
+  into `data/research/*.json` (`verify_research.record_in_pack`). It did not until
+  2026-11-11, and deleting `data/kryteria.db` for the `entry_themes` schema bump
+  destroyed all 18 signatures — the one part of that knowledge base a human had signed.
+  `load_research_pack` honours them and still applies the source gate on the way in, so
+  a pack cannot approve its own work. There is a test that rebuilds from the file alone.
 - **Themes (Intimacy & Relationship Experience Mapping), added 2026-11-11.**
   `data/themes.json` is a **closed** vocabulary of 10 topics; `backend/themes.py` loads
   and validates it; `NarrativeOutput.themes` and `store.save_themes` both reject an
@@ -131,7 +144,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,017 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
+  1,110 checks in total as of 2026-11-11. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

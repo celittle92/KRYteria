@@ -56,8 +56,8 @@
       "citation": "Gottman, J. M. (1994). Why Marriages Succeed or Fail: What You Can Learn from the Breakthrough Research to Make Your Marriage Last. New York: Simon & Schuster. ISBN 0-671-86748-2.",
       "citation_confidence": "bibliography_confirmed_2026-11-11",
       "source_url": "https://openlibrary.org/books/OL1424938M",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Names a specific behaviour rather than generalising about who you are",
         "Can hear a complaint without immediately counter-attacking",
@@ -68,7 +68,8 @@
         "Never tell a user their partner 'shows contempt' as an established fact from one entry.",
         "Never quote a divorce-prediction percentage. The popular figures do not trace cleanly to primary sources."
       ],
-      "citation_checked_against": "Open Library edition OL1424938M, a MARC-derived catalogue record: Simon & Schuster, New York, 1994, 234 p., ISBN-10 0671867482 / ISBN-13 9780671867485, LCCN 93035891, OCLC 28962710 and 34081834, LC call number HQ536 .G68 1994. TWO CORRECTIONS the record forced on the earlier draft. (1) The subtitle. The draft used 'And How You Can Make Yours Last', which belongs to a later edition; the 1994 Simon & Schuster edition reads 'what you can learn from the breakthrough research to make your marriage last'. (2) The authorship. The draft credited 'Gottman, J. M., & Silver, N.'; this record names John Mordechai Gottman alone, so Silver has been dropped. STILL NOT ESTABLISHED: which primary paper first defined the Four Horsemen. Sources variously credit Gottman & Buehlman (1992) or Carrere & Gottman (1999) and disagree on the samples, so the book remains the attribution. DO NOT cite a divorce-prediction percentage: the widely-quoted 94% traces only to lifestyle blogs."
+      "citation_checked_against": "Open Library edition OL1424938M, a MARC-derived catalogue record: Simon & Schuster, New York, 1994, 234 p., ISBN-10 0671867482 / ISBN-13 9780671867485, LCCN 93035891, OCLC 28962710 and 34081834, LC call number HQ536 .G68 1994. TWO CORRECTIONS the record forced on the earlier draft. (1) The subtitle. The draft used 'And How You Can Make Yours Last', which belongs to a later edition; the 1994 Simon & Schuster edition reads 'what you can learn from the breakthrough research to make your marriage last'. (2) The authorship. The draft credited 'Gottman, J. M., & Silver, N.'; this record names John Mordechai Gottman alone, so Silver has been dropped. STILL NOT ESTABLISHED: which primary paper first defined the Four Horsemen. Sources variously credit Gottman & Buehlman (1992) or Carrere & Gottman (1999) and disagree on the samples, so the book remains the attribution. DO NOT cite a divorce-prediction percentage: the widely-quoted 94% traces only to lifestyle blogs.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "gottman-repair-attempts",
@@ -79,8 +80,8 @@
       "citation": "Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. New York: Crown Publishers.",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://libcat.library.tamu.edu/Record/in00002670224",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Can step back mid-argument and change the temperature",
         "Accepts a repair attempt rather than pressing the advantage",
@@ -91,7 +92,8 @@
         "Never score a person on how often they repair.",
         "Never treat an apology as settling a criterion — the charter names apologies as something that must not be read as evidence that earlier behaviour was harmless."
       ],
-      "citation_checked_against": "A library record gives 'New York : Crown Publishers, c1999' for the first edition. A revised edition was published by Harmony in 2015 — cite whichever edition was actually read."
+      "citation_checked_against": "A library record gives 'New York : Crown Publishers, c1999' for the first edition. A revised edition was published by Harmony in 2015 — cite whichever edition was actually read.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "gottman-bids",
@@ -102,8 +104,8 @@
       "citation": "Gottman, J. M., & DeClaire, J. (2001). The Relationship Cure: A Five-Step Guide for Building Better Connections with Family, Friends, and Lovers. New York: Crown Publishers. ISBN 978-0-609-60809-8.",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://catalog.lib.msu.edu/Record/folio.in00006491422/Description",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Responds to small things you mention, not just the important ones",
         "Notices when something is off without being told",
@@ -113,7 +115,8 @@
       "do_not": [
         "Never infer that someone 'turns away' from an entry that simply did not mention small moments."
       ],
-      "citation_checked_against": "The 2001 Crown hardcover (ISBN 9780609608098) is the first edition. The commonly-seen subtitle 'A 5 Step Guide to Strengthening Your Marriage, Family, and Friendships' belongs to the later paperback (ISBN 9780609809532) — the drafted citation previously used the wrong subtitle."
+      "citation_checked_against": "The 2001 Crown hardcover (ISBN 9780609608098) is the first edition. The commonly-seen subtitle 'A 5 Step Guide to Strengthening Your Marriage, Family, and Friendships' belongs to the later paperback (ISBN 9780609809532) — the drafted citation previously used the wrong subtitle.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "gottman-flooding",
@@ -124,8 +127,8 @@
       "citation": "Gottman, J. M., & Silver, N. (1999). The Seven Principles for Making Marriage Work. New York: Crown Publishers.",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://libcat.library.tamu.edu/Record/in00002670224",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Can say they need a break rather than simply disappearing",
         "Comes back after taking time, rather than leaving it unresolved",
@@ -136,7 +139,8 @@
         "Never offer flooding as a reason the user should not be bothered by withdrawal.",
         "Never diagnose anyone as flooded. It is a physiological state nobody can see from a journal entry."
       ],
-      "citation_checked_against": "Same work as gottman-repair-attempts; first edition Crown, 1999, revised edition Harmony, 2015."
+      "citation_checked_against": "Same work as gottman-repair-attempts; first edition Crown, 1999, revised edition Harmony, 2015.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "attachment-adult-romantic",
@@ -148,8 +152,8 @@
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "citation_checked_against": "PubMed record 3572722 (1987 Mar;52(3):511-24), corroborated by a Springer reference list giving the same volume, pages and DOI.",
       "source_url": "https://pubmed.ncbi.nlm.nih.gov/3572722/",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Can say what they need directly rather than testing whether you notice",
         "Closeness after a disagreement is restored rather than withheld",
@@ -161,7 +165,8 @@
         "Never say 'this sounds like anxious attachment' or 'that is avoidant behaviour'.",
         "Never use attachment language about the user either.",
         "Use this only to suggest behaviours worth noticing — never as an explanation of who somebody is."
-      ]
+      ],
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "gross-emotion-regulation",
@@ -172,8 +177,8 @@
       "citation": "Gross, J. J. (Ed.). (2014). Handbook of Emotion Regulation (2nd ed.). New York: Guilford Press.",
       "citation_confidence": "bibliography_partial_2026-11-08",
       "source_url": "https://www.guilford.com/books/Handbook-of-Emotion-Regulation/Gross/9781462520732",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Can name what they are feeling rather than acting it out sideways",
         "Does not make the other person responsible for managing their feeling",
@@ -183,7 +188,8 @@
       "do_not": [
         "Never treat visible calm as evidence a criterion about emotional maturity is met."
       ],
-      "citation_checked_against": "PARTIAL. Gross as editor and Guilford as publisher are confirmed across editions; the 2nd edition (2014) is confirmed. The FIRST edition's 2007 date is NOT confirmed — one listing gives 08/2009. A 3rd edition (Gross & Ford, 2024) now exists. Cite the edition actually read."
+      "citation_checked_against": "PARTIAL. Gross as editor and Guilford as publisher are confirmed across editions; the 2nd edition (2014) is confirmed. The FIRST edition's 2007 date is NOT confirmed — one listing gives 08/2009. A 3rd edition (Gross & Ford, 2024) now exists. Cite the edition actually read.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "rusbult-investment-model",
@@ -194,8 +200,8 @@
       "citation": "Rusbult, C. E. (1980). Commitment and satisfaction in romantic associations: A test of the investment model. Journal of Experimental Social Psychology, 16(2), 172–186. https://doi.org/10.1016/0022-1031(80)90007-4",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://faculty.wcas.northwestern.edu/eli-finkel/documents/6_Rusbult1980_JournalOfExperimentalSocialPsychology.pdf",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "What you say you want, set against what you are choosing to do",
         "Reasons for staying that are about what has already been spent rather than about the relationship now"
@@ -205,7 +211,8 @@
         "Never tell a user they are only staying because of sunk cost.",
         "Never use this to argue toward leaving. The charter is explicit: no automatic stay/leave recommendations."
       ],
-      "citation_checked_against": "A Northwestern-hosted PDF reproduces the journal header ('JOURNAL OF EXPERIMENTAL SOCIAL PSYCHOLOGY 16, 172-186 (1980)'); Scilit gives the same volume, issue and pages. An earlier search on 2026-11-07 could NOT settle this; a targeted search did."
+      "citation_checked_against": "A Northwestern-hosted PDF reproduces the journal header ('JOURNAL OF EXPERIMENTAL SOCIAL PSYCHOLOGY 16, 172-186 (1980)'); Scilit gives the same volume, issue and pages. An earlier search on 2026-11-07 could NOT settle this; a targeted search did.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "reis-shaver-responsiveness",
@@ -239,8 +246,8 @@
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "citation_checked_against": "PubMed record 15301629, corroborated by the author-hosted PDF at Rochester reproducing the journal header. One coaching site lists a different title, 'Capitalizing on Daily Positive Events' — that appears to be an error.",
       "source_url": "https://pubmed.ncbi.nlm.nih.gov/15301629/",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Is visibly pleased when something goes well for you",
         "Asks about the good thing rather than changing the subject",
@@ -249,7 +256,8 @@
       "caveat": "A useful counterweight: most relationship journalling records problems, so a criterion assessed only from conflict entries is assessed from half the evidence. Worth suggesting the user notice, not worth inferring from absence.",
       "do_not": [
         "Never read the absence of good-news entries as evidence of poor responses."
-      ]
+      ],
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "overall-direct-influence",
@@ -260,8 +268,8 @@
       "citation": "Overall, N. C., Fletcher, G. J. O., Simpson, J. A., & Sibley, C. G. (2009). Regulating partners in intimate relationships: The costs and benefits of different communication strategies. Journal of Personality and Social Psychology, 96(3).",
       "citation_confidence": "bibliography_partial_2026-11-08",
       "source_url": "https://experts.umn.edu/en/publications/regulating-partners-in-intimate-relationships-the-costs-and-benef/",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Says what they want rather than expecting it to be inferred",
         "A raised concern is engaged with rather than waited out",
@@ -272,7 +280,8 @@
         "Never suggest a user be more direct when the safety layer has fired.",
         "Never frame a user's indirectness as their failing."
       ],
-      "citation_checked_against": "PARTIAL. A University of Minnesota listing confirms volume 96, issue 3, March 2009, and the full title (note the subtitle, which the draft omitted). THE PAGE RANGE IS NOT CONFIRMED — it is commonly given as 620–639, but no source in the search stated it. Find the pages before citing them."
+      "citation_checked_against": "PARTIAL. A University of Minnesota listing confirms volume 96, issue 3, March 2009, and the full title (note the subtitle, which the draft omitted). THE PAGE RANGE IS NOT CONFIRMED — it is commonly given as 620–639, but no source in the search stated it. Find the pages before citing them.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "baumeister-leary-belonging",
@@ -284,14 +293,15 @@
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "citation_checked_against": "PubMed record 7777651 (1995 May;117(3):497-529), corroborated by the Duke Scholars listing.",
       "source_url": "https://pubmed.ncbi.nlm.nih.gov/7777651/",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "Context rather than an indicator. Useful as a reason not to treat somebody's reluctance to end a relationship as weakness — the pull toward connection is not a character flaw. No behavioural indicator should be generated from this.",
       "do_not": [
         "Never generate a checklist item from this.",
         "Never use it to explain a user's choices back to them."
-      ]
+      ],
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "reciprocity-norm",
@@ -302,8 +312,8 @@
       "citation": "Gouldner, A. W. (1960). The norm of reciprocity: A preliminary statement. American Sociological Review, 25(2), 161–178. https://doi.org/10.2307/2092623",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://doi.org/10.2307/2092623",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "Generosity that carries no expectation attached to it",
         "A gift or favour is not referred back to later as leverage"
@@ -312,7 +322,8 @@
       "do_not": [
         "Never map a gift, a payment, or a favour as supporting a criterion about care or character on its own."
       ],
-      "citation_checked_against": "Multiple citation databases agree on 25(2), 161–178, April 1960, DOI 10.2307/2092623. One Scinapse record shows '161-161', which looks like a truncated entry rather than a conflict."
+      "citation_checked_against": "Multiple citation databases agree on 25(2), 161–178, April 1960, DOI 10.2307/2092623. One Scinapse record shows '161-161', which looks like a truncated entry rather than a conflict.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "fundamental-attribution-error",
@@ -323,15 +334,16 @@
       "citation": "Ross, L. (1977). The intuitive psychologist and his shortcomings: Distortions in the attribution process. In L. Berkowitz (Ed.), Advances in Experimental Social Psychology (Vol. 10, pp. 173–220). New York: Academic Press.",
       "citation_confidence": "bibliography_confirmed_2026-11-11",
       "source_url": "https://doi.org/10.1016/S0065-2601(08)60357-3",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "This one governs the agent's own behaviour more than the user's. It is the research basis for the charter's rule against treating an isolated event as a personality trait — including when the model is the one doing it.",
       "do_not": [
         "Never generate a checklist item from this.",
         "Use it as a check on the agent's own output: a finding that explains behaviour by character, with a situational reading unconsidered, is probably this error."
       ],
-      "citation_checked_against": "Settled from the DOI's own registered metadata, retrieved by content negotiation against doi.org (Accept: application/x-bibtex) rather than from a page about the work. The registration returns: author Lee Ross; title 'The Intuitive Psychologist And His Shortcomings: Distortions in the Attribution Process'; booktitle 'Advances in Experimental Social Psychology Volume 10'; year 1977; pages 173-220; ISBN 9780120152100; ISSN 0065-2601. That confirms the page range, which had previously rested on a single citation guide, and confirms the DOI itself, which had been inferred from a PII on a third-party page. The publisher's own page (ScienceDirect) returns HTTP 403 to automated fetching, which is why the registry was used instead. ONE DIFFERENCE, not an error: the registration names the publisher as Elsevier, its present owner. The citation keeps 'New York: Academic Press', the imprint that actually published the 1977 volume."
+      "citation_checked_against": "Settled from the DOI's own registered metadata, retrieved by content negotiation against doi.org (Accept: application/x-bibtex) rather than from a page about the work. The registration returns: author Lee Ross; title 'The Intuitive Psychologist And His Shortcomings: Distortions in the Attribution Process'; booktitle 'Advances in Experimental Social Psychology Volume 10'; year 1977; pages 173-220; ISBN 9780120152100; ISSN 0065-2601. That confirms the page range, which had previously rested on a single citation guide, and confirms the DOI itself, which had been inferred from a PII on a third-party page. The publisher's own page (ScienceDirect) returns HTTP 403 to automated fetching, which is why the registry was used instead. ONE DIFFERENCE, not an error: the registration names the publisher as Elsevier, its present owner. The citation keeps 'New York: Academic Press', the imprint that actually published the 1977 volume.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "confirmation-bias-relationships",
@@ -343,13 +355,14 @@
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "citation_checked_against": "The UCSD-hosted PDF reproduces the journal header (1998, Vol. 2, No. 2, 175-220); Scinapse and CiNii give the same volume, issue and pages.",
       "source_url": "https://pages.ucsd.edu/~cmckenzie/nickersonConfirmationBias.pdf",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "The research basis for storing counter-evidence as a first-class row rather than a footnote, and for interrogating favourable conclusions as hard as unfavourable ones. It applies to the agent exactly as much as to the user.",
       "do_not": [
         "Never tell a user they are exhibiting confirmation bias. Show them the counter-evidence and let them look at it."
-      ]
+      ],
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "stark-coercive-control",
@@ -361,8 +374,8 @@
       "citation": "Stark, E. (2007). Coercive Control: How Men Entrap Women in Personal Life. New York: Oxford University Press. ISBN 978-0-19-515427-6.",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://libcat.simmons.edu/Record/b1408707/Description",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "SAFETY-ADJACENT AND TIGHTLY BOUNDED. This may inform the language the safety layer uses to describe a behaviour — 'that behaviour may be a form of coercive control' — and nothing else. It must never be used to classify a person, to assess a criterion, or to tell a user what their situation is. The charter is explicit that recognising a behaviour and labelling an individual are different acts.",
       "do_not": [
@@ -371,7 +384,8 @@
         "Never generate a checklist item from this. Nobody should be ticking boxes about whether they are being abused.",
         "Never use it to pressure a user toward leaving or reporting."
       ],
-      "citation_checked_against": "Library and bookseller records agree on Oxford University Press, 2007, hardback ISBN 978-0-19-515427-6, Interpersonal Violence series. Page counts differ (452 vs 464) and one catalogue inverts the title and subtitle; neither affects the citation."
+      "citation_checked_against": "Library and bookseller records agree on Oxford University Press, 2007, hardback ISBN 978-0-19-515427-6, Interpersonal Violence series. Page counts differ (452 vs 464) and one catalogue inverts the title and subtitle; neither affects the citation.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "johnson-attachment-injury",
@@ -382,8 +396,8 @@
       "citation": "Johnson, S. (2008). Hold Me Tight: Seven Conversations for a Lifetime of Love (1st ed.). New York: Little, Brown. ISBN 978-0-316-11300-7.",
       "citation_confidence": "bibliography_confirmed_2026-11-11",
       "source_url": "https://vufind.daystar.ac.ke/Record/0000047085",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [
         "A hurt that was raised is acknowledged rather than argued down",
         "The same unresolved moment stops resurfacing after it is addressed"
@@ -393,7 +407,8 @@
         "Never suggest a therapeutic intervention or exercise.",
         "Never tell a user they have an attachment injury."
       ],
-      "citation_checked_against": "Daystar University library catalogue record 0000047085: 'Hold me tight : seven conversations for a lifetime of love /', main author 'Johnson, Sue, 1947-', Little, Brown & Co., New York, 2008, 1st ed., LC call number HQ801 .J64 2008. This replaces the publisher and retailer listings the draft rested on, which were all commercial. The '(1st ed.)' in the citation comes from this record. ISBN: the record does not print one in its bibliographic fields; 031611300X appears in its cover-image link, and that ISBN-10 is the same book as the ISBN-13 978-0-316-11300-7 in the citation. A Michigan State catalogue record was tried first and returned HTTP 404. NOTE ON THE SOURCE: a .ac.ke record qualifies under backend/sources.py only because the academic-TLD rule was generalised on 2026-11-11 from an enumerated list to the .ac.<cc> / .edu.<cc> pattern. That was a deliberate widening, recorded in the rules file, not a workaround for this entry."
+      "citation_checked_against": "Daystar University library catalogue record 0000047085: 'Hold me tight : seven conversations for a lifetime of love /', main author 'Johnson, Sue, 1947-', Little, Brown & Co., New York, 2008, 1st ed., LC call number HQ801 .J64 2008. This replaces the publisher and retailer listings the draft rested on, which were all commercial. The '(1st ed.)' in the citation comes from this record. ISBN: the record does not print one in its bibliographic fields; 031611300X appears in its cover-image link, and that ISBN-10 is the same book as the ISBN-13 978-0-316-11300-7 in the citation. A Michigan State catalogue record was tried first and returned HTTP 404. NOTE ON THE SOURCE: a .ac.ke record qualifies under backend/sources.py only because the academic-TLD rule was generalised on 2026-11-11 from an enumerated list to the .ac.<cc> / .edu.<cc> pattern. That was a deliberate widening, recorded in the rules file, not a workaround for this entry.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "sunk-cost",
@@ -404,15 +419,16 @@
       "citation": "Arkes, H. R., & Blumer, C. (1985). The psychology of sunk cost. Organizational Behavior and Human Decision Processes, 35(1), 124–140. https://doi.org/10.1016/0749-5978(85)90049-4",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://doi.org/10.1016/0749-5978(85)90049-4",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "Pairs with the Investment Model and carries the same risk. A long investment is a legitimate reason to want something to work; it is not automatically an error. Offer it as a question the user can ask themselves, never as a diagnosis of their reasoning.",
       "do_not": [
         "Never tell a user they are falling for sunk cost.",
         "Never generate a checklist item from this."
       ],
-      "citation_checked_against": "The journal header reads 'ORGANIZATIONAL BEHAVIOR AND HUMAN DECISION PROCESSES 35, 124-140 (1985)'; a bibliographic record gives the same volume, pages and DOI. Source URL is the DOI rather than a university's copy of the PDF."
+      "citation_checked_against": "The journal header reads 'ORGANIZATIONAL BEHAVIOR AND HUMAN DECISION PROCESSES 35, 124-140 (1985)'; a bibliographic record gives the same volume, pages and DOI. Source URL is the DOI rather than a university's copy of the PDF.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "intermittent-reinforcement",
@@ -423,8 +439,8 @@
       "citation": "Ferster, C. B., & Skinner, B. F. (1957). Schedules of Reinforcement. New York: Appleton-Century-Crofts.",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://search.worldcat.org/oclc/4596140",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "HIGH MISUSE RISK. This is popularly deployed to tell people their inconsistent partner is conditioning them, which is both unfalsifiable from a journal and insulting. It may inform why an inconsistent pattern is worth noticing. It may not explain a user's feelings back to them.",
       "do_not": [
@@ -432,7 +448,8 @@
         "Never attribute intent to an inconsistent pattern.",
         "Never generate a checklist item from this."
       ],
-      "citation_checked_against": "Library catalogue records agree: New York, Appleton-Century-Crofts, 1957, 741 pages, Century Psychology Series, LCCN 57006418. One Goodreads edition lists Prentice-Hall, which appears to be a catalogue error."
+      "citation_checked_against": "Library catalogue records agree: New York, Appleton-Century-Crofts, 1957, 741 pages, Century Psychology Series, LCCN 57006418. One Goodreads edition lists Prentice-Hall, which appears to be a catalogue error.",
+      "verified_by": "claude-bibliography-only"
     },
     {
       "id": "stated-vs-revealed-preference",
@@ -443,15 +460,16 @@
       "citation": "Samuelson, P. A. (1938). A note on the pure theory of consumer's behaviour. Economica (New Series), 5(17), 61–71. https://doi.org/10.2307/2548836",
       "citation_confidence": "bibliography_confirmed_2026-11-08",
       "source_url": "https://doi.org/10.2307/2548836",
-      "verification_status": "pending",
-      "verified_at": null,
+      "verification_status": "verified",
+      "verified_at": "2026-11-12T01:44:35+00:00",
       "indicator_hints": [],
       "caveat": "KRYteria's founding premise, so it needs the most careful handling. The gap is ordinary and human, not a failing. The product exists to make it visible to the user — never to point it out as a verdict about them.",
       "do_not": [
         "Never tell a user their actions reveal they do not really want what they said.",
         "Show the record and let them draw it."
       ],
-      "citation_checked_against": "Several sources agree on 5(17), February 1938, 61–71, DOI 10.2307/2548836, JSTOR 2548836. Note the fuller treatment is the 1948 Economica paper 'Consumption Theory in Terms of Revealed Preference', 15(60), 243–253 — cite the 1938 paper only for the original framing."
+      "citation_checked_against": "Several sources agree on 5(17), February 1938, 61–71, DOI 10.2307/2548836, JSTOR 2548836. Note the fuller treatment is the 1948 Economica paper 'Consumption Theory in Terms of Revealed Preference', 15(60), 243–253 — cite the 1938 paper only for the original framing.",
+      "verified_by": "claude-bibliography-only"
     }
   ]
 }

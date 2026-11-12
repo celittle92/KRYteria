@@ -182,6 +182,45 @@ def test_the_prompt_block_is_built_from_the_vocabulary() -> None:
           "NOT A SAFETY RESPONSE" in block.upper())
 
 
+def test_verification_survives_a_database_rebuild() -> None:
+    """The signature belongs in the committed pack, not in a disposable database.
+
+    Until 2026-11-11 ``verify_research ok`` wrote only to SQLite — and CLAUDE.md tells
+    you to delete that database on every schema change. Adding ``entry_themes`` did
+    exactly that and took eighteen human verifications with it. The pack now carries
+    ``verification_status`` / ``verified_at`` / ``verified_by``, and the source gate
+    still applies on the way in, so a file cannot approve its own work.
+    """
+    import tempfile as _tf
+
+    blob = json.loads(
+        (PROJECT_DIR / "data" / "research" / "behavioral_indicators.json").read_text())
+    verified = [n for n in blob["notes"] if n.get("verification_status") == "verified"]
+    check("the committed pack carries its verifications", len(verified) >= 18,
+          f"only {len(verified)} — were they written back by `ok`?")
+    for n in verified:
+        check(f"{n['id']} records who signed it", bool(n.get("verified_by")))
+        check(f"{n['id']} records when", bool(n.get("verified_at")))
+        check(f"{n['id']} records what was opened", bool(n.get("source_url")))
+
+    # A rebuild from the file alone restores them.
+    s = Store(Path(_tf.mkdtemp()) / "rebuilt.db")
+    s.load_research_pack(
+        PROJECT_DIR / "data" / "research" / "behavioral_indicators.json")
+    check("a fresh database reloads them as verified",
+          len(s.citable_refs()) >= 17,
+          f"{len(s.citable_refs())} citable after rebuild")
+
+    # But the file still cannot approve itself against a source KRYteria will not cite.
+    bad = dict(blob)
+    bad["notes"] = [dict(verified[0], id="self-approved",
+                         source_url="https://goop.com/wellness")]
+    path = Path(_tf.mkdtemp()) / "bad.json"
+    path.write_text(json.dumps(bad))
+    expect_raises("a pack cannot verify itself against a bad source", StoreError,
+                  Store(Path(_tf.mkdtemp()) / "g.db").load_research_pack, path)
+
+
 # ---------------------------------------------------------------- criteria versioning
 
 def test_criteria_are_versioned_not_overwritten() -> None:
@@ -946,10 +985,17 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
     pack = PROJECT_DIR / "data" / "research" / "behavioral_indicators.json"
     result = s.load_research_pack(pack)
     check("the curated pack loads", result["added"] >= 15, f"got {result['added']}")
-    check("nothing is citable on load", result["citable"] == 0)
-    check("and nothing is visible to agents", s.list_research_notes() == [])
 
+    # Since the pack carries its own verifications, a load restores the signed ones —
+    # and anything NOT signed in the file stays invisible, which is the rule that
+    # matters. `reis-shaver-responsiveness` is the live example: a real entry, a real
+    # source opened, and still pending because that source did not settle the claim.
     everything = s.list_research_notes(include_pending=True, include_safety_adjacent=True)
+    pending = [n for n in everything if not n["verified_at"]]
+    check("unsigned entries stay pending on load", bool(pending))
+    check("and are invisible to the agents",
+          not any(n["ref"] in {p["ref"] for p in pending}
+                  for n in s.list_research_notes()))
     check("but the entries are there", len(everything) == result["added"])
     check("every entry has a caveat", all(n["caveat"].strip() for n in everything))
     check("every entry has a citation", all(n["citation"].strip() for n in everything))
@@ -964,14 +1010,15 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
                   s.link_evidence, acct, entry_id=e, criterion_id=c,
                   relation="supporting", source_level="research_informed",
                   research_ref="Gottman, J. M. (1994), p. 42")
-    expect_raises("a real-but-pending ref is still refused", StoreError,
+    still_pending = pending[0]["ref"]
+    expect_raises(f"a real-but-pending ref ({still_pending}) is still refused", StoreError,
                   s.link_evidence, acct, entry_id=e, criterion_id=c,
                   relation="supporting", source_level="research_informed",
-                  research_ref="gottman-bids")
+                  research_ref=still_pending)
     expect_raises("an indicator citing a pending ref is refused", StoreError,
                   s.save_checklist_items, acct, c,
                   [{"text": "Responds to small bids", "source_level": "research_informed",
-                    "research_ref": "gottman-bids"}])
+                    "research_ref": still_pending}])
 
     # Verification requires that somebody actually opened something.
     expect_raises("verifying without a source is refused", StoreError,
@@ -1005,13 +1052,20 @@ def test_unverified_research_is_invisible_and_uncitable() -> None:
     # Reloading the pack refreshes PENDING rows — that is how a corrected citation
     # reaches the database — but must never touch one a human signed off on, because the
     # approval was given for specific wording.
+    #
+    # Since 2026-11-11 the pack carries its own verifications, so most rows arrive
+    # already signed and `kept_verified` counts them. What this still has to prove is
+    # that a signature made IN THIS DATABASE is not overwritten by a reload.
     before = s.load_research_pack(pack)
-    check("reloading refreshes pending entries", before["refreshed"] >= 15)
-    check("and leaves verified ones alone", before["kept_verified"] == 2,
+    check("reloading leaves signed rows alone", before["kept_verified"] >= 2,
           f"got {before['kept_verified']}")
-    check("the verified one is still citable", "gottman-bids" in s.citable_refs())
-    check("its verification survived the reload",
-          s.list_research_notes()[0]["verified_by"] == "christine")
+    check("a locally verified entry is still citable", "gottman-bids" in s.citable_refs())
+    signed_here = next(n for n in s.list_research_notes(include_safety_adjacent=True)
+                       if n["ref"] == "gottman-bids")
+    check("and the local signature survived the reload, not the pack's",
+          signed_here["verified_by"] == "christine", str(signed_here["verified_by"]))
+    check("the one pending entry stays pending",
+          "reis-shaver-responsiveness" not in s.citable_refs())
 
     expect_raises("a note with no caveat is refused", StoreError,
                   s.add_research_note, ref="x", area="attachment", finding="f",
@@ -1113,15 +1167,20 @@ def test_verification_requires_a_reputable_source() -> None:
     s, acct, _ = fresh()
     s.load_research_pack(PROJECT_DIR / "data" / "research" / "behavioral_indicators.json")
 
+    # Use an entry that is genuinely still pending, so "it did not become citable"
+    # means the refusal held rather than that it was already signed in the pack.
+    target = next(n["ref"] for n in s.list_research_notes(
+        include_pending=True, include_safety_adjacent=True) if not n["verified_at"])
+
     expect_raises("a wellness site cannot verify a note", StoreError,
-                  s.verify_research_note, "gottman-bids",
+                  s.verify_research_note, target,
                   source_url="https://goop.com/conscious-uncoupling",
                   verified_by="someone")
     expect_raises("nor can an encyclopaedia", StoreError,
-                  s.verify_research_note, "gottman-bids",
+                  s.verify_research_note, target,
                   source_url="https://en.wikipedia.org/wiki/John_Gottman",
                   verified_by="someone")
-    check("and it is still not citable", "gottman-bids" not in s.citable_refs())
+    check("and it is still not citable", target not in s.citable_refs())
 
     s.verify_research_note("gottman-bids",
                            source_url="https://catalog.lib.msu.edu/Record/x",
