@@ -442,7 +442,11 @@ missing is mostly packaging.
 
 ## Still missing — the actual to-do list
 
-1. `report.html` and `slides.html` — **49 points**, not started.
+1. ~~`report.html`~~ **drafted 2026-11-12** — ~14 printed pages, self-contained,
+   4 real screenshots + an SVG diagram inlined. Three TODO blocks remain, styled
+   to be impossible to miss: hosted URL, the real-user quote, and confirming the
+   competitor one-liners. Edit `report_body.html`, then `python build_report.py`.
+   **`slides.html` — 8 points, not started.**
 2. **A real user** — 5 points, plus it is a Tier 3 requirement.
 3. **Named competitor comparison** — 4 points, pure desk work.
 4. ~~Live safety run~~ **done 2026-11-11** — see §5. Three findings to act on.
