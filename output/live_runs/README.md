@@ -10,6 +10,53 @@ call and grades nothing.
 
 ---
 
+## Live brain dump, 2026-11-12 — `entry_id=11`, `run_id=3`
+
+Not a file: a run recorded **in the demo account's own database**, so the app itself
+shows real analysis instead of scripted demo output. Readable at `GET /api/runs/3`.
+
+**5 agents · 9,109 input · 4,992 output · $0.00341 · 72s wall clock.**
+
+| agent | in | out | ms |
+|---|---|---|---|
+| narrative | 2,425 | 180 | 5,119 |
+| safety | 1,792 | 55 | 5,209 |
+| evidence | 1,307 | 874 | 13,126 |
+| reasoning | 2,344 | 3,597 | 42,674 |
+| reflection | 1,241 | 286 | 6,480 |
+
+Entry: *"Sam cancelled again an hour before, said work. I'm always the one texting first
+and he takes a day to reply. He's completely unreliable, I can't count on him for
+anything."* — chosen because the demo record already contradicts it.
+
+**The central claim, working in the product rather than in a test harness.** Unprompted,
+the Reasoning agent asked:
+
+> *"Which kinds of commitments do you mean by 'anything,' and how do you weigh this
+> against the earlier reports that he came through when your car broke down and did show
+> up after moving plans?"*
+
+Both counter-examples, from entries she wrote weeks earlier. It also declined to
+generalise: the pattern it saved is marked **`insufficient`** and says so in its own
+words — *"not by itself a conclusion that he is unreliable in every area."* And the
+reflection it produced is the product's signature line: *"What new information are you
+waiting for that you don't already have?"*
+
+### One real flaw, recorded rather than smoothed over
+
+The saved pattern has `supporting=[4, 2]` and **`contradicting=[]`**. The agent used the
+counter-evidence in its *question* but did not attach it to the finding as contradicting
+entry ids — so a reader of the stored pattern sees only the entries that support it.
+`pattern_has_counter_evidence` in the A/B exists precisely to catch this, and `reasoning.md`
+already says *"Record `contradicting_entry_ids` as carefully as supporting ones. A finding
+that only collects agreement is building a case, not holding up a mirror."*
+
+The prose was right and the structured output was incomplete. **Unfixed, and it is the
+honest version of "the agents are evaluated on reasoning, not on sounding good"** — this
+one sounded good and still left the record one-sided.
+
+---
+
 ## `safety_results_2026-11-11_first-live-safety-run`
 
 The full safety pack, live. **18 cases · 56 calls · 91,430 input · 22,788 output ·

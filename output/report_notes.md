@@ -72,9 +72,10 @@ indistinguishable from never having been mentioned. `docs/privacy.md`.
 **Evidence required: one real run traced step by step, with a screenshot of what each
 agent did.**
 
-- The trace view is **already built** — `frontend/src/screens/BrainDump.tsx:494`
-  renders per-agent input tokens, output tokens and latency from `GET /api/runs/{id}`.
-  **This is a screenshot away, not a feature away.**
+- The trace view is built AND has a real run behind it. `GET /api/runs/3` returns five
+  agents with `is_simulated: 0` and real token counts. **Agent Design's evidence now
+  exists** — what remains is capturing it on screen, which needs the server in live mode
+  so a brain dump run through the UI shows those figures instead of zeros.
 - Architecture diagram: the ASCII one in `.claude/rules/final-project-kryteria.md`
   needs redrawing properly.
 - **Seven agents, one orchestrator, a controlled workflow — not a chat mesh.** Worth
@@ -104,14 +105,20 @@ pack. In `data/prices.json`.
 | First live A/B | 11 | 11,549 | 3,096 | **$0.0027** |
 | After routing fix | 12 | 16,148 | 4,451 | **$0.0038** |
 
-**The figures the rubric asks for by name:**
+**The figures the rubric asks for by name**, from a MEASURED full brain dump on
+2026-11-12 (5 agents including reflection, `run_id=3`, 9,109 in / 4,992 out):
 
-| | before routing fix | after |
-|---|---|---|
-| per brain dump | $0.00136 | **$0.00208** |
-| per user / month (12 dumps) | $0.0163 | **$0.0250** |
-| 100 users / month | $1.63 | **$2.50** |
-| 10,000 users / month | $162.88 | **$249.62** |
+| | per brain dump | per user/month | 100 users | 10,000 users |
+|---|---|---|---|---|
+| measured, full run | **$0.00341** | **$0.0409** | **$4.09** | **$408.84** |
+| 4-agent run (no reflection) | $0.00208 | $0.0250 | $2.50 | $249.62 |
+| before the routing fix | $0.00136 | $0.0163 | $1.63 | $162.88 |
+
+Assumes 12 brain dumps per user per month. The middle row is the common case — reflection
+is opt-in — so **$2.50 and $249.62 are the honest headline, with $4.09 / $408.84 as the
+every-entry-gets-everything ceiling.**
+
+**Total live spend across the whole project to date: $0.0305.**
 
 **Cost-cutting steps actually taken, and whether they hurt performance** — this is the
 row's second half and we have a real answer:
@@ -411,10 +418,9 @@ missing is mostly packaging.
 4. ~~Checklist Mode has no UI~~ **DONE 2026-11-12.** `/checklist` — pick a profile,
    person and standard, generate indicators, record observations in four states. Ticking
    never moves a status, and "no chance to see" is kept distinct from "didn't see it".
-5. **No trace screenshot from a live run.** Demo mode correctly shows zeros — the trace
-   table renders with per-agent rows, but every token count is 0 because nothing was
-   billed. **The Agent Design row needs a screenshot of that same table after a LIVE
-   brain dump**, where the figures are real. One live run (~4 calls, under a cent).
+5. **Trace screenshot** — the live run exists (`run_id=3`, real figures), but the
+   table only renders immediately after a brain dump. To screenshot it, run the server
+   in live mode and do one dump through the UI. ~$0.0035.
 
 ### Not demo blockers, but submission blockers
 

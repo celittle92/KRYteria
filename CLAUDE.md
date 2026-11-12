@@ -23,6 +23,17 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   .venv/bin/python -m pip install -r requirements.txt
   ```
 
+- **OPEN FINDING, live brain dump 2026-11-12 (`run_id=3`):** the Reasoning agent used
+  the record's counter-evidence in its *question* — *"how do you weigh this against the
+  earlier reports that he came through when your car broke down…"* — but saved the
+  pattern with `supporting=[4, 2]` and **`contradicting=[]`**. The prose was right; the
+  structured output left the record one-sided. `reasoning.md` already instructs
+  otherwise and `pattern_has_counter_evidence` exists to catch it. **Unfixed on
+  purpose** — it is the clearest live example of "graded on reasoning, not on sounding
+  good", and it sounded good.
+- **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
+  / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total
+  live spend across the project to date: **$0.0305**.
 - **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
   call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
   checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
