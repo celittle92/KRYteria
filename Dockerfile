@@ -54,11 +54,17 @@ COPY --from=build /opt/venv /opt/venv
 WORKDIR /app
 COPY --chown=kryteria:kryteria . .
 
-# The database lives outside the source tree so a mounted volume can own it, and so a
-# redeploy that replaces /app does not quietly replace somebody's journal.
+# The database lives outside the source tree so that a redeploy replacing /app does not
+# quietly replace somebody's journal, and so a persistent disk can be mounted here later
+# without moving anything.
+#
+# Deliberately NOT a VOLUME. Render's free plan cannot attach a disk at all, so declaring
+# one would promise durability this deployment does not have — and an anonymous volume
+# would mask the directory for no benefit. On free hosting /data is ordinary ephemeral
+# container storage, rebuilt on every boot by KRYTERIA_SEED_ON_BOOT. Mounting a real disk
+# here on a paid plan is the upgrade, and needs no change to this file.
 ENV KRYTERIA_DB_PATH=/data/kryteria.db
 RUN mkdir -p /data && chown kryteria:kryteria /data
-VOLUME ["/data"]
 
 USER kryteria
 EXPOSE 8000

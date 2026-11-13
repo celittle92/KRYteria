@@ -26,7 +26,10 @@ services:
     plan: free
     region: oregon
     healthCheckPath: /api/health
-    autoDeploy: false          # Deploy deliberately, not on every push to main.
+    # Deploy deliberately, not on every push to main. Quoted on purpose: YAML reads a
+    # bare off/no/yes as a boolean, and this field wants the string. (The older spelling
+    # for this was `autoDeploy: false`, now deprecated.)
+    autoDeployTrigger: "off"
     envVars:
       # Supplied in the Render dashboard, never committed. sync:false means Render will
       # prompt for it and keep it out of this file.

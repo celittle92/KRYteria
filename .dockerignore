@@ -21,11 +21,24 @@ data/*.db-*
 .claude/
 
 # Node's build inputs are not needed: frontend/dist is committed and is what gets served.
+# Named one by one rather than with wildcards, and the built output is then explicitly
+# un-ignored. Docker's `*` does not cross a `/`, so `frontend/*.html` would not in fact
+# reach frontend/dist/index.html — but a deployment that serves a blank page because of
+# a disagreement about glob semantics is not a thing to risk, and `!` says it outright.
 frontend/node_modules/
 frontend/src/
-frontend/*.json
-frontend/*.ts
-frontend/*.html
+frontend/.claude/
+frontend/index.html
+frontend/package.json
+frontend/package-lock.json
+frontend/tsconfig.json
+frontend/tsconfig.tsbuildinfo
+frontend/vite.config.ts
+frontend/tailwind.config.js
+frontend/postcss.config.js
+
+# The front end KRYteria actually serves. Never exclude this.
+!frontend/dist
 
 # Development-only material.
 tests/
