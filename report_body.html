@@ -207,27 +207,38 @@ prose about any of them; none of them survives closing the tab.</p>
 </ol>
 
 <h3>The two-dimensional model, and the Jimmy G Principle</h3>
-<p>Importance is a property of a criterion <em>within a profile</em>. Status is what is
-currently known about one person against that criterion, within that profile. They are
-independent, and this is the architecture rather than a feature.</p>
+<p>KRYteria separates two dimensions that are often mistakenly conflated:
+<strong>importance</strong> and <strong>status</strong>. Importance describes how much a
+criterion matters to the user within a particular relationship profile. Status describes
+what is currently known about a specific person in relation to that criterion, within
+that profile.</p>
 
-<p><strong>Where the name comes from.</strong> Jimmy Garoppolo spent several seasons as
-the San Francisco quarterback at the centre of an argument that never resolved. One side
-held up a winning record, a Super Bowl appearance, and a man who was extremely nice to
-look at. The other side held up the throws. Both had evidence. Each was certain the other
-was being ridiculous. They were not actually disagreeing about the facts — they were
-running the same person against two different profiles and treating the mismatch as a
-contradiction. The joke is on the arguers, not on him.</p>
+<p>Importance is expressed as Mandatory, Preferred, or Aspirational. Status is expressed
+as Pass, Unknown, Fail, or Not Applicable. These dimensions operate independently: a
+highly important criterion can remain Unknown, and a criterion that is Not Applicable
+does not become a deficiency simply because it matters in another context.</p>
 
-<p class="callout">Same person, different profile, different answer — and neither answer
-is wrong. That is the Jimmy G Principle.</p>
+<p><strong>Where the name comes from.</strong> The Jimmy G Principle is named after former
+NFL quarterback Jimmy Garoppolo, whose public persona provides a memorable illustration of
+the distinction between physical and mental attraction. His appearance might make him an
+appealing prospect for a casual encounter, while his public interviews and much-joked-about
+reputation for poor texting and communication might leave a hypothetical prospective
+partner less interested in pursuing a deeper relationship.</p>
 
-<p>It arrives as a joke and then turns into the hardest constraint in the codebase.
-Christine's instruction on the first build day was explicit: <em>"Multiple profiles are
-foundational… The Jimmy G Principle is an architectural requirement, not just a funny
-example."</em> Two hard-coded modes — serious and casual — would have been a week less
-work, and would have encoded the opposite claim: that there is one real answer about a
-person and the casual one is a lesser version of it.</p>
+<p>For our founder, the distinction is particularly straightforward: someone can be
+attractive enough to inspire physical interest without being someone she would want to
+date. The attraction is real. So is the lack of interest in a deeper relationship. Neither
+cancels out the other.</p>
+
+<p>This illustrates a fundamental distinction in relationship evaluation: <strong>the same
+person can satisfy one set of criteria while failing to satisfy another, depending on what
+the user is looking for.</strong></p>
+
+<p>A user evaluating a man as a potential husband might consider intellectual engagement,
+shared interests, emotional compatibility, and long-term intentions essential. Evaluating
+the same man as a casual partner might place greater importance on physical attraction,
+mutual interest, communication, and clearly understood expectations. Some criteria may be
+irrelevant to one profile but essential to another.</p>
 
 <table>
   <tr><th>Criterion (one row in the library)</th><th>Husband</th><th>Boyfriend</th><th>One Night Stand</th></tr>
@@ -236,17 +247,38 @@ person and the casual one is a lesser version of it.</p>
   <tr><td>Wants children</td><td>Mandatory</td><td>Preferred</td><td>Not applicable</td></tr>
   <tr><td>Emotional availability</td><td>Mandatory</td><td>Mandatory</td><td>Preferred</td></tr>
 </table>
-<p class="meta">The tier is a property of the <em>profile</em>, not of the person. Nothing
-in this table is a judgement about anybody.</p>
+<p class="meta">One criterion, three tiers. The tier is a property of the <em>profile</em>,
+not of the person — nothing in this table is a judgement about anybody.</p>
 
-<p>Someone who fails three rows on the left can pass every row on the right, and KRYteria
-reports that without a note of consolation, because nothing has gone wrong. That is why
+<p>The person has not changed. The objective has.</p>
+
+<p class="callout">Same person. Different profile. Different criteria.<br>
+That is the Jimmy G Principle.</p>
+
+<p>Its implications extend beyond the user experience into the underlying architecture.
+Relationship profiles must be independently configurable, with their own selected criteria,
+importance tiers, and assessments. The same criterion may be Mandatory in one profile,
+Preferred in another, and Not Applicable in a third. Assessments must remain independent
+even when they concern the same person and draw on overlapping observations. That is why
 the criterion lives in the Master Criteria Library carrying <em>no tier at all</em>, and
 the tier lives on the profile's selection of it: adding a fourth profile never edits a
-criterion, and <code>get_assessment</code> is structurally unable to see another profile's
-rows. <strong>No profile ranks above another</strong> — enforced in the data model and,
-as of this build, in the interface: with more than one profile, KRYteria pre-selects none,
-because a default is a recommendation.</p>
+criterion, and <code>get_assessment</code> is structurally unable to fall back to another
+profile's answer.</p>
+
+<p>Hard-coding relationship types or applying one universal compatibility assessment would
+undermine this principle — which is why the instruction on the first build day was
+explicit: <em>"Multiple profiles are foundational… The Jimmy G Principle is an
+architectural requirement, not just a funny example."</em> Two hard-coded modes, serious
+and casual, would have been a week less work and would have encoded the opposite claim.
+KRYteria does not assume that everyone is evaluating a person for the same purpose, nor
+does it impose a hierarchy in which a long-term relationship is inherently more legitimate
+than a casual one. <strong>No profile ranks above another</strong> — enforced in the data
+model and, as of this build, in the interface: with more than one profile, KRYteria
+pre-selects none, because a default is a recommendation.</p>
+
+<p>The Jimmy G Principle reinforces a central product philosophy: <strong>a person's
+suitability is contextual, not universal.</strong> KRYteria evaluates someone against the
+user's objectives and standards, rather than assigning them a single overall verdict.</p>
 
 <figure>
   <img alt="The My KRYteria screen: four profiles with different criteria counts, per-profile tiers, and per-person statuses." src="{{PROFILES_DARK}}">
