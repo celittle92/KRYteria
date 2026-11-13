@@ -1,37 +1,62 @@
 https://kryteria.onrender.com
 
-Deployed 2026-11-12 to Render, from the Dockerfile and render.yaml at the repository
-root. Verified the same day against the live instance: /api/health returned mode "live",
-model "gpt-6-luna", api_key_found true, env_source "process environment", prices loaded,
-database /data/kryteria.db, frontend_built true. Signing in as the demo account over
-https returned all four seeded profiles.
+Deployed to Render from the Dockerfile and render.yaml at the repository root. First
+deployed 2026-11-12; the nine-character demo went live 2026-11-13. Verified against the
+running instance: /api/health reports mode "live", model "gpt-6-luna", api_key_found
+true, env_source "process environment", database /data/kryteria.db, frontend_built true.
 
-SIGN IN WITHOUT TYPING ANYTHING PERSONAL
+NOTHING TO TYPE
 
-    handle:     demo
-    passphrase: kryteria-demo-account
+The sign-in screen lists all nine demo characters. Click one and you are in. No
+sign-up, no handle, no passphrase.
 
-Everything in that account is invented. No real person, no real assessment.
+If you would rather type them, the handle is below and the passphrase is
+"kryteria-demo-" followed by the handle — Catherine is kryteria-demo-thelonggame.
+
+    Jane       theintentionalist   36, attorney, Manhattan
+    Bianca     notyourtherapist    39, creative director, Manhattan
+    Vanessa    afterhours          30, restaurant manager, Bronx and Manhattan
+    Catherine  thelonggame         34, strategy executive, Manhattan
+    Adrian     theproducer         37, television producer, Manhattan
+    Joe        thequietone         35, commercial insurance, Manhattan
+    Will       thewildcard         52, managing director and stand-up, Manhattan
+    Jack       thegoodone          32, software engineer, Brooklyn
+    Greg       theunderdog         38, between roles, Queens
+
+WHERE TO LOOK FIRST
+
+  Catherine and Adrian wrote about the same Thursday evening, separately. Open both.
+  Neither account can see the other, and KRYteria never tells either of them that
+  somebody else described that night. Her record pulls one communication criterion
+  three ways at once; his produces no contradicting evidence at all.
+
+  Vanessa's account is where the safety layer fired on its own, on the raw text, with
+  nobody having labelled anything.
+
+  Catherine's "soft hands" is a real criterion, treated with the same evidentiary
+  standard as financial independence.
+
+Every person, entry, observation and assessment is invented. Nothing describes a real
+person. The analysis in the proof-point entries is genuine agent output from a live run
+(58 model calls, $0.0431), frozen into data/characters/*.json so the hosted app shows
+real output without spending credits on every restart.
 
 TWO THINGS TO EXPECT, BOTH NORMAL
 
 1. The first request after a quiet spell takes about a minute. A free Render instance
    spins down after roughly fifteen minutes without traffic, and the first visitor wakes
-   it. The health check above took 10.6 seconds on a cold start and 0.2 seconds warm.
-   It is not a broken link.
+   it. Measured: 10.6 seconds on a cold start, 0.2 seconds warm. It is not a broken link.
 
 2. Nothing a visitor writes survives a restart. A free instance has an ephemeral disk,
-   so the SQLite file is rebuilt on every boot and redeploy. KRYTERIA_SEED_ON_BOOT makes
-   that self-healing rather than fatal: the synthetic demo account is rebuilt every time,
-   so the demo is always there. It is a demonstration deployment and not durable storage,
-   and README.md says so rather than implying otherwise.
+   so the database is rebuilt on every boot and redeploy. KRYTERIA_SEED_ON_BOOT makes
+   that self-healing rather than fatal: the nine characters are rebuilt every time. It
+   is a demonstration deployment, not durable storage, and README.md says so.
 
 IF THE HOSTED LINK IS ASLEEP OR DOWN
 
 README.md carries tested local instructions, and the app runs with no API key at all in
 demo mode. The project requirements warn that a sleeping free tier is a real risk, which
-is exactly why the local path is kept current rather than assumed.
+is why the local path is kept current rather than assumed.
 
-The deployment redeploys automatically on every push to main (render.yaml,
-autoDeployTrigger: commit). A deploy therefore resets the database — avoid pushing while
-somebody is mid-session on the hosted app.
+The deployment redeploys on every push to main (render.yaml, autoDeployTrigger: commit).
+A deploy resets the database, so avoid pushing while somebody is mid-session.

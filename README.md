@@ -63,9 +63,43 @@ Then open **http://localhost:8000/api/health** — it reports the mode, the mode
 key was found and *where it looked*, and whether prices are loaded. Interactive API docs
 are at **/docs**.
 
-There is no browser interface yet, so `/` returns a short JSON status rather than a page.
+`/` serves the built front end. The same process serves the API and the interface, so
+there is one thing to run and one port. If `frontend/dist` is missing, `/` returns a JSON
+status explaining how to build it rather than a bare 404.
 
-The demo account is `demo` / `kryteria-demo-account`. Everything in it is invented.
+### The demo: nine people, nothing to type
+
+The sign-in screen lists nine demo characters and opens one in a click — no sign-up, no
+handle, no passphrase. They are built on first boot and rebuilt by
+`POST /api/demo/reset`, or from the command line:
+
+```bash
+.venv/bin/python -m backend.seed_characters --reset
+```
+
+To sign in by hand, the passphrase is `kryteria-demo-` followed by the handle
+(Catherine is `thelonggame` / `kryteria-demo-thelonggame`).
+
+| | handle | |
+|---|---|---|
+| Jane | `theintentionalist` | the postponement loop, and a standard that quietly got easier |
+| Bianca | `notyourtherapist` | counter-evidence against a conclusion she likes |
+| Vanessa | `afterhours` | two profiles for one person; `not_applicable`; the safety case |
+| Catherine | `thelonggame` | cross-criterion reasoning, soft hands, the shared evening |
+| Adrian | `theproducer` | the same evening, read differently |
+| Joe | `thequietone` | a thin record producing honest Unknowns |
+| Will | `thewildcard` | disclosure and accountability as separate facts |
+| Jack | `thegoodone` | insufficient evidence preserved rather than filled in |
+| Greg | `theunderdog` | circumstances and character as different questions |
+
+Every person, entry and assessment is invented. **Catherine and Adrian describe the same
+Thursday evening in separate private accounts** — neither can see the other, and KRYteria
+never tells either of them that somebody else wrote about that night. Open both.
+
+The analysis in the proof-point entries is real agent output from a live run, frozen into
+`data/characters/*.json` by `backend/run_character_analysis.py` so the hosted app shows it
+without spending credits on every restart. Everything a model produced sits under a
+`generated` key; everything else was written by a person.
 
 ### The research knowledge base
 
