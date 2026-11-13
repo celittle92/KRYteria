@@ -222,8 +222,13 @@ export const api = {
   health: () => get<Record<string, unknown>>("/api/health"),
 
   me: () => get<Account>("/api/auth/me"),
+  // Sign-up returns a recovery code ONCE. It is not stored anywhere in plaintext and
+  // cannot be fetched again, so the UI has to put it in front of the user there and then.
   signUp: (handle: string, passphrase: string) =>
-    post<Account>("/api/auth/signup", { handle, passphrase }),
+    post<Account & { recovery_code: string }>("/api/auth/signup", { handle, passphrase }),
+  recover: (handle: string, recovery_code: string, passphrase: string) =>
+    post<Account & { recovery_code: string }>("/api/auth/recover",
+      { handle, recovery_code, passphrase }),
   signIn: (handle: string, passphrase: string) =>
     post<Account>("/api/auth/signin", { handle, passphrase }),
   signOut: () => post<{ signed_out: boolean }>("/api/auth/signout"),

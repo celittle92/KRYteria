@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS accounts (
     id              INTEGER PRIMARY KEY,
     handle          TEXT    NOT NULL UNIQUE,     -- user-chosen, anonymous. No email, no name.
     passphrase_hash TEXT    NOT NULL,            -- Argon2id, via pwdlib. Never returned.
+    -- A recovery code, shown once at sign-up and never again. Argon2id like the
+    -- passphrase, because it IS a credential: anything that can reset a passphrase can
+    -- open the journal, so it gets the same hashing and the same constant-time check.
+    --
+    -- Why this instead of an email: a lost passphrase otherwise means months of somebody's
+    -- entries gone for good, which is a severe failure for a product whose whole value is
+    -- longitudinal. An email would fix that by adding the one thing this app is designed
+    -- around — a real identity on file, and a notification channel visible to anyone with
+    -- access to that inbox. A code the user writes down fixes recovery and adds neither.
+    recovery_hash   TEXT,                        -- NULL for demo accounts; they need none.
     -- V1 ships Clarity Mode only. Tough Love is V2 and explicitly not an MVP priority;
     -- the value is allowed here so the column need not migrate, but nothing selects it yet.
     -- Tone changes presentation, never reasoning, evidence, or an assessment outcome.

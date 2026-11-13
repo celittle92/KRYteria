@@ -812,6 +812,71 @@ def test_health_is_diagnosable() -> None:
           or "api_key_found" in body)
 
 
+def test_recovery_code_is_the_way_back_in_without_an_email() -> None:
+    """A lost passphrase must not mean a lost journal, and must not require an email.
+
+    The anonymity is the point — no email means no real identity on file and no reset
+    link landing in an inbox another person can read, which matters for this product
+    specifically. The cost of that is otherwise severe: forget the passphrase and months
+    of somebody's writing are gone for good.
+
+    A code issued once at sign-up closes that gap without reopening the other one. The
+    properties that make it safe are all asserted here.
+    """
+    handle = "recovery-flow-user"
+    first = TestClient(app).post(
+        "/api/auth/signup", json={"handle": handle, "passphrase": "a long enough passphrase"})
+    check("signup succeeds", first.status_code == 201, first.text[:120])
+    code = first.json().get("recovery_code")
+    check("signup returns a recovery code", bool(code))
+    check("the code is several words", len((code or "").split("-")) >= 4, str(code))
+
+    locked = TestClient(app).post(
+        "/api/auth/signin", json={"handle": handle, "passphrase": "the forgotten one"})
+    check("the old passphrase no longer works for a stranger", locked.status_code == 401)
+
+    used = TestClient(app).post("/api/auth/recover", json={
+        "handle": handle, "recovery_code": (code or "").upper(),
+        "passphrase": "a replacement passphrase"})
+    check("the code resets the passphrase", used.status_code == 200, used.text[:160])
+    check("entering the code is case-insensitive", used.status_code == 200)
+    check("recovery signs the user in", "set-cookie" in used.headers)
+
+    reissued = used.json().get("recovery_code")
+    check("a fresh code is issued", bool(reissued) and reissued != code)
+
+    replayed = TestClient(app).post("/api/auth/recover", json={
+        "handle": handle, "recovery_code": code, "passphrase": "yet another passphrase"})
+    check("the used code is consumed", replayed.status_code == 404,
+          f"got {replayed.status_code} — a code that still works after a reset is a "
+          f"second standing password on the account")
+
+    now = TestClient(app).post(
+        "/api/auth/signin", json={"handle": handle, "passphrase": "a replacement passphrase"})
+    check("the new passphrase works", now.status_code == 200)
+
+    # Wrong code and unknown handle must be indistinguishable, or this becomes a way of
+    # asking whether somebody has an account here.
+    wrong = TestClient(app).post("/api/auth/recover", json={
+        "handle": handle, "recovery_code": "not-a-real-code-at-all-here",
+        "passphrase": "a long enough passphrase"})
+    nobody = TestClient(app).post("/api/auth/recover", json={
+        "handle": "nobody-has-this-handle", "recovery_code": reissued,
+        "passphrase": "a long enough passphrase"})
+    check("a wrong code is refused", wrong.status_code == 404)
+    check("an unknown handle fails identically",
+          nobody.status_code == wrong.status_code and nobody.json() == wrong.json())
+
+    # The plaintext must exist only in that one response.
+    me = TestClient(app)
+    me.post("/api/auth/signin",
+            json={"handle": handle, "passphrase": "a replacement passphrase"})
+    account = me.get("/api/auth/me").json()
+    check("no recovery code is readable from the account",
+          "recovery_code" not in account and "recovery_hash" not in account,
+          str(sorted(account)))
+
+
 def test_demo_signin_cannot_reach_a_real_account() -> None:
     """One-click demo entry, and the boundary that keeps it from being a back door.
 

@@ -21,6 +21,14 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
     """Create an anonymous account.
 
     No email is collected and none is needed. The handle is whatever the user types.
+
+    Returns a **recovery code**, once. It is the only way back into an account whose
+    passphrase is lost, because there is no email to send a reset to — that absence is
+    the thing that keeps the account anonymous, and this is what stops it also meaning
+    that a forgotten passphrase destroys months of somebody's writing.
+
+    The plaintext exists in this response and nowhere else. It is not stored, cannot be
+    re-sent, and is not recoverable from the database.
     """
     try:
         account_id = store.create_account(body.handle, body.passphrase)
@@ -28,8 +36,40 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     except sqlite3.IntegrityError:
         raise HTTPException(status.HTTP_409_CONFLICT, "That handle is taken.")
+    recovery_code = store.issue_recovery_code(account_id)
     issue_session(response, account_id)
-    return store.get_account(account_id)
+    return {**store.get_account(account_id), "recovery_code": recovery_code}
+
+
+@router.post("/recover")
+def recover(body: dict, response: Response, store: Store = Depends(get_store)):
+    """Set a new passphrase using a recovery code, and sign in.
+
+    Deliberately returns the same 404 for a wrong code, an unknown handle, and an
+    account that never had a code. Distinguishing them would answer "does this person
+    have an account here", which is the disclosure this whole application refuses.
+
+    The used code is consumed and a fresh one is returned, once. A recovery code that
+    kept working after a reset would be a second standing password on the account, on a
+    piece of paper the user has already had out.
+    """
+    handle = str(body.get("handle", "")).strip()
+    code = str(body.get("recovery_code", "")).strip().lower()
+    new_passphrase = str(body.get("passphrase", ""))
+
+    try:
+        account_id = store.reset_passphrase_with_code(handle, code, new_passphrase)
+    except WeakPassphrase as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+    if account_id is None:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND,
+            "That handle and recovery code do not match an account.",
+        )
+
+    fresh_code = store.issue_recovery_code(account_id)
+    issue_session(response, account_id)
+    return {**store.get_account(account_id), "recovery_code": fresh_code}
 
 
 @router.post("/signin")

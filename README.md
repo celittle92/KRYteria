@@ -373,6 +373,21 @@ See `docs/privacy.md` §5.
 - Accounts are **anonymous** — a handle of your choosing, no email, no name.
 - Passphrases are hashed with **Argon2id** (`pwdlib`). Never stored, returned, logged or
   rendered in any form.
+- **A recovery code is issued once at sign-up**, and it is the way back in if the
+  passphrase is forgotten. Six words, hashed with Argon2id like a passphrase — because
+  anything that can reset a passphrase can open the journal, so it is a credential and
+  not a hint. The plaintext is in that one response and nowhere else: it is not stored
+  readably, cannot be shown again, and nobody operating this app can look it up.
+  Using it consumes it and a fresh one is issued, so a code written on paper does not
+  stay live after a reset.
+
+  The alternative was an email address, and it was rejected deliberately. An email is a
+  real identity on file and a notification channel visible to anyone with access to that
+  inbox — which is precisely the exposure a relationship journal has to design around,
+  and the same reasoning that keeps `accounts.region` user-set and never inferred. A
+  code the user writes down fixes the recovery problem and adds neither. The cost is
+  real and is stated at sign-up: lose both the passphrase and the code and the account
+  cannot be opened by anyone.
 - People in your journal are stored as **aliases only**. There is no column for a real
   name.
 - Export and delete-everything are both supported, and deletion removes rows rather than

@@ -183,7 +183,11 @@ the deletion promise is only true while this paragraph is.
 - No analytics, telemetry service, crash reporter, or third-party script.
 - No training on user content.
 - No password or identity beyond an anonymous handle.
-- No email, phone number, or contact detail is collected anywhere.
+- No email, phone number, or contact detail is collected anywhere. Account recovery is a
+  **code issued once at sign-up**, hashed with Argon2id and stored only as a hash, rather
+  than a reset link sent to an address. That keeps the account anonymous and, more to the
+  point here, means there is no message about this application that can arrive somewhere
+  another person can see it.
 
 ---
 

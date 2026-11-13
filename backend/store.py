@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-12.1"
+SCHEMA_VERSION = "2026-11-13.1"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -399,6 +399,60 @@ class Store:
                 (account_id,),
             ).fetchone()
         return dict(row) if row else None
+
+    def issue_recovery_code(self, account_id: int) -> str:
+        """Generate a recovery code, store only its hash, and return it once.
+
+        The plaintext is returned to exactly one caller, once, and never persisted. It
+        cannot be shown again, re-sent, or recovered from this database — which is the
+        property that makes it safe to hold alongside the journal it protects.
+
+        Calling this again replaces the previous code, so a user who thinks theirs may
+        have been seen can take a new one and the old one stops working.
+        """
+        from .security import generate_recovery_code, hash_recovery_code
+
+        code = generate_recovery_code()
+        with self.write() as conn:
+            conn.execute("UPDATE accounts SET recovery_hash = ? WHERE id = ?",
+                         (hash_recovery_code(code), account_id))
+        return code
+
+    def reset_passphrase_with_code(
+        self, handle: str, code: str, new_passphrase: str
+    ) -> int | None:
+        """Set a new passphrase given a valid recovery code. Returns the account id.
+
+        Returns ``None`` for a wrong code, an unknown handle, or an account that has no
+        code — the caller must not distinguish them, because telling the difference would
+        answer "does this handle exist here".
+
+        The used code is consumed. A recovery code that still works after a reset is a
+        second standing password on the account, and the user has already written it on
+        something. The caller issues a fresh one and shows it once.
+        """
+        from .security import hash_passphrase, verify_recovery_code
+
+        with self.read() as conn:
+            row = conn.execute(
+                "SELECT id, recovery_hash FROM accounts WHERE handle = ?",
+                (handle.strip(),),
+            ).fetchone()
+
+        # Verify even when there is no row, so a missing handle costs the same time as a
+        # wrong code. verify_recovery_code hashes against a dummy when given None.
+        stored = row["recovery_hash"] if row else None
+        if not verify_recovery_code(code, stored):
+            return None
+
+        new_hash = hash_passphrase(new_passphrase)   # raises WeakPassphrase if too short
+        with self.write() as conn:
+            conn.execute(
+                "UPDATE accounts SET passphrase_hash = ?, recovery_hash = NULL "
+                "WHERE id = ?",
+                (new_hash, row["id"]),
+            )
+        return row["id"]
 
     def get_account_by_handle(self, handle: str) -> dict[str, Any] | None:
         """Look an account up by handle alone, with no passphrase.

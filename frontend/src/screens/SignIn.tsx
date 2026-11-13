@@ -30,9 +30,16 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
   // and on the hosted demo that also means claiming a character's handle before the
   // seeder has taken it. In an app whose whole promise is that it holds as little as
   // possible, a stray click should not create an account.
-  const [mode, setMode] = useState<"in" | "up">("in");
+  const [mode, setMode] = useState<"in" | "up" | "recover">("in");
   const [handle, setHandle] = useState("");
   const [passphrase, setPassphrase] = useState("");
+  const [recoveryCode, setRecoveryCode] = useState("");
+
+  // Shown once, after sign-up or a reset, before going any further. The plaintext exists
+  // in that one response and nowhere else — not in the database, not re-sendable — so if
+  // the user walks past this panel it is genuinely gone.
+  const [issued, setIssued] = useState<{ code: string; account: Account } | null>(null);
+  const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [characters, setCharacters] = useState<DemoCharacter[]>([]);
@@ -60,10 +67,15 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
     setBusy(true);
     setError(null);
     try {
-      const account = mode === "up"
-        ? await api.signUp(handle.trim(), passphrase)
-        : await api.signIn(handle.trim(), passphrase);
-      onSignedIn(account);
+      if (mode === "in") {
+        onSignedIn(await api.signIn(handle.trim(), passphrase));
+      } else if (mode === "up") {
+        const a = await api.signUp(handle.trim(), passphrase);
+        setIssued({ code: a.recovery_code, account: a });
+      } else {
+        const a = await api.recover(handle.trim(), recoveryCode.trim(), passphrase);
+        setIssued({ code: a.recovery_code, account: a });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -139,14 +151,58 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
           </div>
         </div>
 
+        {issued ? (
+          <div className="rise">
+            <div className="card p-7 sm:p-8 max-w-md lg:ml-auto">
+              <h2 className="font-serif text-xl">Write this down now</h2>
+              <p className="text-sm text-muted mt-1.5">
+                This is the only way back into your account if you forget your
+                passphrase. There is no email on file to send a reset to — that is what
+                keeps the account anonymous.
+              </p>
+
+              <p className="font-mono text-lg tracking-tight mt-5 p-4 rounded-lg
+                            bg-accent/10 border border-accent/30 select-all break-words">
+                {issued.code}
+              </p>
+
+              <button
+                className="btn-ghost w-full mt-3"
+                onClick={() => {
+                  navigator.clipboard?.writeText(issued.code).then(
+                    () => setCopied(true), () => setCopied(false));
+                }}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+
+              <p className="text-xs text-faint mt-4">
+                KRYteria stores only a hash of this code. It is not saved anywhere in
+                readable form, cannot be shown to you again, and nobody here can look it
+                up — including us. If you lose both this and your passphrase, the account
+                cannot be opened by anyone.
+              </p>
+
+              <div className="divider my-6" />
+
+              <button className="btn-accent w-full"
+                      onClick={() => onSignedIn(issued.account)}>
+                I have written it down
+              </button>
+            </div>
+          </div>
+        ) : (
         <div className="rise">
           <div className="card p-7 sm:p-8 max-w-md lg:ml-auto">
             <h2 className="font-serif text-xl">
-              {mode === "up" ? "Create a private account" : "Sign in"}
+              {mode === "up" ? "Create a private account"
+                : mode === "recover" ? "Use a recovery code" : "Sign in"}
             </h2>
             <p className="text-sm text-muted mt-1.5">
               {mode === "up"
                 ? "No email, no name. Choose a handle only you know."
+                : mode === "recover"
+                ? "The six words you were given when you created the account."
                 : "Welcome back."}
             </p>
 
@@ -163,18 +219,34 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
                   autoFocus
                 />
               </div>
+              {mode === "recover" && (
+                <div>
+                  <label htmlFor="recovery" className="eyebrow block">Recovery code</label>
+                  <input
+                    id="recovery"
+                    className="field mt-2 font-mono"
+                    placeholder="six-words-joined-by-hyphens-like-this"
+                    value={recoveryCode}
+                    onChange={(e) => setRecoveryCode(e.target.value)}
+                    autoComplete="off"
+                    required
+                  />
+                </div>
+              )}
               <div>
-                <label htmlFor="passphrase" className="eyebrow block">Passphrase</label>
+                <label htmlFor="passphrase" className="eyebrow block">
+                  {mode === "recover" ? "New passphrase" : "Passphrase"}
+                </label>
                 <input
                   id="passphrase"
                   type="password"
                   className="field mt-2"
                   value={passphrase}
                   onChange={(e) => setPassphrase(e.target.value)}
-                  autoComplete={mode === "up" ? "new-password" : "current-password"}
+                  autoComplete={mode === "in" ? "current-password" : "new-password"}
                   required
                 />
-                {mode === "up" && (
+                {mode !== "in" && (
                   <p className="text-xs text-faint mt-2">
                     At least 10 characters. A few ordinary words in a row is both stronger
                     and easier to remember than a short scramble.
@@ -185,20 +257,38 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
               {error && <ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote>}
 
               <button type="submit" className="btn-accent w-full" disabled={busy}>
-                {busy ? <Spinner label="" /> : mode === "up" ? "Create account" : "Sign in"}
+                {busy ? <Spinner label="" />
+                  : mode === "up" ? "Create account"
+                  : mode === "recover" ? "Reset my passphrase" : "Sign in"}
               </button>
             </form>
 
             <div className="divider my-6" />
 
-            <button
-              className="text-sm text-muted hover:text-ink transition-colors"
-              onClick={() => { setMode(mode === "up" ? "in" : "up"); setError(null); }}
-            >
-              {mode === "up"
-                ? "I already have an account"
-                : "I need to create an account"}
-            </button>
+            <div className="flex flex-col items-start gap-2">
+              <button
+                className="text-sm text-muted hover:text-ink transition-colors"
+                onClick={() => {
+                  setMode(mode === "up" ? "in" : "up");
+                  setError(null);
+                }}
+              >
+                {mode === "up"
+                  ? "I already have an account"
+                  : "I need to create an account"}
+              </button>
+              <button
+                className="text-sm text-muted hover:text-ink transition-colors"
+                onClick={() => {
+                  setMode(mode === "recover" ? "in" : "recover");
+                  setError(null);
+                }}
+              >
+                {mode === "recover"
+                  ? "Back to signing in"
+                  : "I have lost my passphrase"}
+              </button>
+            </div>
           </div>
 
           {characters.length > 0 && (
@@ -243,10 +333,12 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
           )}
 
           <p className="text-xs text-faint mt-5 max-w-md lg:ml-auto">
-            Because there is no email on file, a lost passphrase cannot be reset — which
-            is the same property that makes the account anonymous.
+            There is no email on file, so nothing here is tied to who you are and no
+            reset link can land in an inbox somebody else can read. A recovery code,
+            given once when you sign up, is what gets you back in instead.
           </p>
         </div>
+        )}
       </div>
     </div>
   );
