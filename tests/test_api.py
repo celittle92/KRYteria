@@ -864,6 +864,52 @@ def test_seeding_on_boot_is_opt_in_and_idempotent() -> None:
         get_store.cache_clear()
 
 
+def test_the_hosted_configuration_signs_in_over_https_and_only_https() -> None:
+    """The exact deployed setup: Secure cookies on, behind https.
+
+    This is pinned because the failure it guards against is silent and catastrophic in
+    opposite directions.
+
+    With ``KRYTERIA_SECURE_COOKIES=true`` the session cookie carries the Secure flag, so
+    a browser will not send it back over plain http. That is the point of the flag — a
+    session cookie for a relationship journal has no business travelling in clear text.
+    But it also means a deployment that terminates as http would let somebody sign in
+    successfully and then 401 on the very next request, which looks like a broken login
+    rather than a misconfigured scheme.
+
+    So both halves are asserted: it works over https, and it does NOT work over http.
+    Dropping the Secure flag would pass the first and fail the second.
+    """
+    before = os.environ.get("KRYTERIA_SECURE_COOKIES")
+    os.environ["KRYTERIA_SECURE_COOKIES"] = "true"
+    try:
+        handle = "hosted-config-user"
+        signup = TestClient(app, base_url="https://testserver")
+        r = signup.post("/api/auth/signup",
+                        json={"handle": handle, "passphrase": "a long enough passphrase"})
+        check("signup works over https", r.status_code == 201, r.text[:120])
+
+        secure = TestClient(app, base_url="https://testserver")
+        r = secure.post("/api/auth/signin",
+                        json={"handle": handle, "passphrase": "a long enough passphrase"})
+        check("signin works over https", r.status_code == 200)
+        check("the cookie carries the Secure flag",
+              "secure" in r.headers.get("set-cookie", "").lower())
+        check("and the session is usable over https",
+              secure.get("/api/profiles").status_code == 200)
+
+        plain = TestClient(app, base_url="http://testserver")
+        plain.post("/api/auth/signin",
+                   json={"handle": handle, "passphrase": "a long enough passphrase"})
+        check("a Secure cookie is not replayed over plain http",
+              plain.get("/api/profiles").status_code == 401)
+    finally:
+        if before is None:
+            os.environ.pop("KRYTERIA_SECURE_COOKIES", None)
+        else:
+            os.environ["KRYTERIA_SECURE_COOKIES"] = before
+
+
 def test_demo_reset_refuses_a_real_account() -> None:
     c = new_client("not-the-demo")
     r = c.post("/api/demo/reset")
