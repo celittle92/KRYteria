@@ -812,6 +812,41 @@ def test_health_is_diagnosable() -> None:
           or "api_key_found" in body)
 
 
+def test_demo_signin_cannot_reach_a_real_account() -> None:
+    """One-click demo entry, and the boundary that keeps it from being a back door.
+
+    ``POST /api/demo/signin`` issues a session from a handle alone, so that seeing the
+    demo needs no typing. That is only safe because it refuses anything not flagged
+    ``is_demo``. Without that check it would be an unauthenticated way into any journal
+    whose handle somebody guessed.
+
+    It also has to fail *identically* for a real account and for a handle that does not
+    exist. Different answers would turn it into a way of asking "does this person have
+    an account here", which is the one disclosure this app exists to refuse.
+    """
+    real_handle = "demo-signin-real-user"
+    owner = TestClient(app)
+    r = owner.post("/api/auth/signup",
+                   json={"handle": real_handle, "passphrase": "a long enough passphrase"})
+    check("the real account was created", r.status_code == 201, r.text[:120])
+
+    anon = TestClient(app)
+    taken = anon.post("/api/demo/signin", json={"handle": real_handle})
+    missing = anon.post("/api/demo/signin", json={"handle": "no-such-handle-anywhere"})
+
+    check("demo sign-in refuses a real account", taken.status_code == 404,
+          f"got {taken.status_code}")
+    check("and an unknown handle fails the same way", missing.status_code == 404)
+    check("the two responses are indistinguishable",
+          taken.json() == missing.json(), f"{taken.json()} vs {missing.json()}")
+    check("no session was issued", "set-cookie" not in taken.headers)
+
+    listed = anon.get("/api/demo/characters")
+    check("the character list is readable without signing in", listed.status_code == 200)
+    check("and never contains a real account",
+          all(c["handle"] != real_handle for c in listed.json()))
+
+
 def test_the_nine_character_demo_creates_no_cross_account_links() -> None:
     """Nine demo accounts in one database, and no row in any of them touching another.
 

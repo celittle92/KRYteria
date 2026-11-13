@@ -1,6 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, type Account } from "../api";
 import { ErrorNote, Spinner } from "../components/ui";
+
+type DemoCharacter = {
+  handle: string;
+  name: string;
+  age?: number;
+  occupation?: string;
+  location?: string;
+  demonstrates?: string[];
+};
 
 /**
  * The front door, and the onboarding moment.
@@ -14,11 +23,37 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
   theme: "dark" | "warm";
   onToggleTheme: () => void;
 }) {
-  const [mode, setMode] = useState<"in" | "up">("up");
+  // Signing in is the default, not creating an account.
+  //
+  // This opened on "up", so arriving at the app put you in a create-account form with
+  // no choice made. Somebody who meant to sign in gets a second, empty account instead,
+  // and on the hosted demo that also means claiming a character's handle before the
+  // seeder has taken it. In an app whose whole promise is that it holds as little as
+  // possible, a stray click should not create an account.
+  const [mode, setMode] = useState<"in" | "up">("in");
   const [handle, setHandle] = useState("");
   const [passphrase, setPassphrase] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [characters, setCharacters] = useState<DemoCharacter[]>([]);
+  const [enteringAs, setEnteringAs] = useState<string | null>(null);
+
+  useEffect(() => {
+    // A deployment with no demo data simply shows nothing here, rather than offering a
+    // sign-in that fails.
+    api.demoCharacters().then(setCharacters).catch(() => setCharacters([]));
+  }, []);
+
+  async function enterDemo(c: DemoCharacter) {
+    setEnteringAs(c.handle);
+    setError(null);
+    try {
+      onSignedIn(await api.demoSignIn(c.handle));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not open the demo.");
+      setEnteringAs(null);
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -165,6 +200,47 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
                 : "I need to create an account"}
             </button>
           </div>
+
+          {characters.length > 0 && (
+            <div className="card p-7 sm:p-8 max-w-md lg:ml-auto mt-5">
+              <h2 className="font-serif text-xl">Look around first</h2>
+              <p className="text-sm text-muted mt-1.5">
+                {characters.length} invented people, each with their own standards and
+                their own private record. Nothing here describes a real person, and no
+                account can see any other. Open one — no sign-up, nothing to type.
+              </p>
+
+              <ul className="mt-5 space-y-2">
+                {characters.map((c) => (
+                  <li key={c.handle}>
+                    <button
+                      onClick={() => enterDemo(c)}
+                      disabled={enteringAs !== null}
+                      className="w-full text-left rounded-lg px-3.5 py-3 border border-hair
+                                 hover:border-accent hover:bg-accent/5 transition-colors
+                                 disabled:opacity-50 disabled:cursor-wait"
+                    >
+                      <span className="flex items-baseline justify-between gap-3">
+                        <span className="font-medium">{c.name}</span>
+                        <span className="text-xs text-faint">@{c.handle}</span>
+                      </span>
+                      <span className="block text-sm text-muted mt-0.5">
+                        {[c.age, c.occupation, c.location].filter(Boolean).join(" · ")}
+                      </span>
+                      {enteringAs === c.handle && (
+                        <span className="block mt-2"><Spinner label="Opening…" /></span>
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="text-xs text-faint mt-4">
+                Demonstration data. Your own account, if you make one, is separate from
+                these and from everyone else's.
+              </p>
+            </div>
+          )}
 
           <p className="text-xs text-faint mt-5 max-w-md lg:ml-auto">
             Because there is no email on file, a lost passphrase cannot be reset — which

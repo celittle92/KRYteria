@@ -76,9 +76,16 @@ def _seed_on_boot() -> None:
     if os.getenv("KRYTERIA_SEED_ON_BOOT", "").lower() != "true":
         return
     try:
-        from .seed_characters import seed
+        from .seed_characters import PartialSeed, seed
 
-        built = seed(get_store())
+        try:
+            built = seed(get_store())
+        except PartialSeed as e:
+            # Eight characters beat none. Take what built and say loudly what did not,
+            # because the failure mode this guards against is an app that comes up
+            # looking fine with an empty demo and no visible reason.
+            built = e.built
+            log.error("Demo ecosystem is INCOMPLETE — %s", e)
         log.warning(
             "Demo ecosystem ready: %d accounts (%s).",
             len(built), ", ".join(sorted(built)),

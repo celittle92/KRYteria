@@ -79,6 +79,20 @@ KINDS = ("reported_event", "interpretation", "emotional_reaction",
          "missing_information", "uncertainty")
 
 
+class PartialSeed(StoreError):
+    """Some characters built and some did not.
+
+    Carries the ones that succeeded, so a caller that would rather have eight characters
+    than none — the application at boot, for instance — can take them and log the rest.
+    An exception that throws away the work it completed makes the failure worse than it
+    needs to be.
+    """
+
+    def __init__(self, message: str, *, built: dict[str, int]) -> None:
+        super().__init__(message)
+        self.built = built
+
+
 def _day(offset: int) -> str:
     return (date.today() - timedelta(days=offset)).isoformat()
 
@@ -467,16 +481,60 @@ def seed(store: Store, *, reset: bool = False) -> dict[str, int]:
         raise StoreError("Character files are invalid:\n  " + "\n  ".join(problems))
 
     built: dict[str, int] = {}
+    squatted: list[str] = []
+    failed: list[str] = []
+
     for c in chars:
-        existing = store.verify_account(c["handle"], passphrase_for(c["handle"]))
-        if existing is not None:
-            if not reset:
-                built[c["handle"]] = existing
-                continue
-            store.delete_account(existing)
-        built[c["handle"]] = build_character(store, c)
+        handle = c["handle"]
+
+        # Look the account up BY HANDLE, not by handle-and-passphrase.
+        #
+        # This was verify_account(handle, passphrase_for(handle)), which answers a
+        # different question: "is there an account with this handle AND the demo
+        # passphrase". An account holding the handle with some other passphrase came back
+        # as absent, so the seeder went on to create it, hit the UNIQUE constraint on
+        # handle, and the exception took down the seeding of all nine characters — caught
+        # upstream and logged, so the app came up with an empty demo and no obvious cause.
+        #
+        # Christine hit exactly this: the previous build was still serving, the character
+        # accounts did not exist yet, and she signed up as `thelonggame` by clicking
+        # "create an account" instead of "I have an account".
+        existing = store.get_account_by_handle(handle)
+
+        if existing is not None and not existing["is_demo"]:
+            # Somebody's real account holds a character handle. Never touch it — an
+            # account the seeder did not create is not the seeder's to delete, and a
+            # demo fixture is nowhere near a good enough reason.
+            squatted.append(handle)
+            continue
+
+        try:
+            if existing is not None:
+                if not reset:
+                    built[handle] = existing["id"]
+                    continue
+                store.delete_account(existing["id"])
+            built[handle] = build_character(store, c)
+        except Exception as e:                       # noqa: BLE001 - reported below
+            # One malformed character must not cost the other eight. A demo that is
+            # eight-ninths present is far better than one that is silently empty.
+            failed.append(f"{handle}: {type(e).__name__}: {e}")
 
     assert_no_cross_account_links(store)
+
+    if squatted or failed:
+        parts = []
+        if squatted:
+            parts.append(
+                "These demo handles are held by real accounts and were left alone: "
+                + ", ".join(squatted)
+                + ". Delete those accounts (or rename the characters) for the demo to "
+                  "be complete."
+            )
+        if failed:
+            parts.append("These characters failed to build:\n  " + "\n  ".join(failed))
+        raise PartialSeed(" ".join(parts), built=built)
+
     return built
 
 

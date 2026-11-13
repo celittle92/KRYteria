@@ -12,6 +12,60 @@ from .schemas import DeleteAccount, ResourceOfferResponse
 router = APIRouter(prefix="/api", tags=["account"])
 
 
+# ---------------------------------------------------------------- the demo front door
+
+@router.get("/demo/characters")
+def demo_characters(store: Store = Depends(get_store)):
+    """The demo accounts that actually exist, for the sign-in screen to offer.
+
+    Only accounts flagged ``is_demo`` and only the details already published in
+    README.md. A real account can never appear here, so this cannot be used to find out
+    whether some handle belongs to a person.
+
+    It reports what is really in the database rather than what the character files say,
+    so a partially seeded demo shows as partial instead of offering a sign-in that fails.
+    """
+    from ..seed_characters import load_character_files
+
+    out = []
+    for char in load_character_files():
+        account = store.get_account_by_handle(char["handle"])
+        if not account or not account["is_demo"]:
+            continue
+        out.append({
+            "handle": char["handle"],
+            "name": char["display_name"],
+            "age": char.get("age"),
+            "occupation": char.get("occupation"),
+            "location": char.get("location"),
+            "demonstrates": char.get("demonstrates", []),
+        })
+    return out
+
+
+@router.post("/demo/signin")
+def demo_signin(body: dict, response: Response, store: Store = Depends(get_store)):
+    """Sign in to a demo account by handle alone.
+
+    So that seeing the demo needs no typing and no credentials in the browser. The
+    passphrases are published, but putting them in the front end would mean a real
+    sign-in form prefilled with a password, which is a habit worth not teaching.
+
+    **Refuses any account that is not a demo account**, so it cannot become a way into
+    somebody's journal. A handle that does not exist and a handle belonging to a real
+    person return the same 404, because distinguishing them would answer "does this
+    person have an account here".
+    """
+    from .deps import issue_session
+
+    handle = str(body.get("handle", "")).strip()
+    account = store.get_account_by_handle(handle) if handle else None
+    if not account or not account["is_demo"]:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "No demo account with that handle.")
+    issue_session(response, account["id"])
+    return store.get_account(account["id"])
+
+
 # ---------------------------------------------------------------- tokenomics
 
 @router.get("/usage")

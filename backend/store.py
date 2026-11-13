@@ -400,6 +400,25 @@ class Store:
             ).fetchone()
         return dict(row) if row else None
 
+    def get_account_by_handle(self, handle: str) -> dict[str, Any] | None:
+        """Look an account up by handle alone, with no passphrase.
+
+        Deliberately not exposed through any route, and it must not be: answering
+        "does this handle exist" for an arbitrary caller is the disclosure this app is
+        built to refuse. It exists for the seeder, which needs to know whether a handle
+        is taken before it tries to take it — a question ``verify_account`` cannot
+        answer, because that returns nothing for a handle held under a passphrase it was
+        not given, which is indistinguishable from the handle being free.
+
+        Returns no passphrase hash.
+        """
+        with self.read() as conn:
+            row = conn.execute(
+                "SELECT id, handle, is_demo, created_at FROM accounts WHERE handle = ?",
+                (handle.strip(),),
+            ).fetchone()
+        return dict(row) if row else None
+
     def set_preferences(
         self, account_id: int, *, tone_mode: str | None = None, theme: str | None = None,
         resource_offering: str | None = None, retention: str | None = None,

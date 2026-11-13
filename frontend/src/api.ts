@@ -227,6 +227,15 @@ export const api = {
   signIn: (handle: string, passphrase: string) =>
     post<Account>("/api/auth/signin", { handle, passphrase }),
   signOut: () => post<{ signed_out: boolean }>("/api/auth/signout"),
+
+  // The demo front door. No passphrase crosses the wire: the backend refuses any handle
+  // that is not a demo account, so this cannot open a real person's journal.
+  demoCharacters: () => get<Array<{
+    handle: string; name: string; age?: number;
+    occupation?: string; location?: string; demonstrates?: string[];
+  }>>("/api/demo/characters"),
+  demoSignIn: (handle: string) => post<Account>("/api/demo/signin", { handle }),
+
   setPreferences: (
     p: Partial<Pick<Account, "theme" | "tone_mode" | "resource_offering" | "retention">>
       & { region?: string },
