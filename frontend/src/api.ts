@@ -311,7 +311,19 @@ export const api = {
 
   entries: (params?: { search?: string; limit?: number }) =>
     get<Entry[]>("/api/entries" + (params?.search ? `?search=${encodeURIComponent(params.search)}` : "")),
-  entry: (id: number) => get<Entry & { observations: Observation[] }>(`/api/entries/${id}`),
+  // The backend has always returned the evidence and the questions alongside the
+  // observations; nothing was reading them, so the type stopped at observations.
+  entry: (id: number) => get<Entry & {
+    observations: Observation[];
+    evidence_links: Array<{
+      id: number; relation: Relation; criterion_value?: string;
+      rationale: string | null; source_level: string; proposed_by: string;
+    }>;
+    questions: Array<{
+      id: number; claim: string; question: string; gap_kind: string;
+      claim_valence: string; materiality: string; answer: string | null;
+    }>;
+  }>(`/api/entries/${id}`),
   brainDump: (b: {
     text: string; profile_id?: number | null; person_id?: number | null;
     want_reflection?: boolean; retention?: Retention | null; analyze?: boolean;

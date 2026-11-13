@@ -1625,7 +1625,24 @@ class Store:
         sql += " ORDER BY occurred_on DESC, id DESC LIMIT ?"
         args.append(limit)
         with self.read() as conn:
-            return [dict(r) for r in conn.execute(sql, args)]
+            rows = [dict(r) for r in conn.execute(sql, args)]
+            # ``get_entry`` has always attached these; the list did not, so every entry in
+            # a listing looked like one about nobody. A journal that cannot say who an
+            # entry concerns is most of the way to useless, and "no one named" is a worse
+            # answer than none because it reads as a fact rather than as missing data.
+            if rows:
+                marks = conn.execute(
+                    "SELECT ep.entry_id, p.alias FROM entry_people ep"
+                    " JOIN people p ON p.id = ep.person_id"
+                    f" WHERE ep.entry_id IN ({','.join('?' * len(rows))})",
+                    [r["id"] for r in rows],
+                ).fetchall()
+                by_entry: dict[int, list[str]] = {}
+                for m in marks:
+                    by_entry.setdefault(m["entry_id"], []).append(m["alias"])
+                for r in rows:
+                    r["people"] = by_entry.get(r["id"], [])
+            return rows
 
     def get_entry(self, account_id: int, entry_id: int) -> dict[str, Any] | None:
         with self.read() as conn:

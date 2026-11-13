@@ -23,16 +23,31 @@ import { awaitingChoice, placeholderFor, soleOrNone } from "../choice";
  * conclude that person handles disagreement well.
  */
 
+// The two negative states are the ones that carry the weight, and their first labels
+// — "No chance to see" and "Didn't see it" — did not say how they differed. They are
+// different in the way that matters most: one is no evidence at all, the other is
+// evidence. If plans never came up, nothing has been learned about how he handles
+// plans. If plans came up and he said nothing about his schedule, something has.
+//
+// The labels now carry that on their own, instead of relying on a hint the eye skips.
 const STATES: { value: ChecklistState; label: string; hint: string }[] = [
-  { value: "observed", label: "Saw this", hint: "It happened, at least once." },
-  { value: "contradicted", label: "Saw the opposite", hint: "The reverse happened." },
   {
-    value: "no_opportunity", label: "No chance to see",
-    hint: "The situation has not come up. Not the same as absence.",
+    value: "observed", label: "Yes, saw this",
+    hint: "It happened, at least once.",
   },
   {
-    value: "not_observed", label: "Didn't see it", hint:
-      "There was an opportunity and it did not happen.",
+    value: "contradicted", label: "Saw the opposite",
+    hint: "The reverse happened.",
+  },
+  {
+    value: "no_opportunity", label: "Hasn't come up",
+    hint: "The situation has not arisen, so there is nothing to have seen. This is not "
+        + "evidence of absence, and it is not held against anyone.",
+  },
+  {
+    value: "not_observed", label: "Came up, didn't happen",
+    hint: "The situation did arise and this did not happen. That is a real observation, "
+        + "unlike 'hasn't come up'.",
   },
 ];
 
@@ -262,10 +277,12 @@ export default function Checklist() {
                   for you.
                 </p>
                 <p className="text-xs text-faint leading-relaxed">
-                  <strong className="text-muted">"No chance to see" is not a
-                  fail.</strong> Someone who has never disagreed with a person cannot
-                  conclude that person handles disagreement well. The two are kept
-                  apart on purpose.
+                  <strong className="text-muted">"Hasn't come up" is not a fail.</strong>{" "}
+                  If you have never disagreed with someone, you cannot conclude they
+                  handle disagreement badly — or well. That is different from "came up,
+                  didn't happen", which is a real observation. The two are kept apart on
+                  purpose, and nothing here is ever counted against anyone for being
+                  unobserved.
                 </p>
               </div>
             </>

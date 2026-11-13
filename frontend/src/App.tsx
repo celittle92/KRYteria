@@ -5,6 +5,7 @@ import { Spinner } from "./components/ui";
 import SignIn from "./screens/SignIn";
 import BrainDump from "./screens/BrainDump";
 import Criteria from "./screens/Criteria";
+import Journal from "./screens/Journal";
 import Checklist from "./screens/Checklist";
 import Patterns from "./screens/Patterns";
 import Reflection from "./screens/Reflection";
@@ -17,6 +18,9 @@ import Settings from "./screens/Settings";
  */
 const NAV = [
   { to: "/", label: "Brain Dump", end: true },
+  // Second, right after writing: rereading what you wrote and what KRYteria made of it
+  // is the other half of the primary interaction, and it had no screen at all.
+  { to: "/journal", label: "Journal" },
   { to: "/criteria", label: "My KRYteria" },
   { to: "/checklist", label: "Checklist" },
   { to: "/patterns", label: "Patterns" },
@@ -129,6 +133,7 @@ export default function App() {
         <div key={location.pathname} className="rise">
           <Routes>
             <Route path="/" element={<BrainDump account={account} />} />
+            <Route path="/journal" element={<Journal />} />
             <Route path="/criteria" element={<Criteria />} />
             <Route path="/checklist" element={<Checklist />} />
             <Route path="/patterns" element={<Patterns />} />
