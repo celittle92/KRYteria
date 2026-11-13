@@ -1,0 +1,399 @@
+{
+  "_comment": [
+    "Adrian — @theproducer. Synthetic. No real person.",
+    "",
+    "The other half of the shared date night. His entry and Catherine's describe the same",
+    "Thursday and carry the same occurred_on, which is the only thing they share: the two",
+    "accounts cannot see each other, and KRYteria never tells either of them that someone",
+    "else wrote about that evening. Neither account is more correct.",
+    "",
+    "His 'being trusted rather than managed' criterion is deliberately in tension with",
+    "Catherine's 'consistent communication between dates'. Both are legitimate standards.",
+    "The product's job is not to decide which of them is right.",
+    "",
+    "Left out on purpose: the ecosystem table lists Vanessa among his connections, but no",
+    "narrative in the specification describes it, so nothing has been invented for it."
+  ],
+  "handle": "theproducer",
+  "display_name": "Adrian",
+  "age": 37,
+  "occupation": "Television and entertainment producer",
+  "location": "Manhattan",
+  "bio": "Intelligent, successful, ambitious, socially confident, surprisingly private about his own feelings. Attentive and affectionate in person. Believes being fully present when he is with someone should count for more than how often he texts. Wants marriage and children eventually, and is careful about promising it early.",
+  "demonstrates": [
+    "An independent assessment of the same relationship",
+    "A different reading of the same shared evening",
+    "Caring genuinely while holding a different communication preference",
+    "The distance between acknowledging a concern and changing the behaviour"
+  ],
+  "criteria": [
+    {
+      "key": "attraction",
+      "value": "Physical attraction",
+      "desired_behavior": "I want to be near her"
+    },
+    {
+      "key": "intellect",
+      "value": "Intellectual engagement",
+      "desired_behavior": "Has her own opinions and will defend them"
+    },
+    {
+      "key": "independence",
+      "value": "Her own life and ambition",
+      "desired_behavior": "Has a career and interests she would not drop for me",
+      "why_it_matters": "I have dated people who wanted me to be their whole schedule."
+    },
+    {
+      "key": "trust",
+      "value": "Being trusted rather than managed",
+      "desired_behavior": "Raises a problem once, directly, instead of keeping a tally",
+      "why_it_matters": "A busy week should not turn into a referendum on whether I care."
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Can say what she needs without it becoming a fight"
+    },
+    {
+      "key": "intentions",
+      "value": "Compatible intentions",
+      "desired_behavior": "Wants the same thing, without needing it decided by month three"
+    },
+    {
+      "key": "kids",
+      "value": "Wants children eventually",
+      "desired_behavior": "Wants them, and is not in a hurry to pin down when"
+    },
+    {
+      "key": "humor",
+      "value": "Humor",
+      "desired_behavior": "Funny, and does not explain the joke"
+    },
+    {
+      "key": "lifestyle",
+      "value": "Compatible with the hours I work",
+      "desired_behavior": "An unpredictable schedule is a fact she can live with"
+    },
+    {
+      "key": "chemistry",
+      "value": "Physical comfort and chemistry",
+      "desired_behavior": "It is easy, and neither of us is performing"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Long-Term Partner KRYteria",
+      "objective": "A serious relationship that can hold a demanding career",
+      "context_label": "Long-term",
+      "criteria": [
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "independence",
+          "tier": "mandatory"
+        },
+        {
+          "key": "trust",
+          "tier": "mandatory"
+        },
+        {
+          "key": "lifestyle",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        },
+        {
+          "key": "intellect",
+          "tier": "preferred"
+        },
+        {
+          "key": "kids",
+          "tier": "preferred"
+        },
+        {
+          "key": "humor",
+          "tier": "preferred"
+        },
+        {
+          "key": "chemistry",
+          "tier": "preferred"
+        }
+      ]
+    },
+    {
+      "name": "Casual Dating KRYteria",
+      "objective": "Attraction, chemistry and compatible short-term expectations",
+      "context_label": "Casual",
+      "criteria": [
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "chemistry",
+          "tier": "mandatory"
+        },
+        {
+          "key": "humor",
+          "tier": "preferred"
+        },
+        {
+          "key": "intellect",
+          "tier": "preferred"
+        },
+        {
+          "key": "trust",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "kids",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "lifestyle",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "key": "catherine",
+      "alias": "Catherine",
+      "role_label": "exclusive, about four months"
+    },
+    {
+      "key": "jane",
+      "alias": "Jane",
+      "role_label": "a few dates, last year"
+    }
+  ],
+  "entries": [
+    {
+      "key": "adr-datenight",
+      "person": "catherine",
+      "days_ago": 3,
+      "analyze": true,
+      "themes": [
+        "attraction-and-chemistry",
+        "emotional-intimacy",
+        "feeling-valued",
+        "communication-preferences",
+        "expectations-and-commitment"
+      ],
+      "body": "Dinner with Catherine was great tonight.\n\nI was annoyed that I was late. I think more annoyed than she was. The production issue was legitimate, but I hate starting a date that way, especially when I was the one who planned it. I texted her when I knew I wasn't going to make it on time, and she was very understanding.\n\nI like talking to her. She's smart, she has opinions, and she listens when someone disagrees with her. We were talking about work and she challenged something I said. I didn't agree with her completely, but I liked the conversation. It wasn't one of those dates where you're just trying to keep the other person entertained or having to put on a fake smile for them.\n\nShe's also really funny. Sometimes she says something completely straight-faced and it takes me a second to realize she's joking.\n\nI'm very attracted to her. I like being around her, and I like how comfortable we are physically. I like holding her hand across the table. There's a lot of chemistry, and it doesn't feel forced.\n\nI did have to check my phone once. Another issue came up with the production, and I didn't want to ignore it. I explained what was happening. I could tell she wasn't thrilled, but she didn't make a thing of it.\n\nI know my schedule isn't ideal. I'm not always great at texting during the day. Sometimes I'm in meetings, sometimes I'm dealing with production, and sometimes I just don't want to spend the entire day on my phone. I don't think that means I'm not interested. I don't know if she thinks that.\n\nI also know she likes consistency. She's mentioned that before. I don't want her to feel like she's chasing me, because she's not. I do want to see her. I made sure we had a plan for next weekend and made the reservation as soon as I got back home.\n\nI like that she has her own career and her own life. I don't want someone who needs me to organize everything for them. But I also don't want to be in a relationship where every time I have a busy week it becomes a discussion about whether I'm making enough time.\n\nI think there's something here. I'm not ready to make huge promises, but I am interested in continuing to see her. I want to figure out whether our schedules and expectations can work together."
+    },
+    {
+      "key": "adr-career",
+      "person": null,
+      "days_ago": 6,
+      "analyze": true,
+      "themes": [
+        "expectations-and-commitment",
+        "communication-preferences"
+      ],
+      "body": "Took the job. More responsibility, more money, a lot more travel, and hours I cannot predict more than about a week out.\n\nI have wanted this for a long time and I am not going to pretend otherwise. But I signed it knowing exactly what the last three months have looked like with Catherine, and the thing she has already told me is a problem is the thing this job makes worse.\n\nI keep telling myself I will be better about staying in touch when I am busy. I have been telling myself that since August. I have not actually changed anything about how I work. I just intend to.\n\nI do not want her to be the thing that gets fitted around the edges. I also do not want to hand back something I have built toward for ten years. I do not think those are the only two options but I have not done the work of figuring out what the third one is."
+    },
+    {
+      "key": "adr-effort",
+      "person": "catherine",
+      "days_ago": 19,
+      "themes": [
+        "communication-preferences",
+        "reciprocity-and-initiative"
+      ],
+      "body": "Set a reminder to text Catherine in the mornings this week. Did it Monday and Tuesday. Forgot Wednesday entirely, which is the part that bothers me — not that I was too busy, I just did not think of it. She did not say anything about it. She noticed, though.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He set a reminder and followed it on two of three days.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "He did not think of it on the third day.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "He believes she noticed and chose not to mention it.",
+          "certainty": "inferred",
+          "hedge": "You've read her not saying anything as her having noticed — is that something she confirmed, or your read?"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "trust",
+          "relation": "complicating",
+          "profile": "Long-Term Partner KRYteria",
+          "rationale": "Her not raising it is consistent with trusting him and with keeping a tally. The entry does not distinguish them."
+        }
+      ]
+    },
+    {
+      "key": "adr-jane",
+      "person": "jane",
+      "days_ago": 300,
+      "themes": [
+        "expectations-and-commitment",
+        "communication-preferences"
+      ],
+      "body": "Jane and I are not going anywhere and I think we both worked that out on the same evening. She is impressive and I liked her. She also had a timeline and a set of questions and I could feel myself being assessed against them. That is not a criticism of her. I just could not tell whether she liked me or whether I was clearing bars.",
+      "observations": [
+        {
+          "kind": "interpretation",
+          "text": "He experienced her clarity about what she wanted as evaluation.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "Both stopped pursuing it after the same evening.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "trust",
+          "relation": "contradicting",
+          "profile": "Long-Term Partner KRYteria"
+        }
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "attraction",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "intellect",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "humor",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "chemistry",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "independence",
+      "person": "catherine",
+      "status": "pass",
+      "note": "Her own career, her own life. This one is not in question."
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "maturity",
+      "person": "catherine",
+      "status": "pass",
+      "note": "She told me the communication thing directly instead of letting it rot."
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "trust",
+      "person": "catherine",
+      "status": "unknown",
+      "note": "She has raised it once, which is what I said I wanted. I do not yet know what happens when the new schedule actually starts."
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "lifestyle",
+      "person": "catherine",
+      "status": "unknown",
+      "note": "The honest answer is that this depends on me, not on her."
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "intentions",
+      "person": "catherine",
+      "status": "unknown"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "kids",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "trust",
+      "person": "jane",
+      "status": "fail",
+      "note": "Not her fault. It was not what either of us wanted it to be."
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "intellect",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "independence",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Long-Term Partner KRYteria",
+      "criterion": "intentions",
+      "person": "jane",
+      "status": "unknown"
+    }
+  ],
+  "interrogations": [
+    {
+      "entry": "adr-career",
+      "claim": "I will be better about staying in touch when I am busy.",
+      "gap_kind": "accountability",
+      "claim_valence": "positive",
+      "materiality": "material",
+      "question": "You have held that intention since August. What would be different in a week where it actually happened — and what would you have to stop doing to make room for it?"
+    }
+  ],
+  "decisions": [
+    {
+      "choice": "talk",
+      "criterion": "lifestyle",
+      "action_text": "Tell Catherine what the new schedule actually looks like before she finds out by experiencing it."
+    },
+    {
+      "choice": "more_time",
+      "criterion": "intentions",
+      "action_text": "Keep seeing her and see where it goes."
+    },
+    {
+      "choice": "undecided",
+      "criterion": "trust"
+    }
+  ]
+}

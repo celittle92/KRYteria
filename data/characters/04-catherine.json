@@ -1,0 +1,522 @@
+{
+  "_comment": [
+    "Catherine — @thelonggame. Synthetic. No real person.",
+    "",
+    "Demonstrates: soft hands as a serious user-defined criterion (the brand test),",
+    "cross-criterion reasoning where one fact is positive evidence for one criterion and",
+    "complicating for another, and her half of the shared date night with Adrian.",
+    "",
+    "Entries flagged \"analyze\": true carry no seeded observations or evidence on purpose.",
+    "Those are run through the real agent pipeline and the output is what the demo shows,",
+    "so the analysis in the proof-point entries is genuine rather than fixture text."
+  ],
+  "handle": "thelonggame",
+  "display_name": "Catherine",
+  "age": 34,
+  "occupation": "Senior strategy executive",
+  "location": "Manhattan",
+  "bio": "Intelligent, ambitious, independent, opinionated, self-aware. Wants marriage and children, and is intentional about dating. Guarded at first, affectionate and playful once comfortable. Likes a man who can challenge her without turning everything into an argument.",
+  "demonstrates": [
+    "Unconventional standards treated seriously — soft hands",
+    "Cross-criterion reasoning: career ambition as both positive and complicating",
+    "Perspective reconciliation: improvement acknowledged, need still standing",
+    "Her private account of a date night Adrian also wrote about"
+  ],
+  "criteria": [
+    {
+      "key": "attraction",
+      "value": "Physical attraction",
+      "desired_behavior": "I want him, not just the idea of him",
+      "why_it_matters": "I have talked myself into attraction before and it does not hold."
+    },
+    {
+      "key": "intellect",
+      "value": "Intellectual connection",
+      "desired_behavior": "Can disagree with me and make it interesting rather than tiring"
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Says the hard thing instead of going quiet"
+    },
+    {
+      "key": "kindness",
+      "value": "Kindness",
+      "desired_behavior": "Is decent to people who cannot do anything for him"
+    },
+    {
+      "key": "independence",
+      "value": "Independent identity and ambition",
+      "desired_behavior": "Has a life he would not give up, and does not need me to run it",
+      "why_it_matters": "I do not want to be anyone's social secretary."
+    },
+    {
+      "key": "intentions",
+      "value": "Shared long-term intentions",
+      "desired_behavior": "Wants what I want, on a timeline that is not vague"
+    },
+    {
+      "key": "kids",
+      "value": "Wants children",
+      "desired_behavior": "Wants them, and has thought about it rather than assumed it"
+    },
+    {
+      "key": "communication",
+      "value": "Consistent communication between dates",
+      "desired_behavior": "I hear from him when we are not in the same room",
+      "why_it_matters": "I do not want a relationship I only exist inside when he is present."
+    },
+    {
+      "key": "humor",
+      "value": "Humor",
+      "desired_behavior": "Gets the joke, and makes better ones"
+    },
+    {
+      "key": "lifestyle",
+      "value": "Lifestyle compatibility",
+      "desired_behavior": "Our weeks can actually contain each other"
+    },
+    {
+      "key": "softhands",
+      "value": "Soft hands",
+      "desired_behavior": "His hands are soft",
+      "why_it_matters": "I am allowed to have a preference."
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Husband KRYteria",
+      "objective": "Marriage and children",
+      "context_label": "Long-term",
+      "criteria": [
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kids",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kindness",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intellect",
+          "tier": "mandatory"
+        },
+        {
+          "key": "independence",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        },
+        {
+          "key": "lifestyle",
+          "tier": "preferred"
+        },
+        {
+          "key": "humor",
+          "tier": "preferred"
+        },
+        {
+          "key": "softhands",
+          "tier": "aspirational"
+        }
+      ]
+    },
+    {
+      "name": "Boyfriend KRYteria",
+      "objective": "Committed, exclusive dating",
+      "context_label": "Dating",
+      "criteria": [
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intellect",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kindness",
+          "tier": "mandatory"
+        },
+        {
+          "key": "humor",
+          "tier": "preferred"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "intentions",
+          "tier": "preferred"
+        },
+        {
+          "key": "lifestyle",
+          "tier": "preferred"
+        },
+        {
+          "key": "softhands",
+          "tier": "aspirational"
+        },
+        {
+          "key": "kids",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "key": "adrian",
+      "alias": "Adrian",
+      "role_label": "exclusive, about four months"
+    },
+    {
+      "key": "joe",
+      "alias": "Joe",
+      "role_label": "a few dates last spring"
+    },
+    {
+      "key": "jack",
+      "alias": "Jack",
+      "role_label": "two dates, winter"
+    }
+  ],
+  "entries": [
+    {
+      "key": "cat-datenight",
+      "person": "adrian",
+      "days_ago": 3,
+      "analyze": true,
+      "themes": [
+        "attraction-and-chemistry",
+        "emotional-intimacy",
+        "feeling-valued",
+        "communication-preferences",
+        "reciprocity-and-initiative"
+      ],
+      "body": "Okay. Dinner last night was really good. Annoyingly good, actually.\n\nFirst, he was late. Twenty minutes. But he texted me, explained what was happening, and apologized when he got there. So I don't really have a complaint about the lateness itself. I appreciated that he told me.\n\nAnd then he was just…really good company. We talked for hours. He remembered something I told him about a work situation and asked me how it turned out. I like that. I don't want to have to reintroduce myself every time I see someone.\n\nHe also challenged me on something we were talking about. Not in an obnoxious way. He actually made a good point. I really like how intelligent he is. And he's funny. And obviously I'm attracted to him. Very attracted to him.\n\nHis hands are also extremely nice. I know that's a ridiculous thing to say, but I have a criterion for this. I am allowed to have a preference.\n\nHe checked his phone once during dinner because something was happening at work. He explained it, apologized, and put it away. That didn't bother me much. I understand that his job is demanding. What bothers me is that sometimes I don't hear from him for most of the day, and then when we're together he's completely attentive.\n\nI don't want to be unreasonable. I don't need a minute-by-minute update. But I also don't want a relationship where I only feel like I exist when I'm physically in the same room as him.\n\nThe good thing is that he actually made the next plan. I didn't have to bring it up or hint around it. He said we should do something next weekend, and made the reservation, again. He confirmed this morning.\n\nI think he likes me. I just don't know whether the communication thing is a difference in style or something that will become a bigger problem. One amazing date doesn't change things or answer that question.\n\nAnd I know I'm very attracted to him, and I unfortunately like him a lot. I need to make sure I'm not letting that make me too generous about things that actually matter to me or that I'm making excuses that shouldn't slide.",
+      "_comment": "Same occurred_on as Adrian's adr-datenight: this is when the evening happened. She wrote it the next morning ('last night'), he wrote it that night ('tonight')."
+    },
+    {
+      "key": "cat-quiet-week",
+      "person": "adrian",
+      "days_ago": 11,
+      "themes": [
+        "communication-preferences",
+        "expressing-needs"
+      ],
+      "body": "Didn't hear from Adrian from Tuesday morning until Thursday night. He was in a production block, I know that. He surfaced Thursday with a long message and a plan for the weekend. I don't think he was avoiding me. I think I genuinely did not cross his mind for two days, which is somehow a different thing and I am not sure it is a better one.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "No contact from Tuesday morning to Thursday evening.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "He initiated contact on Thursday with a plan for the weekend.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "She reads the silence as absence of thought rather than avoidance.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "missing_information",
+          "text": "Whether she has told him what frequency would feel like enough.",
+          "certainty": "inferred",
+          "hedge": "You haven't mentioned discussing this with him directly — have you?"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "communication",
+          "relation": "contradicting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "Two days without contact is the pattern she named as her concern."
+        },
+        {
+          "criterion": "independence",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "A demanding production block is the career she said she wanted him to have."
+        },
+        {
+          "criterion": "lifestyle",
+          "relation": "complicating",
+          "profile": "Husband KRYteria",
+          "rationale": "The same fact reads as ambition and as unavailability; it does not resolve to either."
+        }
+      ]
+    },
+    {
+      "key": "cat-adrian-early",
+      "person": "adrian",
+      "days_ago": 104,
+      "themes": [
+        "attraction-and-chemistry",
+        "emotional-intimacy"
+      ],
+      "body": "Second date with Adrian. He is genuinely one of the most attractive men I have ever sat across a table from, which I had assumed would be the whole story, and then he turned out to be interesting. He asked what I actually do, not what my title is. I came home annoyed about how much I liked it.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He asked about the substance of her work rather than her title.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "emotional_reaction",
+          "text": "She was unsettled by how much she enjoyed it.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "attraction",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria"
+        },
+        {
+          "criterion": "intellect",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "One conversation is consistent with intellectual interest without establishing it."
+        }
+      ]
+    },
+    {
+      "key": "cat-joe",
+      "person": "joe",
+      "days_ago": 219,
+      "themes": [
+        "attraction-and-chemistry",
+        "communication-preferences"
+      ],
+      "body": "Third and last date with Joe. He is lovely to look at and extremely easy to be around and I ran out of things to say by the main course. He did not seem to notice, which was somehow the answer. Nothing was wrong. There just was not anything there.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "Conversation did not sustain across the evening.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "She took his not noticing as confirmation rather than as a separate fact.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "attraction",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria"
+        },
+        {
+          "criterion": "intellect",
+          "relation": "contradicting",
+          "profile": "Boyfriend KRYteria"
+        }
+      ]
+    }
+  ],
+  "assessments": [
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intellect",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "humor",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "kindness",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "communication",
+      "person": "adrian",
+      "status": "unknown",
+      "note": "He communicates well when something changes. Between dates is the open question, and one good evening did not answer it."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "independence",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "maturity",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intentions",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "lifestyle",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "softhands",
+      "person": "adrian",
+      "status": "pass",
+      "note": "Confirmed. Repeatedly."
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "attraction",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "intellect",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "softhands",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "communication",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "kids",
+      "person": "adrian",
+      "status": "unknown",
+      "note": "He has said eventually. That is not nothing and it is not an answer."
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "intentions",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "lifestyle",
+      "person": "adrian",
+      "status": "unknown",
+      "note": "The thing I actually need to find out."
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "maturity",
+      "person": "adrian",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "kindness",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "independence",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "humor",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "joe",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intellect",
+      "person": "joe",
+      "status": "fail",
+      "note": "Three evenings and I was doing all of the work."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "kindness",
+      "person": "joe",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "communication",
+      "person": "joe",
+      "status": "unknown"
+    }
+  ],
+  "decisions": [
+    {
+      "choice": "gather_info",
+      "criterion": "communication",
+      "action_text": "Notice what the next two weeks actually look like between dates, rather than deciding now."
+    },
+    {
+      "choice": "more_time",
+      "criterion": "lifestyle",
+      "action_text": "See how the new job actually lands before drawing a conclusion about it.",
+      "times": 2
+    },
+    {
+      "choice": "reconsider",
+      "criterion": "intellect",
+      "action_text": "Stop seeing Joe."
+    }
+  ]
+}
