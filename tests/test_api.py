@@ -812,6 +812,29 @@ def test_health_is_diagnosable() -> None:
           or "api_key_found" in body)
 
 
+def test_an_unknown_api_path_is_a_404_and_not_the_single_page_app() -> None:
+    """A mistyped endpoint must fail like an endpoint, not answer like a page.
+
+    The SPA is mounted on a catch-all so the client router can own its own paths. That
+    caught ``/api/...`` too, so every unmatched endpoint returned 200 and a page of HTML:
+    a client got a JSON parse error rather than a 404, and asking a deployment whether it
+    had a route answered "yes" no matter what. That is how a redeploy that never happened
+    looked, for a while, like one that had.
+    """
+    anon = TestClient(app)
+    missing = anon.get("/api/no-such-endpoint-exists")
+    check("an unknown /api path 404s", missing.status_code == 404,
+          f"got {missing.status_code}")
+    check("and answers as JSON, not a page",
+          missing.headers.get("content-type", "").startswith("application/json"),
+          missing.headers.get("content-type", ""))
+
+    page = anon.get("/checklist")
+    check("a client-side route still serves the app", page.status_code == 200)
+    check("and that one is HTML",
+          page.headers.get("content-type", "").startswith("text/html"))
+
+
 def test_recovery_code_is_the_way_back_in_without_an_email() -> None:
     """A lost passphrase must not mean a lost journal, and must not require an email.
 

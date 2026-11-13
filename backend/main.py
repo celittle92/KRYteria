@@ -186,7 +186,18 @@ if FRONTEND_DIST.is_dir():
 
     @app.get("/{full_path:path}", include_in_schema=False)
     def spa(full_path: str):
-        """Serve the single-page app, letting the client router own its own paths."""
+        """Serve the single-page app, letting the client router own its own paths.
+
+        An unmatched ``/api/...`` path is an error, not a page. Falling through to the
+        SPA answered every mistyped or not-yet-deployed endpoint with 200 and a page of
+        HTML, so a client got a JSON parse error instead of a 404 — and checking whether
+        a deployment had a route returned "yes" either way. That cost real time once.
+        """
+        if full_path.startswith("api/"):
+            return JSONResponse(
+                status_code=404,
+                content={"detail": f"No such endpoint: /{full_path}"},
+            )
         candidate = FRONTEND_DIST / full_path
         if full_path and candidate.is_file():
             return FileResponse(candidate)
