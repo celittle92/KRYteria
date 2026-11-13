@@ -18,7 +18,6 @@
     "Whether he wants more children is Unknown in his own account too. He has not decided,",
     "which is a different fact from withholding it from Bianca, and both are true here."
   ],
-
   "handle": "thewildcard",
   "display_name": "Will",
   "age": 52,
@@ -31,45 +30,97 @@
     "Disclosure and accountability as separate facts, from the inside",
     "Conscious trade-offs between a life already built and a new relationship"
   ],
-
   "criteria": [
-    {"key": "funny", "value": "Can take a joke and make a better one",
-     "desired_behavior": "Gives as good as she gets"},
-    {"key": "independent", "value": "Independent",
-     "desired_behavior": "Has her own money, her own friends, her own calendar",
-     "why_it_matters": "I have done the version where I was the whole infrastructure."},
-    {"key": "nojudgement", "value": "Does not treat my history as the headline",
-     "desired_behavior": "Knows about the drinking and does not make it the subject of every third conversation",
-     "why_it_matters": "I told her because I wanted her to know, not so it could be produced as evidence."},
-    {"key": "attraction", "value": "Attraction",
-     "desired_behavior": "There is heat there"},
-    {"key": "kidsfit", "value": "Fits with my children",
-     "desired_behavior": "Can be around them, or around the fact of them, without it being a problem"},
-    {"key": "directness", "value": "Says the thing",
-     "desired_behavior": "Tells me when something is wrong instead of collecting it"},
-    {"key": "intelligence", "value": "Intelligence",
-     "desired_behavior": "Interesting, and interested"},
-    {"key": "intentions", "value": "Compatible intentions",
-     "desired_behavior": "Wants roughly the shape of thing I want, whatever that turns out to be"},
-    {"key": "maturity", "value": "Emotional maturity",
-     "desired_behavior": "Can have a hard conversation without it becoming a referendum"}
+    {
+      "key": "funny",
+      "value": "Can take a joke and make a better one",
+      "desired_behavior": "Gives as good as she gets"
+    },
+    {
+      "key": "independent",
+      "value": "Independent",
+      "desired_behavior": "Has her own money, her own friends, her own calendar",
+      "why_it_matters": "I have done the version where I was the whole infrastructure."
+    },
+    {
+      "key": "nojudgement",
+      "value": "Does not treat my history as the headline",
+      "desired_behavior": "Knows about the drinking and does not make it the subject of every third conversation",
+      "why_it_matters": "I told her because I wanted her to know, not so it could be produced as evidence."
+    },
+    {
+      "key": "attraction",
+      "value": "Attraction",
+      "desired_behavior": "There is heat there"
+    },
+    {
+      "key": "kidsfit",
+      "value": "Fits with my children",
+      "desired_behavior": "Can be around them, or around the fact of them, without it being a problem"
+    },
+    {
+      "key": "directness",
+      "value": "Says the thing",
+      "desired_behavior": "Tells me when something is wrong instead of collecting it"
+    },
+    {
+      "key": "intelligence",
+      "value": "Intelligence",
+      "desired_behavior": "Interesting, and interested"
+    },
+    {
+      "key": "intentions",
+      "value": "Compatible intentions",
+      "desired_behavior": "Wants roughly the shape of thing I want, whatever that turns out to be"
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Can have a hard conversation without it becoming a referendum"
+    }
   ],
-
   "profiles": [
     {
       "name": "Committed Relationship KRYteria",
       "objective": "A serious relationship alongside an existing family",
       "context_label": "Committed",
       "criteria": [
-        {"key": "independent", "tier": "mandatory"},
-        {"key": "nojudgement", "tier": "mandatory"},
-        {"key": "kidsfit", "tier": "mandatory"},
-        {"key": "maturity", "tier": "mandatory"},
-        {"key": "directness", "tier": "mandatory"},
-        {"key": "intentions", "tier": "mandatory"},
-        {"key": "funny", "tier": "preferred"},
-        {"key": "attraction", "tier": "preferred"},
-        {"key": "intelligence", "tier": "preferred"}
+        {
+          "key": "independent",
+          "tier": "mandatory"
+        },
+        {
+          "key": "nojudgement",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kidsfit",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "directness",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "funny",
+          "tier": "preferred"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        },
+        {
+          "key": "intelligence",
+          "tier": "preferred"
+        }
       ]
     },
     {
@@ -77,65 +128,411 @@
       "objective": "Chemistry, mutual desire, clear boundaries",
       "context_label": "Casual",
       "criteria": [
-        {"key": "attraction", "tier": "mandatory"},
-        {"key": "funny", "tier": "mandatory"},
-        {"key": "directness", "tier": "mandatory"},
-        {"key": "independent", "tier": "preferred"},
-        {"key": "intelligence", "tier": "preferred"},
-        {"key": "nojudgement", "tier": "preferred"},
-        {"key": "maturity", "tier": "preferred"},
-        {"key": "kidsfit", "tier": "mandatory", "relevance": "not_applicable"},
-        {"key": "intentions", "tier": "mandatory", "relevance": "not_applicable"}
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "funny",
+          "tier": "mandatory"
+        },
+        {
+          "key": "directness",
+          "tier": "mandatory"
+        },
+        {
+          "key": "independent",
+          "tier": "preferred"
+        },
+        {
+          "key": "intelligence",
+          "tier": "preferred"
+        },
+        {
+          "key": "nojudgement",
+          "tier": "preferred"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "kidsfit",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        }
       ]
     }
   ],
-
   "people": [
-    {"key": "bianca", "alias": "Bianca", "role_label": "dating, about five months"}
+    {
+      "key": "bianca",
+      "alias": "Bianca",
+      "role_label": "dating, about five months"
+    }
   ],
-
   "entries": [
     {
       "key": "will-saturday",
       "person": "bianca",
       "days_ago": 11,
       "analyze": true,
-      "themes": ["communication-preferences", "emotional-intimacy", "expressing-needs"],
-      "body": "Bianca asked me about Saturday. Specifically about how much I had.\n\nMy first instinct was to make it funny and I did, which was the wrong move and I knew it halfway through the sentence. Then I told her I had already been straight with her about all of this months ago, which is true, and then I said something about not having realised I was being monitored, which was not fair and I knew that too.\n\nHere is the thing I did not say. I was loud on Saturday. I know I was, because Danny told me on Sunday and Danny does not say things like that. So she is not inventing it.\n\nWhat I object to is the feeling of being assessed. Except I am aware that is the thing I would say either way, which does not leave me anywhere useful.\n\nI told her in month one because I wanted her to know who she was dealing with. I did not think of it as a line I was drawing under the subject. I am not sure I can tell her that now without it sounding like a correction."
+      "themes": [
+        "communication-preferences",
+        "emotional-intimacy",
+        "expressing-needs"
+      ],
+      "body": "Bianca asked me about Saturday. Specifically about how much I had.\n\nMy first instinct was to make it funny and I did, which was the wrong move and I knew it halfway through the sentence. Then I told her I had already been straight with her about all of this months ago, which is true, and then I said something about not having realised I was being monitored, which was not fair and I knew that too.\n\nHere is the thing I did not say. I was loud on Saturday. I know I was, because Danny told me on Sunday and Danny does not say things like that. So she is not inventing it.\n\nWhat I object to is the feeling of being assessed. Except I am aware that is the thing I would say either way, which does not leave me anywhere useful.\n\nI told her in month one because I wanted her to know who she was dealing with. I did not think of it as a line I was drawing under the subject. I am not sure I can tell her that now without it sounding like a correction.",
+      "analyze_profile": "Committed Relationship KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "emotional_reaction",
+            "text": "The writer objects to feeling assessed.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer judged making it funny to be the wrong move, and judged the remark about being monitored to be unfair.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer takes Danny's comment as support that Bianca is not inventing what happened.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer recognises that they might say they feel assessed regardless, and feels this leaves them without a useful way forward.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Bianca asked about Saturday, specifically how much the writer had.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer tried to make the answer funny, then told Bianca they had already been straight with her about this months earlier, and then said they had not realised they were being monitored.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer says they were loud on Saturday. Danny told them on Sunday.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer told Bianca in the first month because they wanted her to know who she was dealing with.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer is not sure they can tell Bianca now that the earlier disclosure was not meant to close the subject without it sounding like a correction.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "complicating",
+            "rationale": "A question about how much the writer had is directly relevant to whether drinking becomes a focus, but one question—especially about a specific Saturday—does not show a recurring pattern.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "complicating",
+            "rationale": "The writer's feeling assessed is relevant to how the exchange landed, but it does not by itself establish that Bianca repeatedly makes their history the subject.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "supporting",
+            "rationale": "The writer reports telling Bianca about the drinking, which supports that she knows about it; it does not establish how often she brings it up.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Emotional maturity",
+            "relation": "complicating",
+            "rationale": "The account describes a difficult exchange in which the writer says they had already been direct and felt monitored. Bianca's response and how the conversation concluded are not described, so this does not settle how she handles hard conversations.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "I had already been straight with her about all of this months ago.",
+            "gap_kind": "accountability",
+            "question": "That is true and it is not nothing. It also answers a question about month one, and she asked about Saturday. What would taking responsibility for Saturday specifically look like?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "I had already been straight with her about all of this months ago.",
+            "gap_kind": "frequency",
+            "question": "How often has Bianca brought up your drinking since that first disclosure, and in what situations? The earlier disclosure matters, but by itself it doesn’t show whether she has made it a recurring focus.",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "The comment about not having realised I was being monitored ... was not fair.",
+            "gap_kind": "circumstances",
+            "question": "Beyond asking how much you had on Saturday, what did Bianca say or do that felt like monitoring? That distinction could change how this exchange bears on whether she treats your history as the headline.",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "Danny told me on Sunday ... So she is not inventing it.",
+            "gap_kind": "magnitude",
+            "question": "What exactly did Danny observe or tell you? His comment supports that you were loud, but does it also establish how much you had, or what Bianca was responding to?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "communication-preferences",
+          "emotional-intimacy",
+          "expressing-needs"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "will-kids",
       "person": "bianca",
       "days_ago": 38,
       "analyze": true,
-      "themes": ["expectations-and-commitment", "communication-preferences"],
-      "body": "Bianca has asked about more children twice now, both times sideways, both times I answered something adjacent.\n\nIt is not that I am hiding an answer. It is that I do not have one. I am 52 with two I already do not see enough of. I have no idea whether I want to start again or whether the honest version is that I liked the idea of being asked.\n\nShe does not want children, which she has said plainly, which is more than I have managed. If I say I do not want more and then in two years I do, that is a much worse thing than saying I do not know.\n\nI should tell her I do not know. That is an answer. I have been treating it like it is not one."
+      "themes": [
+        "expectations-and-commitment",
+        "communication-preferences"
+      ],
+      "body": "Bianca has asked about more children twice now, both times sideways, both times I answered something adjacent.\n\nIt is not that I am hiding an answer. It is that I do not have one. I am 52 with two I already do not see enough of. I have no idea whether I want to start again or whether the honest version is that I liked the idea of being asked.\n\nShe does not want children, which she has said plainly, which is more than I have managed. If I say I do not want more and then in two years I do, that is a much worse thing than saying I do not know.\n\nI should tell her I do not know. That is an answer. I have been treating it like it is not one.",
+      "analyze_profile": "Committed Relationship KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "emotional_reaction",
+            "text": "The writer liked the idea of being asked about having more children.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer says they are not hiding an answer; they do not have one.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer thinks saying they do not want more children and later changing their mind would be worse than saying they do not know.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer has been treating 'I do not know' as though it were not an answer.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Bianca has asked about having more children twice, indirectly both times.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Both times, the writer answered something adjacent rather than directly answering the question.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Bianca has said plainly that she does not want children.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer is 52 and has two children whom they already do not see enough.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer says they should tell Bianca that they do not know.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer does not know whether they want to start again, or whether they mainly liked the idea of being asked.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Her indirect questions show that having more children is in the conversation, but do not establish whether your intentions align.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Because you answered indirectly, your own position has not been clear between you; this leaves alignment unsettled, rather than showing what Bianca wants.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Bianca has stated that she does not want children, but your own position is still uncertain, so this does not settle whether your intentions align.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Your account that you do not have an answer helps explain why alignment is not yet clear; it does not establish Bianca's intentions.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Your uncertainty about wanting more children means your side of this question is unresolved.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Liking being asked may be part of what makes your own response hard to interpret; it does not establish that you want more children.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "Treating 'I do not know' as not being an answer may have contributed to the lack of clarity, but it does not settle your intentions.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "You say you should tell Bianca you do not know, but the observation does not say that conversation has happened yet.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Fits with my children",
+            "relation": "complicating",
+            "rationale": "Not wanting children does not by itself show whether Bianca is comfortable with your existing children or the fact that you have them.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Fits with my children",
+            "relation": "complicating",
+            "rationale": "This establishes that you have children, but says nothing about Bianca's comfort with them or with their place in your life.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "It is not that I am hiding an answer.",
+            "gap_kind": "communication",
+            "question": "You have written that 'I do not know' is itself an answer and that you have not given it. What makes that one harder to say than the two adjacent answers you did give?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I should tell her I do not know. That is an answer.”",
+            "gap_kind": "communication",
+            "question": "Once you tell her, will she know both that you genuinely do not know and that she has plainly said she does not want children—so she can judge whether that uncertainty works for her?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“Both times I answered something adjacent.”",
+            "gap_kind": "impact",
+            "question": "Has Bianca indicated how your indirect answers landed for her, or whether they left her unclear about your intentions?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“If I say I do not want more and then in two years I do, that is a much worse thing than saying I do not know.”",
+            "gap_kind": "comparison",
+            "question": "Worse by which standard—being inaccurate about your own uncertainty, or leaving Bianca without a clear answer about a potentially important difference in what you each want?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "communication-preferences",
+          "expectations-and-commitment",
+          "expressing-needs"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "will-bianca-good",
       "person": "bianca",
       "days_ago": 80,
-      "themes": ["attraction-and-chemistry", "emotional-intimacy", "feeling-valued"],
+      "themes": [
+        "attraction-and-chemistry",
+        "emotional-intimacy",
+        "feeling-valued"
+      ],
       "body": "Bianca came to the Tuesday set, which I did not ask her to do, and then told me afterwards that two of the bits were not working. She was right about both.\n\nI have dated people who told me I was wonderful at a show I knew was bad. This is better.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "She attended a performance unprompted and gave critical feedback.",
-         "certainty": "stated"},
-        {"kind": "reported_event",
-         "text": "He agreed with the criticism.",
-         "certainty": "stated"}
+        {
+          "kind": "reported_event",
+          "text": "She attended a performance unprompted and gave critical feedback.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "He agreed with the criticism.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "directness", "relation": "supporting",
-         "profile": "Committed Relationship KRYteria"},
-        {"criterion": "funny", "relation": "supporting",
-         "profile": "Committed Relationship KRYteria"},
-        {"criterion": "intelligence", "relation": "supporting",
-         "profile": "Committed Relationship KRYteria"}
+        {
+          "criterion": "directness",
+          "relation": "supporting",
+          "profile": "Committed Relationship KRYteria"
+        },
+        {
+          "criterion": "funny",
+          "relation": "supporting",
+          "profile": "Committed Relationship KRYteria"
+        },
+        {
+          "criterion": "intelligence",
+          "relation": "supporting",
+          "profile": "Committed Relationship KRYteria"
+        }
       ]
     }
   ],
-
   "interrogations": [
     {
       "entry": "will-saturday",
@@ -154,38 +551,81 @@
       "question": "You have written that 'I do not know' is itself an answer and that you have not given it. What makes that one harder to say than the two adjacent answers you did give?"
     }
   ],
-
   "assessments": [
-    {"profile": "Committed Relationship KRYteria", "criterion": "funny",
-     "person": "bianca", "status": "pass"},
-    {"profile": "Committed Relationship KRYteria", "criterion": "intelligence",
-     "person": "bianca", "status": "pass"},
-    {"profile": "Committed Relationship KRYteria", "criterion": "attraction",
-     "person": "bianca", "status": "pass"},
-    {"profile": "Committed Relationship KRYteria", "criterion": "independent",
-     "person": "bianca", "status": "pass"},
-    {"profile": "Committed Relationship KRYteria", "criterion": "directness",
-     "person": "bianca", "status": "pass",
-     "note": "She asked me about Saturday to my face. I did not enjoy it. It is still the thing I said I wanted."},
-    {"profile": "Committed Relationship KRYteria", "criterion": "nojudgement",
-     "person": "bianca", "status": "unknown",
-     "note": "One conversation where I felt assessed. I am not sure yet whether that is her doing it or me hearing it."},
-    {"profile": "Committed Relationship KRYteria", "criterion": "maturity",
-     "person": "bianca", "status": "pass"},
-    {"profile": "Committed Relationship KRYteria", "criterion": "kidsfit",
-     "person": "bianca", "status": "unknown",
-     "note": "She has been clear she does not want her own. She has never met mine. Those are different questions and I have not asked either of them properly."},
-    {"profile": "Committed Relationship KRYteria", "criterion": "intentions",
-     "person": "bianca", "status": "unknown",
-     "note": "Hard to assess hers while I have not settled mine."}
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "funny",
+      "person": "bianca",
+      "status": "pass"
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "intelligence",
+      "person": "bianca",
+      "status": "pass"
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "attraction",
+      "person": "bianca",
+      "status": "pass"
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "independent",
+      "person": "bianca",
+      "status": "pass"
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "directness",
+      "person": "bianca",
+      "status": "pass",
+      "note": "She asked me about Saturday to my face. I did not enjoy it. It is still the thing I said I wanted."
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "nojudgement",
+      "person": "bianca",
+      "status": "unknown",
+      "note": "One conversation where I felt assessed. I am not sure yet whether that is her doing it or me hearing it."
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "maturity",
+      "person": "bianca",
+      "status": "pass"
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "kidsfit",
+      "person": "bianca",
+      "status": "unknown",
+      "note": "She has been clear she does not want her own. She has never met mine. Those are different questions and I have not asked either of them properly."
+    },
+    {
+      "profile": "Committed Relationship KRYteria",
+      "criterion": "intentions",
+      "person": "bianca",
+      "status": "unknown",
+      "note": "Hard to assess hers while I have not settled mine."
+    }
   ],
-
   "decisions": [
-    {"choice": "talk", "criterion": "kidsfit",
-     "action_text": "Tell Bianca I do not know about more children, and that not knowing is the actual answer."},
-    {"choice": "more_time", "criterion": "nojudgement",
-     "action_text": "See how the next difficult conversation goes before concluding anything about it.",
-     "times": 2},
-    {"choice": "undecided", "criterion": "intentions"}
+    {
+      "choice": "talk",
+      "criterion": "kidsfit",
+      "action_text": "Tell Bianca I do not know about more children, and that not knowing is the actual answer."
+    },
+    {
+      "choice": "more_time",
+      "criterion": "nojudgement",
+      "action_text": "See how the next difficult conversation goes before concluding anything about it.",
+      "times": 2
+    },
+    {
+      "choice": "undecided",
+      "criterion": "intentions"
+    }
   ]
 }

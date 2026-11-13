@@ -12,6 +12,19 @@ that can be read and corrected without reading code.
 It also means the specification and the fixture cannot drift: the JSON *is* the spec,
 loaded directly.
 
+Known limitation — hand-written analysis is not distinguishable in the database
+-------------------------------------------------------------------------------
+The specification asks that the audience be able to tell authored synthetic narrative
+from AI-generated analysis. In the character files that distinction is explicit: anything
+under an entry's ``generated`` key came from a paid agent run, and everything else was
+written by a person.
+
+In the database it is not. ``evidence_links.proposed_by`` is constrained to
+``('agent', 'user')``, so hand-written fixture evidence is stored as ``agent`` — standing
+in for what the agent would have proposed. Making this honest in the database needs a
+third value, which means a schema change and a SCHEMA_VERSION bump. Worth doing before
+the demo is shown as evidence of what the agents produce; not done unasked.
+
 Each character is one account. The people they date are alias rows inside their own
 account and nothing more — "Adrian" in Catherine's account and the account belonging to
 Adrian are unrelated rows that share a string. That separation is the product's central
@@ -266,15 +279,58 @@ def build_character(store: Store, char: dict[str, Any]) -> int:
             people=[alias] if alias else [], person_id=pid,
         )
         entries[e["key"]] = entry_id
-        if e.get("themes"):
-            store.save_themes(account_id, entry_id, e["themes"])
-        if e.get("observations"):
+
+        # An analysed entry's analysis comes from `generated` — produced by the agents in
+        # a paid run and frozen by backend/run_character_analysis.py. It is loaded here
+        # exactly like hand-written analysis, because the point of freezing it was that
+        # the hosted deployment rebuilds from these files on every boot and must not
+        # re-spend to show it. Until that run happens, an analysed entry simply has no
+        # analysis, which is correct: better an obviously empty entry than invented
+        # observations dressed up as the product's output.
+        gen = e.get("generated") or {}
+
+        themes = gen.get("themes") or e.get("themes")
+        if themes:
+            store.save_themes(account_id, entry_id, themes)
+
+        observations = gen.get("observations") or e.get("observations")
+        if observations:
             store.save_observations(account_id, entry_id, [
                 {"kind": o["kind"], "text": o["text"],
                  "certainty": o.get("certainty", "stated"),
                  **({"hedge": o["hedge"]} if o.get("hedge") else {})}
-                for o in e["observations"]
+                for o in observations
             ])
+
+        if gen:
+            by_value = {c["value"]: lib[c["key"]] for c in char["criteria"]}
+            gen_profile = profiles.get(e.get("analyze_profile"))
+            for ev in gen.get("evidence", []):
+                cid = by_value.get(ev.get("criterion_value"))
+                if cid is None:
+                    continue    # a criterion renamed since the run; skip rather than guess
+                store.link_evidence(
+                    account_id, entry_id=entry_id, criterion_id=cid,
+                    relation=ev["relation"], profile_id=gen_profile, person_id=pid,
+                    rationale=ev.get("rationale"),
+                    source_level=ev.get("source_level", "agent_hypothesis"),
+                    proposed_by="agent",
+                )
+            for q in gen.get("interrogations", []):
+                store.save_interrogation(
+                    account_id, entry_id=entry_id, claim=q["claim"],
+                    gap_kind=q["gap_kind"], question=q["question"],
+                    claim_valence=q.get("claim_valence", "negative"),
+                    materiality=q.get("materiality", "material"),
+                )
+            for s in gen.get("safety", []):
+                store.log_safety_event(
+                    account_id=account_id, entry_id=entry_id,
+                    trigger=s["trigger"], action=s["action"],
+                    category=s.get("category"),
+                    concern_level=s.get("concern_level", "potential"),
+                    detail=s.get("detail"),
+                )
         for ev in e.get("evidence", []):
             store.link_evidence(
                 account_id, entry_id=entry_id, criterion_id=lib[ev["criterion"]],

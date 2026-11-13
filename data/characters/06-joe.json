@@ -15,7 +15,6 @@
     "Catherine ended things with him over conversation. His version is that it was fine and",
     "then it stopped, which is its own kind of evidence about how much he was tracking."
   ],
-
   "handle": "thequietone",
   "display_name": "Joe",
   "age": 35,
@@ -28,43 +27,96 @@
     "Intentions can stay Unknown to the person holding them",
     "The same individual that Vanessa is assessing, assessing her back"
   ],
-
   "criteria": [
-    {"key": "attraction", "value": "Attraction",
-     "desired_behavior": "I want to see her"},
-    {"key": "chemistry", "value": "Physical chemistry",
-     "desired_behavior": "It is good"},
-    {"key": "easy", "value": "Easy to be around",
-     "desired_behavior": "I do not have to work at it"},
-    {"key": "fun", "value": "Fun",
-     "desired_behavior": "We have a good time"},
-    {"key": "clarity", "value": "Clear expectations",
-     "desired_behavior": "We both know what this is"},
-    {"key": "conversation", "value": "Good conversation",
-     "desired_behavior": "There is something to talk about"},
-    {"key": "intentions", "value": "Compatible relationship intentions",
-     "desired_behavior": "Wants the same sort of thing I do"},
-    {"key": "maturity", "value": "Emotional maturity",
-     "desired_behavior": "Handles things without drama"},
-    {"key": "independence", "value": "Her own life",
-     "desired_behavior": "Has her own things going on"}
+    {
+      "key": "attraction",
+      "value": "Attraction",
+      "desired_behavior": "I want to see her"
+    },
+    {
+      "key": "chemistry",
+      "value": "Physical chemistry",
+      "desired_behavior": "It is good"
+    },
+    {
+      "key": "easy",
+      "value": "Easy to be around",
+      "desired_behavior": "I do not have to work at it"
+    },
+    {
+      "key": "fun",
+      "value": "Fun",
+      "desired_behavior": "We have a good time"
+    },
+    {
+      "key": "clarity",
+      "value": "Clear expectations",
+      "desired_behavior": "We both know what this is"
+    },
+    {
+      "key": "conversation",
+      "value": "Good conversation",
+      "desired_behavior": "There is something to talk about"
+    },
+    {
+      "key": "intentions",
+      "value": "Compatible relationship intentions",
+      "desired_behavior": "Wants the same sort of thing I do"
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Handles things without drama"
+    },
+    {
+      "key": "independence",
+      "value": "Her own life",
+      "desired_behavior": "Has her own things going on"
+    }
   ],
-
   "profiles": [
     {
       "name": "Casual Dating KRYteria",
       "objective": "Attraction, chemistry and a good time",
       "context_label": "Casual",
       "criteria": [
-        {"key": "attraction", "tier": "mandatory"},
-        {"key": "chemistry", "tier": "mandatory"},
-        {"key": "fun", "tier": "mandatory"},
-        {"key": "easy", "tier": "preferred"},
-        {"key": "clarity", "tier": "preferred"},
-        {"key": "independence", "tier": "preferred"},
-        {"key": "conversation", "tier": "preferred"},
-        {"key": "intentions", "tier": "preferred", "relevance": "not_applicable"},
-        {"key": "maturity", "tier": "preferred"}
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "chemistry",
+          "tier": "mandatory"
+        },
+        {
+          "key": "fun",
+          "tier": "mandatory"
+        },
+        {
+          "key": "easy",
+          "tier": "preferred"
+        },
+        {
+          "key": "clarity",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "conversation",
+          "tier": "preferred"
+        },
+        {
+          "key": "intentions",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        }
       ]
     },
     {
@@ -72,80 +124,265 @@
       "objective": "An actual relationship, if I got there",
       "context_label": "Dating",
       "criteria": [
-        {"key": "attraction", "tier": "mandatory"},
-        {"key": "chemistry", "tier": "mandatory"},
-        {"key": "easy", "tier": "mandatory"},
-        {"key": "conversation", "tier": "mandatory"},
-        {"key": "intentions", "tier": "mandatory"},
-        {"key": "maturity", "tier": "preferred"},
-        {"key": "independence", "tier": "preferred"},
-        {"key": "fun", "tier": "preferred"},
-        {"key": "clarity", "tier": "preferred"}
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "chemistry",
+          "tier": "mandatory"
+        },
+        {
+          "key": "easy",
+          "tier": "mandatory"
+        },
+        {
+          "key": "conversation",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "fun",
+          "tier": "preferred"
+        },
+        {
+          "key": "clarity",
+          "tier": "preferred"
+        }
       ]
     }
   ],
-
   "people": [
-    {"key": "vanessa", "alias": "Vanessa", "role_label": "seeing, couple of months"},
-    {"key": "catherine", "alias": "Catherine", "role_label": "a few dates last spring"}
+    {
+      "key": "vanessa",
+      "alias": "Vanessa",
+      "role_label": "seeing, couple of months"
+    },
+    {
+      "key": "catherine",
+      "alias": "Catherine",
+      "role_label": "a few dates last spring"
+    }
   ],
-
   "entries": [
     {
       "key": "joe-vanessa-more",
       "person": "vanessa",
       "days_ago": 6,
       "analyze": true,
-      "themes": ["expectations-and-commitment", "affection-and-comfort"],
-      "body": "Asked Vanessa if she wanted to do something Sunday. Actual daytime thing, not the usual.\n\nShe said maybe. Hard to tell with her.\n\nI think I would be fine if this turned into something. I had not really planned on it. She said at the beginning she did not want a boyfriend and I said no problem, which was true at the time. I have not brought it up since because it would be a whole thing and we are good as we are.\n\nShe is the most alive person I know. That is the thing I keep thinking about."
+      "themes": [
+        "expectations-and-commitment",
+        "affection-and-comfort"
+      ],
+      "body": "Asked Vanessa if she wanted to do something Sunday. Actual daytime thing, not the usual.\n\nShe said maybe. Hard to tell with her.\n\nI think I would be fine if this turned into something. I had not really planned on it. She said at the beginning she did not want a boyfriend and I said no problem, which was true at the time. I have not brought it up since because it would be a whole thing and we are good as we are.\n\nShe is the most alive person I know. That is the thing I keep thinking about.",
+      "analyze_profile": "Girlfriend KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "interpretation",
+            "text": "The writer expects bringing it up would become “a whole thing,” and says they are good as they are.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer describes Vanessa as “the most alive person I know.”",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer asked Vanessa if she wanted to do something on Sunday, specifying a daytime activity rather than their usual thing.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Vanessa said maybe.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "At the beginning, Vanessa said she did not want a boyfriend, and the writer said that was no problem; the writer says that was true at the time.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer has not brought up the possibility of the relationship changing since then.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer says it is hard to tell with Vanessa, without specifying exactly what is hard to read.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer thinks they would be fine if the relationship turned into something, though they had not really planned on that.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "Vanessa said at the beginning that she did not want a boyfriend, but that was then; the observation does not establish what she wants now.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "The possibility of the relationship changing has not been discussed, so her current intentions are not established.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Clear expectations",
+            "relation": "complicating",
+            "rationale": "Her initial statement and the writer's agreement suggest expectations were expressed at that point, but the observation does not establish whether expectations are clear now.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Clear expectations",
+            "relation": "complicating",
+            "rationale": "They have not revisited whether the relationship might change, leaving current mutual expectations unclear.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Clear expectations",
+            "relation": "complicating",
+            "rationale": "The writer reports difficulty reading Vanessa, but does not specify what is unclear, so this only tentatively bears on whether expectations are clear.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "We are good as we are.",
+            "gap_kind": "communication",
+            "question": "You have also written that you would be fine if this became something, and that you have not raised it. Does she know that your answer has changed since the conversation at the beginning?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“Hard to tell with her.”",
+            "gap_kind": "definition",
+            "question": "What specifically is hard to read—her interest in the Sunday plan, her feelings about you, or something else? What has she said or done that leaves it unclear?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“She said at the beginning she did not want a boyfriend” and “I have not brought it up since because it would be a whole thing and we are good as we are.”",
+            "gap_kind": "pattern",
+            "question": "Since that initial conversation, has anything happened that suggests either of your intentions may have changed? And when you say you are “good as we are,” do you mean you prefer keeping things as they are, or that you are avoiding a conversation despite wanting more?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“She is the most alive person I know.”",
+            "gap_kind": "definition",
+            "question": "What does “alive” mean in terms of the connection you want—does it show up as attraction, physical chemistry, easy company, good conversation, or fun? Which of those have you actually experienced with her?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "affection-and-comfort",
+          "expectations-and-commitment",
+          "expressing-needs"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "joe-vanessa-ok",
       "person": "vanessa",
       "days_ago": 33,
-      "themes": ["attraction-and-chemistry", "affection-and-comfort"],
+      "themes": [
+        "attraction-and-chemistry",
+        "affection-and-comfort"
+      ],
       "body": "Good night. She is great. Easy.",
       "observations": [
-        {"kind": "emotional_reaction",
-         "text": "He enjoyed the evening.",
-         "certainty": "stated"},
-        {"kind": "missing_information",
-         "text": "Almost everything. The entry records a judgement and no events.",
-         "certainty": "stated"}
+        {
+          "kind": "emotional_reaction",
+          "text": "He enjoyed the evening.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "missing_information",
+          "text": "Almost everything. The entry records a judgement and no events.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "easy", "relation": "supporting",
-         "profile": "Casual Dating KRYteria",
-         "rationale": "Thin, but it is what the entry says."},
-        {"criterion": "fun", "relation": "supporting",
-         "profile": "Casual Dating KRYteria"}
+        {
+          "criterion": "easy",
+          "relation": "supporting",
+          "profile": "Casual Dating KRYteria",
+          "rationale": "Thin, but it is what the entry says."
+        },
+        {
+          "criterion": "fun",
+          "relation": "supporting",
+          "profile": "Casual Dating KRYteria"
+        }
       ]
     },
     {
       "key": "joe-catherine",
       "person": "catherine",
       "days_ago": 221,
-      "themes": ["communication-preferences", "attraction-and-chemistry"],
+      "themes": [
+        "communication-preferences",
+        "attraction-and-chemistry"
+      ],
       "body": "Catherine stopped replying. Three dates, thought it went fine. She is impressive and I did not really know what to say to her half the time, so maybe that was it. Did not ask.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "Contact ended after three dates.",
-         "certainty": "stated"},
-        {"kind": "interpretation",
-         "text": "He suspects conversation was the reason.",
-         "certainty": "stated"},
-        {"kind": "missing_information",
-         "text": "Her actual reason. He did not ask.",
-         "certainty": "stated"}
+        {
+          "kind": "reported_event",
+          "text": "Contact ended after three dates.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "He suspects conversation was the reason.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "missing_information",
+          "text": "Her actual reason. He did not ask.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "conversation", "relation": "complicating",
-         "profile": "Girlfriend KRYteria",
-         "rationale": "He names it as the likely problem without having checked, so it is a hypothesis rather than a finding."}
+        {
+          "criterion": "conversation",
+          "relation": "complicating",
+          "profile": "Girlfriend KRYteria",
+          "rationale": "He names it as the likely problem without having checked, so it is a hypothesis rather than a finding."
+        }
       ]
     }
   ],
-
   "interrogations": [
     {
       "entry": "joe-vanessa-more",
@@ -156,60 +393,147 @@
       "question": "You have also written that you would be fine if this became something, and that you have not raised it. Does she know that your answer has changed since the conversation at the beginning?"
     }
   ],
-
   "assessments": [
-    {"profile": "Casual Dating KRYteria", "criterion": "attraction", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Casual Dating KRYteria", "criterion": "chemistry", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Casual Dating KRYteria", "criterion": "fun", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Casual Dating KRYteria", "criterion": "easy", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Casual Dating KRYteria", "criterion": "independence", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Casual Dating KRYteria", "criterion": "clarity", "person": "vanessa",
-     "status": "unknown",
-     "note": "Was clear. Might not be anymore, and that is mine not hers."},
-    {"profile": "Casual Dating KRYteria", "criterion": "conversation", "person": "vanessa",
-     "status": "unknown"},
-    {"profile": "Casual Dating KRYteria", "criterion": "maturity", "person": "vanessa",
-     "status": "unknown"},
-    {"profile": "Casual Dating KRYteria", "criterion": "intentions", "person": "vanessa",
-     "status": "not_applicable"},
-
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "chemistry", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "easy", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "intentions", "person": "vanessa",
-     "status": "unknown",
-     "note": "She said no boyfriend. That was three months ago and I have not asked since."},
-    {"profile": "Girlfriend KRYteria", "criterion": "conversation", "person": "vanessa",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "maturity", "person": "vanessa",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "independence", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "fun", "person": "vanessa",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "clarity", "person": "vanessa",
-     "status": "unknown"},
-
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "catherine",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "conversation", "person": "catherine",
-     "status": "unknown",
-     "note": "Still do not know what happened there."},
-    {"profile": "Girlfriend KRYteria", "criterion": "intentions", "person": "catherine",
-     "status": "unknown"}
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "attraction",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "chemistry",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "fun",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "easy",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "independence",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "clarity",
+      "person": "vanessa",
+      "status": "unknown",
+      "note": "Was clear. Might not be anymore, and that is mine not hers."
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "conversation",
+      "person": "vanessa",
+      "status": "unknown"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "maturity",
+      "person": "vanessa",
+      "status": "unknown"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "intentions",
+      "person": "vanessa",
+      "status": "not_applicable"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "chemistry",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "easy",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "intentions",
+      "person": "vanessa",
+      "status": "unknown",
+      "note": "She said no boyfriend. That was three months ago and I have not asked since."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "conversation",
+      "person": "vanessa",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "maturity",
+      "person": "vanessa",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "independence",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "fun",
+      "person": "vanessa",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "clarity",
+      "person": "vanessa",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "catherine",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "conversation",
+      "person": "catherine",
+      "status": "unknown",
+      "note": "Still do not know what happened there."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "intentions",
+      "person": "catherine",
+      "status": "unknown"
+    }
   ],
-
   "decisions": [
-    {"choice": "more_time", "criterion": "intentions",
-     "action_text": "Leave it. See what happens.", "times": 2},
-    {"choice": "undecided", "criterion": "clarity"}
+    {
+      "choice": "more_time",
+      "criterion": "intentions",
+      "action_text": "Leave it. See what happens.",
+      "times": 2
+    },
+    {
+      "choice": "undecided",
+      "criterion": "clarity"
+    }
   ]
 }

@@ -879,14 +879,17 @@ def test_seeding_on_boot_is_opt_in_and_idempotent() -> None:
         neither duplicates the demo nor overwrites it.
     """
     from backend.api.deps import get_store
-    from backend.seed_demo import DEMO_HANDLE, DEMO_PASSPHRASE
+    from backend.seed_characters import load_character_files, passphrase_for
+
+    first = load_character_files()[0]
+    handle = first["handle"]
 
     before_path = os.environ["KRYTERIA_DB_PATH"]
     before_flag = os.environ.get("KRYTERIA_SEED_ON_BOOT")
     fresh = Path(tempfile.mkdtemp()) / "boot.db"
 
     def demo_exists() -> bool:
-        return get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE) is not None
+        return get_store().verify_account(handle, passphrase_for(handle)) is not None
 
     try:
         os.environ["KRYTERIA_DB_PATH"] = str(fresh)
@@ -901,11 +904,11 @@ def test_seeding_on_boot_is_opt_in_and_idempotent() -> None:
         with TestClient(app):
             pass
         check("boot seeds the demo when the host asks", demo_exists())
-        first_id = get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE)
+        first_id = get_store().verify_account(handle, passphrase_for(handle))
 
         with TestClient(app):
             pass
-        second_id = get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE)
+        second_id = get_store().verify_account(handle, passphrase_for(handle))
         check("a second boot leaves the existing demo alone",
               second_id == first_id, f"{first_id} -> {second_id}")
     finally:

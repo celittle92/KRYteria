@@ -76,17 +76,12 @@ def _seed_on_boot() -> None:
     if os.getenv("KRYTERIA_SEED_ON_BOOT", "").lower() != "true":
         return
     try:
-        from .seed_demo import DEMO_HANDLE, DEMO_PASSPHRASE, seed
+        from .seed_characters import seed
 
-        store = get_store()
-        # seed() returns the account id whether it built the account or found one, so ask
-        # first if we want to say which happened.
-        existed = store.verify_account(DEMO_HANDLE, DEMO_PASSPHRASE) is not None
-        account_id = seed(store)
+        built = seed(get_store())
         log.warning(
-            "Demo account %r %s (id %s).", DEMO_HANDLE,
-            "was already present and has been left alone" if existed else "seeded",
-            account_id,
+            "Demo ecosystem ready: %d accounts (%s).",
+            len(built), ", ".join(sorted(built)),
         )
     except Exception:
         # A broken seed must not take the whole application down with it: the API and a

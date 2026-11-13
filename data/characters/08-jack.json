@@ -17,7 +17,6 @@
     "ecosystem table gives him Jane, Bianca and Catherine. Say the word if a tenth alias",
     "who is not a KRYteria user would be better."
   ],
-
   "handle": "thegoodone",
   "display_name": "Jack",
   "age": 32,
@@ -30,47 +29,106 @@
     "Someone can meet the written criteria and still not be a relationship",
     "A sparse dating history producing honest gaps rather than conclusions"
   ],
-
   "criteria": [
-    {"key": "wanted", "value": "Actually wants me",
-     "desired_behavior": "Chooses me because she wants to, not because the list checks out",
-     "why_it_matters": "I have been the sensible option twice now and I would rather be nobody's sensible option."},
-    {"key": "attraction", "value": "Mutual attraction",
-     "desired_behavior": "It goes both ways and I can tell"},
-    {"key": "kids", "value": "Wants children",
-     "desired_behavior": "Wants them, and not in a someday way"},
-    {"key": "intentions", "value": "Wants a committed relationship",
-     "desired_behavior": "Is looking for the same thing"},
-    {"key": "effort", "value": "Mutual effort",
-     "desired_behavior": "Plans things too, not just agrees to things"},
-    {"key": "interests", "value": "Shared interests",
-     "desired_behavior": "There is something we both actually like doing"},
-    {"key": "communication", "value": "Communication",
-     "desired_behavior": "Says what is going on instead of fading"},
-    {"key": "conflict", "value": "Handles conflict well",
-     "desired_behavior": "Can disagree and come back"},
-    {"key": "money", "value": "Financial responsibility",
-     "desired_behavior": "Manages her own money sensibly"},
-    {"key": "maturity", "value": "Emotional maturity under pressure",
-     "desired_behavior": "Is recognisably herself on a bad week"}
+    {
+      "key": "wanted",
+      "value": "Actually wants me",
+      "desired_behavior": "Chooses me because she wants to, not because the list checks out",
+      "why_it_matters": "I have been the sensible option twice now and I would rather be nobody's sensible option."
+    },
+    {
+      "key": "attraction",
+      "value": "Mutual attraction",
+      "desired_behavior": "It goes both ways and I can tell"
+    },
+    {
+      "key": "kids",
+      "value": "Wants children",
+      "desired_behavior": "Wants them, and not in a someday way"
+    },
+    {
+      "key": "intentions",
+      "value": "Wants a committed relationship",
+      "desired_behavior": "Is looking for the same thing"
+    },
+    {
+      "key": "effort",
+      "value": "Mutual effort",
+      "desired_behavior": "Plans things too, not just agrees to things"
+    },
+    {
+      "key": "interests",
+      "value": "Shared interests",
+      "desired_behavior": "There is something we both actually like doing"
+    },
+    {
+      "key": "communication",
+      "value": "Communication",
+      "desired_behavior": "Says what is going on instead of fading"
+    },
+    {
+      "key": "conflict",
+      "value": "Handles conflict well",
+      "desired_behavior": "Can disagree and come back"
+    },
+    {
+      "key": "money",
+      "value": "Financial responsibility",
+      "desired_behavior": "Manages her own money sensibly"
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity under pressure",
+      "desired_behavior": "Is recognisably herself on a bad week"
+    }
   ],
-
   "profiles": [
     {
       "name": "Girlfriend KRYteria",
       "objective": "A committed relationship",
       "context_label": "Dating",
       "criteria": [
-        {"key": "wanted", "tier": "mandatory"},
-        {"key": "attraction", "tier": "mandatory"},
-        {"key": "intentions", "tier": "mandatory"},
-        {"key": "communication", "tier": "mandatory"},
-        {"key": "effort", "tier": "preferred"},
-        {"key": "interests", "tier": "preferred"},
-        {"key": "conflict", "tier": "preferred"},
-        {"key": "maturity", "tier": "preferred"},
-        {"key": "kids", "tier": "preferred"},
-        {"key": "money", "tier": "preferred", "relevance": "not_applicable"}
+        {
+          "key": "wanted",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "mandatory"
+        },
+        {
+          "key": "effort",
+          "tier": "preferred"
+        },
+        {
+          "key": "interests",
+          "tier": "preferred"
+        },
+        {
+          "key": "conflict",
+          "tier": "preferred"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "kids",
+          "tier": "preferred"
+        },
+        {
+          "key": "money",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        }
       ]
     },
     {
@@ -78,68 +136,425 @@
       "objective": "Marriage and children",
       "context_label": "Long-term",
       "criteria": [
-        {"key": "kids", "tier": "mandatory"},
-        {"key": "intentions", "tier": "mandatory"},
-        {"key": "maturity", "tier": "mandatory"},
-        {"key": "conflict", "tier": "mandatory"},
-        {"key": "money", "tier": "mandatory"},
-        {"key": "wanted", "tier": "mandatory"},
-        {"key": "communication", "tier": "mandatory"},
-        {"key": "attraction", "tier": "preferred"},
-        {"key": "effort", "tier": "preferred"},
-        {"key": "interests", "tier": "preferred"}
+        {
+          "key": "kids",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "conflict",
+          "tier": "mandatory"
+        },
+        {
+          "key": "money",
+          "tier": "mandatory"
+        },
+        {
+          "key": "wanted",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        },
+        {
+          "key": "effort",
+          "tier": "preferred"
+        },
+        {
+          "key": "interests",
+          "tier": "preferred"
+        }
       ]
     }
   ],
-
   "people": [
-    {"key": "jane", "alias": "Jane", "role_label": "four dates, last spring"},
-    {"key": "bianca", "alias": "Bianca", "role_label": "two dates, last autumn"},
-    {"key": "catherine", "alias": "Catherine", "role_label": "two dates, winter"}
+    {
+      "key": "jane",
+      "alias": "Jane",
+      "role_label": "four dates, last spring"
+    },
+    {
+      "key": "bianca",
+      "alias": "Bianca",
+      "role_label": "two dates, last autumn"
+    },
+    {
+      "key": "catherine",
+      "alias": "Catherine",
+      "role_label": "two dates, winter"
+    }
   ],
-
   "entries": [
     {
       "key": "jack-jane-end",
       "person": "jane",
       "days_ago": 186,
       "analyze": true,
-      "themes": ["attraction-and-chemistry", "expectations-and-commitment",
-                 "feeling-valued"],
-      "body": "Jane ended it after four dates. Very kindly, very clearly, which I appreciate more than the alternative.\n\nShe said there was nothing wrong, which I believe, and that is somehow the part that is hard. I would know what to do with a reason.\n\nI keep trying to fill in what I know about her and I actually know very little. Four dinners. I know she is a lawyer, that she wants children, that she is funny in a dry way that took me two dates to catch. I do not know how she is when something goes wrong, because nothing went wrong in four dinners. I do not know whether she would have planned anything, because I planned all four.\n\nI am not sure what I am supposed to have learned here. I think I have a conclusion that I did not get enough information to support."
+      "themes": [
+        "attraction-and-chemistry",
+        "expectations-and-commitment",
+        "feeling-valued"
+      ],
+      "body": "Jane ended it after four dates. Very kindly, very clearly, which I appreciate more than the alternative.\n\nShe said there was nothing wrong, which I believe, and that is somehow the part that is hard. I would know what to do with a reason.\n\nI keep trying to fill in what I know about her and I actually know very little. Four dinners. I know she is a lawyer, that she wants children, that she is funny in a dry way that took me two dates to catch. I do not know how she is when something goes wrong, because nothing went wrong in four dinners. I do not know whether she would have planned anything, because I planned all four.\n\nI am not sure what I am supposed to have learned here. I think I have a conclusion that I did not get enough information to support.",
+      "analyze_profile": "Girlfriend KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "emotional_reaction",
+            "text": "The writer appreciates that Jane ended things kindly and clearly, more than the alternative.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "The lack of a reason is hard for the writer; they say they would know what to do with a reason.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer believes Jane when she says there was nothing wrong.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer thinks they have reached a conclusion without enough information to support it.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Jane ended things after four dates.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Jane said there was nothing wrong. The writer describes the ending as kind and clear.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "They had four dinners, and the writer planned all four.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer knows Jane is a lawyer, wants children, and has a dry sense of humor that took two dates to catch.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer does not know how Jane handles things going wrong or whether she would have planned anything.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer is not sure what they are supposed to have learned from this.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Actually wants me",
+            "relation": "complicating",
+            "rationale": "Jane ended things after four dates, so she is not choosing to continue now. That does not establish what she wanted during the dates or why she ended things.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Communication",
+            "relation": "supporting",
+            "rationale": "The ending is described as kind and clear, which is consistent with saying what is going on rather than fading.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "contradicting",
+            "rationale": "The writer planned all four dinners, so in those instances Jane did not plan the dates.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants children",
+            "relation": "supporting",
+            "rationale": "The writer reports that Jane wants children; the observation does not say whether she wants them soon rather than someday.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Emotional maturity under pressure",
+            "relation": "complicating",
+            "rationale": "The writer explicitly does not know how Jane handles things going wrong, so there is no described behavior under pressure to assess.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Handles conflict well",
+            "relation": "complicating",
+            "rationale": "The writer explicitly does not know how Jane handles things going wrong; no disagreement or return to resolve one is described.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "The writer is unsure whether Jane would have planned anything, leaving her planning beyond these four dinners unknown.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "I think I have a conclusion that I did not get enough information to support.",
+            "gap_kind": "pattern",
+            "question": "That reads as the most accurate line in the entry. Which conclusion specifically — that she was not interested, or something about you?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“Very kindly, very clearly”",
+            "gap_kind": "definition",
+            "question": "For Communication—“says what is going on instead of fading”—does a clear ending with “nothing wrong” meet the kind of communication you mean, or does not knowing more about the reason leave that uncertain?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I planned all four.”",
+            "gap_kind": "circumstances",
+            "question": "Was planning the only way Jane contributed initiative, or did she initiate or contribute in other ways that these four dinners don’t capture?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“She wants children.”",
+            "gap_kind": "definition",
+            "question": "Did Jane say anything about timing or readiness, or is whether she wants children “not in a someday way” still unknown?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "attraction-and-chemistry",
+          "expectations-and-commitment",
+          "feeling-valued",
+          "reciprocity-and-initiative"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "jack-pattern",
       "person": null,
       "days_ago": 24,
       "analyze": true,
-      "themes": ["expectations-and-commitment", "feeling-valued",
-                 "reciprocity-and-initiative"],
-      "body": "Three women in a year, all of them decent, all of them ended it, none of them because of anything I did.\n\nWhat I notice writing that down is that I planned every single date across all three. Every one. I thought that was being a good person to date. It might also mean I have never once found out whether any of them would have.\n\nI do not know whether the problem is that I am not anyone's type, or that I never let it get far enough to find out. Those would need completely different things from me."
+      "themes": [
+        "expectations-and-commitment",
+        "feeling-valued",
+        "reciprocity-and-initiative"
+      ],
+      "body": "Three women in a year, all of them decent, all of them ended it, none of them because of anything I did.\n\nWhat I notice writing that down is that I planned every single date across all three. Every one. I thought that was being a good person to date. It might also mean I have never once found out whether any of them would have.\n\nI do not know whether the problem is that I am not anyone's type, or that I never let it get far enough to find out. Those would need completely different things from me.",
+      "analyze_profile": "Girlfriend KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "interpretation",
+            "text": "The writer thought planning every date meant they were being a good person to date.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer considers that planning every date may have meant they never found out whether any of the women would plan a date.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer says those two possibilities would require completely different things from them.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "missing_information",
+            "text": "What reasons the women gave for ending the relationships, if any.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "missing_information",
+            "text": "Whether any of the women would have planned dates if given the opportunity.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer dated three women over the course of a year; each ended the relationship.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer planned every date across all three relationships.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer does not know whether the problem is that they are not anyone's type or that they never let the relationships get far enough to find out.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "The writer planned every date, so the women’s contribution to planning is unknown; this does not establish whether effort was mutual.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "The writer’s interpretation directly raises the possibility that the women were not given a chance to plan, but does not establish what they would have done.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "Whether any woman would have planned is directly relevant to reciprocal effort, but remains unknown.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Actually wants me",
+            "relation": "complicating",
+            "rationale": "The writer is unsure whether the relationships ended because the women did not choose them or because the relationships did not progress far enough; this is uncertainty, not evidence of the women’s reasons.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual attraction",
+            "relation": "complicating",
+            "rationale": "The writer’s speculation about not being anyone’s type touches mutual attraction, but does not establish whether attraction was mutual in these relationships.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Actually wants me",
+            "relation": "complicating",
+            "rationale": "The reasons for the breakups could clarify whether the women chose the writer because they wanted to, but no reasons are provided.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual attraction",
+            "relation": "complicating",
+            "rationale": "The reasons for the breakups might bear on attraction, but their absence leaves that unsettled.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants a committed relationship",
+            "relation": "complicating",
+            "rationale": "The reasons for the breakups might clarify what each woman wanted from the relationship, but they are not given.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Communication",
+            "relation": "complicating",
+            "rationale": "The reasons given, if any, could indicate how the women communicated about ending things; the observation says those reasons are unknown.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "None of them because of anything I did.",
+            "gap_kind": "impact",
+            "question": "You also wrote that you planned every date across all three. That is something you did, consistently. Is it possible it had an effect you have not counted, in either direction?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“Three women in a year, all of them decent, all of them ended it, none of them because of anything I did.”",
+            "gap_kind": "accountability",
+            "question": "What reasons, if any, did each woman actually give for ending things—and is “none of them because of anything I did” based on what they said, or your interpretation?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I thought that was being a good person to date.”",
+            "gap_kind": "circumstances",
+            "question": "Does planning every date, on its own, show the kind of mutual effort you want, or mainly your contribution? Did they have a clear opening to plan dates or otherwise initiate?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I do not know whether the problem is that I am not anyone’s type, or that I never let it get far enough to find out.”",
+            "gap_kind": "comparison",
+            "question": "What evidence from these relationships distinguishes not being specifically wanted or mutually attracted to from not having enough room to observe their effort? The endings alone may not distinguish those explanations.",
+            "claim_valence": "negative",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "expectations-and-commitment",
+          "feeling-valued",
+          "reciprocity-and-initiative"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "jack-bianca",
       "person": "bianca",
       "days_ago": 317,
-      "themes": ["communication-preferences", "attraction-and-chemistry"],
+      "themes": [
+        "communication-preferences",
+        "attraction-and-chemistry"
+      ],
       "body": "Bianca is the funniest person I have ever been in a restaurant with and I spent the whole evening about four seconds behind the conversation. She was never unkind about it. I just could not keep up and I think we both clocked it at the same moment.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "Two dates; he found the conversational pace difficult.",
-         "certainty": "stated"},
-        {"kind": "reported_event",
-         "text": "She was not unkind about it.",
-         "certainty": "stated"}
+        {
+          "kind": "reported_event",
+          "text": "Two dates; he found the conversational pace difficult.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "She was not unkind about it.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "interests", "relation": "contradicting",
-         "profile": "Girlfriend KRYteria"},
-        {"criterion": "wanted", "relation": "contradicting",
-         "profile": "Girlfriend KRYteria"}
+        {
+          "criterion": "interests",
+          "relation": "contradicting",
+          "profile": "Girlfriend KRYteria"
+        },
+        {
+          "criterion": "wanted",
+          "relation": "contradicting",
+          "profile": "Girlfriend KRYteria"
+        }
       ]
     }
   ],
-
   "patterns": [
     {
       "profile": "Girlfriend KRYteria",
@@ -156,14 +571,19 @@
         "Whether any of them would have initiated, having never needed to."
       ],
       "evidence": [
-        {"entry": "jack-jane-end"},
-        {"entry": "jack-bianca"},
-        {"entry": "jack-pattern"}
+        {
+          "entry": "jack-jane-end"
+        },
+        {
+          "entry": "jack-bianca"
+        },
+        {
+          "entry": "jack-pattern"
+        }
       ],
       "_comment": "evidence_strength is insufficient and must stay there. Three entries meet MIN_SUPPORT numerically, and the finding is still that there is not enough to conclude anything — which is the point of having the field separate from the count."
     }
   ],
-
   "interrogations": [
     {
       "entry": "jack-pattern",
@@ -182,71 +602,171 @@
       "question": "That reads as the most accurate line in the entry. Which conclusion specifically — that she was not interested, or something about you?"
     }
   ],
-
   "assessments": [
-    {"profile": "Girlfriend KRYteria", "criterion": "wanted", "person": "jane",
-     "status": "fail",
-     "note": "She was clear. That is the one thing I do know."},
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "jane",
-     "status": "unknown",
-     "note": "Mine, yes. Hers I genuinely do not know and never found out."},
-    {"profile": "Girlfriend KRYteria", "criterion": "intentions", "person": "jane",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "communication", "person": "jane",
-     "status": "pass",
-     "note": "She told me directly rather than fading. That is rarer than it should be."},
-    {"profile": "Girlfriend KRYteria", "criterion": "effort", "person": "jane",
-     "status": "unknown",
-     "note": "I planned all four. Never found out."},
-    {"profile": "Girlfriend KRYteria", "criterion": "conflict", "person": "jane",
-     "status": "unknown",
-     "note": "Four dinners. Nothing to handle."},
-    {"profile": "Girlfriend KRYteria", "criterion": "maturity", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "interests", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "kids", "person": "jane",
-     "status": "pass"},
-
-    {"profile": "Marriage and Family KRYteria", "criterion": "kids", "person": "jane",
-     "status": "pass"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "intentions", "person": "jane",
-     "status": "pass"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "money", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "conflict", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "maturity", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "wanted", "person": "jane",
-     "status": "fail"},
-    {"profile": "Marriage and Family KRYteria", "criterion": "communication",
-     "person": "jane", "status": "pass"},
-
-    {"profile": "Girlfriend KRYteria", "criterion": "wanted", "person": "bianca",
-     "status": "fail"},
-    {"profile": "Girlfriend KRYteria", "criterion": "interests", "person": "bianca",
-     "status": "fail"},
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "bianca",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "conflict", "person": "bianca",
-     "status": "unknown"},
-
-    {"profile": "Girlfriend KRYteria", "criterion": "wanted", "person": "catherine",
-     "status": "fail"},
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "catherine",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "conflict", "person": "catherine",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "communication", "person": "catherine",
-     "status": "unknown"}
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "wanted",
+      "person": "jane",
+      "status": "fail",
+      "note": "She was clear. That is the one thing I do know."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "jane",
+      "status": "unknown",
+      "note": "Mine, yes. Hers I genuinely do not know and never found out."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "intentions",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "communication",
+      "person": "jane",
+      "status": "pass",
+      "note": "She told me directly rather than fading. That is rarer than it should be."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "effort",
+      "person": "jane",
+      "status": "unknown",
+      "note": "I planned all four. Never found out."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "conflict",
+      "person": "jane",
+      "status": "unknown",
+      "note": "Four dinners. Nothing to handle."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "maturity",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "interests",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "kids",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "kids",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "intentions",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "money",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "conflict",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "maturity",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "wanted",
+      "person": "jane",
+      "status": "fail"
+    },
+    {
+      "profile": "Marriage and Family KRYteria",
+      "criterion": "communication",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "wanted",
+      "person": "bianca",
+      "status": "fail"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "interests",
+      "person": "bianca",
+      "status": "fail"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "bianca",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "conflict",
+      "person": "bianca",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "wanted",
+      "person": "catherine",
+      "status": "fail"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "catherine",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "conflict",
+      "person": "catherine",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "communication",
+      "person": "catherine",
+      "status": "unknown"
+    }
   ],
-
   "decisions": [
-    {"choice": "gather_info", "criterion": "effort",
-     "action_text": "Stop planning everything. See what happens when there is space for someone else to."},
-    {"choice": "undecided", "criterion": "wanted"},
-    {"choice": "more_time", "criterion": "wanted",
-     "action_text": "Keep going. It has been a year, not a verdict."}
+    {
+      "choice": "gather_info",
+      "criterion": "effort",
+      "action_text": "Stop planning everything. See what happens when there is space for someone else to."
+    },
+    {
+      "choice": "undecided",
+      "criterion": "wanted"
+    },
+    {
+      "choice": "more_time",
+      "criterion": "wanted",
+      "action_text": "Keep going. It has been a year, not a verdict."
+    }
   ]
 }

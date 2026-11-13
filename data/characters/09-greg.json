@@ -14,7 +14,6 @@
     "Note he assesses Jane too. Being the person someone else has concerns about does not",
     "stop him having standards of his own."
   ],
-
   "handle": "theunderdog",
   "display_name": "Greg",
   "age": 38,
@@ -27,45 +26,99 @@
     "That circumstances and character are different facts",
     "A user with real standards who is also the one being assessed elsewhere"
   ],
-
   "criteria": [
-    {"key": "kind", "value": "Kindness about hard things",
-     "desired_behavior": "Does not make me feel small about where I am",
-     "why_it_matters": "I can take a lot. I cannot take being someone's disappointment."},
-    {"key": "laugh", "value": "Laughs at my jokes",
-     "desired_behavior": "Actually finds me funny, not tolerating me"},
-    {"key": "direct", "value": "Says what she means",
-     "desired_behavior": "Tells me where I stand instead of letting me guess"},
-    {"key": "attraction", "value": "Physical attraction",
-     "desired_behavior": "There is something there on both sides"},
-    {"key": "intentions", "value": "Wants the same thing",
-     "desired_behavior": "Wants a real relationship and says so"},
-    {"key": "kids", "value": "Wants children",
-     "desired_behavior": "Wants them eventually"},
-    {"key": "patience", "value": "Can live with where I am right now",
-     "desired_behavior": "Sees a year out of work as a year out of work, not a verdict",
-     "why_it_matters": "This is the one I am scared to write down."},
-    {"key": "independence", "value": "Has her own life",
-     "desired_behavior": "Is not waiting around for me to make her happy"},
-    {"key": "stability", "value": "Financially steady herself",
-     "desired_behavior": "Is not relying on me to fix anything, because I cannot right now"}
+    {
+      "key": "kind",
+      "value": "Kindness about hard things",
+      "desired_behavior": "Does not make me feel small about where I am",
+      "why_it_matters": "I can take a lot. I cannot take being someone's disappointment."
+    },
+    {
+      "key": "laugh",
+      "value": "Laughs at my jokes",
+      "desired_behavior": "Actually finds me funny, not tolerating me"
+    },
+    {
+      "key": "direct",
+      "value": "Says what she means",
+      "desired_behavior": "Tells me where I stand instead of letting me guess"
+    },
+    {
+      "key": "attraction",
+      "value": "Physical attraction",
+      "desired_behavior": "There is something there on both sides"
+    },
+    {
+      "key": "intentions",
+      "value": "Wants the same thing",
+      "desired_behavior": "Wants a real relationship and says so"
+    },
+    {
+      "key": "kids",
+      "value": "Wants children",
+      "desired_behavior": "Wants them eventually"
+    },
+    {
+      "key": "patience",
+      "value": "Can live with where I am right now",
+      "desired_behavior": "Sees a year out of work as a year out of work, not a verdict",
+      "why_it_matters": "This is the one I am scared to write down."
+    },
+    {
+      "key": "independence",
+      "value": "Has her own life",
+      "desired_behavior": "Is not waiting around for me to make her happy"
+    },
+    {
+      "key": "stability",
+      "value": "Financially steady herself",
+      "desired_behavior": "Is not relying on me to fix anything, because I cannot right now"
+    }
   ],
-
   "profiles": [
     {
       "name": "Girlfriend KRYteria",
       "objective": "A real relationship, exclusive",
       "context_label": "Dating",
       "criteria": [
-        {"key": "kind", "tier": "mandatory"},
-        {"key": "laugh", "tier": "mandatory"},
-        {"key": "direct", "tier": "mandatory"},
-        {"key": "attraction", "tier": "mandatory"},
-        {"key": "intentions", "tier": "preferred"},
-        {"key": "patience", "tier": "preferred"},
-        {"key": "independence", "tier": "preferred"},
-        {"key": "kids", "tier": "preferred", "relevance": "not_applicable"},
-        {"key": "stability", "tier": "preferred", "relevance": "not_applicable"}
+        {
+          "key": "kind",
+          "tier": "mandatory"
+        },
+        {
+          "key": "laugh",
+          "tier": "mandatory"
+        },
+        {
+          "key": "direct",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intentions",
+          "tier": "preferred"
+        },
+        {
+          "key": "patience",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "kids",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "stability",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        }
       ]
     },
     {
@@ -73,98 +126,303 @@
       "objective": "Marriage and a family",
       "context_label": "Long-term",
       "criteria": [
-        {"key": "intentions", "tier": "mandatory"},
-        {"key": "kids", "tier": "mandatory"},
-        {"key": "kind", "tier": "mandatory"},
-        {"key": "direct", "tier": "mandatory"},
-        {"key": "patience", "tier": "mandatory"},
-        {"key": "independence", "tier": "preferred"},
-        {"key": "stability", "tier": "preferred"},
-        {"key": "laugh", "tier": "preferred"},
-        {"key": "attraction", "tier": "preferred"}
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kids",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kind",
+          "tier": "mandatory"
+        },
+        {
+          "key": "direct",
+          "tier": "mandatory"
+        },
+        {
+          "key": "patience",
+          "tier": "mandatory"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "stability",
+          "tier": "preferred"
+        },
+        {
+          "key": "laugh",
+          "tier": "preferred"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        }
       ]
     }
   ],
-
   "people": [
-    {"key": "jane", "alias": "Jane", "role_label": "dating, about three months"}
+    {
+      "key": "jane",
+      "alias": "Jane",
+      "role_label": "dating, about three months"
+    }
   ],
-
   "entries": [
     {
       "key": "greg-loop",
       "person": "jane",
       "days_ago": 21,
       "analyze": true,
-      "themes": ["expectations-and-commitment", "expressing-needs"],
-      "body": "Jane asked about the job search again. I told her I have been applying and that once something lands we can talk about where this is going.\n\nI have said that three times now. I heard myself say it.\n\nThe honest version is that I do not want to have the exclusivity conversation while I am sitting in my parents' house with eleven hundred dollars in the bank, because I think I know how it goes. If I wait until I have something, I get to have the conversation as a person with a job instead of as a project.\n\nI am aware that this might be the exact thing that makes her leave. I am doing it anyway, which probably tells me something."
+      "themes": [
+        "expectations-and-commitment",
+        "expressing-needs"
+      ],
+      "body": "Jane asked about the job search again. I told her I have been applying and that once something lands we can talk about where this is going.\n\nI have said that three times now. I heard myself say it.\n\nThe honest version is that I do not want to have the exclusivity conversation while I am sitting in my parents' house with eleven hundred dollars in the bank, because I think I know how it goes. If I wait until I have something, I get to have the conversation as a person with a job instead of as a project.\n\nI am aware that this might be the exact thing that makes her leave. I am doing it anyway, which probably tells me something.",
+      "analyze_profile": "Girlfriend KRYteria",
+      "analyze_reflection": false,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "interpretation",
+            "text": "The writer thinks having something land first would let them have the conversation as a person with a job rather than as a project.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer says, “I think I know how it goes,” but does not specify exactly what they expect would happen.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer says choosing to delay the conversation anyway “probably tells me something.”",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Jane asked about the job search again.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer told Jane they have been applying and that they can talk about where the relationship is going once something lands.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer says they have given this response three times and heard themself say it.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer is living at their parents' house and has $1,100 in the bank.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer is choosing not to have the exclusivity conversation for now.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "The writer is unsure whether delaying the conversation might be the thing that makes Jane leave.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Kindness about hard things",
+            "relation": "complicating",
+            "rationale": "Jane asked about the job search again, but the observation gives no tone or context to show whether this was considerate concern or made the writer feel small.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Can live with where I am right now",
+            "relation": "complicating",
+            "rationale": "The question concerns the writer's job search, but it does not show how Jane views the period out of work or whether she treats it as a verdict.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Can live with where I am right now",
+            "relation": "complicating",
+            "rationale": "This describes the writer's current circumstances, which are relevant to the criterion, but says nothing about Jane's response to them.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants the same thing",
+            "relation": "complicating",
+            "rationale": "The writer deferred a conversation about the relationship's direction until a job lands; this does not reveal what Jane wants or whether she has said so.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants the same thing",
+            "relation": "complicating",
+            "rationale": "The writer is choosing not to have the exclusivity conversation, so Jane's relationship intentions remain unestablished by this observation.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants the same thing",
+            "relation": "complicating",
+            "rationale": "The writer is unsure whether delaying the conversation could make Jane leave; that uncertainty is not evidence of what Jane wants or has said.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "Once something lands we can talk about where this is going.",
+            "gap_kind": "definition",
+            "question": "You have set the conversation after a condition three times. What exactly has to land — any offer, a particular kind of role, or moving out? And does Jane know that is the condition?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I have said that three times now.”",
+            "gap_kind": "frequency",
+            "question": "Were the earlier two replies the same postponement of the relationship conversation, and over what period did you give them?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I think I know how it goes.”",
+            "gap_kind": "circumstances",
+            "question": "What do you expect Jane would say or do in that conversation, and has she said or done anything that supports that expectation?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“Once something lands we can talk about where this is going.”",
+            "gap_kind": "communication",
+            "question": "Has Jane agreed to wait until you have a job before discussing exclusivity or the relationship, or is that timing something you have proposed without knowing what she wants?",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "expectations-and-commitment",
+          "expressing-needs"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "greg-interview",
       "person": null,
       "days_ago": 7,
-      "themes": ["expectations-and-commitment"],
+      "themes": [
+        "expectations-and-commitment"
+      ],
       "body": "Second round on Thursday. First one that has got this far since March. I told Jane and she did the thing where she gets very measured, which I have learned means she is managing her own expectations rather than unimpressed.\n\nTrying not to build the whole future on one interview. Building a bit of it anyway.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "A second-round interview, the furthest he has got since March.",
-         "certainty": "stated"},
-        {"kind": "interpretation",
-         "text": "He read her measured response as managed expectations rather than disinterest.",
-         "certainty": "inferred",
-         "hedge": "You've read her reaction as her managing her own hopes — is that something she has told you, or your interpretation of it?"}
+        {
+          "kind": "reported_event",
+          "text": "A second-round interview, the furthest he has got since March.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "He read her measured response as managed expectations rather than disinterest.",
+          "certainty": "inferred",
+          "hedge": "You've read her reaction as her managing her own hopes — is that something she has told you, or your interpretation of it?"
+        }
       ],
       "evidence": [
-        {"criterion": "direct", "relation": "complicating",
-         "profile": "Girlfriend KRYteria",
-         "rationale": "He is interpreting a reaction rather than being told. That is consistent with her being measured and with her not saying what she thinks."}
+        {
+          "criterion": "direct",
+          "relation": "complicating",
+          "profile": "Girlfriend KRYteria",
+          "rationale": "He is interpreting a reaction rather than being told. That is consistent with her being measured and with her not saying what she thinks."
+        }
       ]
     },
     {
       "key": "greg-burger",
       "person": "jane",
       "days_ago": 9,
-      "themes": ["affection-and-comfort", "attraction-and-chemistry", "feeling-valued"],
+      "themes": [
+        "affection-and-comfort",
+        "attraction-and-chemistry",
+        "feeling-valued"
+      ],
       "body": "Found a burger place with good reviews and a short menu so I would not have to do maths at the table. Made an absolute disaster of it — grease everywhere, tried to gesture mid-bite, lost control of the entire situation.\n\nShe laughed so hard she had to put her head on the table. Not at me in a bad way. I would do it again on purpose.\n\nThat is the first time in a year I have not felt like the least impressive person in the room.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "He chose a restaurant he could afford and checked in advance.",
-         "certainty": "stated"},
-        {"kind": "emotional_reaction",
-         "text": "He felt, for the first time in a year, not like the least impressive person present.",
-         "certainty": "stated"}
+        {
+          "kind": "reported_event",
+          "text": "He chose a restaurant he could afford and checked in advance.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "emotional_reaction",
+          "text": "He felt, for the first time in a year, not like the least impressive person present.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "laugh", "relation": "supporting", "profile": "Girlfriend KRYteria"},
-        {"criterion": "kind", "relation": "supporting", "profile": "Girlfriend KRYteria",
-         "rationale": "She laughed with him at something that could have embarrassed him."}
+        {
+          "criterion": "laugh",
+          "relation": "supporting",
+          "profile": "Girlfriend KRYteria"
+        },
+        {
+          "criterion": "kind",
+          "relation": "supporting",
+          "profile": "Girlfriend KRYteria",
+          "rationale": "She laughed with him at something that could have embarrassed him."
+        }
       ]
     },
     {
       "key": "greg-worry",
       "person": "jane",
       "days_ago": 30,
-      "themes": ["expectations-and-commitment", "expressing-needs", "feeling-valued"],
+      "themes": [
+        "expectations-and-commitment",
+        "expressing-needs",
+        "feeling-valued"
+      ],
       "body": "Told Jane I am still at my parents' and then changed the subject so fast I may as well have put up a sign. She did not push. I could not tell whether that was tact or whether she had already filed it.\n\nShe is a litigator. She is very good at not reacting. I have no idea what she actually thinks and I have not asked, because asking means hearing it.",
       "observations": [
-        {"kind": "reported_event",
-         "text": "He disclosed his living situation and changed the subject immediately.",
-         "certainty": "stated"},
-        {"kind": "reported_event",
-         "text": "She did not pursue it.",
-         "certainty": "stated"},
-        {"kind": "uncertainty",
-         "text": "He does not know how she took it and has not asked.",
-         "certainty": "stated"}
+        {
+          "kind": "reported_event",
+          "text": "He disclosed his living situation and changed the subject immediately.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "She did not pursue it.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "uncertainty",
+          "text": "He does not know how she took it and has not asked.",
+          "certainty": "stated"
+        }
       ],
       "evidence": [
-        {"criterion": "patience", "relation": "unrelated",
-         "profile": "Wife KRYteria",
-         "rationale": "Her not reacting is not evidence either way about whether she can live with his circumstances."}
+        {
+          "criterion": "patience",
+          "relation": "unrelated",
+          "profile": "Wife KRYteria",
+          "rationale": "Her not reacting is not evidence either way about whether she can live with his circumstances."
+        }
       ]
     }
   ],
-
   "interrogations": [
     {
       "entry": "greg-loop",
@@ -183,49 +441,117 @@
       "question": "That is a prediction about what she would say. What has she actually said or done that supports it — and what has she done that cuts against it?"
     }
   ],
-
   "assessments": [
-    {"profile": "Girlfriend KRYteria", "criterion": "laugh", "person": "jane",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "kind", "person": "jane",
-     "status": "pass",
-     "note": "She has had a hundred chances to make me feel like a charity case and has not taken one."},
-    {"profile": "Girlfriend KRYteria", "criterion": "attraction", "person": "jane",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "direct", "person": "jane",
-     "status": "unknown",
-     "note": "She is direct about everything except this. Or I have not given her the opening."},
-    {"profile": "Girlfriend KRYteria", "criterion": "independence", "person": "jane",
-     "status": "pass"},
-    {"profile": "Girlfriend KRYteria", "criterion": "intentions", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Girlfriend KRYteria", "criterion": "patience", "person": "jane",
-     "status": "unknown"},
-
-    {"profile": "Wife KRYteria", "criterion": "kids", "person": "jane",
-     "status": "pass"},
-    {"profile": "Wife KRYteria", "criterion": "intentions", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Wife KRYteria", "criterion": "kind", "person": "jane",
-     "status": "pass"},
-    {"profile": "Wife KRYteria", "criterion": "direct", "person": "jane",
-     "status": "unknown"},
-    {"profile": "Wife KRYteria", "criterion": "patience", "person": "jane",
-     "status": "unknown",
-     "note": "The one that decides it, and the one I am least willing to find out about."},
-    {"profile": "Wife KRYteria", "criterion": "stability", "person": "jane",
-     "status": "pass"},
-    {"profile": "Wife KRYteria", "criterion": "independence", "person": "jane",
-     "status": "pass"},
-    {"profile": "Wife KRYteria", "criterion": "laugh", "person": "jane",
-     "status": "pass"},
-    {"profile": "Wife KRYteria", "criterion": "attraction", "person": "jane",
-     "status": "pass"}
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "laugh",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "kind",
+      "person": "jane",
+      "status": "pass",
+      "note": "She has had a hundred chances to make me feel like a charity case and has not taken one."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "attraction",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "direct",
+      "person": "jane",
+      "status": "unknown",
+      "note": "She is direct about everything except this. Or I have not given her the opening."
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "independence",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "intentions",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Girlfriend KRYteria",
+      "criterion": "patience",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "kids",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "intentions",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "kind",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "direct",
+      "person": "jane",
+      "status": "unknown"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "patience",
+      "person": "jane",
+      "status": "unknown",
+      "note": "The one that decides it, and the one I am least willing to find out about."
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "stability",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "independence",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "laugh",
+      "person": "jane",
+      "status": "pass"
+    },
+    {
+      "profile": "Wife KRYteria",
+      "criterion": "attraction",
+      "person": "jane",
+      "status": "pass"
+    }
   ],
-
   "decisions": [
-    {"choice": "more_time", "criterion": "intentions",
-     "action_text": "Wait until the job situation is resolved before raising it.", "times": 3},
-    {"choice": "undecided", "criterion": "patience"}
+    {
+      "choice": "more_time",
+      "criterion": "intentions",
+      "action_text": "Wait until the job situation is resolved before raising it.",
+      "times": 3
+    },
+    {
+      "choice": "undecided",
+      "criterion": "patience"
+    }
   ]
 }

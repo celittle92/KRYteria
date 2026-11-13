@@ -219,7 +219,264 @@
         "reciprocity-and-initiative"
       ],
       "body": "Okay. Dinner last night was really good. Annoyingly good, actually.\n\nFirst, he was late. Twenty minutes. But he texted me, explained what was happening, and apologized when he got there. So I don't really have a complaint about the lateness itself. I appreciated that he told me.\n\nAnd then he was just…really good company. We talked for hours. He remembered something I told him about a work situation and asked me how it turned out. I like that. I don't want to have to reintroduce myself every time I see someone.\n\nHe also challenged me on something we were talking about. Not in an obnoxious way. He actually made a good point. I really like how intelligent he is. And he's funny. And obviously I'm attracted to him. Very attracted to him.\n\nHis hands are also extremely nice. I know that's a ridiculous thing to say, but I have a criterion for this. I am allowed to have a preference.\n\nHe checked his phone once during dinner because something was happening at work. He explained it, apologized, and put it away. That didn't bother me much. I understand that his job is demanding. What bothers me is that sometimes I don't hear from him for most of the day, and then when we're together he's completely attentive.\n\nI don't want to be unreasonable. I don't need a minute-by-minute update. But I also don't want a relationship where I only feel like I exist when I'm physically in the same room as him.\n\nThe good thing is that he actually made the next plan. I didn't have to bring it up or hint around it. He said we should do something next weekend, and made the reservation, again. He confirmed this morning.\n\nI think he likes me. I just don't know whether the communication thing is a difference in style or something that will become a bigger problem. One amazing date doesn't change things or answer that question.\n\nAnd I know I'm very attracted to him, and I unfortunately like him a lot. I need to make sure I'm not letting that make me too generous about things that actually matter to me or that I'm making excuses that shouldn't slide.",
-      "_comment": "Same occurred_on as Adrian's adr-datenight: this is when the evening happened. She wrote it the next morning ('last night'), he wrote it that night ('tonight')."
+      "_comment": "Same occurred_on as Adrian's adr-datenight: this is when the evening happened. She wrote it the next morning ('last night'), he wrote it that night ('tonight').",
+      "analyze_profile": "Boyfriend KRYteria",
+      "analyze_reflection": true,
+      "generated": {
+        "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
+        "by": "gpt-6-luna",
+        "on": "2026-11-12",
+        "observations": [
+          {
+            "kind": "emotional_reaction",
+            "text": "She appreciated that he told her about the delay and does not really have a complaint about the lateness itself.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "She liked that he remembered and followed up; she does not want to have to reintroduce herself every time she sees someone.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "She is very attracted to him and likes him a lot.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "She has a preference about his hands and considers herself allowed to have that preference.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "His checking his phone during dinner did not bother her much; she understands that his job is demanding.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "She does not want a relationship where she feels she exists only when they are physically in the same room.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "She is concerned that her strong attraction and liking for him may make her too generous about things that matter to her, or lead her to make excuses for things that should not slide.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "She really likes how intelligent he is and thinks he is funny.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "She thinks he likes her.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "She thinks one amazing date does not change things or answer that question.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "missing_information",
+            "text": "How often and for how long she goes without hearing from him, what contact each of them prefers, and whether they have discussed those preferences.",
+            "certainty": "inferred",
+            "hedge": "I may be reading between the lines, but those details seem relevant to the communication question. Would you want to include them?"
+          },
+          {
+            "kind": "reported_event",
+            "text": "He arrived 20 minutes late, texted to explain what was happening, and apologized when he arrived.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "They talked for hours over dinner.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "He remembered a work situation she had told him about and asked how it turned out.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "He challenged her on something they were discussing and made a point she considered good.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "He checked his phone once during dinner because something was happening at work, explained it, apologized, and put the phone away.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "Sometimes she does not hear from him for most of the day.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "When they are together, he is completely attentive, as she describes it.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "He suggested they do something next weekend, made a reservation, and confirmed it the following morning. She says he made the reservation again.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "uncertainty",
+            "text": "She is unsure whether the communication issue is a difference in style or something that will become a bigger problem.",
+            "certainty": "stated",
+            "hedge": null
+          }
+        ],
+        "evidence": [
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "supporting",
+            "rationale": "He texted while they were apart to explain the delay. This is one instance of communication, not evidence of consistency.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "Her appreciation shows that advance notice matters to her, but her reaction does not establish how often he communicates between dates.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Intellectual connection",
+            "relation": "complicating",
+            "rationale": "Talking for hours suggests sustained conversation, but the observation does not say whether it involved interesting disagreement or intellectual exchange.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Intellectual connection",
+            "relation": "supporting",
+            "rationale": "He challenged her, made a point she considered good, and the exchange was described positively.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Intellectual connection",
+            "relation": "supporting",
+            "rationale": "Her positive impression of his intelligence bears on the intellectual connection she describes wanting.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Humor",
+            "relation": "supporting",
+            "rationale": "She says she thinks he is funny, which is consistent with this preference.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Physical attraction",
+            "relation": "supporting",
+            "rationale": "She directly reports being very attracted to him.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Soft hands",
+            "relation": "complicating",
+            "rationale": "She has a preference about his hands, but this observation does not say whether his hands are soft.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Lifestyle compatibility",
+            "relation": "complicating",
+            "rationale": "Work interrupted dinner once, but he explained, apologized, and put the phone away. A single instance does not show whether their lifestyles are compatible overall.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Lifestyle compatibility",
+            "relation": "complicating",
+            "rationale": "Her understanding of one work interruption is relevant context, but does not establish how their usual weeks fit together.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "contradicting",
+            "rationale": "Sometimes going most of the day without hearing from him is inconsistent with her stated preference for communication between dates, though the pattern is not specified.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "His attentiveness when they are together does not establish whether he communicates when they are apart; the contrast is relevant to her concern.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "This states what she wants to avoid, but says nothing by itself about how often he contacts her between dates.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "supporting",
+            "rationale": "He proposed a next date, made a reservation, and confirmed it the following morning—an example of proactive follow-through, but not proof of consistent communication over time.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "Her uncertainty directly concerns whether their communication patterns fit, but does not resolve that question.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "She recognizes that one good date does not answer the communication question; this is a caution about the evidence, not evidence of his communication pattern.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Consistent communication between dates",
+            "relation": "complicating",
+            "rationale": "The inferred missing details concern the frequency, duration, and expectations around contact, which are needed to interpret the reported gaps.",
+            "source_level": "user_stated"
+          }
+        ],
+        "interrogations": [
+          {
+            "claim": "What bothers me is that sometimes I don't hear from him for most of the day",
+            "gap_kind": "frequency",
+            "question": "Across what period has this happened, and how often or for how long are the gaps? What level of between-date contact do each of you prefer, and have you discussed it?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "I think he likes me.",
+            "gap_kind": "comparison",
+            "question": "What concrete evidence leads you to that conclusion beyond his suggesting, booking, and confirming the next date—and what does that evidence tell you about his interest, as distinct from whether your communication needs are compatible?",
+            "claim_valence": "positive",
+            "materiality": "material"
+          }
+        ],
+        "themes": [
+          "attraction-and-chemistry",
+          "communication-preferences",
+          "emotional-intimacy",
+          "feeling-valued",
+          "reciprocity-and-initiative"
+        ],
+        "safety": []
+      }
     },
     {
       "key": "cat-quiet-week",

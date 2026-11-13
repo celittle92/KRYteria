@@ -217,18 +217,24 @@ def reset_demo(
     account_id: int = Depends(current_account_id),
     store: Store = Depends(get_store),
 ):
-    """Rebuild the synthetic demo account from scratch.
+    """Rebuild the synthetic demo accounts from scratch.
 
     Refuses on a real account. Synthetic content is never mixed with real records, and
     the one-click reset must not be a one-click way to erase somebody's journal.
+
+    The demo is nine characters rather than one account, so a reset rebuilds the whole
+    ecosystem. That is deliberate: several of the demonstrations only exist *between*
+    accounts — the same evening written up by two people, the same alias appearing in
+    three records as three unrelated rows — and resetting one of them in isolation would
+    leave the set inconsistent with itself.
     """
-    from ..seed_demo import DEMO_HANDLE, seed
+    from ..seed_characters import seed
 
     account = store.get_account(account_id)
     if not account or not account["is_demo"]:
         raise HTTPException(
             status.HTTP_403_FORBIDDEN,
-            "This is a real account, not the demo. Reset only works on the demo account.",
+            "This is a real account, not the demo. Reset only works on a demo account.",
         )
-    seed(store, reset=True)
-    return {"reset": True, "handle": DEMO_HANDLE}
+    built = seed(store, reset=True)
+    return {"reset": True, "accounts": sorted(built)}
