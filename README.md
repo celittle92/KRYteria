@@ -184,6 +184,50 @@ print(info)
 Everything demo mode produces is flagged `is_simulated` and is excluded from every token
 and cost figure, so a demo can never contaminate a measured number.
 
+### Deploying it
+
+One image, one process, one port. The app serves its own built front end, so there is no
+second service, no reverse proxy and no CORS to configure.
+
+```bash
+docker build -t kryteria . && docker run -p 8000:8000 -e KRYTERIA_MODE=demo kryteria
+```
+
+The `Dockerfile` pins the interpreter rather than accepting a platform default. This
+project is developed on Python 3.14 and most hosts still default to 3.11 or 3.12; an image
+removes the question entirely. `render.yaml` is a ready blueprint for a free Render web
+service and documents each variable's reasoning.
+
+| Variable | What it does |
+|---|---|
+| `PORTKEY_API_KEY` | The model key. Supplied by the host as an environment variable, never committed or baked into an image layer. |
+| `PORT` | Assigned by the host; the container honours it. |
+| `KRYTERIA_HOST` | Bind address. `0.0.0.0` in a container, `127.0.0.1` on a laptop. |
+| `KRYTERIA_DB_PATH` | Where the SQLite file lives. Set it outside the source tree so a redeploy cannot replace somebody's journal. |
+| `KRYTERIA_SECRET_KEY` | Signs the session cookie. **Set this in production** — the development fallback generates one per process, which would sign everybody out on every deploy. |
+| `KRYTERIA_SECURE_COOKIES` | `true` over https, so the session cookie refuses to travel in clear text. |
+| `KRYTERIA_SEED_ON_BOOT` | Rebuild the synthetic demo account at startup. See below. |
+| `KRYTERIA_MODE` | `demo` to run free and simulated; otherwise live whenever a key is reachable. |
+
+**Two things about free hosting, stated plainly rather than discovered later.**
+
+A free instance **sleeps** after roughly fifteen minutes of inactivity and takes about a
+minute to wake. The first request after a quiet spell will be slow. That is expected, not
+a broken link — and it is exactly why the local instructions above are tested and kept
+current. The hosted link is the front door; the local path is what works when the front
+door is asleep.
+
+A free instance also has an **ephemeral disk**. The SQLite file does not survive a restart
+or a redeploy. `KRYTERIA_SEED_ON_BOOT=true` turns that from data loss into a self-healing
+demo: the synthetic account is rebuilt on every boot, so the demo is always there however
+often the host recycles the process. It is idempotent and only ever touches the synthetic
+account.
+
+**Anything a real visitor writes is lost when the instance restarts.** This is a class
+demonstration deployment and it should not be mistaken for durable storage. Attaching a
+persistent disk at `/data` is the upgrade path, and the `Dockerfile` already puts the
+database there.
+
 ---
 
 ## How it works

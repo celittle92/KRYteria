@@ -812,6 +812,58 @@ def test_health_is_diagnosable() -> None:
           or "api_key_found" in body)
 
 
+def test_seeding_on_boot_is_opt_in_and_idempotent() -> None:
+    """The hosted demo depends on this, so it is tested rather than assumed.
+
+    A free hosting tier gives an ephemeral disk: the database is gone after every restart
+    and redeploy. Seeding on boot is what stops a grader opening the link and finding an
+    empty application. Three things have to hold:
+
+      * it does NOT run unless asked, because on a laptop a surprise write at startup is
+        the wrong default;
+      * it DOES run when the host asks, on an empty disk;
+      * running twice leaves the first one alone, so a restart with a real disk underneath
+        neither duplicates the demo nor overwrites it.
+    """
+    from backend.api.deps import get_store
+    from backend.seed_demo import DEMO_HANDLE, DEMO_PASSPHRASE
+
+    before_path = os.environ["KRYTERIA_DB_PATH"]
+    before_flag = os.environ.get("KRYTERIA_SEED_ON_BOOT")
+    fresh = Path(tempfile.mkdtemp()) / "boot.db"
+
+    def demo_exists() -> bool:
+        return get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE) is not None
+
+    try:
+        os.environ["KRYTERIA_DB_PATH"] = str(fresh)
+        os.environ.pop("KRYTERIA_SEED_ON_BOOT", None)
+        get_store.cache_clear()
+
+        with TestClient(app):
+            pass
+        check("boot does not seed unless asked", not demo_exists())
+
+        os.environ["KRYTERIA_SEED_ON_BOOT"] = "true"
+        with TestClient(app):
+            pass
+        check("boot seeds the demo when the host asks", demo_exists())
+        first_id = get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE)
+
+        with TestClient(app):
+            pass
+        second_id = get_store().verify_account(DEMO_HANDLE, DEMO_PASSPHRASE)
+        check("a second boot leaves the existing demo alone",
+              second_id == first_id, f"{first_id} -> {second_id}")
+    finally:
+        os.environ["KRYTERIA_DB_PATH"] = before_path
+        if before_flag is None:
+            os.environ.pop("KRYTERIA_SEED_ON_BOOT", None)
+        else:
+            os.environ["KRYTERIA_SEED_ON_BOOT"] = before_flag
+        get_store.cache_clear()
+
+
 def test_demo_reset_refuses_a_real_account() -> None:
     c = new_client("not-the-demo")
     r = c.post("/api/demo/reset")

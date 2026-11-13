@@ -1,0 +1,34 @@
+# Keep the build context small and keep local state out of the image.
+#
+# .env is listed first and deliberately: the key is supplied to the container as an
+# environment variable by the host, never baked into a layer. An image is copyable, and
+# a secret in a layer survives being deleted in a later one.
+.env
+.env.*
+!.env.example
+
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local databases and anything derived from a real run. A fresh deploy seeds its own.
+data/*.db
+data/*.db-*
+
+.git/
+.github/
+.claude/
+
+# Node's build inputs are not needed: frontend/dist is committed and is what gets served.
+frontend/node_modules/
+frontend/src/
+frontend/*.json
+frontend/*.ts
+frontend/*.html
+
+# Development-only material.
+tests/
+output/demo_runs/
+output/screenshots/
+*.zip

@@ -15,6 +15,7 @@ calls the model provider.
 from __future__ import annotations
 
 import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -53,7 +54,54 @@ def _announce_mode() -> None:
         log.warning("KRYteria is in %s mode — nothing is billed.", mode.value.upper())
 
 
+def _seed_on_boot() -> None:
+    """Rebuild the synthetic demo account at startup when ``KRYTERIA_SEED_ON_BOOT=true``.
+
+    Free hosting tiers mostly give you an ephemeral disk: the database is gone after a
+    restart or a redeploy, and a grader who opens the link gets an empty application with
+    nowhere to sign in. Seeding on boot turns that from a failure into a non-event — the
+    demo is simply always there, freshly built, however many times the host recycles the
+    process.
+
+    Off by default, because on a laptop the database is supposed to persist and a surprise
+    write at import time is the wrong default. The host turns it on.
+
+    It is idempotent: ``seed()`` returns early when the demo account already exists, so a
+    restart with a real disk underneath neither duplicates anything nor overwrites it. It
+    only ever touches the synthetic account, never a real one.
+    """
+    import logging
+
+    log = logging.getLogger("kryteria")
+    if os.getenv("KRYTERIA_SEED_ON_BOOT", "").lower() != "true":
+        return
+    try:
+        from .seed_demo import DEMO_HANDLE, DEMO_PASSPHRASE, seed
+
+        store = get_store()
+        # seed() returns the account id whether it built the account or found one, so ask
+        # first if we want to say which happened.
+        existed = store.verify_account(DEMO_HANDLE, DEMO_PASSPHRASE) is not None
+        account_id = seed(store)
+        log.warning(
+            "Demo account %r %s (id %s).", DEMO_HANDLE,
+            "was already present and has been left alone" if existed else "seeded",
+            account_id,
+        )
+    except Exception:
+        # A broken seed must not take the whole application down with it: the API and a
+        # real user's data are more important than the demo fixture. Log it loudly.
+        log.exception("Seeding the demo account on boot FAILED. The app is still up.")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    _seed_on_boot()
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="KRYteria",
     description=(
         "Personal decision intelligence. Knowledge is the tool. Relationships are the "

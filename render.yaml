@@ -1,0 +1,58 @@
+# Render blueprint — one web service, built from the Dockerfile.
+#
+# Why Render: a free web service needs no credit card, builds a Dockerfile directly, and
+# gives a stable public https URL. The cost is that a free instance SPINS DOWN after about
+# 15 minutes of inactivity and takes roughly a minute to wake. That is survivable here and
+# it is planned for in two ways:
+#
+#   1. The grader's first request wakes it. README.md says so plainly, so a slow first
+#      load reads as expected behaviour rather than a broken link.
+#   2. The project requirements warn about exactly this, which is why README.md also
+#      carries tested local instructions. The hosted link is the front door; the local
+#      path is what saves the marks when the front door is asleep.
+#
+# A free instance also has an EPHEMERAL disk: the SQLite file is gone after every restart
+# and redeploy. KRYTERIA_SEED_ON_BOOT turns that from data loss into a self-healing demo —
+# the synthetic account is rebuilt on every boot. Anything a real visitor writes does NOT
+# survive a restart, and README.md must say so rather than implying durability we do not
+# have. Attaching a paid disk at /data is the upgrade path; the Dockerfile already puts
+# the database there.
+
+services:
+  - type: web
+    name: kryteria
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /api/health
+    autoDeploy: false          # Deploy deliberately, not on every push to main.
+    envVars:
+      # Supplied in the Render dashboard, never committed. sync:false means Render will
+      # prompt for it and keep it out of this file.
+      - key: PORTKEY_API_KEY
+        sync: false
+
+      # Signs the session cookie. Generated once by Render and then held steady — a key
+      # regenerated on each deploy would sign everybody out on every deploy.
+      - key: KRYTERIA_SECRET_KEY
+        generateValue: true
+
+      # The hosted app is https, so the session cookie should refuse to travel over http.
+      - key: KRYTERIA_SECURE_COOKIES
+        value: "true"
+
+      # Rebuild the synthetic demo account on every boot. See backend/main._seed_on_boot.
+      - key: KRYTERIA_SEED_ON_BOOT
+        value: "true"
+
+      # DELIBERATE AND IT COSTS MONEY: a hosted instance in live mode spends real Portkey
+      # credits whenever anybody uses it. That is the right call for an AI course — a
+      # demo-mode deployment would show graders a deterministic fixture rather than the
+      # system — and the protection is in code, not in hope: per-account and global daily
+      # token caps in backend/agents/orchestrator.py (120,000 per account per day,
+      # 2,000,000 globally), checked before a run starts.
+      #
+      # Set this to "demo" to host it for free with simulated, clearly-labelled output.
+      - key: KRYTERIA_MODE
+        value: live
