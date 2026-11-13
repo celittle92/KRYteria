@@ -125,6 +125,14 @@ EVIDENCE_RELATIONS = ("supporting", "contradicting", "complicating", "unrelated"
 SOURCE_LEVELS = ("established_research", "research_informed", "agent_hypothesis",
                  "user_stated")
 
+#: The kinds of finding a pattern may be. Mirrors the CHECK constraint on
+#: ``patterns.kind`` in schema.sql, and exists so a bad value raises a StoreError naming
+#: the alternatives rather than a bare sqlite IntegrityError. Every other closed
+#: vocabulary here already did that; this one was only enforced in SQL until a seeder hit
+#: it and got an error that named the constraint instead of the problem.
+PATTERN_KINDS = ("recurring_unmet_need", "repeated_discrepancy", "shifting_expectation",
+                 "stated_vs_chosen", "insufficient_evidence")
+
 #: Qualitative only. The brief is explicit and so is the PRD: never a numerical
 #: relationship score. There is no code path in this module that produces a number
 #: describing a person or a relationship.
@@ -1864,6 +1872,10 @@ class Store:
             raise StoreError(
                 "A pattern must name the journal entries it rests on. "
                 "Refusing to write a finding with no evidence."
+            )
+        if kind not in PATTERN_KINDS:
+            raise StoreError(
+                f"kind must be one of {PATTERN_KINDS}, got {kind!r}"
             )
         if evidence_strength not in EVIDENCE_STRENGTHS:
             raise StoreError(

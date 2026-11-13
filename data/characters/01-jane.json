@@ -1,0 +1,654 @@
+{
+  "_comment": [
+    "Jane — @theintentionalist. Synthetic. No real person.",
+    "",
+    "Carries two demonstrations that work best together: the postponement loop with Greg,",
+    "and a criterion whose definition quietly got easier as she grew attached to him.",
+    "",
+    "The criterion revision is the mechanism. Her original 'Financial independence' is not",
+    "overwritten — it is superseded, and both versions survive, which is what lets the",
+    "product ask whether the change was a conscious refinement or an exception she made",
+    "because she likes him. KRYteria does not answer that question. It asks it.",
+    "",
+    "Jane and Will never dated. The specification's ecosystem table listed Jane under",
+    "Will's connections; Christine confirmed 2026-11-13 that this was a typo.",
+    "",
+    "Greg is not a failure and Jane is not a villain. The entries have to carry both."
+  ],
+  "handle": "theintentionalist",
+  "display_name": "Jane",
+  "age": 36,
+  "occupation": "Attorney",
+  "location": "Manhattan",
+  "bio": "Intelligent, organized, pragmatic, occasionally intimidating. Reserved until she trusts someone, then warm and funny. Financially independent, wants marriage and children, and increasingly conscious of the time involved in both. Ended an engagement some years ago and has been more deliberate since — sometimes to the point of guarding against wasted time more carefully than the situation needs.",
+  "demonstrates": [
+    "The postponement loop, and the question at the end of it",
+    "A standard that quietly got easier, surfaced rather than judged",
+    "Evidence interrogation: unemployment is not the same fact as irresponsibility",
+    "Being amused, attracted and invested while holding a real concern"
+  ],
+  "criteria": [
+    {
+      "key": "money",
+      "value": "Financial independence",
+      "desired_behavior": "Supports himself without it being a recurring crisis",
+      "why_it_matters": "I am not looking to be anybody's plan."
+    },
+    {
+      "key": "competence",
+      "value": "Adult competence",
+      "desired_behavior": "Runs his own life — appointments, obligations, admin — without being managed"
+    },
+    {
+      "key": "intentions",
+      "value": "Compatible relationship intentions",
+      "desired_behavior": "Wants marriage and children, and will say so in plain words"
+    },
+    {
+      "key": "kids",
+      "value": "Wants children",
+      "desired_behavior": "Wants them, on a timeline that is compatible with mine",
+      "why_it_matters": "This is the one I cannot be flexible about and I know it."
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Can hear something difficult without going defensive"
+    },
+    {
+      "key": "followthrough",
+      "value": "Follow-through",
+      "desired_behavior": "Does the thing he said he would do"
+    },
+    {
+      "key": "humor",
+      "value": "Makes me laugh",
+      "desired_behavior": "Actually funny, not just agreeable",
+      "why_it_matters": "I did not have this with my ex-fiancé and I did not realise what it cost until afterwards."
+    },
+    {
+      "key": "attraction",
+      "value": "Physical attraction",
+      "desired_behavior": "I want him"
+    },
+    {
+      "key": "attentive",
+      "value": "Pays attention",
+      "desired_behavior": "Remembers what I told him and asks about it later"
+    },
+    {
+      "key": "trajectory",
+      "value": "A direction he is actually moving in",
+      "desired_behavior": "Where he is going is something he can describe, and is doing something about"
+    }
+  ],
+  "criterion_revisions": [
+    {
+      "key": "money",
+      "note": "I wrote this as 'has a job and an income comparable to mine', which is not actually what I meant and I think I knew that when I wrote it. What I need is someone who takes care of his own obligations and is moving in a direction. Whether that is true of Greg right now is a separate question I have not answered.",
+      "desired_behavior": "Takes responsibility for his own obligations and is moving in a direction he can describe"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Husband KRYteria",
+      "objective": "Marriage and children",
+      "context_label": "Long-term",
+      "criteria": [
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "kids",
+          "tier": "mandatory"
+        },
+        {
+          "key": "money",
+          "tier": "mandatory"
+        },
+        {
+          "key": "competence",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "followthrough",
+          "tier": "mandatory"
+        },
+        {
+          "key": "trajectory",
+          "tier": "preferred"
+        },
+        {
+          "key": "humor",
+          "tier": "preferred"
+        },
+        {
+          "key": "attentive",
+          "tier": "preferred"
+        },
+        {
+          "key": "attraction",
+          "tier": "preferred"
+        }
+      ]
+    },
+    {
+      "name": "Boyfriend KRYteria",
+      "objective": "A committed relationship with a shared direction",
+      "context_label": "Dating",
+      "criteria": [
+        {
+          "key": "intentions",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "humor",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attentive",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "followthrough",
+          "tier": "preferred"
+        },
+        {
+          "key": "competence",
+          "tier": "preferred"
+        },
+        {
+          "key": "money",
+          "tier": "preferred"
+        },
+        {
+          "key": "trajectory",
+          "tier": "preferred"
+        },
+        {
+          "key": "kids",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "key": "greg",
+      "alias": "Greg",
+      "role_label": "dating, about three months"
+    },
+    {
+      "key": "jack",
+      "alias": "Jack",
+      "role_label": "a few dates, last spring"
+    },
+    {
+      "key": "adrian",
+      "alias": "Adrian",
+      "role_label": "a few dates, last year"
+    }
+  ],
+  "entries": [
+    {
+      "key": "jane-burger",
+      "person": "greg",
+      "days_ago": 9,
+      "themes": [
+        "affection-and-comfort",
+        "attraction-and-chemistry"
+      ],
+      "body": "Greg took me to a burger place he had clearly researched, which was sweet, and then proceeded to create what I can only describe as a greasy burger finger situation. It was all over. There was a moment where he tried to gesture with one hand while holding the burger in the other and I genuinely had to look away. I have not recovered. I laughed until I could not breathe. He was not embarrassed, he just leaned into it.\n\nI do not know what to do with the fact that I had a better time than I have had on any date in two years.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He chose a restaurant he had researched in advance.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "A messy incident with the food, which he did not become embarrassed about.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "emotional_reaction",
+          "text": "She enjoyed the evening more than any date in two years.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "humor",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "Not the mess itself — that he was comfortable enough not to be humiliated by it."
+        },
+        {
+          "criterion": "attentive",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "He looked the place up beforehand."
+        }
+      ],
+      "_comment": "The greasy burger finger situation maps to NOTHING about financial independence, adult competence or long-term readiness, and must not be force-mapped there just because it is the funniest thing in the file. Two evidence links, both about what it actually shows."
+    },
+    {
+      "key": "jane-money-1",
+      "person": "greg",
+      "days_ago": 31,
+      "themes": [
+        "expectations-and-commitment",
+        "communication-preferences"
+      ],
+      "body": "Greg mentioned he is still at his parents' place. A year out from the layoff. He said it quickly and changed the subject, which told me more than the fact did.\n\nI keep going back and forth. He is not lazy — he plans things, he shows up, he remembers everything I say. But a year is a long time and I am 36 and I do not have a decade to find out whether someone is going to sort himself out.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He has lived with his parents for about a year since the layoff.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "He changed the subject quickly after saying it.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "She read the subject change as significant.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "missing_information",
+          "text": "What he has been doing about work over that year.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "money",
+          "relation": "contradicting",
+          "profile": "Husband KRYteria"
+        },
+        {
+          "criterion": "competence",
+          "relation": "complicating",
+          "profile": "Husband KRYteria",
+          "rationale": "Living with parents after a layoff is a circumstance. It is consistent with competence and with its absence, and this entry does not separate them."
+        },
+        {
+          "criterion": "attentive",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria"
+        }
+      ]
+    },
+    {
+      "key": "jane-money-2",
+      "person": "greg",
+      "days_ago": 22,
+      "analyze": true,
+      "themes": [
+        "expectations-and-commitment",
+        "expressing-needs"
+      ],
+      "body": "Asked Greg where things are with the job search. He said he has been applying, that the market is brutal for his level, and that he will have something sorted soon and then we can talk about what we are doing.\n\nThat is the third time he has said some version of 'once I have a job'. I do not think he is lying to me. I think he means it every time he says it. But I have now been told twice that the conversation happens later, and I am not sure what the trigger actually is — a job offer? any job? a certain salary? He has not said, and I have not asked, which is probably on me.\n\nI like him so much. That is the problem. I am aware I am being more patient with this than I would be with someone I liked less and I cannot tell whether that is me being fair or me making an exception."
+    },
+    {
+      "key": "jane-money-3",
+      "person": "greg",
+      "days_ago": 8,
+      "analyze": true,
+      "themes": [
+        "expectations-and-commitment",
+        "expressing-needs",
+        "communication-preferences"
+      ],
+      "body": "Still thinking about the Greg situation. Nothing has changed since the last time I wrote this down. No job, no conversation about where this is going, and another lovely weekend.\n\nI have been round this exact loop at least three times now. I keep laying the same facts out and expecting them to add up differently.\n\nHe did tell me he has a second-round interview, which is the first concrete thing in a while. I notice I immediately wanted to treat that as the thing changing. A second-round interview is not a job."
+    },
+    {
+      "key": "jane-jack",
+      "person": "jack",
+      "days_ago": 190,
+      "themes": [
+        "attraction-and-chemistry",
+        "expectations-and-commitment"
+      ],
+      "body": "Fourth date with Jack and I have to be honest with myself. He is kind, he is stable, he has a real job, he wants children, he is on time, he is thoughtful. On paper he is the entire list.\n\nAnd I do not want to kiss him. I have been waiting for that to change for a month and it has not.\n\nIt would be easier if there were something wrong with him.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "Four dates over roughly a month.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "emotional_reaction",
+          "text": "No physical attraction, unchanged over that period.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "She notes he meets her stated written criteria.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "attraction",
+          "relation": "contradicting",
+          "profile": "Boyfriend KRYteria"
+        },
+        {
+          "criterion": "intentions",
+          "relation": "supporting",
+          "profile": "Husband KRYteria"
+        },
+        {
+          "criterion": "money",
+          "relation": "supporting",
+          "profile": "Husband KRYteria"
+        },
+        {
+          "criterion": "kids",
+          "relation": "supporting",
+          "profile": "Husband KRYteria"
+        }
+      ],
+      "_comment": "Jack passes nearly every written criterion and it still is not a relationship. The product does not get to tell her she is wrong about that, and it does not get to tell her she is right either."
+    }
+  ],
+  "patterns": [
+    {
+      "profile": "Husband KRYteria",
+      "kind": "shifting_expectation",
+      "statement": "Her working definition of financial independence has moved from 'an income comparable to mine' to 'takes responsibility for his own obligations' over the period she has been seeing Greg.",
+      "criterion": "money",
+      "evidence_strength": "moderate",
+      "alternatives": [
+        "She may have decided that an income threshold was never the real requirement, and that responsibility and trajectory always were.",
+        "The revision note says she thinks she knew the first wording was wrong when she wrote it, which would make this a correction rather than a change."
+      ],
+      "uncertainties": [
+        "Whether the revision was prompted by reflection or by Greg specifically.",
+        "What the new wording would actually exclude, if anything."
+      ],
+      "evidence": [
+        {
+          "entry": "jane-money-1"
+        },
+        {
+          "entry": "jane-money-2"
+        },
+        {
+          "entry": "jane-money-3"
+        },
+        {
+          "entry": "jane-burger",
+          "stance": "contradicts"
+        }
+      ]
+    },
+    {
+      "profile": "Husband KRYteria",
+      "kind": "stated_vs_chosen",
+      "statement": "Financial independence is set to Mandatory, and the recorded decision on it has been 'give it more time' on three occasions.",
+      "criterion": "money",
+      "evidence_strength": "moderate",
+      "alternatives": [
+        "Three months is not long for a decision this consequential.",
+        "She may be waiting on a conversation she has not yet asked for, rather than on evidence."
+      ],
+      "uncertainties": [
+        "What specific change would count as the situation resolving.",
+        "Whether Greg knows the question is open."
+      ],
+      "evidence": [
+        {
+          "entry": "jane-money-1"
+        },
+        {
+          "entry": "jane-money-2"
+        },
+        {
+          "entry": "jane-money-3"
+        },
+        {
+          "entry": "jane-burger",
+          "stance": "contradicts"
+        }
+      ]
+    }
+  ],
+  "interrogations": [
+    {
+      "entry": "jane-money-3",
+      "claim": "Nothing has changed since the last time I wrote this down.",
+      "gap_kind": "definition",
+      "claim_valence": "negative",
+      "materiality": "material",
+      "question": "You have revisited Greg's circumstances three times and the underlying facts have not moved. What specific new information would change your assessment — and if none arrives, what decision is being postponed?"
+    },
+    {
+      "entry": "jane-money-2",
+      "claim": "I am being more patient with this than I would be with someone I liked less.",
+      "gap_kind": "comparison",
+      "claim_valence": "neutral",
+      "materiality": "material",
+      "question": "You revised this criterion from 'an income comparable to mine' to 'takes responsibility for his own obligations'. Was that a change of mind about what you actually need, or a change made to fit Greg? Both are legitimate answers, and only you can tell which it is."
+    },
+    {
+      "entry": "jane-money-1",
+      "claim": "He is not lazy.",
+      "gap_kind": "accountability",
+      "claim_valence": "positive",
+      "materiality": "material",
+      "question": "You have evidence that he plans, shows up and remembers. What do you know about what he has done over the past year about work specifically? That is a different question from whether he is lazy, and your entry does not answer it."
+    }
+  ],
+  "assessments": [
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "humor",
+      "person": "greg",
+      "status": "pass",
+      "note": "Comfortably. This one is not in doubt."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attentive",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intentions",
+      "person": "greg",
+      "status": "unknown",
+      "note": "He says he wants this. He also keeps moving the conversation to after the job. Those are not the same thing."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "maturity",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "followthrough",
+      "person": "greg",
+      "status": "pass",
+      "note": "On plans with me, consistently."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "money",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "competence",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "trajectory",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "money",
+      "person": "greg",
+      "status": "unknown",
+      "note": "Not a Fail. I do not have the information a Fail would need, and I notice I was ready to record one a month ago."
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "competence",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "trajectory",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "kids",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "intentions",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "humor",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "attentive",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "attraction",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "maturity",
+      "person": "greg",
+      "status": "unknown"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "followthrough",
+      "person": "greg",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "money",
+      "person": "jack",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "competence",
+      "person": "jack",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "kids",
+      "person": "jack",
+      "status": "pass"
+    },
+    {
+      "profile": "Husband KRYteria",
+      "criterion": "intentions",
+      "person": "jack",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "jack",
+      "status": "fail",
+      "note": "A month of waiting for it to arrive. It did not. That is not his fault and it is still the answer."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "humor",
+      "person": "jack",
+      "status": "unknown"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "adrian",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intentions",
+      "person": "adrian",
+      "status": "fail",
+      "note": "Not unwilling. Just not about this, with me."
+    }
+  ],
+  "decisions": [
+    {
+      "choice": "more_time",
+      "criterion": "money",
+      "action_text": "Wait and see what happens with the job search.",
+      "times": 3
+    },
+    {
+      "choice": "gather_info",
+      "criterion": "intentions",
+      "action_text": "Ask Greg what 'once I have a job' actually means — which job, and what happens if it takes another year."
+    },
+    {
+      "choice": "revise_criterion",
+      "criterion": "money",
+      "action_text": "Rewrite financial independence to say what I actually meant."
+    },
+    {
+      "choice": "reconsider",
+      "criterion": "attraction",
+      "action_text": "Stop seeing Jack. It is not going to arrive."
+    }
+  ]
+}

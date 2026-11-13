@@ -1,0 +1,494 @@
+{
+  "_comment": [
+    "Bianca — @notyourtherapist. Synthetic. No real person.",
+    "",
+    "The flattering-conclusion test, which is the harder direction. It is easy for an agent",
+    "to push back on 'he is terrible'. Pushing back on 'he told me about it himself, which",
+    "shows real self-awareness' without becoming cynical about a person who did in fact",
+    "disclose something difficult is the actual skill.",
+    "",
+    "Both pieces of evidence stay. bia-will-disclosure is genuine positive evidence and is",
+    "not retracted by bia-will-defensive. The product's job is to hold them side by side,",
+    "not to decide that the later one cancels the earlier one.",
+    "",
+    "She also demonstrates that not wanting children is a preference and not a deficit.",
+    "Nothing in her account should read as a woman who has settled for less."
+  ],
+  "handle": "notyourtherapist",
+  "display_name": "Bianca",
+  "age": 39,
+  "occupation": "Creative director",
+  "location": "Manhattan",
+  "bio": "Irreverent, confident, socially intelligent, exceptionally funny, with a sharp tongue and a talent for spotting absurdity. Enjoys romance, sex and companionship without much interest in conventional milestones. Does not want children of her own; a partner having them is not automatically a problem. Independent, and does not want a relationship to become a second job.",
+  "demonstrates": [
+    "Counter-evidence against a conclusion the user likes",
+    "Disclosure and accountability as separate facts",
+    "Not wanting marriage or children as a legitimate objective",
+    "Existing children, wanting more children, and her own willingness as three questions"
+  ],
+  "criteria": [
+    {
+      "key": "funny",
+      "value": "Genuinely funny",
+      "desired_behavior": "Makes me laugh without trying to win",
+      "why_it_matters": "I would rather be bored by someone attractive than by someone dull."
+    },
+    {
+      "key": "intelligence",
+      "value": "Intelligence",
+      "desired_behavior": "Has thought about things and can say why"
+    },
+    {
+      "key": "attraction",
+      "value": "Physical attraction",
+      "desired_behavior": "I want him"
+    },
+    {
+      "key": "maturity",
+      "value": "Emotional maturity",
+      "desired_behavior": "Can sit in an uncomfortable conversation without turning it into a bit"
+    },
+    {
+      "key": "accountability",
+      "value": "Takes responsibility",
+      "desired_behavior": "Owns the thing without being asked twice, and without the performance",
+      "why_it_matters": "Telling me about it and taking responsibility for it are not the same, and I keep catching myself treating them as if they are."
+    },
+    {
+      "key": "communication",
+      "value": "Communication",
+      "desired_behavior": "Tells me things while they are still happening"
+    },
+    {
+      "key": "independence",
+      "value": "His own life",
+      "desired_behavior": "Has one, likes it, does not need mine"
+    },
+    {
+      "key": "interest",
+      "value": "Mutual interest",
+      "desired_behavior": "Wants to see me, and says so"
+    },
+    {
+      "key": "availability",
+      "value": "Actually available",
+      "desired_behavior": "His obligations and my life can occupy the same calendar"
+    },
+    {
+      "key": "nokids",
+      "value": "Not expecting children with me",
+      "desired_behavior": "Does not want more children, or does not want them with me, and is clear about which",
+      "why_it_matters": "I am not having children. That is settled and it is not a wound."
+    }
+  ],
+  "profiles": [
+    {
+      "name": "Boyfriend KRYteria",
+      "objective": "An ongoing romantic relationship, no assumed milestones",
+      "context_label": "Dating",
+      "criteria": [
+        {
+          "key": "funny",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intelligence",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "maturity",
+          "tier": "mandatory"
+        },
+        {
+          "key": "accountability",
+          "tier": "mandatory"
+        },
+        {
+          "key": "nokids",
+          "tier": "mandatory"
+        },
+        {
+          "key": "interest",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "preferred"
+        },
+        {
+          "key": "availability",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        }
+      ]
+    },
+    {
+      "name": "Casual Dating KRYteria",
+      "objective": "Companionship, chemistry, honesty, no assumed direction",
+      "context_label": "Casual",
+      "criteria": [
+        {
+          "key": "funny",
+          "tier": "mandatory"
+        },
+        {
+          "key": "attraction",
+          "tier": "mandatory"
+        },
+        {
+          "key": "communication",
+          "tier": "mandatory"
+        },
+        {
+          "key": "intelligence",
+          "tier": "preferred"
+        },
+        {
+          "key": "independence",
+          "tier": "preferred"
+        },
+        {
+          "key": "interest",
+          "tier": "preferred"
+        },
+        {
+          "key": "maturity",
+          "tier": "preferred"
+        },
+        {
+          "key": "accountability",
+          "tier": "preferred"
+        },
+        {
+          "key": "nokids",
+          "tier": "mandatory",
+          "relevance": "not_applicable"
+        },
+        {
+          "key": "availability",
+          "tier": "preferred",
+          "relevance": "not_applicable"
+        }
+      ]
+    }
+  ],
+  "people": [
+    {
+      "key": "will",
+      "alias": "Will",
+      "role_label": "dating, about five months"
+    },
+    {
+      "key": "jack",
+      "alias": "Jack",
+      "role_label": "two dates, last autumn"
+    }
+  ],
+  "entries": [
+    {
+      "key": "bia-will-disclosure",
+      "person": "will",
+      "days_ago": 96,
+      "themes": [
+        "emotional-intimacy",
+        "communication-preferences",
+        "feeling-valued"
+      ],
+      "body": "Will told me about the drinking. Unprompted, about an hour into dinner, no big production about it — that there had been a bad few years, that it cost him things, and that he does not do it the way he used to.\n\nI did not go looking for that and he did not have to say it. Most men I have dated would have let me find out from somebody else in eighteen months.\n\nI like him a great deal more than I did at the start of the evening.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He disclosed a history of problematic alcohol use, unprompted.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "He described consequences and a change in his current drinking.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "interpretation",
+          "text": "She reads the disclosure as evidence of self-awareness and maturity.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "communication",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "Volunteering something costly is communication evidence, and strong."
+        },
+        {
+          "criterion": "maturity",
+          "relation": "supporting",
+          "profile": "Boyfriend KRYteria"
+        },
+        {
+          "criterion": "accountability",
+          "relation": "complicating",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "A disclosure establishes that he will say it. It does not by itself establish what he has done since, which is what this criterion asks."
+        }
+      ]
+    },
+    {
+      "key": "bia-will-defensive",
+      "person": "will",
+      "days_ago": 12,
+      "analyze": true,
+      "themes": [
+        "emotional-intimacy",
+        "communication-preferences",
+        "expressing-needs",
+        "boundaries-and-consent"
+      ],
+      "body": "Asked Will about Saturday — he had quite a lot and got loud in a way I had not seen, and someone at the table noticed.\n\nIt did not go the way I expected. He did the joke first, then when I said I was being serious he said he had already told me all of this, as though having disclosed it once meant it was a closed subject. Then he said something about how he had not realised he was being monitored.\n\nAnd I notice I have spent three days telling myself that he was tired, that it was one night, that at least he has always been honest about it. Which is true. He has been. But I keep using the thing he told me in month one as the answer to a question I am asking about last Saturday, and those are different things.\n\nI do not think he has a problem right now. I also notice I want that to be true, and that I have not actually got anything that settles it."
+    },
+    {
+      "key": "bia-will-kids",
+      "person": "will",
+      "days_ago": 40,
+      "themes": [
+        "expectations-and-commitment",
+        "communication-preferences"
+      ],
+      "body": "Will's weekend with the kids got moved and he cancelled on me, which is completely fine and exactly what should happen.\n\nWhat I notice is that I still do not know whether he wants more. He has two. I have asked twice in a roundabout way and both times he has answered a slightly different question. I am not going to ask a third time in a roundabout way.\n\nI do not want children. If he does, that is not a fault in either of us, it is just the end of the road, and I would rather know at five months than at two years.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "He cancelled because of a change to his parenting schedule.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "reported_event",
+          "text": "She has raised future children twice and not received a direct answer.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "missing_information",
+          "text": "Whether he wants more children.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "nokids",
+          "relation": "complicating",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "Having children and wanting more are different facts, and neither of them is her willingness to be in a family with the ones he has. The entry speaks to the first only."
+        },
+        {
+          "criterion": "availability",
+          "relation": "complicating",
+          "profile": "Boyfriend KRYteria",
+          "rationale": "A cancelled evening because of his children is both a constraint on availability and evidence of him meeting an obligation."
+        }
+      ]
+    },
+    {
+      "key": "bia-jack",
+      "person": "jack",
+      "days_ago": 320,
+      "themes": [
+        "communication-preferences",
+        "attraction-and-chemistry"
+      ],
+      "body": "Jack is genuinely lovely and I have never worked so hard at a dinner in my life. He is kind, he asks good questions, and there is nothing there. I spent the cab home feeling like I had failed an exam in being a nice person.",
+      "observations": [
+        {
+          "kind": "reported_event",
+          "text": "Two dates; conversation required sustained effort from her.",
+          "certainty": "stated"
+        },
+        {
+          "kind": "emotional_reaction",
+          "text": "She felt guilty about her own lack of interest.",
+          "certainty": "stated"
+        }
+      ],
+      "evidence": [
+        {
+          "criterion": "funny",
+          "relation": "contradicting",
+          "profile": "Casual Dating KRYteria"
+        },
+        {
+          "criterion": "maturity",
+          "relation": "supporting",
+          "profile": "Casual Dating KRYteria"
+        }
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "profile": "Boyfriend KRYteria",
+      "kind": "repeated_discrepancy",
+      "statement": "Will's disclosure in month one is being used to answer questions about his behaviour since.",
+      "criterion": "accountability",
+      "evidence_strength": "limited",
+      "alternatives": [
+        "One evening is one evening, and she has five months of other evenings.",
+        "His reaction may be about being questioned rather than about drinking."
+      ],
+      "uncertainties": [
+        "What his drinking has actually looked like across those five months.",
+        "Whether anyone else has raised it with him."
+      ],
+      "evidence": [
+        {
+          "entry": "bia-will-defensive"
+        },
+        {
+          "entry": "bia-will-disclosure",
+          "stance": "contradicts"
+        }
+      ]
+    }
+  ],
+  "interrogations": [
+    {
+      "entry": "bia-will-disclosure",
+      "claim": "Most men would have let me find out from somebody else.",
+      "gap_kind": "accountability",
+      "claim_valence": "positive",
+      "materiality": "material",
+      "question": "Telling you is real evidence and worth keeping. Separately from the telling — what have you seen him do about it since?"
+    },
+    {
+      "entry": "bia-will-defensive",
+      "claim": "I do not think he has a problem right now.",
+      "gap_kind": "pattern",
+      "claim_valence": "positive",
+      "materiality": "material",
+      "question": "You have written that you want that to be true and have nothing that settles it. What would you need to have seen over the last five months for it to be settled either way?"
+    }
+  ],
+  "assessments": [
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "funny",
+      "person": "will",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "intelligence",
+      "person": "will",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "attraction",
+      "person": "will",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "interest",
+      "person": "will",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "independence",
+      "person": "will",
+      "status": "pass"
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "communication",
+      "person": "will",
+      "status": "pass",
+      "note": "He told me about the drinking unprompted. That stands, whatever else does."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "maturity",
+      "person": "will",
+      "status": "unknown",
+      "note": "Changed from Pass. Not because of one bad evening — because of how the conversation about it went."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "accountability",
+      "person": "will",
+      "status": "unknown",
+      "note": "I had this as Pass for four months on the strength of a single conversation in month one."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "nokids",
+      "person": "will",
+      "status": "unknown",
+      "note": "Asked twice, answered neither time. Next one is a direct question."
+    },
+    {
+      "profile": "Boyfriend KRYteria",
+      "criterion": "availability",
+      "person": "will",
+      "status": "unknown"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "funny",
+      "person": "jack",
+      "status": "fail"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "maturity",
+      "person": "jack",
+      "status": "pass"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "attraction",
+      "person": "jack",
+      "status": "fail",
+      "note": "Nothing wrong with him. Nothing there either."
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "nokids",
+      "person": "jack",
+      "status": "not_applicable"
+    },
+    {
+      "profile": "Casual Dating KRYteria",
+      "criterion": "availability",
+      "person": "jack",
+      "status": "not_applicable"
+    }
+  ],
+  "decisions": [
+    {
+      "choice": "gather_info",
+      "criterion": "accountability",
+      "action_text": "Pay attention to what the drinking actually looks like over the next month, rather than deciding now."
+    },
+    {
+      "choice": "talk",
+      "criterion": "nokids",
+      "action_text": "Ask Will directly whether he wants more children. Not sideways this time."
+    },
+    {
+      "choice": "more_time",
+      "criterion": "maturity",
+      "action_text": "See how he is about it when neither of us is annoyed."
+    },
+    {
+      "choice": "reconsider",
+      "criterion": "attraction",
+      "action_text": "Stop seeing Jack. It is not fair to either of us."
+    }
+  ]
+}

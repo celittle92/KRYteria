@@ -812,6 +812,59 @@ def test_health_is_diagnosable() -> None:
           or "api_key_found" in body)
 
 
+def test_the_nine_character_demo_creates_no_cross_account_links() -> None:
+    """Nine demo accounts in one database, and no row in any of them touching another.
+
+    The seeder is the only component in the codebase that legitimately holds every
+    account open at once, which makes it the only one capable of creating the
+    cross-account reference the product promises cannot exist. Nothing downstream would
+    catch it: the store's guards and the route guards both scope by account_id and would
+    simply return the wrong row's data as though it were yours.
+
+    So the whole ecosystem is built into a throwaway database and checked directly. This
+    also exercises every character file, so a malformed one fails here rather than on the
+    hosted app.
+    """
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    from backend.seed_characters import (
+        assert_no_cross_account_links, load_character_files, seed,
+    )
+    from backend.store import Store as _Store, StoreError as _StoreError
+
+    fresh = _Store(_P(_tf.mkdtemp()) / "ecosystem.db")
+    try:
+        built = seed(fresh, reset=True)     # seed() calls the assertion itself
+    except _StoreError as e:
+        check("the nine characters build", False, str(e)[:300])
+        return
+
+    check("every character file built an account",
+          len(built) == len(load_character_files()), f"{len(built)} accounts")
+    check("the demo has nine characters", len(built) == 9, f"got {len(built)}")
+
+    # Called again explicitly: seed() running it is the production path, and a test that
+    # only trusts the thing under test to check itself is not much of a test.
+    try:
+        assert_no_cross_account_links(fresh)
+        check("no row in any account references another account's row", True)
+    except _StoreError as e:
+        check("no row in any account references another account's row", False, str(e)[:300])
+
+    # Two accounts holding an alias with the same string must still be unrelated rows.
+    ids = sorted(built.values())
+    rows = {}
+    for aid in ids:
+        for p in fresh.list_people(aid):
+            rows.setdefault(p["alias"], []).append((aid, p["id"]))
+    shared = {a: v for a, v in rows.items() if len(v) > 1}
+    check("aliases are reused across accounts in this dataset", bool(shared),
+          "nothing to prove isolation with")
+    check("a repeated alias is a separate row in each account",
+          all(len({pid for _, pid in v}) == len(v) for v in shared.values()))
+
+
 def test_seeding_on_boot_is_opt_in_and_idempotent() -> None:
     """The hosted demo depends on this, so it is tested rather than assumed.
 

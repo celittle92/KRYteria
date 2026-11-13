@@ -1,0 +1,244 @@
+{
+  "_comment": [
+    "Vanessa — @afterhours. Synthetic. No real person.",
+    "",
+    "The clean test of the data model. Her two profiles mark marriage intentions, children",
+    "and long-term financial partnership as not_applicable, which is a real answer and not",
+    "a failed criterion. Nothing in her account should read as a casual profile being a",
+    "lesser version of a serious one.",
+    "",
+    "She also carries the safety case. The incident with Will is recorded in HER account",
+    "and nowhere else. Will's account contains nothing about that evening — not a denial,",
+    "not a version, nothing. The shared-date-night device used for Catherine and Adrian",
+    "('neither account is right or wrong, it is perception') is correct for a late arrival",
+    "and wrong for this: whether somebody kept pressuring her after she said she wanted to",
+    "leave is not a matter of perspective, and staging it as two viewpoints would quietly",
+    "undo the layer it is supposed to demonstrate. Christine's call, 2026-11-13.",
+    "",
+    "concern_level is 'potential' so the analysis still reaches the screen. At 'disclosure'",
+    "the orchestrator withholds it, which is a different demonstration than this one."
+  ],
+
+  "handle": "afterhours",
+  "display_name": "Vanessa",
+  "age": 30,
+  "occupation": "Restaurant manager",
+  "location": "Bronx and Manhattan",
+  "bio": "Outgoing, flirtatious, energetic, ambitious. Recently promoted and wants her own restaurant eventually. Unpredictable hours and a close group of girlfriends who are her actual support system. Wants sex, affection, chemistry and fun. Does not want a boyfriend right now, and that is a preference rather than an avoidance.",
+  "demonstrates": [
+    "The same person assessed under two different objectives",
+    "not_applicable as a real answer, distinct from Unknown and from Fail",
+    "That casual does not mean lowered standards — hers are specific and strict",
+    "A safety concern recognised proportionately, and a declined offer respected"
+  ],
+
+  "criteria": [
+    {"key": "attraction", "value": "Physical attraction",
+     "desired_behavior": "I want to be in a room with him"},
+    {"key": "chemistry", "value": "Sexual chemistry",
+     "desired_behavior": "It works, and neither of us is performing"},
+    {"key": "boundaries", "value": "Takes no for an answer",
+     "desired_behavior": "A no lands the first time and does not need defending",
+     "why_it_matters": "This is not negotiable and it is not a mood."},
+    {"key": "health", "value": "Sexual health transparency",
+     "desired_behavior": "Tests, says so, and is not weird about being asked"},
+    {"key": "discretion", "value": "Discretion",
+     "desired_behavior": "My business is not anybody's story"},
+    {"key": "clarity", "value": "Clear expectations",
+     "desired_behavior": "We both know what this is and neither of us is pretending otherwise"},
+    {"key": "reliability", "value": "Reliability",
+     "desired_behavior": "Shows up when he says, leaves when he says"},
+    {"key": "respect", "value": "Basic respect",
+     "desired_behavior": "Treats me like a person he likes, not a thing he secured"},
+    {"key": "fun", "value": "Actually fun",
+     "desired_behavior": "I look forward to it"},
+    {"key": "intentions", "value": "Long-term relationship intentions",
+     "desired_behavior": "Wants a committed future together"},
+    {"key": "kids", "value": "Wants children",
+     "desired_behavior": "Wants children, eventually"},
+    {"key": "money", "value": "Long-term financial partnership",
+     "desired_behavior": "Could build something financially with me"}
+  ],
+
+  "profiles": [
+    {
+      "name": "Fuck Buddy KRYteria",
+      "objective": "An ongoing sexual connection with clear terms",
+      "context_label": "Ongoing casual",
+      "criteria": [
+        {"key": "attraction", "tier": "mandatory"},
+        {"key": "chemistry", "tier": "mandatory"},
+        {"key": "boundaries", "tier": "mandatory"},
+        {"key": "health", "tier": "mandatory"},
+        {"key": "discretion", "tier": "mandatory"},
+        {"key": "clarity", "tier": "mandatory"},
+        {"key": "respect", "tier": "mandatory"},
+        {"key": "reliability", "tier": "preferred"},
+        {"key": "fun", "tier": "preferred"},
+        {"key": "intentions", "tier": "mandatory", "relevance": "not_applicable"},
+        {"key": "kids", "tier": "mandatory", "relevance": "not_applicable"},
+        {"key": "money", "tier": "preferred", "relevance": "not_applicable"}
+      ]
+    },
+    {
+      "name": "One Night Stand KRYteria",
+      "objective": "One evening, clearly understood by both people",
+      "context_label": "One-time",
+      "criteria": [
+        {"key": "attraction", "tier": "mandatory"},
+        {"key": "chemistry", "tier": "mandatory"},
+        {"key": "boundaries", "tier": "mandatory"},
+        {"key": "respect", "tier": "mandatory"},
+        {"key": "health", "tier": "mandatory"},
+        {"key": "clarity", "tier": "mandatory"},
+        {"key": "discretion", "tier": "preferred"},
+        {"key": "fun", "tier": "preferred"},
+        {"key": "reliability", "tier": "preferred", "relevance": "not_applicable"},
+        {"key": "intentions", "tier": "mandatory", "relevance": "not_applicable"},
+        {"key": "kids", "tier": "mandatory", "relevance": "not_applicable"},
+        {"key": "money", "tier": "preferred", "relevance": "not_applicable"}
+      ]
+    }
+  ],
+
+  "people": [
+    {"key": "joe", "alias": "Joe", "role_label": "seeing casually, about two months"},
+    {"key": "will", "alias": "Will", "role_label": "one evening, a while ago"}
+  ],
+
+  "entries": [
+    {
+      "key": "van-will",
+      "person": "will",
+      "days_ago": 48,
+      "analyze": true,
+      "themes": ["boundaries-and-consent", "expressing-needs", "feeling-valued"],
+      "body": "I want to write this down because I keep going over it and I would rather it was somewhere than in my head at 2am.\n\nThe thing with Will a few weeks ago. We had been drinking, it was fun, and at some point I said I was going to head home. He said stay a bit longer. Fine, normal. I said no, I have an early shift. He asked again. Then again, and by the fourth time it was not really asking anymore, it was him standing between me and my bag and making it a joke so that if I made it a thing I would be the one who made it a thing.\n\nI left. Nothing happened. I want to be clear about that.\n\nBut then two days later he texted something about how I had been giving him signals all night and he had read the room wrong, which, okay, except that is not what happened. I said I wanted to leave and he kept going. Those are different things and he has combined them into one thing where I am somehow also responsible for it.\n\nI do not think he is a monster. I think he had a lot to drink. I also do not want to be alone with him again and I notice I have been checking whether he is going to be at things before I say yes, which I do not love about my own week right now."
+    },
+    {
+      "key": "van-joe-mornings",
+      "person": "joe",
+      "days_ago": 5,
+      "analyze": true,
+      "themes": ["expectations-and-commitment", "communication-preferences",
+                 "affection-and-comfort"],
+      "body": "Joe has started texting me every morning. Not about anything — just good morning, how is your day, what are you doing this weekend. He asked what I was doing on Sunday and then said we should do something that is not just me coming over at midnight.\n\nI like it. That is the honest thing. I like getting the text.\n\nAnd I do not want a boyfriend. Which I said at the start, very clearly, and he said that was fine. So either he has changed his mind and has not said so, or I am reading breakfast plans as a proposal, and I genuinely cannot tell which.\n\nI do not want to have a dramatic conversation about it and make it into something. But I also do not want to find out in three months that we have been having two different arrangements this whole time."
+    },
+    {
+      "key": "van-joe-good",
+      "person": "joe",
+      "days_ago": 40,
+      "themes": ["attraction-and-chemistry", "sexual-consideration",
+                 "boundaries-and-consent"],
+      "body": "Joe is extremely attractive and extremely easy. He asked what I actually liked, which approximately nobody does, and then paid attention to the answer. He got tested without me having to raise it twice. He leaves when he says he is going to leave.\n\nHe is not the person I would call to talk about my week. He is not trying to be. That is sort of the point.",
+      "observations": [
+        {"kind": "reported_event",
+         "text": "He asked what she liked and adjusted accordingly.",
+         "certainty": "stated"},
+        {"kind": "reported_event",
+         "text": "He arranged sexual health testing without repeated prompting.",
+         "certainty": "stated"},
+        {"kind": "reported_event",
+         "text": "He leaves when he says he will.",
+         "certainty": "stated"},
+        {"kind": "interpretation",
+         "text": "She reads his lack of emotional involvement as matching the arrangement rather than as a deficit.",
+         "certainty": "stated"}
+      ],
+      "evidence": [
+        {"criterion": "chemistry", "relation": "supporting",
+         "profile": "Fuck Buddy KRYteria"},
+        {"criterion": "health", "relation": "supporting",
+         "profile": "Fuck Buddy KRYteria"},
+        {"criterion": "respect", "relation": "supporting",
+         "profile": "Fuck Buddy KRYteria"},
+        {"criterion": "reliability", "relation": "supporting",
+         "profile": "Fuck Buddy KRYteria"},
+        {"criterion": "boundaries", "relation": "supporting",
+         "profile": "Fuck Buddy KRYteria"}
+      ]
+    }
+  ],
+
+  "safety_events": [
+    {
+      "entry": "van-will",
+      "trigger": "Repeated pressure to stay after a clearly stated intention to leave, physical positioning between her and her belongings, and a later message reframing her stated no as mixed signals.",
+      "action": "acknowledged_and_offered_support",
+      "category": "sexual",
+      "concern_level": "potential",
+      "detail": "Named the behaviour without characterising the person and without a legal determination. Asked whether she is safe. Offered support as an option. She declined, and that is respected: it is not raised again unless she asks or her immediate safety changes. The analysis of her entry still reached the screen — withholding is for disclosure and immediate danger, and this is neither."
+    }
+  ],
+
+  "interrogations": [
+    {
+      "entry": "van-joe-mornings",
+      "claim": "Either he has changed his mind and has not said so, or I am reading breakfast plans as a proposal.",
+      "gap_kind": "communication",
+      "claim_valence": "neutral",
+      "materiality": "material",
+      "question": "Those are the two possibilities you have listed, and both are guesses about what Joe thinks. What has he actually said about what he wants since the conversation at the start?"
+    }
+  ],
+
+  "assessments": [
+    {"profile": "Fuck Buddy KRYteria", "criterion": "attraction", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "chemistry", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "boundaries", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "health", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "respect", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "reliability", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "discretion", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "fun", "person": "joe",
+     "status": "pass"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "clarity", "person": "joe",
+     "status": "unknown",
+     "note": "This was settled at the start and may not be settled now. The morning texts are not an answer either way."},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "intentions", "person": "joe",
+     "status": "not_applicable"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "kids", "person": "joe",
+     "status": "not_applicable"},
+    {"profile": "Fuck Buddy KRYteria", "criterion": "money", "person": "joe",
+     "status": "not_applicable"},
+
+    {"profile": "One Night Stand KRYteria", "criterion": "attraction", "person": "will",
+     "status": "pass"},
+    {"profile": "One Night Stand KRYteria", "criterion": "boundaries", "person": "will",
+     "status": "fail",
+     "note": "I said I wanted to go and it took four times and me walking round him."},
+    {"profile": "One Night Stand KRYteria", "criterion": "respect", "person": "will",
+     "status": "fail"},
+    {"profile": "One Night Stand KRYteria", "criterion": "clarity", "person": "will",
+     "status": "fail",
+     "note": "Rewriting what I said afterwards is its own thing."},
+    {"profile": "One Night Stand KRYteria", "criterion": "chemistry", "person": "will",
+     "status": "unknown"},
+    {"profile": "One Night Stand KRYteria", "criterion": "health", "person": "will",
+     "status": "unknown"},
+    {"profile": "One Night Stand KRYteria", "criterion": "intentions", "person": "will",
+     "status": "not_applicable"},
+    {"profile": "One Night Stand KRYteria", "criterion": "kids", "person": "will",
+     "status": "not_applicable"},
+    {"profile": "One Night Stand KRYteria", "criterion": "money", "person": "will",
+     "status": "not_applicable"},
+    {"profile": "One Night Stand KRYteria", "criterion": "reliability", "person": "will",
+     "status": "not_applicable"}
+  ],
+
+  "decisions": [
+    {"choice": "boundary", "criterion": "boundaries",
+     "action_text": "Not alone with Will. Not rude about it, not explaining it either."},
+    {"choice": "talk", "criterion": "clarity",
+     "action_text": "Ask Joe what he thinks this is, before it becomes three months of two different arrangements."},
+    {"choice": "more_time", "criterion": "clarity",
+     "action_text": "See whether the morning texts are a phase.", "times": 2}
+  ]
+}

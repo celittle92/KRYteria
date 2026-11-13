@@ -38,6 +38,7 @@ from .store import (
     DECISION_CHOICES,
     EVIDENCE_STRENGTHS,
     GAP_KINDS,
+    PATTERN_KINDS,
     SAFETY_CATEGORIES,
     SOURCE_LEVELS,
     Store,
@@ -160,6 +161,9 @@ def validate(char: dict[str, Any], themes: set[str]) -> list[str]:
                  f"pattern names unknown criterion {pat['criterion']!r}")
         need(pat.get("evidence_strength", "insufficient") in EVIDENCE_STRENGTHS,
              f"pattern has bad evidence_strength {pat.get('evidence_strength')!r}")
+        need(pat.get("kind") in PATTERN_KINDS,
+             f"pattern has bad kind {pat.get('kind')!r} "
+             f"(one of {', '.join(PATTERN_KINDS)})")
 
     for s in char.get("safety_events", []):
         need(s.get("entry") in entry_keys,
