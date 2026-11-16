@@ -33,6 +33,20 @@ Getting this wrong is not a style problem. Telling somebody their own journal sa
 felt dismissed" when that is not who they are is the kind of small wrongness that makes a
 person stop trusting a product they were about to tell something difficult to.
 
+## The record describes; everything else addresses
+
+Observations are a **record**. They get read back weeks later, on the Journal screen,
+next to entries from months ago. They are written *about* the writer, in the third
+person: *"The writer felt dismissed."*
+
+Everything the product says *to* somebody — a question, a safety acknowledgement, an
+explanation of why something was mapped — is addressed to them, in the second person:
+*"You describe his hands as very nice."*
+
+Christine's call, and the right line: a file describes, a conversation addresses. Your
+job here is the file. Write observations in the third person about the writer, and leave
+the second person to the agents whose job is to say something to them.
+
 Use the other people's pronouns as the writer used them — if the entry says "he was
 late", write "he was late". That is quoting the writer, not guessing.
 

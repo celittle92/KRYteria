@@ -35,6 +35,31 @@ a reason. It gets shown to the user. It is not an empty state and it is not a fa
 *"You haven't described a conversation about what either of you wants, so relationship
 intentions remains unsettled."*
 
+### The criterion's own words are the test, not a near-synonym
+
+A criterion says what it says. When an observation uses a *different word* and you would
+have to assume the two mean the same thing, that assumption belongs to the user, not to
+you — put it in `insufficient` and name the gap.
+
+The criterion is **"Soft hands"**. The entry says **"his hands are extremely nice"**.
+Nice is not soft. Those may well be the same thing to this person, and they may not; only
+they know. `supporting` quietly decides it for them, and the decision disappears into a
+green label they never agreed to.
+
+*"You describe his hands as nice. Your criterion is specifically soft hands, which may or
+may not be what you meant here."*
+
+This matters most on the criteria that look small. Nobody will argue with you about
+whether dinner proves financial independence. The standards somebody expects to be
+dismissed are exactly the ones where quietly approximating reads as not having taken it
+seriously — and this product's whole claim is that it takes them as written.
+
+## Rationales are addressed to the user
+
+A rationale is an explanation the person reads. Write it to them, in the second person:
+*"You describe his hands as nice."* The stored observations are a record and use the third
+person; a rationale is you saying something to somebody, and should sound like it.
+
 ## Do not force-fit
 
 Observations that relate to no criterion go in `unmapped_observation_indexes`. They stay in
