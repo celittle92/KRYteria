@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, type Account } from "../api";
 import { ErrorNote, Spinner } from "../components/ui";
 
@@ -42,14 +42,38 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [characters, setCharacters] = useState<DemoCharacter[]>([]);
   const [enteringAs, setEnteringAs] = useState<string | null>(null);
 
-  useEffect(() => {
-    // A deployment with no demo data simply shows nothing here, rather than offering a
-    // sign-in that fails.
-    api.demoCharacters().then(setCharacters).catch(() => setCharacters([]));
+  // Three states, not two. This was `catch(() => setCharacters([]))`, which rendered a
+  // failed fetch exactly like a deployment that has no demo data: nothing at all, with
+  // no explanation and no way to retry.
+  //
+  // That is not a rare case here. A free instance sleeps after fifteen minutes and takes
+  // about a minute to wake, so the very first request from a new browser — a fresh
+  // window, an incognito window, a grader opening the link — is the one most likely to
+  // lose a race with the boot. The result was a sign-in screen whose only route in had
+  // silently removed itself, leaving a handle-and-passphrase form to somebody who has
+  // neither.
+  const [characters, setCharacters] = useState<DemoCharacter[] | null>(null);
+  const [charactersFailed, setCharactersFailed] = useState(false);
+
+  const loadCharacters = useCallback(async (attempt = 0) => {
+    setCharactersFailed(false);
+    try {
+      setCharacters(await api.demoCharacters());
+    } catch {
+      // Wake-up takes about a minute, so retry a few times before giving up and saying
+      // so. Backing off rather than hammering a container that is still starting.
+      if (attempt < 4) {
+        setTimeout(() => loadCharacters(attempt + 1), 4000 * (attempt + 1));
+      } else {
+        setCharacters([]);
+        setCharactersFailed(true);
+      }
+    }
   }, []);
+
+  useEffect(() => { loadCharacters(); }, [loadCharacters]);
 
   async function enterDemo(c: DemoCharacter) {
     setEnteringAs(c.handle);
@@ -291,7 +315,30 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
             </div>
           </div>
 
-          {characters.length > 0 && (
+          {characters === null && (
+            <div className="card p-7 sm:p-8 max-w-md lg:ml-auto mt-5">
+              <Spinner label="Loading the demo…" />
+              <p className="text-xs text-faint mt-3">
+                A free instance sleeps when nobody has used it, so the first load after a
+                quiet spell takes about a minute. Nothing is wrong.
+              </p>
+            </div>
+          )}
+
+          {charactersFailed && (
+            <div className="card p-7 sm:p-8 max-w-md lg:ml-auto mt-5">
+              <h2 className="font-serif text-xl">The demo did not load</h2>
+              <p className="text-sm text-muted mt-1.5">
+                The server did not answer in time. On a free instance that usually means
+                it was asleep and is still waking up.
+              </p>
+              <button className="btn-accent w-full mt-5" onClick={() => loadCharacters()}>
+                Try again
+              </button>
+            </div>
+          )}
+
+          {characters !== null && characters.length > 0 && (
             <div className="card p-7 sm:p-8 max-w-md lg:ml-auto mt-5">
               <h2 className="font-serif text-xl">Look around first</h2>
               <p className="text-sm text-muted mt-1.5">
