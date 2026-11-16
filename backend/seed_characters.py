@@ -418,6 +418,67 @@ def build_character(store: Store, char: dict[str, Any], *,
     return account_id
 
 
+# ──────────────────────── reference data, not character data ────────────────────────
+
+def load_shared_reference_data(store: Store) -> dict[str, int]:
+    """Support resources and the research pack. Belongs to the deployment, not a user.
+
+    These were loaded by ``seed_demo``, and retiring it took them with it — which went
+    unnoticed because nothing fails loudly without them. The hosted app came up with
+    ``/api/resources`` returning an empty list, so the safety layer could recognise a
+    concern perfectly and then have nothing to offer; and with no research notes,
+    ``citable_refs()`` was empty, which silently disables the entire research layer,
+    since a ``research_ref`` must resolve to a verified row or the write is refused.
+
+    Both failures are quiet by design elsewhere in this codebase — refusing to invent a
+    hotline and refusing to cite an unverified source are correct behaviours — which is
+    exactly why their absence has to be loaded on purpose rather than assumed.
+
+    Idempotent, and never overwrites: resources load only when that region has none, and
+    ``load_research_pack`` honours the verification already recorded in the pack.
+    """
+    import logging
+
+    log = logging.getLogger("kryteria")
+    data = HERE.parent / "data"
+    counts = {"resources": 0, "research": 0}
+
+    for path in sorted(data.glob("resources_*.json")):
+        rows = json.loads(path.read_text(encoding="utf-8")).get("resources", [])
+        if not rows:
+            continue
+        # include_global=False matters: list_resources folds GLOBAL rows into every
+        # region by default, so once the international file had seeded its GLOBAL
+        # entry this guard saw it and skipped the US file entirely — five resources
+        # silently missing, including the only sexual-assault and emergency entries.
+        regions = {r.get("region") for r in rows if r.get("region")}
+        if any(store.list_resources(region=r, include_global=False)
+               for r in regions):
+            continue                       # already present; leave it alone
+        try:
+            store.seed_resources(rows)
+            counts["resources"] += len(rows)
+        except StoreError as e:
+            # seed_resources refuses a row with no region, verified_at or contact route.
+            # That refusal is the point, so it is reported rather than swallowed.
+            log.error("Refused resources from %s: %s", path.name, e)
+
+    research_dir = data / "research"
+    if research_dir.is_dir():
+        for path in sorted(research_dir.glob("*.json")):
+            try:
+                result = store.load_research_pack(path) or {}
+                counts["research"] += sum(
+                    v for v in result.values() if isinstance(v, int))
+            except Exception as e:                    # noqa: BLE001
+                log.error("Could not load research pack %s: %s", path.name, e)
+
+    if counts["resources"] or counts["research"]:
+        log.warning("Reference data: %d support resource(s), %d research note(s).",
+                    counts["resources"], counts["research"])
+    return counts
+
+
 # ──────────────────────────── the privacy assertion ────────────────────────────
 
 def assert_no_cross_account_links(store: Store) -> None:
@@ -532,6 +593,7 @@ def seed(store: Store, *, reset: bool = False,
             # eight-ninths present is far better than one that is silently empty.
             failed.append(f"{handle}: {type(e).__name__}: {e}")
 
+    load_shared_reference_data(store)
     assert_no_cross_account_links(store)
 
     if squatted or failed:

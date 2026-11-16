@@ -835,6 +835,72 @@ def test_an_unknown_api_path_is_a_404_and_not_the_single_page_app() -> None:
           page.headers.get("content-type", "").startswith("text/html"))
 
 
+def test_a_fresh_deployment_has_resources_and_research() -> None:
+    """The two things whose absence fails silently.
+
+    Both were loaded by seed_demo, and retiring it took them with it. Nothing broke
+    loudly, because the correct behaviour when they are missing is quiet:
+
+      * With no resources, the safety layer can recognise a concern perfectly and then
+        have nothing to offer — and refusing to invent a hotline is right, so the empty
+        result looks like the product working. It was live on the hosted app in exactly
+        that state.
+      * With no research notes, ``citable_refs()`` is empty, so every ``research_ref``
+        fails to resolve and the write is refused. That is also correct behaviour, and
+        it disables the entire research layer without a single error.
+
+    Correct-when-missing is precisely why these need a test rather than a convention.
+    """
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    from backend.seed_characters import seed
+    from backend.store import Store as _Store
+
+    fresh = _Store(_P(_tf.mkdtemp()) / "deployment.db")
+    seed(fresh, reset=True)
+
+    us = fresh.list_resources(region="US", include_global=False)
+    check("a fresh deployment has US support resources", len(us) >= 3, f"{len(us)}")
+    check("and resources for somewhere outside the US",
+          bool(fresh.list_resources(region="GB", include_global=False)))
+    check("and a GLOBAL fallback for an unset region",
+          bool(fresh.list_resources(region=None)))
+
+    # The US file loads after the international one alphabetically. list_resources folds
+    # GLOBAL into every region by default, so a guard written without
+    # include_global=False sees the GLOBAL row and skips US entirely.
+    check("the GLOBAL row does not mask a country's own resources",
+          len(us) >= 3,
+          "US resources were skipped because a GLOBAL row already existed")
+
+    citable = fresh.citable_refs()
+    check("research notes are loaded and citable", len(citable) >= 10, f"{len(citable)}")
+
+    # Verification has to survive a rebuild, because the database is thrown away on every
+    # deploy — it lives in the committed pack, not only in the row. And nothing may become
+    # citable without it: a ref that resolves to an unverified row is the fabrication this
+    # whole layer exists to make impossible.
+    #
+    # Note the two methods have different scopes on purpose: citable_refs queries the
+    # table, while list_research_notes withholds safety_adjacent entries from agents. So
+    # the counts differ legitimately, and comparing them proves nothing.
+    import sqlite3 as _sq
+
+    conn = _sq.connect(fresh.db_path)
+    conn.row_factory = _sq.Row
+    unverified_but_citable = [
+        r["ref"] for r in conn.execute(
+            "SELECT ref FROM research_notes WHERE verified_at IS NULL")
+        if r["ref"] in citable
+    ]
+    check("no unverified note is citable", not unverified_but_citable,
+          str(unverified_but_citable))
+    total = conn.execute("SELECT COUNT(*) FROM research_notes").fetchone()[0]
+    check("the pack arrives with its verification intact, not all pending",
+          len(citable) >= total - 2, f"{len(citable)} citable of {total} loaded")
+
+
 def test_security_headers_are_on_every_response() -> None:
     """Browser-enforced protections the server cannot apply itself.
 
