@@ -235,7 +235,7 @@ def main() -> int:
         model, info = build(Mode.DEMO)
         db = Path(tempfile.mkdtemp()) / "smoke.db"
         store = Store(db)
-        accounts = seed(store, reset=True)
+        accounts = seed(store, reset=True, skip_generated=True)
         print(f"SMOKE ({info.mode.value}, nothing billed, nothing written back)\n")
         results = asyncio.run(analyse(store, accounts, pairs, model, info))
         harvested = harvest(db, results)
@@ -255,7 +255,8 @@ def main() -> int:
 
     db = Path(tempfile.mkdtemp()) / "characters.db"
     store = Store(db)
-    accounts = seed(store, reset=True)
+    # skip_generated: start from the raw entries, not from the last run's output.
+    accounts = seed(store, reset=True, skip_generated=True)
     print(f"Seeded {len(accounts)} accounts into {db}\n")
 
     results = asyncio.run(analyse(store, accounts, pairs, model, info))

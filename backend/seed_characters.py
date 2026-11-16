@@ -231,7 +231,8 @@ def validate(char: dict[str, Any], themes: set[str]) -> list[str]:
 
 # ───────────────────────────────── building ─────────────────────────────────
 
-def build_character(store: Store, char: dict[str, Any]) -> int:
+def build_character(store: Store, char: dict[str, Any], *,
+                    skip_generated: bool = False) -> int:
     """Create one account and everything in it. Returns the account id."""
     handle = char["handle"]
     account_id = store.create_account(handle, passphrase_for(handle), is_demo=True)
@@ -307,7 +308,11 @@ def build_character(store: Store, char: dict[str, Any]) -> int:
         # re-spend to show it. Until that run happens, an analysed entry simply has no
         # analysis, which is correct: better an obviously empty entry than invented
         # observations dressed up as the product's output.
-        gen = e.get("generated") or {}
+        # skip_generated is for run_character_analysis: it seeds the entries and then
+        # runs the agents over them again. Loading the previous run's output first
+        # would leave the regenerated entry carrying both, so the re-run must start
+        # from the raw text exactly as a first run would.
+        gen = {} if skip_generated else (e.get("generated") or {})
 
         themes = gen.get("themes") or e.get("themes")
         if themes:
@@ -474,7 +479,8 @@ def assert_no_cross_account_links(store: Store) -> None:
 
 # ───────────────────────────────── entry point ─────────────────────────────────
 
-def seed(store: Store, *, reset: bool = False) -> dict[str, int]:
+def seed(store: Store, *, reset: bool = False,
+         skip_generated: bool = False) -> dict[str, int]:
     """Build every character. Returns handle -> account id."""
     themes = {t["id"] for t in json.loads(
         (HERE.parent / "data" / "themes.json").read_text(encoding="utf-8"))["themes"]}
@@ -520,7 +526,7 @@ def seed(store: Store, *, reset: bool = False) -> dict[str, int]:
                     built[handle] = existing["id"]
                     continue
                 store.delete_account(existing["id"])
-            built[handle] = build_character(store, c)
+            built[handle] = build_character(store, c, skip_generated=skip_generated)
         except Exception as e:                       # noqa: BLE001 - reported below
             # One malformed character must not cost the other eight. A demo that is
             # eight-ninths present is far better than one that is silently empty.
