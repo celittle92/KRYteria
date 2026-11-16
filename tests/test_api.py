@@ -835,6 +835,119 @@ def test_an_unknown_api_path_is_a_404_and_not_the_single_page_app() -> None:
           page.headers.get("content-type", "").startswith("text/html"))
 
 
+def test_security_headers_are_on_every_response() -> None:
+    """Browser-enforced protections the server cannot apply itself.
+
+    The app shipped without any of these. `frame-ancestors`/X-Frame-Options is the one
+    that matters most here: framing is how somebody with access to a shared device could
+    overlay or watch this interface, and the content is somebody's relationship journal.
+    Referrer-Policy matters for the same reason at one remove — a URL here names the
+    screen being read.
+    """
+    r = TestClient(app).get("/api/health")
+    for header, expected in (
+        ("X-Frame-Options", "DENY"),
+        ("X-Content-Type-Options", "nosniff"),
+        ("Referrer-Policy", "no-referrer"),
+        ("Cross-Origin-Opener-Policy", "same-origin"),
+    ):
+        check(f"{header} is set", r.headers.get(header) == expected,
+              f"got {r.headers.get(header)!r}")
+
+    csp = r.headers.get("Content-Security-Policy", "")
+    check("a CSP is set", bool(csp))
+    check("the app cannot be framed", "frame-ancestors 'none'" in csp, csp[:120])
+    check("no script origin other than our own", "script-src 'self'" in csp, csp[:120])
+    check("object-src is closed", "object-src 'none'" in csp, csp[:120])
+    check("Permissions-Policy denies geolocation",
+          "geolocation=()" in r.headers.get("Permissions-Policy", ""))
+
+
+def test_credential_endpoints_are_throttled() -> None:
+    """Guessing a passphrase against a known handle has to get slower.
+
+    Handles are short and, for the demo accounts, published. Without this, sign-in could
+    be called as fast as the network allowed.
+
+    Two properties are asserted beyond "it refuses": a correct passphrase is also
+    refused during cooldown (otherwise the throttle is trivially bypassed by interleaving
+    guesses), and a success *clears* the counter, so somebody who mistyped their own
+    passphrase a few times is not punished for the rest of the window.
+    """
+    from backend import throttle
+
+    throttle.reset()
+    handle = "throttled-user"
+    first = TestClient(app).post(
+        "/api/auth/signup", json={"handle": handle, "passphrase": "a long enough passphrase"})
+    check("the account exists", first.status_code == 201, first.text[:120])
+    throttle.reset()
+
+    codes = [
+        TestClient(app).post("/api/auth/signin",
+                             json={"handle": handle, "passphrase": f"wrong-{i}"}).status_code
+        for i in range(throttle.MAX_ATTEMPTS + 3)
+    ]
+    check("repeated guesses are eventually refused", 429 in codes, str(codes))
+    check("but not on the first try", codes[0] == 401, str(codes[:2]))
+
+    correct = TestClient(app).post(
+        "/api/auth/signin", json={"handle": handle, "passphrase": "a long enough passphrase"})
+    check("the right passphrase is also refused while in cooldown",
+          correct.status_code == 429,
+          "otherwise the throttle is bypassed by interleaving a real attempt")
+    check("and it says how long to wait", correct.headers.get("Retry-After") is not None)
+
+    # A success must clear the record, or a user who fumbles their own passphrase stays
+    # locked out for the window even after getting it right.
+    throttle.reset()
+    ok = TestClient(app).post(
+        "/api/auth/signin", json={"handle": handle, "passphrase": "a long enough passphrase"})
+    check("a correct sign-in works once the window has cleared", ok.status_code == 200)
+    throttle.record_failure(handle)
+    throttle.record_success(handle)
+    throttle.check(handle)          # raises if the success did not clear it
+    check("a success clears the failure count", True)
+    throttle.reset()
+
+
+def test_a_session_cookie_does_not_last_forever() -> None:
+    """The signed session has a server-side expiry, not just a cookie max-age.
+
+    This was a URLSafeSerializer, where the signature never expires. `max_age` on
+    set_cookie is only an instruction to the browser about when to stop sending the
+    value — a copied cookie stayed valid indefinitely, including after signing out,
+    because sign-out deletes the browser's copy and nothing more.
+    """
+    from itsdangerous import SignatureExpired
+
+    from backend.api.deps import SESSION_COOKIE, SESSION_MAX_AGE, _serializer
+
+    c = TestClient(app)
+    c.post("/api/auth/signup",
+           json={"handle": "session-expiry-user", "passphrase": "a long enough passphrase"})
+    raw = c.cookies.get(SESSION_COOKIE)
+    check("a session cookie was issued", bool(raw))
+
+    check("the session has a bounded lifetime", SESSION_MAX_AGE <= 60 * 60 * 24 * 30,
+          f"{SESSION_MAX_AGE}s")
+
+    # The serializer must reject the very same token once it is older than the window.
+    expired = False
+    try:
+        _serializer().loads(raw, max_age=-1)
+    except SignatureExpired:
+        expired = True
+    check("an aged token is refused by the serializer itself", expired,
+          "URLSafeSerializer would accept it forever; URLSafeTimedSerializer does not")
+
+    # And the token still has to be intact.
+    stolen = TestClient(app)
+    stolen.cookies.set(SESSION_COOKIE, (raw or "") + "x")
+    check("a tampered cookie is refused",
+          stolen.get("/api/auth/me").status_code == 401)
+
+
 def test_recovery_code_is_the_way_back_in_without_an_email() -> None:
     """A lost passphrase must not mean a lost journal, and must not require an email.
 

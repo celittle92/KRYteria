@@ -6,6 +6,7 @@ import sqlite3
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
+from .. import throttle
 from ..security import WeakPassphrase
 from ..store import Store, StoreError
 from .deps import (
@@ -58,15 +59,23 @@ def recover(body: dict, response: Response, store: Store = Depends(get_store)):
     new_passphrase = str(body.get("passphrase", ""))
 
     try:
+        throttle.check(handle)
+    except throttle.TooManyAttempts as e:
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(e),
+                            headers={"Retry-After": str(e.retry_after)})
+
+    try:
         account_id = store.reset_passphrase_with_code(handle, code, new_passphrase)
     except WeakPassphrase as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     if account_id is None:
+        throttle.record_failure(handle)
         raise HTTPException(
             status.HTTP_404_NOT_FOUND,
             "That handle and recovery code do not match an account.",
         )
 
+    throttle.record_success(handle)
     fresh_code = store.issue_recovery_code(account_id)
     issue_session(response, account_id)
     return {**store.get_account(account_id), "recovery_code": fresh_code}
@@ -74,10 +83,18 @@ def recover(body: dict, response: Response, store: Store = Depends(get_store)):
 
 @router.post("/signin")
 def sign_in(body: SignIn, response: Response, store: Store = Depends(get_store)):
+    # Throttled per handle. See backend/throttle.py for why it is not per IP.
+    try:
+        throttle.check(body.handle)
+    except throttle.TooManyAttempts as e:
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(e),
+                            headers={"Retry-After": str(e.retry_after)})
     account_id = store.verify_account(body.handle, body.passphrase)
     if account_id is None:
+        throttle.record_failure(body.handle)
         # One message for both cases, so the response does not reveal which handles exist.
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Handle or passphrase is wrong.")
+    throttle.record_success(body.handle)
     issue_session(response, account_id)
     return store.get_account(account_id)
 

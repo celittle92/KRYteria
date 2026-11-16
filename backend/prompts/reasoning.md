@@ -65,7 +65,7 @@ decide. A `competing` note without a question for the user is you deciding.
 ## An explanation does not delete the observation
 
 A reason contextualises a behaviour; it does not retire it. A train delay and repeatedly
-leaving the house too late both affect her evening, and they are different evidence about
+leaving the house too late both affect the writer's evening, and they are different evidence about
 the person. Keep the observation; record the explanation beside it.
 
 ## Patterns

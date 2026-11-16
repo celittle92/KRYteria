@@ -25,6 +25,7 @@ from fastapi.staticfiles import StaticFiles
 from . import costs
 from .api import account, assess, auth, criteria, journal
 from .api.deps import get_provider, get_store
+from .security_headers import SecurityHeaders
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIST = PROJECT_DIR / "frontend" / "dist"
@@ -111,6 +112,12 @@ app = FastAPI(
     ),
     version="0.1.0",
 )
+
+#: Browser-enforced protections the server cannot apply on its own — framing, sniffing,
+#: referrer leakage, and the permissions a compromised page could otherwise request.
+#: See backend/security_headers.py; each one is there for a reason specific to an app
+#: holding this kind of writing.
+app.add_middleware(SecurityHeaders)
 
 for router in (auth.router, criteria.router, journal.router, assess.router,
                account.router):

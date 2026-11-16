@@ -237,6 +237,12 @@ def build_character(store: Store, char: dict[str, Any]) -> int:
     account_id = store.create_account(handle, passphrase_for(handle), is_demo=True)
     domain_id = store.create_domain(account_id, "Dating", "romantic")
 
+    # A character may prefer the warm palette. Both themes come from one token set and
+    # both have to be shown, and carrying it on the account rather than the browser is
+    # also the real behaviour: the choice follows the person to another device.
+    if char.get("theme"):
+        store.set_preferences(account_id, theme=char["theme"])
+
     # ---- criteria library (no tier here; a tier belongs to a profile, not a criterion)
     lib: dict[str, int] = {}
     for c in char["criteria"]:

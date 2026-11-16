@@ -28,10 +28,12 @@ OUT = HERE / "report.html"
 
 #: Every image the body may reference, by the token used in the HTML.
 IMAGES = {
-    "PATTERNS_DARK": "patterns-dark.jpg",
-    "PATTERNS_WARM": "patterns-warm.jpg",
-    "PROFILES_DARK": "profiles-dark.jpg",
-    "PROGRESS_DARK": "progress-dark.jpg",
+    "FRONT_DOOR": "front-door.png",
+    "PATTERNS_DARK": "patterns-dark.png",
+    "PATTERNS_WARM": "patterns-warm.png",
+    "PROFILES_DARK": "profiles-dark.png",
+    "PROGRESS_DARK": "progress-dark.png",
+    "JOURNAL_DARK": "journal-dark.png",
 }
 
 

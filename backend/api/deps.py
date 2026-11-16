@@ -17,7 +17,7 @@ import secrets
 from functools import lru_cache
 
 from fastapi import Depends, HTTPException, Request, Response, status
-from itsdangerous import BadSignature, URLSafeSerializer
+from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
 from ..provider import ProviderInfo, build
 from ..store import Store
@@ -25,9 +25,19 @@ from ..store import Store
 SESSION_COOKIE = "kryteria_session"
 SESSION_SALT = "kryteria-session-v1"
 
+#: How long a session is good for, enforced on the SERVER when the cookie is read.
+#:
+#: This was a URLSafeSerializer with a 30-day ``max_age`` on set_cookie, which is a
+#: different and much weaker thing: ``max_age`` is an instruction to the browser about
+#: when to stop sending the cookie, not a statement about when the token stops being
+#: valid. A copied cookie value worked forever — past the 30 days, and past signing
+#: out, because sign-out deletes the browser's copy and nothing else. For an app
+#: holding this kind of writing, a session token with no expiry is the wrong default.
+SESSION_MAX_AGE = 60 * 60 * 24 * 14
+
 
 @lru_cache(maxsize=1)
-def _serializer() -> URLSafeSerializer:
+def _serializer() -> URLSafeTimedSerializer:
     """Signs the session cookie.
 
     A generated key in development means sessions do not survive a restart, which is
@@ -35,7 +45,7 @@ def _serializer() -> URLSafeSerializer:
     Generating one silently in production would log everybody out on every deploy.
     """
     key = os.getenv("KRYTERIA_SECRET_KEY") or secrets.token_urlsafe(32)
-    return URLSafeSerializer(key, salt=SESSION_SALT)
+    return URLSafeTimedSerializer(key, salt=SESSION_SALT)
 
 
 @lru_cache(maxsize=1)
@@ -55,7 +65,7 @@ def issue_session(response: Response, account_id: int) -> None:
         httponly=True,          # the browser's JS cannot read it
         samesite="lax",
         secure=os.getenv("KRYTERIA_SECURE_COOKIES", "").lower() == "true",
-        max_age=60 * 60 * 24 * 30,
+        max_age=SESSION_MAX_AGE,
         path="/",
     )
 
@@ -70,7 +80,10 @@ def current_account_id(request: Request) -> int:
     if not raw:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Not signed in.")
     try:
-        payload = _serializer().loads(raw)
+        payload = _serializer().loads(raw, max_age=SESSION_MAX_AGE)
+    except SignatureExpired:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED,
+                            "Session has expired. Please sign in again.")
     except BadSignature:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Session is not valid.")
     account_id = payload.get("account_id")

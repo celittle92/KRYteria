@@ -65,7 +65,30 @@ export default function App() {
   const location = useLocation();
 
   useEffect(() => {
-    api.me().then(setAccount).catch(() => setAccount(null)).finally(() => setChecking(false));
+    // `?demo=<handle>` opens that demo character directly — so a link can point at the
+    // exact view being written about, rather than at a sign-in screen plus instructions.
+    // The report, the slides and anyone sharing a specific account all want this.
+    //
+    // It can only ever open a demo account: /api/demo/signin refuses anything not
+    // flagged is_demo, so a handle in a URL is not a way into somebody's journal. An
+    // existing session wins, so a link cannot sign a real user out of their own account
+    // by accident.
+    const wanted = new URLSearchParams(window.location.search).get("demo");
+
+    api.me()
+      .then(setAccount)
+      .catch(async () => {
+        if (!wanted) return setAccount(null);
+        try {
+          setAccount(await api.demoSignIn(wanted));
+          // Take the parameter back out of the address bar: leaving it there would
+          // re-open that account on every later reload, including after signing out.
+          window.history.replaceState({}, "", window.location.pathname);
+        } catch {
+          setAccount(null);   // falls through to the sign-in screen, which says so
+        }
+      })
+      .finally(() => setChecking(false));
   }, []);
 
   if (checking) {

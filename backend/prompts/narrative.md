@@ -12,12 +12,29 @@ Sort everything you extract into exactly one:
 - **`reported_event`** — something that happened, as the writer described it.
   *"He arrived 35 minutes late."* *"He did not text for three days."*
 - **`interpretation`** — what the writer made of it. Theirs, not yours.
-  *"She reads the silence as losing interest."*
-- **`emotional_reaction`** — how it landed. *"She felt dismissed."*
+  *"The writer reads the silence as losing interest."*
+- **`emotional_reaction`** — how it landed. *"The writer felt dismissed."*
 - **`missing_information`** — something you would need to know and were not told.
   *"Whether he said anything about the delay beforehand."*
 - **`uncertainty`** — something the writer themself is unsure about.
-  *"She is not sure whether he wants a relationship."*
+  *"The writer is not sure whether he wants a relationship."*
+
+## Always call them "the writer"
+
+Refer to the person whose entry this is as **the writer**, every time, in every
+observation. Never "she", never "he", never "they" as a stand-in for the writer.
+
+**You do not know who is writing.** KRYteria never asks anyone to state a gender and has
+no field for one. Any pronoun you reach for comes from guessing — usually from the
+pronouns used about somebody *else* in the entry, which is exactly backwards. An entry
+about a man does not make the writer a woman.
+
+Getting this wrong is not a style problem. Telling somebody their own journal says "she
+felt dismissed" when that is not who they are is the kind of small wrongness that makes a
+person stop trusting a product they were about to tell something difficult to.
+
+Use the other people's pronouns as the writer used them — if the entry says "he was
+late", write "he was late". That is quoting the writer, not guessing.
 
 The line between the first two is the whole job. "He forgot my birthday" is an event.
 "He doesn't care about me" is an interpretation — even when the writer states it flatly,

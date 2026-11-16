@@ -63,7 +63,15 @@ export default function Journal() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api.entries().then(setEntries).catch((e) => setError(String(e)));
+    api.entries()
+      .then((rows) => {
+        setEntries(rows);
+        // Open the most recent one. A journal that shows nothing until you click reads
+        // as empty, and the entry somebody most likely came back for is the last one
+        // they wrote. The rest stay closed so the page is still scannable.
+        if (rows.length) setOpenId(rows[0].id);
+      })
+      .catch((e) => setError(String(e)));
   }, []);
 
   useEffect(() => {
@@ -106,7 +114,14 @@ export default function Journal() {
                         {e.people?.length ? e.people.join(", ") : "no one named"}
                       </span>
                     </span>
-                    <span className="block mt-2 leading-relaxed">
+                    {/* The erased notice stays whether open or shut — it is the only
+                        explanation for an entry with no text, and hiding it on open
+                        would leave a blank card. The snippet is how you find an entry
+                        in the list, so once it is open and the full text is directly
+                        underneath, repeating it is noise. */}
+                    <span className={`block mt-2 leading-relaxed ${
+                      open && !erased ? "hidden" : ""
+                    }`}>
                       {erased ? (
                         <em className="text-muted">
                           You asked for this to be erased. The analysis below survives;
