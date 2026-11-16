@@ -195,25 +195,25 @@
         "observations": [
           {
             "kind": "interpretation",
-            "text": "The writer thinks they would be fine if the relationship turned into something more.",
+            "text": "The writer finds Vanessa’s response difficult to read.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer says they are good as they are.",
+            "text": "The writer says they have not brought it up because it would be “a whole thing” and they are good as they are.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer describes Vanessa as the most alive person they know and says this is what they keep thinking about.",
+            "text": "The writer describes Vanessa as “the most alive person I know” and says this is what they keep thinking about.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer asked Vanessa if she wanted to do something on Sunday, describing it as a daytime plan rather than their usual.",
+            "text": "The writer asked Vanessa to do something on Sunday, describing it as a daytime plan rather than their usual activity.",
             "certainty": "stated",
             "hedge": null
           },
@@ -225,19 +225,19 @@
           },
           {
             "kind": "reported_event",
-            "text": "Vanessa said at the beginning that she did not want a boyfriend, and the writer said that was no problem; the writer says that was true at the time.",
+            "text": "At the beginning, Vanessa said she did not want a boyfriend, and the writer said that was no problem.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer has not brought up the possibility of this turning into something since then.",
+            "text": "The writer has not brought up the possibility of the relationship becoming something more since then.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer says it is hard to tell with Vanessa.",
+            "text": "The writer thinks they would be fine if the relationship turned into something, while noting they had not planned on that.",
             "certainty": "stated",
             "hedge": null
           }
@@ -246,55 +246,37 @@
           {
             "criterion_value": "Attraction",
             "relation": "supporting",
-            "rationale": "The writer initiated a plan to see Vanessa, which is consistent with wanting to see her.",
+            "rationale": "You asked Vanessa to make a Sunday plan, which is consistent with wanting to see her.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "You said Vanessa initially did not want a boyfriend and you accepted that at the time. That describes your understanding then, but does not establish whether your intentions align now.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "The writer's difficulty reading Vanessa is relevant to how clear the situation feels, but does not establish what expectations either person has.",
+            "rationale": "You haven't brought up the possibility of something more since the initial conversation, so what this is between you may not have been clarified since then.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible relationship intentions",
             "relation": "complicating",
-            "rationale": "Vanessa said she did not want a boyfriend and the writer agreed at the time; that earlier alignment may not describe what either wants now.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Clear expectations",
-            "relation": "complicating",
-            "rationale": "They discussed expectations at the beginning, but that does not establish whether they are clear or shared now.",
+            "rationale": "You haven't discussed whether either of your intentions have changed since Vanessa said she did not want a boyfriend.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible relationship intentions",
             "relation": "complicating",
-            "rationale": "They have not revisited what this could become, so their current relationship intentions remain unclear.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Clear expectations",
-            "relation": "complicating",
-            "rationale": "Without a later conversation, the observation does not establish whether they both know what this is.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible relationship intentions",
-            "relation": "complicating",
-            "rationale": "The writer says they would be fine if things became more, but that is the writer's view and does not establish Vanessa's intentions.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible relationship intentions",
-            "relation": "complicating",
-            "rationale": "The writer says they are good as they are; this describes the writer's view of the current arrangement, not whether their intentions match Vanessa's.",
+            "rationale": "You say you might be fine with the relationship becoming more, but that does not tell you what Vanessa wants now or whether your intentions match.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Attraction",
-            "relation": "supporting",
-            "rationale": "The writer's strong positive focus on Vanessa is consistent with wanting to see her; it does not establish physical chemistry.",
+            "relation": "complicating",
+            "rationale": "You describe Vanessa as “the most alive person I know,” which conveys strong admiration, but that wording alone does not establish whether you want to see her.",
             "source_level": "user_stated"
           }
         ],
@@ -307,24 +289,17 @@
             "materiality": "material"
           },
           {
-            "claim": "“She said maybe. Hard to tell with her.”",
+            "claim": "“Asked Vanessa if she wanted to do something Sunday. Actual daytime thing, not the usual.”",
             "gap_kind": "definition",
-            "question": "What specifically is hard to read—her response to this Sunday plan, what she wants from the relationship, or a broader pattern of signals? What has she actually said or done that leaves it unclear?",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
-            "claim": "“I think I would be fine if this turned into something” and “we are good as we are.”",
-            "gap_kind": "communication",
-            "question": "What do you want now: to keep things as they are, or to find out whether you both might want more? Since you have not raised it because it would be “a whole thing,” has Vanessa said anything about her intentions since her initial comment that she did not want a boyfriend?",
-            "claim_valence": "neutral",
-            "materiality": "material"
-          },
-          {
-            "claim": "“She is the most alive person I know.”",
-            "gap_kind": "definition",
-            "question": "What does “most alive” mean for you here—does it reflect wanting to see her and feeling attraction, or is it a different quality that you admire?",
+            "question": "You initiated a daytime plan, and you describe Vanessa as “the most alive person I know.” Do those things reflect the specific kind of attraction you mean by “I want to see her,” or are they interest or admiration that feel different from that?",
             "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“She said at the beginning she did not want a boyfriend and I said no problem, which was true at the time.”",
+            "gap_kind": "circumstances",
+            "question": "You now think you would be fine if this turned into something. Has Vanessa said anything since that clarifies whether her intentions have changed, or is mutual alignment still unknown?",
+            "claim_valence": "neutral",
             "materiality": "material"
           }
         ],

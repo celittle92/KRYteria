@@ -191,32 +191,26 @@
         "on": "2026-11-16",
         "observations": [
           {
-            "kind": "interpretation",
-            "text": "The writer does not want to have the exclusivity conversation while living at the writer's parents' house with $1,100 in the bank, because the writer thinks they know how it goes.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "interpretation",
-            "text": "The writer thinks that waiting until having a job would allow the writer to have the conversation as a person with a job rather than as a project.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "interpretation",
-            "text": "The writer says they are doing it anyway and thinks that choice probably tells them something.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "missing_information",
-            "text": "What the writer means by “how it goes,” and what outcome the writer expects from having the conversation now.",
+            "kind": "emotional_reaction",
+            "text": "The writer describes discomfort with having the exclusivity conversation while living with their parents and having limited money.",
             "certainty": "inferred",
-            "hedge": "I may be reading between the lines, but it seems the writer has an expected outcome in mind for having the conversation in the current circumstances. Is that right?"
+            "hedge": "I may be reading between the lines, but this sounds uncomfortable or exposing for you. Is that right, or would you describe it differently?"
           },
           {
-            "kind": "missing_information",
-            "text": "Whether Jane and the writer have discussed exclusivity before, and what each of them wants from the relationship.",
+            "kind": "interpretation",
+            "text": "The writer says they do not want to have the exclusivity conversation in their current circumstances because they think they know how it would go.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer frames having a job as allowing them to have the conversation as a person with a job rather than as a project.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer says they are delaying the conversation anyway, and thinks that choice probably tells them something. It is not clear what the writer thinks it tells them.",
             "certainty": "stated",
             "hedge": null
           },
@@ -234,13 +228,19 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer says they have said this three times and heard themself say it.",
+            "text": "The writer says they have given Jane this same answer three times, and noticed themself saying it.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer is living in their parents’ house and has eleven hundred dollars in the bank.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer is aware that delaying the conversation might be the exact thing that makes Jane leave.",
+            "text": "The writer thinks postponing the conversation might be the exact thing that makes Jane leave.",
             "certainty": "stated",
             "hedge": null
           }
@@ -249,26 +249,44 @@
           {
             "criterion_value": "Kindness about hard things",
             "relation": "complicating",
-            "rationale": "Jane asked again about the job search, a difficult part of the writer’s current situation, but the observation gives no tone or account of how the question landed. It does not show whether she made the writer feel small.",
+            "rationale": "You report that Jane asked about your job search again. That could reflect concern, but you haven’t described her tone or whether the question made you feel small, so it doesn’t settle how she treats you about hard things.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Can live with where I am right now",
             "relation": "complicating",
-            "rationale": "The question concerns the writer’s job search, but asking about it again alone does not show whether Jane accepts the writer’s present circumstances or treats them as a verdict.",
+            "rationale": "You report that Jane asked about your job search again, but that alone doesn’t show whether she sees your current circumstances as a verdict or can live with where you are now.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Can live with where I am right now",
+            "relation": "complicating",
+            "rationale": "You describe living with your parents and having $1,100 in the bank. That gives context for where you are, but it doesn’t show how Jane views your circumstances.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Wants the same thing",
             "relation": "complicating",
-            "rationale": "The writer deferred a conversation about where the relationship was going until after finding work. That explains why Jane’s intentions are not established here, but says nothing about what she wants.",
+            "rationale": "You told Jane you could discuss where the relationship was going once something landed. That describes your position, not what Jane wants; you haven’t described her stating whether she wants a real relationship.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Wants the same thing",
             "relation": "complicating",
-            "rationale": "Whether they have discussed exclusivity and what each wants is directly relevant, but the observation reports that this information is not available rather than revealing Jane’s intentions.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You expect you know how Jane would respond to an exclusivity conversation, but that expectation isn’t the same as her saying what she wants.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Can live with where I am right now",
+            "relation": "complicating",
+            "rationale": "You frame having a job as letting you have the conversation as a person with a job rather than as a project. That describes your perspective, not whether Jane can live with where you are right now.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants the same thing",
+            "relation": "complicating",
+            "rationale": "You worry that postponing the conversation could make Jane leave. That concern doesn’t establish what she wants or whether she has said so.",
+            "source_level": "user_stated"
           }
         ],
         "interrogations": [
@@ -280,23 +298,23 @@
             "materiality": "material"
           },
           {
-            "claim": "“Jane asked about the job search again.”",
-            "gap_kind": "frequency",
-            "question": "How often has she asked, over what period, and what was her tone or response when you answered? That context could distinguish concern or curiosity from making you feel small, and from treating your current circumstances as a verdict.",
+            "claim": "Jane asked about the job search again.",
+            "gap_kind": "impact",
+            "question": "You wrote, “Jane asked about the job search again.” What did she say, and did it make you feel small or suggest she sees your unemployment as a verdict—or did it land another way?",
             "claim_valence": "neutral",
             "materiality": "material"
           },
           {
-            "claim": "“I think I know how it goes” and I can have the conversation “as a person with a job instead of as a project.”",
+            "claim": "I think I know how it goes.",
             "gap_kind": "circumstances",
-            "question": "What has Jane said or done that leads you to expect she would see you as a “project” now—or that having a job would change how she sees you?",
+            "question": "You wrote, “I think I know how it goes.” Is that expectation based on something Jane has said or done about your current circumstances, or is it mainly a prediction about how the conversation might go?",
             "claim_valence": "negative",
             "materiality": "material"
           },
           {
-            "claim": "“Once something lands we can talk about where this is going.”",
+            "claim": "once something lands we can talk about where this is going.",
             "gap_kind": "communication",
-            "question": "Have you and Jane discussed exclusivity or what each of you wants from this relationship before? What has she actually said about her intentions, and what do you still need to ask her?",
+            "question": "You told Jane, “once something lands we can talk about where this is going.” What has Jane herself said about wanting a relationship or where she sees this going? Your postponing the conversation, and your fear that she might leave, do not by themselves tell us what she wants or whether she has been clear about it.",
             "claim_valence": "neutral",
             "materiality": "material"
           }

@@ -210,49 +210,49 @@
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer was annoyed about being late, and says the writer was probably more annoyed than Catherine.",
+            "text": "The writer was annoyed about being late, and thought the writer was more annoyed than Catherine was.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "emotional_reaction",
-            "text": "The writer likes talking with Catherine and enjoyed a conversation in which she challenged something the writer said.",
+            "text": "The writer liked talking with Catherine and liked the conversation, including their disagreement.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "emotional_reaction",
-            "text": "The writer feels very attracted to Catherine, likes being around her, enjoys holding her hand, and experiences their physical comfort and chemistry as natural.",
+            "text": "The writer is very attracted to Catherine and likes being around her, holding her hand across the table, and how comfortable they are physically.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer describes the production issue as legitimate and dislikes starting a date that way, especially because the writer planned it.",
+            "text": "The writer disliked starting the date late, particularly because the writer had planned it.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer liked the conversation despite not agreeing with Catherine completely, and says the date did not feel like trying to entertain her or putting on a fake smile.",
+            "text": "The writer felt the date did not require entertaining Catherine or putting on a fake smile.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer could tell Catherine was not thrilled when the phone issue came up, but says she did not make a thing of it.",
+            "text": "The writer experiences a lot of chemistry with Catherine and feels it does not seem forced.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer does not think being less available for daytime texting means the writer is not interested in Catherine.",
+            "text": "The writer does not think being unavailable to text during the day means a lack of interest.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer does not want Catherine to feel she is chasing the writer, says she is not, and says the writer wants to see her.",
+            "text": "The writer does not want Catherine to feel as though she is chasing the writer, and says that she is not.",
             "certainty": "stated",
             "hedge": null
           },
@@ -264,43 +264,37 @@
           },
           {
             "kind": "interpretation",
-            "text": "The writer does not want busy weeks to repeatedly turn into discussions about whether the writer is making enough time for a relationship.",
+            "text": "The writer does not want busy weeks to repeatedly become discussions about whether the writer is making enough time for the relationship.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "It sounds like the writer is weighing interest in Catherine against concern about how their different schedules and expectations might affect the relationship. Is that right?",
-            "certainty": "inferred",
-            "hedge": "It sounds like the writer is weighing interest in Catherine against concern about how their different schedules and expectations might affect the relationship. Is that right?"
-          },
-          {
-            "kind": "reported_event",
-            "text": "The writer was late to dinner with Catherine because of a production issue and texted her when the writer knew they would not arrive on time.",
+            "text": "The writer thinks there may be something between the writer and Catherine, is interested in continuing to see her, and is not ready to make major promises.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Catherine was understanding about the writer being late.",
+            "text": "The writer was late to dinner with Catherine because of a production issue, texted her when the writer knew they would not arrive on time, and Catherine was understanding.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Catherine expressed opinions, listened when someone disagreed with her, and joked in a straight-faced way that sometimes took the writer a moment to recognize.",
+            "text": "The writer and Catherine talked about work; Catherine challenged something the writer said, and the writer did not agree with her completely.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer checked their phone once during dinner because another production issue came up, and explained what was happening.",
+            "text": "Catherine sometimes says something straight-faced that takes the writer a moment to recognize as a joke.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says they are sometimes in meetings or dealing with production, are not always good at texting during the day, and sometimes do not want to spend the whole day on their phone.",
+            "text": "The writer checked a phone once because another production issue came up, explained what was happening, and perceived Catherine as not thrilled; Catherine did not make an issue of it.",
             "certainty": "stated",
             "hedge": null
           },
@@ -312,19 +306,19 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer made a plan with Catherine for next weekend and made a reservation after getting home.",
+            "text": "The writer wants to see Catherine, made a plan for the next weekend, and made a reservation after getting home.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer does not know whether Catherine thinks the writer's daytime texting habits mean the writer is not interested.",
+            "text": "The writer does not know whether Catherine thinks the writer's daytime texting habits signal a lack of interest.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer is interested in continuing to see Catherine but is not ready to make major promises, and wants to find out whether their schedules and expectations can work together.",
+            "text": "The writer wants to find out whether the writer's and Catherine's schedules and expectations can work together.",
             "certainty": "stated",
             "hedge": null
           }
@@ -333,181 +327,134 @@
           {
             "criterion_value": "Compatible with the hours I work",
             "relation": "supporting",
-            "rationale": "Catherine was told about a work-related delay, but one late arrival cannot establish whether she can live with an unpredictable schedule.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "supporting",
-            "rationale": "She was understanding about this delay; that is consistent with flexibility, but does not establish ongoing schedule compatibility.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Emotional maturity",
-            "relation": "supporting",
-            "rationale": "Her response to the delay was understanding, though this does not show how she expresses needs or handles conflict.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You describe Catherine as understanding when a production issue made you late. That is one instance of her responding flexibly to a work disruption.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Intellectual engagement",
             "relation": "supporting",
-            "rationale": "The writer enjoyed a conversation in which Catherine challenged something they said.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You describe Catherine challenging something you said about work, and you did not agree completely. That is evidence of her offering her own view.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Intellectual engagement",
             "relation": "supporting",
-            "rationale": "She expressed opinions and listened when someone disagreed with her.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You say you enjoyed the conversation, including the disagreement. That is consistent with valuing an exchange where you do not simply agree.",
+            "source_level": "user_stated"
           },
           {
-            "criterion_value": "Emotional maturity",
+            "criterion_value": "Physical comfort and chemistry",
             "relation": "supporting",
-            "rationale": "Listening during disagreement is consistent with constructive interaction, but does not establish how she raises her own needs.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You say the date did not feel like you had to entertain Catherine or put on a fake smile. That is consistent with things feeling unperformed for you.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Humor",
             "relation": "supporting",
-            "rationale": "The writer describes her straight-faced jokes as sometimes taking a moment to recognize.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Intellectual engagement",
-            "relation": "supporting",
-            "rationale": "The writer liked the conversation despite disagreement.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Physical comfort and chemistry",
-            "relation": "supporting",
-            "rationale": "The writer says the date did not feel like performing or trying to entertain her.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You describe Catherine making straight-faced jokes that you recognize a moment later. That is consistent with her having a dry or understated sense of humor.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Physical attraction",
             "relation": "supporting",
-            "rationale": "The writer directly reports strong attraction and wanting to be near her.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You say you are very attracted to Catherine and want to be near her, including holding her hand across the table.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Physical comfort and chemistry",
             "relation": "supporting",
-            "rationale": "The writer describes holding hands and their physical comfort and chemistry as natural.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You describe enjoying physical closeness and feeling comfortable with her. That is consistent with physical comfort between you.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Physical comfort and chemistry",
+            "relation": "supporting",
+            "rationale": "You describe the chemistry as substantial and not forced. That closely matches your criterion of ease without performing.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "A new production issue interrupted dinner; this is relevant to work demands, but there is only one described instance.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Being trusted rather than managed",
-            "relation": "complicating",
-            "rationale": "She apparently was not pleased but did not make an issue of the phone interruption; that does not show whether she would raise a problem directly or keep a tally.",
-            "source_level": "agent_hypothesis"
+            "relation": "supporting",
+            "rationale": "You describe Catherine noticing a work interruption and not making an issue of it, despite seeming less than thrilled. That is one instance of her accommodating a disruption, though it does not settle how she feels about your overall schedule.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "Her response to the interruption is ambiguous: the writer sensed displeasure, but she did not make an issue of it.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "The writer sensed she was not thrilled by the work interruption, which may matter to schedule fit, but the response is indirect and limited to one event.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "The writer describes work demands and limited daytime texting, but Catherine's ability to live with that pattern is not established.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "The writer is unsure how Catherine reads the daytime texting pattern; her view and their compatibility remain unknown.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Being trusted rather than managed",
-            "relation": "complicating",
-            "rationale": "Catherine has stated that she likes consistency, but that alone does not show how she raises concerns or responds to unmet expectations.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "Her preference for consistency may be relevant to the writer's unpredictable availability, but the entry does not say what consistency means to her or whether the schedules conflict.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible intentions",
-            "relation": "complicating",
-            "rationale": "This describes the writer's interest and concern about Catherine feeling she is chasing; it does not establish what relationship she wants.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible intentions",
-            "relation": "complicating",
-            "rationale": "Making another date indicates near-term interest, but does not establish whether their broader intentions match.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Her own life and ambition",
-            "relation": "supporting",
-            "rationale": "The writer says Catherine has her own career and life and values that. This does not establish whether she would keep them in a relationship.",
+            "rationale": "You perceived Catherine as not thrilled, but say she did not make an issue of it. You cannot tell from this whether she chose not to raise a need or whether this was not important enough to her.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible with the hours I work",
             "relation": "complicating",
-            "rationale": "The writer is concerned about recurring discussions over time together during busy weeks; the entry does not establish Catherine's expectations or whether she can accept the schedule.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible intentions",
-            "relation": "complicating",
-            "rationale": "The writer's concern about relationship expectations is relevant, but does not establish whether Catherine wants the same kind of relationship.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Compatible intentions",
-            "relation": "complicating",
-            "rationale": "The writer explicitly says they are still working out whether expectations fit and are not ready to make major promises; Catherine's intentions are not described.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You are unsure whether Catherine reads your daytime texting habits as a lack of interest. That leaves unclear whether your availability and her expectations fit together.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible with the hours I work",
             "relation": "complicating",
-            "rationale": "The writer explicitly says schedule compatibility is still being explored.",
-            "source_level": "agent_hypothesis"
+            "rationale": "You report that Catherine has said she likes consistency. That could matter alongside an unpredictable work schedule, but you have not described what consistency means to her or whether she can live with your hours.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "You made a plan to see Catherine again, which shows interest in continuing to date. A next-weekend plan does not establish whether your broader relationship intentions match.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Her own life and ambition",
+            "relation": "supporting",
+            "rationale": "You describe Catherine as having her own career and life, which is consistent with the career-and-interests part of your criterion.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You anticipate that busy weeks could lead to recurring discussions about time together. That points to a possible tension around your work hours, but it is your concern rather than evidence of Catherine's response to them.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible intentions",
+            "relation": "complicating",
+            "rationale": "You say you want to keep seeing Catherine but are not ready to make major promises. That describes your current position, but says little about whether Catherine wants the same thing.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You are still trying to find out whether your schedules and expectations can work together, so this remains an open question rather than evidence of a fit or mismatch.",
+            "source_level": "user_stated"
           }
         ],
         "interrogations": [
           {
-            "claim": "“She was very understanding.”",
-            "gap_kind": "pattern",
-            "question": "That is encouraging for this late arrival, but is it one instance, or have you seen how she responds across other schedule disruptions? How well this predicts compatibility with your hours depends on that.",
+            "claim": "“I texted her when I knew I wasn't going to make it on time, and she was very understanding.”",
+            "gap_kind": "frequency",
+            "question": "You gave her notice this time, and she was understanding. How often has your unpredictable work schedule affected plans or availability so far, and has Catherine said whether that kind of schedule is workable for her? One dinner may not tell you much about long-term compatibility with your hours.",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
-            "claim": "“I don’t want her to feel like she’s chasing me, because she’s not.”",
-            "gap_kind": "communication",
-            "question": "What has happened between you that tells you she doesn’t feel she’s chasing you, especially given that she has mentioned liking consistency? Has she said how she experiences your contact and planning?",
-            "claim_valence": "positive",
-            "materiality": "material"
-          },
-          {
-            "claim": "“I think there’s something here.”",
+            "claim": "“I could tell she wasn't thrilled, but she didn't make a thing of it.”",
             "gap_kind": "definition",
-            "question": "What has Catherine said about what she wants this connection to become? Mutual interest in continuing to date would not by itself establish compatible intentions, particularly since you’re not ready to make major promises.",
+            "question": "Your criterion is about whether she can say what she needs without it becoming a fight. Did Catherine actually tell you what she needed or felt about the phone interruption, or are you inferring it from her reaction? Not making an issue of it by itself doesn't show whether she can raise a concern directly.",
+            "claim_valence": "neutral",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I think there's something here. I'm not ready to make huge promises, but I am interested in continuing to see her.”",
+            "gap_kind": "communication",
+            "question": "You know what you want for now, but what has Catherine herself said about what she wants from a relationship? Has she indicated that your different levels of certainty or pace are a problem, or is that still unknown?",
             "claim_valence": "positive",
             "materiality": "material"
+          },
+          {
+            "claim": "“I like that she has her own career and her own life.”",
+            "gap_kind": "definition",
+            "question": "Your criterion includes a career and interests she would not drop for you. Does what you know about Catherine show that specifically, or do you mean that you value her having her own career and life more generally?",
+            "claim_valence": "positive",
+            "materiality": "optional"
           }
         ],
         "themes": [
@@ -541,61 +488,61 @@
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer says they have wanted this job for a long time and do not want to give up something they have built toward for ten years.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "emotional_reaction",
             "text": "The writer does not want Catherine to be fitted around the edges of the writer's life.",
             "certainty": "stated",
             "hedge": null
           },
           {
-            "kind": "interpretation",
-            "text": "The writer sees the job as making worse an issue Catherine had already raised.",
+            "kind": "emotional_reaction",
+            "text": "The writer does not want to give up something they have worked toward for ten years.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer does not think the choice is limited to fitting Catherine around the edges or giving up something the writer has worked toward for ten years.",
+            "text": "The writer identifies staying in touch while busy as the issue this job will make worse.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer seems to be weighing a long-pursued career opportunity against maintaining the relationship with Catherine.",
+            "certainty": "inferred",
+            "hedge": "It sounds like you are weighing these two priorities against each other. Is that an accurate reading?"
+          },
+          {
+            "kind": "missing_information",
+            "text": "What Catherine has specifically said is a problem, and what the last three months with Catherine have been like.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What specific changes in staying in touch Catherine has asked for, and what the writer's work schedule or communication options might allow.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "missing_information",
-            "text": "What the writer means by a possible third option.",
+            "text": "What staying in touch currently looks like, and what changes to the writer's work or communication might be possible.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer took a job with more responsibility, more money, substantially more travel, and hours that cannot be predicted more than about a week ahead.",
+            "text": "The writer accepted a job with more responsibility, more money, substantially more travel, and work hours that cannot be predicted more than about a week ahead.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says Catherine had already told the writer that staying in touch while busy was a problem, and that the job will make it worse.",
+            "text": "The writer says the last three months with Catherine have been a certain way, and that Catherine has already told the writer that the job-related issue is a problem.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer has been telling themself since August that they will stay in touch better when busy, but says they have not changed how they work.",
+            "text": "The writer has been telling themself since August that they will do better at staying in touch when busy, but says they have not changed how they work and have only intended to.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer has not worked out what a third option might be.",
+            "text": "The writer thinks these may not be the only two options, but has not figured out what a third option would be.",
             "certainty": "stated",
             "hedge": null
           }
@@ -604,55 +551,61 @@
           {
             "criterion_value": "Compatible with the hours I work",
             "relation": "complicating",
-            "rationale": "The job introduces substantially more travel and an unpredictable schedule, which is relevant context for schedule compatibility, but says nothing about whether Catherine can live with it.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Being trusted rather than managed",
-            "relation": "supporting",
-            "rationale": "The writer reports that Catherine told them staying in touch while busy was a problem, consistent with raising a concern directly. It does not establish whether she raised it only once or avoided keeping a tally.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Emotional maturity",
-            "relation": "supporting",
-            "rationale": "The report that Catherine told the writer that staying in touch was a problem is consistent with expressing a need or concern; the account does not say whether it became a fight.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "The reported communication difficulty while the writer is busy is relevant to how the new schedule may affect the relationship, but it does not establish Catherine's ability or willingness to live with the schedule.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "The writer reports not changing their work habits despite intending to stay in touch better. This may matter to how the schedule affects communication, but it does not establish Catherine's compatibility with the hours themselves.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible with the hours I work",
-            "relation": "complicating",
-            "rationale": "This is the writer's interpretation that the job will worsen a previously raised issue, not independent evidence of Catherine's response to the schedule.",
+            "rationale": "You describe the new job as having hours you cannot predict more than about a week ahead. That is relevant to your work-hours compatibility, but it does not tell us whether Catherine can live with that schedule.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Being trusted rather than managed",
             "relation": "complicating",
-            "rationale": "The unspecified details of what Catherine asked for leave unclear how directly and in what manner she raised the concern.",
+            "rationale": "You say Catherine has told you the job-related issue is a problem. That bears on whether she raises concerns, but the entry does not say exactly what she said or whether this was direct and without keeping a tally.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "The missing details about what Catherine asked for and the surrounding interaction leave unclear whether she expressed a need without it becoming a fight.",
+            "rationale": "You report that Catherine has identified a job-related issue as a problem. That is relevant to her expressing a concern, but you have not described what she needs or whether the conversation became a fight.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible with the hours I work",
             "relation": "complicating",
-            "rationale": "The missing information about communication options and the schedule prevents assessing how the work pattern could affect compatibility.",
+            "rationale": "You say Catherine has already raised a job-related issue, but the entry does not specify whether it is about your unpredictable hours, staying in touch, or something else.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You identify staying in touch while busy as the issue you think the job will worsen. That may affect how the work schedule fits the relationship, but it does not establish whether Catherine can live with the unpredictable hours themselves.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You say you have intended to improve staying in touch while busy but have not changed how you work. That is relevant context for the practical effect of the job on the relationship, but it does not tell us whether Catherine can live with your hours.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Being trusted rather than managed",
+            "relation": "complicating",
+            "rationale": "You note that Catherine's specific words are missing, so there is not enough detail here to tell whether she raised the problem directly or whether it involved keeping a tally.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Emotional maturity",
+            "relation": "complicating",
+            "rationale": "You note that what Catherine specifically said and how the last three months have gone are missing. That leaves unclear what she needs and whether discussing it became a fight.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You note that the nature of Catherine's concern and the recent history are missing, so it is unclear how the job's hours affect your compatibility.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible with the hours I work",
+            "relation": "complicating",
+            "rationale": "You note that your current contact while busy and possible changes are not described. That leaves the practical impact of your work pattern unclear, and still does not establish whether Catherine can live with the unpredictable hours.",
             "source_level": "user_stated"
           }
         ],
@@ -666,30 +619,29 @@
           },
           {
             "claim": "“the thing she has already told me is a problem is the thing this job makes worse.”",
-            "gap_kind": "definition",
-            "question": "What specifically did Catherine ask for when she raised staying in touch, and what would “worse” look like in practice—less frequent contact, longer gaps, or something else?",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
-            "claim": "“I keep telling myself I will be better about staying in touch when I am busy. I have been telling myself that since August. I have not actually changed anything about how I work.”",
-            "gap_kind": "frequency",
-            "question": "Across the busy periods since August, what have you actually done to stay in touch, and how often has the gap between your intention and your actions occurred?",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
-            "claim": "“I do not think those are the only two options but I have not done the work of figuring out what the third one is.”",
             "gap_kind": "circumstances",
-            "question": "What feasible third option do you currently see—if any—and what would make it workable with the schedule you expect, rather than relying only on an intention to communicate better?",
-            "claim_valence": "positive",
+            "question": "You say the job makes worse an issue Catherine has already raised. What specifically did she identify, and what will the added travel and unpredictable hours change about it in practice?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I have been telling myself that since August. I have not actually changed anything about how I work. I just intend to.”",
+            "gap_kind": "frequency",
+            "question": "You describe an intention to stay in touch without changing your work habits. What does staying in touch look like now—how often are you unavailable or missing contact, and what has Catherine said she needs?",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“the thing she has already told me is a problem”",
+            "gap_kind": "communication",
+            "question": "Your criterion is that she raises a problem directly rather than keeping a tally, and that she can express a need without a fight. When Catherine raised this, did she state it directly, and did the conversation become a fight? The entry doesn’t establish either detail.",
+            "claim_valence": "neutral",
             "materiality": "material"
           }
         ],
         "themes": [
           "communication-preferences",
-          "expectations-and-commitment",
-          "reciprocity-and-initiative"
+          "expectations-and-commitment"
         ],
         "safety": []
       }

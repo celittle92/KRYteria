@@ -203,27 +203,33 @@
           },
           {
             "kind": "interpretation",
-            "text": "The writer accepts Danny's account and does not think Bianca is inventing what happened.",
+            "text": "The writer says Bianca is not inventing the writer's loudness on Saturday.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer experiences Bianca's question as feeling like an assessment.",
+            "text": "The writer thinks the objection to feeling assessed is something the writer would say either way, leaving the writer unsure how to proceed.",
             "certainty": "stated",
             "hedge": null
           },
           {
-            "kind": "interpretation",
-            "text": "The writer did not understand that earlier conversation as closing the subject.",
+            "kind": "missing_information",
+            "text": "What the writer had told Bianca months earlier, and what Bianca asked or said beyond asking how much the writer had.",
             "certainty": "stated",
             "hedge": null
           },
           {
-            "kind": "interpretation",
-            "text": "It sounds like the writer is questioning whether the sense of being assessed is shaping their reaction to Bianca's question. Is that what you mean?",
-            "certainty": "inferred",
-            "hedge": "I may be reading between the lines here: it sounds like the writer is questioning whether the sense of being assessed is shaping their reaction to Bianca's question. Is that accurate?"
+            "kind": "missing_information",
+            "text": "What happened on Saturday and what 'how much' refers to.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "missing_information",
+            "text": "What the writer told Bianca in month one and what the writer wants Bianca to understand now.",
+            "certainty": "stated",
+            "hedge": null
           },
           {
             "kind": "reported_event",
@@ -233,31 +239,43 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer tried to make the answer funny, then said they had already been straightforward with Bianca about this months earlier, and said they had not realised they were being monitored.",
+            "text": "The writer's first instinct was to make a joke and the writer did; partway through the sentence, the writer knew it was the wrong move.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says the comment about not realising they were being monitored was unfair, and that the writer knew this at the time.",
+            "text": "The writer told Bianca that the writer had already been straight with her about this months earlier.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says they were loud on Saturday; Danny told the writer about it on Sunday.",
+            "text": "The writer said something about not having realised the writer was being monitored, and knew that was unfair.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer told Bianca about this in the first month because the writer wanted her to know who the writer was dealing with.",
+            "text": "The writer was loud on Saturday, according to what Danny told the writer on Sunday.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer told Bianca in month one because the writer wanted her to know who the writer was dealing with.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer did not think of telling Bianca in month one as drawing a line under the subject.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer is not sure they can now tell Bianca that the earlier conversation was not meant to close the subject without it sounding like a correction.",
+            "text": "The writer is not sure whether saying this to Bianca now would sound like a correction.",
             "certainty": "stated",
             "hedge": null
           }
@@ -266,43 +284,37 @@
           {
             "criterion_value": "Does not treat my history as the headline",
             "relation": "complicating",
-            "rationale": "Bianca asked about how much the writer had on Saturday, which makes the drinking history relevant, but one question does not show whether she makes it a recurring subject.",
+            "rationale": "You describe Bianca asking how much you had on Saturday. That touches the drinking history, but it does not show whether she makes it the subject of every third conversation.",
             "source_level": "user_stated"
           },
           {
-            "criterion_value": "Does not treat my history as the headline",
+            "criterion_value": "Says the thing",
             "relation": "complicating",
-            "rationale": "The writer refers to having disclosed this months earlier and says the question felt like monitoring; that gives context for the concern but does not establish Bianca's broader pattern.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Does not treat my history as the headline",
-            "relation": "complicating",
-            "rationale": "The writer experiences the question as an assessment. That matters to how the interaction landed, but does not by itself establish that Bianca treats the history as the headline.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Does not treat my history as the headline",
-            "relation": "complicating",
-            "rationale": "The writer objects to feeling assessed; this reflects the impact of the exchange, not whether Bianca repeatedly centers the drinking history.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Does not treat my history as the headline",
-            "relation": "supporting",
-            "rationale": "The writer says they told Bianca about the drinking in the first month, which supports that she knows about it. It does not establish how often she brings it up.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Does not treat my history as the headline",
-            "relation": "complicating",
-            "rationale": "The writer did not understand the earlier conversation as closing the subject, so the present question cannot be taken as evidence that Bianca is disregarding an agreed boundary.",
+            "rationale": "You describe Bianca asking a specific question about Saturday. It is not clear whether this was her telling you something was wrong, or what prompted the question.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "The writer is unsure how to raise a concern without it sounding corrective, but no conversation with Bianca about it or response from her is described.",
+            "rationale": "You describe a question that may have been part of a hard conversation, but there is not enough here about how Bianca handled that conversation to assess this criterion.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "complicating",
+            "rationale": "You say you told Bianca months earlier that you had already been straight with her about this. What you told her, and how she has treated that history since, are not clear.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "complicating",
+            "rationale": "You say you told Bianca in month one because you wanted her to know who she was dealing with. The entry does not specify exactly what you told her or how she has treated that information.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Does not treat my history as the headline",
+            "relation": "complicating",
+            "rationale": "You say you did not think telling Bianca in month one meant drawing a line under the subject. That gives context about your expectations, but it does not establish how often Bianca brings it up.",
             "source_level": "user_stated"
           }
         ],
@@ -315,23 +327,23 @@
             "materiality": "material"
           },
           {
-            "claim": "“What I object to is the feeling of being assessed.”",
+            "claim": "“I had already been straight with her about all of this months ago”; “I did not think of it as a line I was drawing under the subject.”",
             "gap_kind": "frequency",
-            "question": "Since you first told Bianca about your drinking, how often has she brought it up, and how many of those times were about your history itself rather than a specific event like Saturday?",
-            "claim_valence": "negative",
+            "question": "You say you had already been straight with Bianca, but didn’t mean that as closing the subject. What had you told her, and how often has she raised your drinking or its effects since then? That would help distinguish a specific follow-up from it becoming the headline under criterion 66.",
+            "claim_valence": "neutral",
             "materiality": "material"
           },
           {
             "claim": "“Bianca asked me about Saturday. Specifically about how much I had.”",
             "gap_kind": "circumstances",
-            "question": "What did Bianca say or do after you joked and mentioned being monitored? That context would help distinguish a hard conversation becoming a referendum from a question that felt assessing to you, without assuming either.",
+            "question": "You describe Bianca asking directly about how much you had. What did she say beyond that, and how did the conversation continue? This could be her saying a concern plainly under criterion 69, while the way the difficult exchange unfolded would matter for criterion 72; the question alone doesn’t show either that she is collecting concerns or that the conversation became a referendum.",
             "claim_valence": "neutral",
             "materiality": "material"
           },
           {
-            "claim": "“I told her in month one because I wanted her to know who she was dealing with.”",
-            "gap_kind": "communication",
-            "question": "Did Bianca indicate at the time what she understood that disclosure to mean, or whether she might ask about it again? Your intention in telling her establishes what you wanted her to know, but not by itself what she understood or how she would handle the subject later.",
+            "claim": "“So she is not inventing it.”",
+            "gap_kind": "definition",
+            "question": "You say Danny told you that you were loud, which supports your view that you were loud. What did Danny mean by “loud,” and do you know whether that was the concern behind Bianca asking how much you had?",
             "claim_valence": "positive",
             "materiality": "optional"
           }
@@ -363,50 +375,32 @@
         "on": "2026-11-16",
         "observations": [
           {
-            "kind": "emotional_reaction",
-            "text": "The writer describes uncertainty about whether to have more children.",
-            "certainty": "inferred",
-            "hedge": "It sounds like not having an answer feels difficult to hold or communicate. Is that accurate?"
-          },
-          {
             "kind": "interpretation",
-            "text": "The writer says the indirect answers are not because the writer is hiding an answer, but because the writer does not know what the answer is.",
+            "text": "The writer thinks saying “I do not want more” and then wanting children in two years would be worse than saying “I do not know.”",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer thinks saying “I do not know” is a worse answer than saying “I do not want more” if the writer later changes their mind.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "interpretation",
-            "text": "The writer concludes that “I do not know” is an answer, though the writer has been treating it as if it were not.",
+            "text": "The writer has been treating “I do not know” as though it were not an answer, and now considers it an answer.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What Bianca meant by asking about more children “sideways,” and what she asked or the writer answered on each occasion.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "missing_information",
-            "text": "Whether the writer and Bianca have discussed what each would do if the writer's wishes about children changed.",
+            "text": "It is not stated whether Bianca is asking about having children together or about the writer’s wishes more generally.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Bianca has asked about having more children twice; both times, the writer answered indirectly, with something adjacent to the question.",
+            "text": "Bianca has asked the writer about having more children twice. The writer describes both questions as indirect and says the writer answered with something adjacent each time.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer is 52 and has two children the writer does not see enough of.",
+            "text": "The writer is 52 and has two children whom the writer says the writer does not see enough of.",
             "certainty": "stated",
             "hedge": null
           },
@@ -418,7 +412,7 @@
           },
           {
             "kind": "uncertainty",
-            "text": "The writer is unsure whether to start again with more children, or whether the writer mainly liked the idea of being asked.",
+            "text": "The writer does not know whether the writer wants to have more children or mainly liked the idea of being asked.",
             "certainty": "stated",
             "hedge": null
           }
@@ -427,43 +421,31 @@
           {
             "criterion_value": "Compatible intentions",
             "relation": "complicating",
-            "rationale": "Bianca has raised having more children twice, but the writer answered indirectly and their own position is unsettled, so this does not establish whether their intentions are compatible.",
+            "rationale": "You describe Bianca asking indirectly about having more children, while you answered adjacent to the question. That leaves unclear whether your wishes align; it also does not establish what she wants from a relationship more broadly.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible intentions",
             "relation": "complicating",
-            "rationale": "Bianca has said she does not want children; the writer is unsure about having more, so this is relevant to compatibility but does not settle it.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Fits with my children",
-            "relation": "complicating",
-            "rationale": "Her stated position about having children is relevant context, but it does not establish whether she is comfortable with the writer’s existing children or their presence in the writer’s life.",
+            "rationale": "You are unsure whether you want more children, so your own wishes on this point are not settled in the account.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible intentions",
             "relation": "complicating",
-            "rationale": "The writer describes the indirect answers as stemming from uncertainty rather than concealment. That clarifies the writer’s current position, but not whether it aligns with Bianca’s.",
+            "rationale": "You say Bianca has plainly said she does not want children, while you are unsure about having more. That may matter to compatibility, but the account does not establish whether she was asking about having children together or what either of you wants overall.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Compatible intentions",
             "relation": "complicating",
-            "rationale": "The writer explicitly remains unsure about having more children, leaving the compatibility question unsettled.",
+            "rationale": "You do not know whether Bianca was asking about having children together or about your wishes generally, so the significance of her questions for compatibility is unclear.",
             "source_level": "user_stated"
           },
           {
-            "criterion_value": "Compatible intentions",
+            "criterion_value": "Says the thing",
             "relation": "complicating",
-            "rationale": "This is the writer’s interpretation of how to communicate uncertainty, not a settled preference about having more children or evidence of compatibility.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible intentions",
-            "relation": "complicating",
-            "rationale": "The writer recognizes uncertainty as their current answer; that makes the writer’s position clearer, but does not establish whether it matches Bianca’s intentions.",
+            "rationale": "You describe Bianca’s questions as indirect, which is relevant to how directly she raises this subject. The account does not say that something was wrong or that she was collecting an issue instead of raising it.",
             "source_level": "user_stated"
           }
         ],
@@ -476,24 +458,24 @@
             "materiality": "material"
           },
           {
-            "claim": "“Bianca has asked about more children twice now, both times sideways, both times I answered something adjacent.”",
-            "gap_kind": "communication",
-            "question": "What did she ask, and what did you say, on each occasion—and does she know that you genuinely do not know your answer?",
+            "claim": "“Bianca has asked about more children twice now, both times sideways”",
+            "gap_kind": "circumstances",
+            "question": "When Bianca asked about more children, was she asking whether you might have a child together, or asking more generally how you feel about having children? That distinction could change what this says about compatible intentions.",
             "claim_valence": "neutral",
             "materiality": "material"
           },
           {
-            "claim": "“She does not want children, which she has said plainly.”",
+            "claim": "“She does not want children, which she has said plainly”",
             "gap_kind": "definition",
-            "question": "What does her no-children position mean in practice for a relationship with you, given that you already have children and are unsure about having more?",
+            "question": "Your criterion about fitting with your children is about being comfortable around your existing children or their presence. Does Bianca’s not wanting children refer to having children together, or do you know how she feels about being around your children? Those may be separate questions.",
             "claim_valence": "neutral",
             "materiality": "material"
           },
           {
-            "claim": "“I should tell her I do not know. That is an answer.”",
+            "claim": "Observation [0] is mapped to criterion [69] (“Says the thing”) as complicating.",
             "gap_kind": "definition",
-            "question": "Would telling her only that you are uncertain give her enough to judge whether your intentions are compatible, or would she also need to hear what possibilities you are considering and whether you expect to revisit the question?",
-            "claim_valence": "positive",
+            "question": "Your criterion is about her telling you when something is wrong rather than collecting it. Does Bianca asking about children indirectly indicate that she is withholding a concern, or is that a separate communication style that does not speak to this criterion?",
+            "claim_valence": "neutral",
             "materiality": "material"
           }
         ],

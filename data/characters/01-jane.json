@@ -315,7 +315,7 @@
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer says they like Greg a lot and describes that as the problem.",
+            "text": "The writer likes Greg a lot.",
             "certainty": "stated",
             "hedge": null
           },
@@ -327,43 +327,49 @@
           },
           {
             "kind": "interpretation",
-            "text": "The writer says they are being more patient about this than they would be with someone they liked less.",
+            "text": "The writer sees themself as being more patient about this than they would be with someone they liked less.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "Greg has not said what specific job-related condition would lead to the conversation about what they are doing.",
+            "text": "Greg has not specified what job-related condition would lead to the conversation or when it would happen.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer asked Greg where things stood with the job search. Greg said he had been applying, that the market was brutal for his level, and that he would have something sorted soon; then they could talk about what they were doing.",
+            "text": "The writer asked Greg where things stood with his job search.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says this is the third time Greg has said some version of “once I have a job.” The writer also says the conversation about what they are doing has been put off twice.",
+            "text": "Greg said he had been applying, that the market was brutal for his level, and that he would have something sorted soon; then they could talk about what they were doing.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer has not asked Greg what the trigger is.",
+            "text": "The writer says this was the third time Greg had said some version of “once I have a job,” and that the writer had now been told twice that the conversation would happen later.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer has not asked what would trigger the conversation.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer is unsure what would trigger the conversation: a job offer, any job, or a certain salary.",
+            "text": "The writer is unsure what the trigger for the conversation is: a job offer, any job, or a certain salary.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer cannot tell whether being more patient is fair or an exception they are making because they like Greg.",
+            "text": "The writer cannot tell whether being more patient is fair or means making an exception.",
             "certainty": "stated",
             "hedge": null
           }
@@ -372,79 +378,67 @@
           {
             "criterion_value": "Compatible relationship intentions",
             "relation": "complicating",
-            "rationale": "He makes the relationship conversation conditional on having a job, but this does not establish whether he wants marriage and children or will say so plainly.",
+            "rationale": "You report that Greg said you could talk about what you were doing once he had a job. That postpones a relationship conversation, but it does not tell you whether he wants marriage or children or whether he would say so plainly.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "You say this was the third time he had tied the conversation to getting a job, and that you had twice been told it would happen later. The repeated delay is relevant, but it does not reveal his intentions.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "You are unsure what job-related condition would lead to the conversation, so the timing of a direct discussion about your relationship intentions remains unclear.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Compatible relationship intentions",
+            "relation": "complicating",
+            "rationale": "You report that Greg has not specified what job-related condition would lead to the conversation or when it would happen. That leaves the promised discussion open-ended without establishing what he wants.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Follow-through",
             "relation": "complicating",
-            "rationale": "He says he expects to have something sorted soon, but the observation does not establish a clear commitment or deadline against which follow-through can be judged.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "A direction he is actually moving in",
-            "relation": "complicating",
-            "rationale": "Applying is action toward work, but the account gives no specific direction or plan beyond expecting to have something sorted soon.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Financial independence",
-            "relation": "complicating",
-            "rationale": "The job search is relevant to his employment situation, but says nothing about his obligations or how he is managing them.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible relationship intentions",
-            "relation": "complicating",
-            "rationale": "The relationship conversation has been deferred twice and he has repeated the job-first condition; that bears on clarity, but does not establish his marriage or children intentions.",
+            "rationale": "You report that Greg said you could talk once he had a job. That is a conditional commitment, but you have not described the condition being met or the conversation happening.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Follow-through",
             "relation": "complicating",
-            "rationale": "Repeatedly saying the conversation will happen after a job is sorted, while it remains deferred, raises a follow-through question; the condition and timing are not clear enough to settle it.",
+            "rationale": "You say he has repeated that the conversation would happen later, tied to getting a job. The repetition matters, but it is not enough to establish that he failed to do something after the stated condition was met.",
             "source_level": "user_stated"
           },
           {
-            "criterion_value": "Compatible relationship intentions",
+            "criterion_value": "Follow-through",
             "relation": "complicating",
-            "rationale": "Uncertainty about what would trigger the promised conversation leaves the relationship-intentions question unresolved; it is the writer's uncertainty, not evidence of Greg's intentions.",
+            "rationale": "You say you have not asked what would trigger the conversation. Without a clear condition, it is hard to tell whether Greg has yet had the opportunity to follow through.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Follow-through",
+            "relation": "complicating",
+            "rationale": "You are unsure whether the trigger is a job offer, any job, or a certain salary. That uncertainty makes it difficult to assess whether the condition for his promise has been met.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Follow-through",
+            "relation": "complicating",
+            "rationale": "You report that Greg has not specified the job-related condition or timing. That leaves the follow-through commitment difficult to assess.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "A direction he is actually moving in",
-            "relation": "complicating",
-            "rationale": "The unclear job-related threshold makes it hard to tell what progress or direction Greg means; this does not establish that he lacks one.",
+            "relation": "supporting",
+            "rationale": "You report that Greg said he has been applying for jobs and is working toward having something lined up. That is some evidence of taking action toward employment, though the entry gives little detail about his broader direction.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Financial independence",
             "relation": "complicating",
-            "rationale": "The writer does not know whether the condition is any job or a particular salary, so the account does not clarify his financial situation or obligations.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible relationship intentions",
-            "relation": "complicating",
-            "rationale": "The writer has not asked what would trigger the conversation, so the condition remains unclarified; this does not establish Greg's intentions.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Compatible relationship intentions",
-            "relation": "complicating",
-            "rationale": "The specific condition for having the relationship conversation has not been stated, leaving the intentions question unsettled.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "A direction he is actually moving in",
-            "relation": "complicating",
-            "rationale": "The missing job-related condition leaves unclear what progress Greg is working toward, without showing that he has no direction.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Financial independence",
-            "relation": "complicating",
-            "rationale": "The missing job-related condition does not clarify his financial responsibilities or how he is handling them.",
+            "rationale": "You report that Greg says he has been applying for jobs and expects to have something sorted soon. That gives some information about his job search, but not whether he takes responsibility for his own obligations or is financially independent.",
             "source_level": "user_stated"
           }
         ],
@@ -457,23 +451,16 @@
             "materiality": "material"
           },
           {
-            "claim": "“That is the third time he has said some version of ‘once I have a job’.”",
-            "gap_kind": "circumstances",
-            "question": "Across those three occasions, what—if anything—has changed in his job search or in how he describes the condition for having the conversation? That would help distinguish a changing circumstance from the same postponement recurring.",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
-            "claim": "“I do not think he is lying to me. I think he means it every time he says it.”",
+            "claim": "I do not think he is lying to me. I think he means it every time he says it.",
             "gap_kind": "accountability",
-            "question": "What observable actions make you think he means it, beyond his saying so—and has anything happened that would distinguish sincere intention from sincere hope without follow-through?",
+            "question": "You believe he means it when he says this. What tells you that, and how do you distinguish sincere intent from follow-through on the conversation he has postponed?",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
-            "claim": "“I am aware I am being more patient with this than I would be with someone I liked less and I cannot tell whether that is me being fair or me making an exception.”",
-            "gap_kind": "comparison",
-            "question": "What does “more patient” mean here in practice—how long or what further delay would you accept—and would that still feel fair to you if his job-search situation did not change?",
+            "claim": "he will have something sorted soon and then we can talk about what we are doing.",
+            "gap_kind": "definition",
+            "question": "Your mandatory criterion is specifically about wanting marriage and children and saying so plainly. Does “talk about what we are doing” address that for you, or is it a more general relationship-status conversation?",
             "claim_valence": "neutral",
             "materiality": "material"
           }
@@ -504,32 +491,26 @@
         "on": "2026-11-16",
         "observations": [
           {
-            "kind": "interpretation",
-            "text": "The writer says they have gone through this same loop at least three times, laying out the same facts and expecting them to add up differently.",
-            "certainty": "stated",
-            "hedge": null
+            "kind": "emotional_reaction",
+            "text": "It sounds as though the writer may feel caught in a repetitive cycle of revisiting the same facts. Is that right?",
+            "certainty": "inferred",
+            "hedge": "It sounds as though the writer may feel caught in a repetitive cycle of revisiting the same facts. Is that right?"
           },
           {
             "kind": "interpretation",
-            "text": "The writer noticed an immediate impulse to treat Greg’s second-round interview as the thing that was changing.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "interpretation",
-            "text": "The writer notes that a second-round interview is not the same as having a job.",
+            "text": "The writer noticed an immediate impulse to treat the second-round interview as the thing that had changed, while also concluding that an interview is not a job.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer says nothing has changed since the previous entry: Greg has no job, and the writer and Greg have not talked about where the relationship is going.",
+            "text": "The writer says that nothing has changed since the last time they wrote: there is no job and no conversation about where this is going. The writer describes it as another “lovely weekend.”",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer describes another weekend with Greg as “lovely.”",
+            "text": "The writer says they have gone through this same loop at least three times, laying out the same facts again.",
             "certainty": "stated",
             "hedge": null
           },
@@ -542,39 +523,27 @@
         ],
         "evidence": [
           {
-            "criterion_value": "Financial independence",
-            "relation": "complicating",
-            "rationale": "Greg having no job is relevant to financial independence, but does not establish whether he is meeting his obligations or has other means of support.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "A direction he is actually moving in",
-            "relation": "complicating",
-            "rationale": "Having no job bears on direction, but by itself does not show whether he can describe a direction or is taking steps toward one.",
-            "source_level": "user_stated"
-          },
-          {
             "criterion_value": "Compatible relationship intentions",
             "relation": "complicating",
-            "rationale": "They have not discussed where the relationship is going, so there is no plain statement here about marriage or relationship intentions; the lack of discussion does not establish what he wants.",
+            "rationale": "You report that there has been no conversation about where the relationship is going. That leaves unclear whether he wants marriage and children and would say so plainly; it does not establish what he wants.",
             "source_level": "user_stated"
           },
           {
-            "criterion_value": "Wants children",
+            "criterion_value": "Financial independence",
             "relation": "complicating",
-            "rationale": "No discussion of the relationship’s direction leaves his wishes about children and timing unstated.",
+            "rationale": "You report that he has no job. That is relevant to financial independence, but it does not tell you whether he takes responsibility for his obligations or can describe a direction he is moving in.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "A direction he is actually moving in",
             "relation": "supporting",
-            "rationale": "A second-round interview is a concrete step toward employment, though it does not establish the broader direction or whether he can describe it.",
+            "rationale": "You report that Greg has a second-round interview, which is a concrete step. It does not establish what direction he can describe or whether he is taking further action toward it.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Financial independence",
-            "relation": "supporting",
-            "rationale": "The interview is evidence of movement toward work, one part of the criterion; it does not establish financial independence or responsibility for obligations.",
+            "relation": "complicating",
+            "rationale": "You report that Greg has a second-round interview. That suggests movement toward possible work, but it does not establish financial independence or responsibility for his obligations.",
             "source_level": "user_stated"
           }
         ],
@@ -587,24 +556,17 @@
             "materiality": "material"
           },
           {
-            "claim": "“No job, no conversation about where this is going”",
-            "gap_kind": "communication",
-            "question": "Has Greg said anything elsewhere in plain words about wanting marriage and children, or is the absence of a conversation the only evidence so far? That would distinguish missing information from evidence about his intentions.",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
             "claim": "“I have been round this exact loop at least three times now.”",
             "gap_kind": "pattern",
-            "question": "What specifically repeats in the loop, and across what period? The entries here show a job search and continued unemployment, but don’t establish that the relationship conversation has also been absent on each occasion.",
+            "question": "You say this is the same loop at least three times. Which earlier occasions do you mean, and was the same combination present each time—no job and no conversation about where the relationship is going?",
             "claim_valence": "negative",
             "materiality": "material"
           },
           {
-            "claim": "“He did tell me he has a second-round interview, which is the first concrete thing in a while.”",
+            "claim": "“No conversation about where this is going.”",
             "gap_kind": "definition",
-            "question": "What would count as evidence of a direction you’re looking for beyond this interview—for example, continued steps in the search or a described plan if it doesn’t lead to a job?",
-            "claim_valence": "positive",
+            "question": "Your criterion is specifically that he wants marriage and children and will say so plainly. When you say there has been no conversation about where this is going, do you mean he has not plainly expressed those intentions, or that you have not discussed the relationship more generally?",
+            "claim_valence": "negative",
             "materiality": "material"
           }
         ],
