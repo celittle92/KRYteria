@@ -257,53 +257,59 @@
       "generated": {
         "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
         "by": "gpt-6-luna",
-        "on": "2026-11-12",
+        "on": "2026-11-16",
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer notices they want it to be true that Will does not have a problem right now.",
+            "text": "The writer notices wanting it to be true that Will does not have a problem right now.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "The writer may feel unsettled by not having information that resolves the question about Will's current situation. Is that accurate?",
+            "certainty": "inferred",
+            "hedge": "I may be reading between the lines; does the lack of anything that settles this feel unsettling to the writer?"
+          },
+          {
+            "kind": "interpretation",
+            "text": "The writer sees what Will disclosed in month one as separate from the question the writer is asking about last Saturday.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer experienced Will's response as treating the subject as closed because he had disclosed it once.",
-            "certainty": "stated",
-            "hedge": null
+            "text": "The writer may be questioning whether Will's earlier disclosure answers the concern about last Saturday. Is that what you mean?",
+            "certainty": "inferred",
+            "hedge": "I may be reading between the lines; is the writer questioning whether the earlier disclosure answers the concern about last Saturday?"
           },
           {
-            "kind": "interpretation",
-            "text": "The writer recognizes that they are using what Will told them in month one as an answer to a different question about last Saturday.",
+            "kind": "missing_information",
+            "text": "What Will had quite a lot of is not specified.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What Will had quite a lot of, and what happened on Saturday in more detail.",
+            "text": "What happened on Saturday that prompted the writer to ask Will about it is not described in detail.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What Will disclosed in month one, and what he meant by saying he had not realized he was being monitored.",
+            "text": "What Will disclosed in month one, and what the writer's question about last Saturday was specifically asking, are not stated.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer asked Will about Saturday.",
+            "text": "The writer asked Will about Saturday. Will had quite a lot and got loud in a way the writer had not seen before; someone at the table noticed.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Will had quite a lot and got loud in a way the writer had not seen before; someone at the table noticed.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "reported_event",
-            "text": "Will made a joke first. When the writer said they were being serious, he said he had already told them all of this.",
+            "text": "Will made a joke first. When the writer said they were being serious, Will said he had already told the writer all of this, as though it was a closed subject after disclosing it once.",
             "certainty": "stated",
             "hedge": null
           },
@@ -314,14 +320,8 @@
             "hedge": null
           },
           {
-            "kind": "reported_event",
-            "text": "For three days, the writer has been telling themself that Will was tired, that it was one night, and that he has always been honest about it.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
             "kind": "uncertainty",
-            "text": "The writer does not think Will has a problem right now, but also says they do not have anything that settles whether he does.",
+            "text": "The writer does not think Will has a problem right now, but says there is nothing that settles whether that is true.",
             "certainty": "stated",
             "hedge": null
           }
@@ -330,32 +330,50 @@
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "Will got noticeably loud after having 'quite a lot,' but the account does not say what prompted this or how it relates to an uncomfortable conversation. It is relevant context, not a settled indication of how he handles such conversations.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The writer reports that Will got loud during a conversation about Saturday, but the subject and context are not specified; this alone does not show how he handles an uncomfortable conversation.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity",
-            "relation": "complicating",
-            "rationale": "He made a joke after the writer raised a serious subject, then said he had already told them all of this. That may indicate difficulty staying with the conversation, but the subject and exchange are not described enough to settle what happened.",
-            "source_level": "agent_hypothesis"
+            "relation": "contradicting",
+            "rationale": "When the writer said they were serious, Will reportedly made a joke first and then treated an earlier disclosure as closing the subject. That is inconsistent with staying in the serious conversation without turning it into a bit.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Communication",
             "relation": "complicating",
-            "rationale": "Referring to an earlier disclosure rather than discussing the Saturday question may bear on whether he communicates while things are happening. The account does not establish what he had disclosed or what the Saturday question asked.",
-            "source_level": "agent_hypothesis"
+            "rationale": "He reportedly referred to having disclosed this before, but the observation does not establish what was disclosed or whether he communicated about the current Saturday situation while it was happening.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "His comment about not realizing he was being monitored could be relevant to how he responded in the exchange, but its wording and context are unclear.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The remark about being monitored may be relevant to how he responded to the conversation, but its context and intended meaning are unclear.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Communication",
             "relation": "complicating",
-            "rationale": "The comment may communicate how he felt, but without its context it does not establish whether he tells the writer things while they are happening.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The remark may bear on the exchange, but by itself it does not show whether he shares relevant information while events are happening.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Emotional maturity",
+            "relation": "complicating",
+            "rationale": "The missing detail about what prompted the question limits what can be inferred about how Will handled the conversation.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Emotional maturity",
+            "relation": "complicating",
+            "rationale": "Without knowing what Will disclosed earlier or what the current question asked, it is difficult to assess whether he engaged with the uncomfortable conversation or simply declined to revisit a settled matter.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Communication",
+            "relation": "complicating",
+            "rationale": "The missing details prevent determining whether the earlier disclosure addressed the current situation or whether he communicated about it while it was happening.",
+            "source_level": "user_stated"
           }
         ],
         "interrogations": [
@@ -368,22 +386,22 @@
           },
           {
             "claim": "“I do not think he has a problem right now.”",
-            "gap_kind": "definition",
-            "question": "What observable evidence supports that conclusion about the present, beyond his earlier disclosure and the possibilities that he was tired or that this was one night? What do you mean by “a problem right now,” and over what period are you judging it?",
-            "claim_valence": "positive",
-            "materiality": "material"
-          },
-          {
-            "claim": "“At least he has always been honest about it.”",
             "gap_kind": "circumstances",
-            "question": "What exactly did he disclose in month one, and did it cover the drinking and behaviour you saw last Saturday, or a different period or issue?",
+            "question": "What evidence from the recent period supports that conclusion, beyond his month-one disclosure and your hope that it is true? What would you need to observe to feel that the question was actually settled?",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
-            "claim": "“As though having disclosed it once meant it was a closed subject.”",
+            "claim": "“He had quite a lot and got loud in a way I had not seen.”",
+            "gap_kind": "magnitude",
+            "question": "What does “quite a lot” mean here, and what happened on Saturday that led you to ask him about it? That detail could change how much this one event tells you.",
+            "claim_valence": "negative",
+            "materiality": "material"
+          },
+          {
+            "claim": "“He said he had already told me all of this, as though having disclosed it once meant it was a closed subject.”",
             "gap_kind": "communication",
-            "question": "Did Will explicitly say the subject was closed, or is that your reading of “I had already told you all of this”? What happened after that, when you said you were serious?",
+            "question": "What exactly were you asking about Saturday, and what did he say after you clarified you were serious? That would help distinguish whether he was declining to discuss a current concern, misunderstanding what you wanted to know, or responding to something else.",
             "claim_valence": "negative",
             "materiality": "material"
           }
@@ -392,17 +410,10 @@
           "boundaries-and-consent",
           "communication-preferences",
           "emotional-intimacy",
-          "expressing-needs"
+          "expressing-needs",
+          "feeling-valued"
         ],
-        "safety": [
-          {
-            "category": "emotional_psychological",
-            "concern_level": "potential",
-            "trigger": "narrative_screen",
-            "action": "note_only",
-            "detail": "He became unusually loud, treated a serious question as a closed subject, and described your asking as being monitored. In this one account, that is worth noticing as a possible dismissive or intimidating interaction, but it does not by itself establish a pattern or show immediate danger."
-          }
-        ]
+        "safety": []
       }
     },
     {

@@ -241,17 +241,17 @@
       "generated": {
         "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
         "by": "gpt-6-luna",
-        "on": "2026-11-12",
+        "on": "2026-11-16",
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer does not want to be alone with Will again.",
+            "text": "The writer says they do not want to be alone with Will again.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "emotional_reaction",
-            "text": "The writer says they do not love checking whether Will will be at events before deciding whether to go.",
+            "text": "The writer does not like that checking whether Will will be at events is affecting their week.",
             "certainty": "stated",
             "hedge": null
           },
@@ -263,49 +263,43 @@
           },
           {
             "kind": "interpretation",
-            "text": "The writer says that by the fourth request it was not really asking anymore, and that making it a joke put them in a position where they would seem to be the one making it a thing if they objected.",
+            "text": "The writer says Will's account combines his having read signals wrong with the writer being responsible for what happened.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer says Will's account combined his reading of signals with the writer's decision to leave, making them somehow responsible too.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "interpretation",
-            "text": "The writer thinks Will had a lot to drink and says they do not think he is a monster.",
+            "text": "The writer says, “I do not think he is a monster,” and thinks he had a lot to drink.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What happened after Will stood between the writer and their bag, before the writer left.",
+            "text": "Whether Will moved aside or otherwise made it possible for the writer to reach their bag before the writer left.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer and Will had been drinking; the writer describes the time together as fun.",
+            "text": "The writer and Will had been drinking, and the writer describes the evening as fun.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer said they were going to head home because they had an early shift. Will asked them to stay longer, and after the writer said no, he asked again several times.",
+            "text": "The writer said they were going to head home because of an early shift. Will asked the writer to stay longer, and after the writer said no, Will asked again several times.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "By the fourth time, Will was standing between the writer and their bag and making the situation a joke.",
+            "text": "By the fourth time, Will was standing between the writer and the writer's bag and making the situation into a joke.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer left. They say nothing happened.",
+            "text": "The writer left and says nothing happened.",
             "certainty": "stated",
             "hedge": null
           },
@@ -317,19 +311,19 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer told Will that they had said they wanted to leave and that he kept going.",
+            "text": "The writer replied that they had said they wanted to leave and that Will kept going.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer has been checking whether Will will be at events before deciding whether to say yes.",
+            "text": "The writer has been checking whether Will will be at events before agreeing to go.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer says, “I do not think he is a monster,” but does not state how certain they feel about their broader view of the incident.",
+            "text": "The writer says, “which, okay, except that is not what happened,” while recounting Will's explanation; the writer's position is that they said they wanted to leave and Will kept asking.",
             "certainty": "stated",
             "hedge": null
           }
@@ -338,92 +332,97 @@
           {
             "criterion_value": "Actually fun",
             "relation": "supporting",
-            "rationale": "The writer directly describes the time together as fun.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The writer describes the evening as fun, which bears on whether they look forward to spending time with him.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Basic respect",
             "relation": "contradicting",
-            "rationale": "After the writer said they were leaving, Will asked them to stay several more times; that bears on whether he treated their stated choice with respect.",
-            "source_level": "agent_hypothesis"
+            "rationale": "After the writer said they were leaving, Will asked them to stay several more times; this is inconsistent with treating their stated choice with basic respect.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Takes no for an answer",
             "relation": "contradicting",
-            "rationale": "The writer reports that Will asked again several times after they said no.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The writer said no, and Will asked again several times rather than accepting it the first time.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Basic respect",
             "relation": "contradicting",
-            "rationale": "Standing between the writer and their bag while making the situation a joke bears on respect for their wish to leave.",
-            "source_level": "agent_hypothesis"
+            "rationale": "Standing between the writer and their bag while joking about the situation bears against respecting their choice to leave.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Takes no for an answer",
             "relation": "contradicting",
-            "rationale": "This adds pressure and an obstacle after the writer had already said no.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The writer describes this happening after repeated refusals; standing between them and their bag made the situation around leaving more difficult.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Takes no for an answer",
             "relation": "complicating",
-            "rationale": "The writer did leave, but this outcome does not show that the initial no was accepted the first time, given the repeated requests and the reported obstruction.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Sexual chemistry",
-            "relation": "complicating",
-            "rationale": "The writer says nothing happened, so this account does not describe a sexual encounter from which to assess chemistry.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Clear expectations",
-            "relation": "complicating",
-            "rationale": "Will's later message describes a mismatch in how he read the signals, but does not establish whether both people had clearly agreed on what the encounter was.",
-            "source_level": "agent_hypothesis"
-          },
-          {
-            "criterion_value": "Takes no for an answer",
-            "relation": "complicating",
-            "rationale": "The account leaves out what happened between Will standing by the bag and the writer leaving, which limits what can be concluded about how the boundary was handled then.",
-            "source_level": "agent_hypothesis"
+            "rationale": "The writer did leave and says nothing happened, but this does not establish whether Will accepted the refusal promptly or made it possible to leave without further pressure.",
+            "source_level": "user_stated"
           },
           {
             "criterion_value": "Basic respect",
             "relation": "complicating",
-            "rationale": "That missing part of the sequence limits assessment of the interaction around the writer's attempt to leave.",
-            "source_level": "agent_hypothesis"
+            "rationale": "Will's later text says he misread signals, while also saying the writer had been giving them. That account is relevant to how he addressed the incident, but does not by itself settle how he treated the writer in the moment.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Basic respect",
+            "relation": "contradicting",
+            "rationale": "The writer told Will they had said they wanted to leave and that he kept asking; this reiterates the reported disregard of their stated choice.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Takes no for an answer",
+            "relation": "contradicting",
+            "rationale": "The writer's reply states that they said they wanted to leave and Will continued asking.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Basic respect",
+            "relation": "complicating",
+            "rationale": "The writer's changed behavior around attending events is relevant to their experience of the interaction, but is a consequence of it rather than direct evidence of Will's conduct.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Basic respect",
+            "relation": "complicating",
+            "rationale": "Not wanting to be alone with Will again is relevant to the writer's experience of his treatment, but does not independently establish what he did.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Takes no for an answer",
+            "relation": "contradicting",
+            "rationale": "The writer's stated account is that they said they wanted to leave and Will kept asking, which is inconsistent with a no being accepted the first time.",
+            "source_level": "user_stated"
           }
         ],
         "interrogations": [
           {
-            "claim": "“By the fourth time it was not really asking anymore, it was him standing between me and my bag and making it a joke so that if I made it a thing I would be the one who made it a thing.”",
+            "claim": "“He said stay a bit longer. Fine, normal. I said no, I have an early shift. He asked again. Then again, and by the fourth time it was not really asking anymore, it was him standing between me and my bag…”",
             "gap_kind": "circumstances",
-            "question": "What happened from when he stood between you and your bag until you left—for example, did he move when you tried to get past or ask for your bag?",
+            "question": "Did he move aside or otherwise make it possible for you to reach your bag before you left?",
             "claim_valence": "negative",
             "materiality": "material"
           },
           {
-            "claim": "“Two days later he texted something about how I had been giving him signals all night and he had read the room wrong.”",
+            "claim": "“I said I wanted to leave and he kept going.”",
             "gap_kind": "accountability",
-            "question": "What did his message say as closely as you remember, and after you told him you had said you wanted to leave, did he acknowledge that or respond in another way?",
+            "question": "After you told him that his repeated asking was the issue, did he acknowledge that or respond in some other way?",
             "claim_valence": "negative",
             "materiality": "material"
           },
           {
-            "claim": "“I think he had a lot to drink.”",
-            "gap_kind": "circumstances",
-            "question": "What did you observe that makes you think he had a lot to drink, and what—if anything—does that change for you about how he responded when you said no?",
-            "claim_valence": "positive",
-            "materiality": "material"
-          },
-          {
-            "claim": "“We had been drinking, it was fun.”",
+            "claim": "“He texted something about how I had been giving him signals all night and he had read the room wrong…”",
             "gap_kind": "definition",
-            "question": "When you say it was fun, are you describing the time before you said you wanted to leave, or the evening overall—and how much does that bear on your “actually fun” criterion given what followed?",
-            "claim_valence": "positive",
-            "materiality": "optional"
+            "question": "Had you and Will explicitly discussed what this encounter was, or what each of you expected from it, before that evening? That would help distinguish criterion 27’s expectations from the separate issue of your saying you wanted to leave.",
+            "claim_valence": "neutral",
+            "materiality": "material"
           }
         ],
         "themes": [
@@ -437,7 +436,7 @@
             "concern_level": "potential",
             "trigger": "narrative_screen",
             "action": "note_only",
-            "detail": "After she clearly said she needed to leave, he repeatedly pressed her to stay and stood between her and her bag, making it harder to leave. That is worth taking seriously even though she did leave and says nothing further happened. Her checking whether he will be at events shows this has affected how she plans her week, though it does not by itself establish a broader pattern."
+            "detail": "He repeatedly pressed after you said you needed to leave and stood between you and your bag, using humor to make objecting feel difficult. His later text also shifted responsibility onto you despite your having said you wanted to go. That is worth taking seriously; you do not have to decide what to call it."
           }
         ]
       }
@@ -458,65 +457,59 @@
       "generated": {
         "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
         "by": "gpt-6-luna",
-        "on": "2026-11-12",
+        "on": "2026-11-16",
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer likes getting Joe’s texts.",
+            "text": "The writer likes receiving Joe’s texts.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "emotional_reaction",
-            "text": "The writer does not want a dramatic conversation or to make the situation into something.",
+            "text": "The writer does not want to have a dramatic conversation and make the situation into something.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "emotional_reaction",
+            "text": "The writer does not want to discover three months from now that the writer and Joe have been assuming different arrangements.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer is concerned that they may discover later that they and Joe have been operating with different understandings of the arrangement.",
+            "text": "The writer sees two possible explanations for Joe’s invitations: Joe may have changed his mind about the arrangement, or the writer may be interpreting plans as a proposal.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "It sounds like the writer may want to keep the connection as it is while avoiding a mismatch in expectations. Is that accurate?",
+            "text": "It sounds like the writer is concerned that the writer and Joe could be operating with different expectations about the arrangement. Is that right?",
             "certainty": "inferred",
-            "hedge": "It sounds like the writer may want to keep the connection as it is while avoiding a mismatch in expectations. Is that accurate?"
+            "hedge": "It sounds like the writer is concerned that the writer and Joe could be operating with different expectations about the arrangement. Is that right?"
           },
           {
-            "kind": "missing_information",
-            "text": "Whether Joe’s intentions or expectations have changed since their initial conversation.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "missing_information",
-            "text": "What Joe means by suggesting plans beyond the writer coming over at midnight.",
+            "kind": "reported_event",
+            "text": "Joe has started texting the writer every morning with messages such as “good morning,” questions about the writer’s day, and what the writer is doing that weekend.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Joe has started texting the writer every morning, with messages such as “good morning,” asking how their day is, and asking what they are doing that weekend.",
+            "text": "Joe asked what the writer was doing on Sunday and suggested they do something other than the writer coming over at midnight.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "Joe asked what the writer was doing on Sunday and suggested they do something that is not just the writer coming over at midnight.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "reported_event",
-            "text": "At the start, the writer told Joe very clearly that they did not want a boyfriend, and Joe said that was fine.",
+            "text": "At the start, the writer told Joe very clearly that the writer did not want a boyfriend, and Joe said that was fine.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer cannot tell whether Joe has changed his mind about the arrangement without saying so, or whether the writer is reading too much into the breakfast plans.",
+            "text": "The writer cannot tell whether Joe has changed his mind about the arrangement without saying so, or whether the writer is reading too much into plans to have breakfast or do something together.",
             "certainty": "stated",
             "hedge": null
           }
@@ -525,49 +518,43 @@
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "The new pattern of morning texts and weekend questions may bear on whether expectations are changing, but does not establish what Joe intends.",
+            "rationale": "The change to frequent morning messages and questions about the writer’s plans may be relevant to the arrangement, but it does not establish that Joe’s expectations have changed.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "Suggesting a plan beyond a midnight visit raises a question about the arrangement, but the suggestion alone does not show that either person’s understanding has changed.",
+            "rationale": "Suggesting a Sunday activity beyond a midnight visit could fit more than one understanding of the arrangement; the invitation alone does not clarify what either person expects.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "supporting",
-            "rationale": "The writer says they clearly stated at the start that they did not want a boyfriend, and Joe said that was fine. This supports that expectations were stated then, not that they remain aligned now.",
+            "rationale": "The writer stated the arrangement clearly at the start, and Joe agreed. This supports clarity at that time, but does not establish whether expectations remain aligned now.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Actually fun",
             "relation": "supporting",
-            "rationale": "The writer likes receiving Joe’s texts, which is a positive response to their contact; it does not establish whether spending time together is actually fun.",
+            "rationale": "The writer enjoys receiving Joe’s texts, which is a positive experience, though it does not establish whether spending time together is fun.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "The writer’s uncertainty directly concerns whether their expectations still match; uncertainty itself does not show that they do or do not.",
+            "rationale": "The writer is unsure whether Joe’s expectations have changed or whether the invitations are being interpreted as more significant than intended; the uncertainty itself does not resolve the expectations.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "The writer is concerned about a possible mismatch in understanding. That concern is relevant, but does not establish that a mismatch exists.",
+            "rationale": "The writer’s concern about a future mismatch makes clear expectations relevant, but it is not evidence that a mismatch has occurred.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Clear expectations",
             "relation": "complicating",
-            "rationale": "Whether Joe’s expectations have changed is directly relevant to clarity, but is not known from the entry.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Clear expectations",
-            "relation": "complicating",
-            "rationale": "What Joe means by suggesting plans beyond a midnight visit is unclear, so the suggestion does not settle what the arrangement means to him.",
+            "rationale": "The two possible interpretations described leave Joe’s current expectations unclear; neither possibility is established by this interpretation.",
             "source_level": "user_stated"
           }
         ],
@@ -582,21 +569,21 @@
           {
             "claim": "“So either he has changed his mind and has not said so, or I am reading breakfast plans as a proposal, and I genuinely cannot tell which.”",
             "gap_kind": "communication",
-            "question": "Since the original conversation, has either of you said directly whether the no-boyfriend arrangement still stands, or what these newer check-ins and Sunday plans mean?",
+            "question": "Since the original conversation, have either of you said anything that updates what “no boyfriend” or “that’s fine” means for the arrangement?",
             "claim_valence": "neutral",
             "materiality": "material"
           },
           {
-            "claim": "“Which approximately nobody does, and then paid attention to the answer” (from the earlier entry about Joe).",
-            "gap_kind": "comparison",
-            "question": "What does that earlier attentive exchange establish for you about basic respect specifically, beyond being a positive interaction?",
-            "claim_valence": "positive",
-            "materiality": "optional"
+            "claim": "“I also do not want to find out in three months that we have been having two different arrangements this whole time.”",
+            "gap_kind": "definition",
+            "question": "What specific difference between your expectations would matter most to clarify—for example, whether you’re dating, exclusivity, or simply spending time together outside midnight visits?",
+            "claim_valence": "negative",
+            "materiality": "material"
           },
           {
             "claim": "“I like it. That is the honest thing. I like getting the text.”",
             "gap_kind": "definition",
-            "question": "Does liking the texts mean you look forward to spending time with Joe generally, or that you enjoy the messages themselves? Those bear differently on “Actually fun.”",
+            "question": "Does liking the texts also mean you look forward to spending time with Joe, or is it specifically the messages you enjoy?",
             "claim_valence": "positive",
             "materiality": "optional"
           }
@@ -604,8 +591,7 @@
         "themes": [
           "affection-and-comfort",
           "communication-preferences",
-          "expectations-and-commitment",
-          "reciprocity-and-initiative"
+          "expectations-and-commitment"
         ],
         "safety": []
       }

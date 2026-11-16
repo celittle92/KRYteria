@@ -213,110 +213,140 @@
       "generated": {
         "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
         "by": "gpt-6-luna",
-        "on": "2026-11-12",
+        "on": "2026-11-16",
         "observations": [
           {
             "kind": "emotional_reaction",
-            "text": "The writer appreciates that Jane ended things kindly and clearly, more than the alternative.",
+            "text": "The writer appreciates that Jane ended it kindly and clearly, more than the alternative.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "emotional_reaction",
-            "text": "The lack of a reason is hard for the writer; they say they would know what to do with a reason.",
+            "text": "The writer finds it hard that Jane said there was nothing wrong; the writer says a reason would be easier to know what to do with.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer believes Jane when she says there was nothing wrong.",
+            "text": "The writer thinks they may have reached a conclusion without enough information to support it.",
             "certainty": "stated",
             "hedge": null
           },
           {
-            "kind": "interpretation",
-            "text": "The writer thinks they have reached a conclusion without enough information to support it.",
+            "kind": "missing_information",
+            "text": "The writer does not know how Jane responds when something goes wrong, because nothing went wrong during the four dinners.",
             "certainty": "stated",
             "hedge": null
           },
           {
-            "kind": "reported_event",
-            "text": "Jane ended things after four dates.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "reported_event",
-            "text": "Jane said there was nothing wrong. The writer describes the ending as kind and clear.",
+            "kind": "missing_information",
+            "text": "The writer does not know whether Jane would have planned anything.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "They had four dinners, and the writer planned all four.",
+            "text": "Jane ended the dating relationship after four dates.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer knows Jane is a lawyer, wants children, and has a dry sense of humor that took two dates to catch.",
+            "text": "Jane said there was nothing wrong; the writer believes her.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer had four dinners with Jane.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer knows Jane is a lawyer, wants children, and has a dry sense of humor that took the writer two dates to catch.",
+            "certainty": "stated",
+            "hedge": null
+          },
+          {
+            "kind": "reported_event",
+            "text": "The writer planned all four dates.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer does not know how Jane handles things going wrong or whether she would have planned anything.",
-            "certainty": "stated",
-            "hedge": null
-          },
-          {
-            "kind": "uncertainty",
-            "text": "The writer is not sure what they are supposed to have learned from this.",
+            "text": "The writer is not sure what they are supposed to have learned from this experience.",
             "certainty": "stated",
             "hedge": null
           }
         ],
         "evidence": [
           {
-            "criterion_value": "Actually wants me",
+            "criterion_value": "Communication",
+            "relation": "supporting",
+            "rationale": "Jane ended the dating relationship directly rather than fading, which bears on communication.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Communication",
             "relation": "complicating",
-            "rationale": "Jane ended things after four dates, so she is not choosing to continue now. That does not establish what she wanted during the dates or why she ended things.",
+            "rationale": "She said nothing was wrong, but that statement does not explain why she ended things.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Communication",
             "relation": "supporting",
-            "rationale": "The ending is described as kind and clear, which is consistent with saying what is going on rather than fading.",
+            "rationale": "The writer experienced the ending as kind and clear.",
             "source_level": "user_stated"
           },
           {
-            "criterion_value": "Mutual effort",
+            "criterion_value": "Communication",
+            "relation": "complicating",
+            "rationale": "The writer would have found a reason helpful, so the ending was clear about stopping but left the reason unexplained.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Actually wants me",
             "relation": "contradicting",
-            "rationale": "The writer planned all four dinners, so in those instances Jane did not plan the dates.",
+            "rationale": "Ending the dating relationship indicates Jane chose not to continue seeing the writer; it does not establish what motivated her choice.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants a committed relationship",
+            "relation": "complicating",
+            "rationale": "The relationship ended, but that alone does not establish what kind of relationship Jane was seeking.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual attraction",
+            "relation": "complicating",
+            "rationale": "Four dinners show that they met repeatedly, but do not establish whether attraction was mutual.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Wants children",
             "relation": "supporting",
-            "rationale": "The writer reports that Jane wants children; the observation does not say whether she wants them soon rather than someday.",
+            "rationale": "The writer knows Jane wants children; the observation does not say whether she wants them in the non-someday way this criterion specifies.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Emotional maturity under pressure",
             "relation": "complicating",
-            "rationale": "The writer explicitly does not know how Jane handles things going wrong, so there is no described behavior under pressure to assess.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Handles conflict well",
-            "relation": "complicating",
-            "rationale": "The writer explicitly does not know how Jane handles things going wrong; no disagreement or return to resolve one is described.",
+            "rationale": "The writer reports no occasion to observe how Jane responds when something goes wrong.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Mutual effort",
             "relation": "complicating",
-            "rationale": "The writer is unsure whether Jane would have planned anything, leaving her planning beyond these four dinners unknown.",
+            "rationale": "The writer planned all four dates, which is relevant to mutual effort, but the observation does not say whether Jane had an opportunity or inclination to plan.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "Whether Jane would have planned anything remains unknown.",
             "source_level": "user_stated"
           }
         ],
@@ -329,25 +359,25 @@
             "materiality": "material"
           },
           {
-            "claim": "“Very kindly, very clearly”",
+            "claim": "“Very kindly, very clearly, which I appreciate more than the alternative.”",
             "gap_kind": "definition",
-            "question": "For Communication—“says what is going on instead of fading”—does a clear ending with “nothing wrong” meet the kind of communication you mean, or does not knowing more about the reason leave that uncertain?",
+            "question": "What made the ending clear in practice—did Jane state directly that she was ending the relationship, and did she communicate that rather than fade? That would help distinguish a clear decision from having a clear reason.",
+            "claim_valence": "positive",
+            "materiality": "material"
+          },
+          {
+            "claim": "“I know … that she wants children.”",
+            "gap_kind": "magnitude",
+            "question": "Did Jane say anything about when she wants children, given that this criterion is specifically about wanting them “not in a someday way”?",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
             "claim": "“I planned all four.”",
             "gap_kind": "circumstances",
-            "question": "Was planning the only way Jane contributed initiative, or did she initiate or contribute in other ways that these four dinners don’t capture?",
-            "claim_valence": "negative",
-            "materiality": "material"
-          },
-          {
-            "claim": "“She wants children.”",
-            "gap_kind": "definition",
-            "question": "Did Jane say anything about timing or readiness, or is whether she wants children “not in a someday way” still unknown?",
-            "claim_valence": "positive",
-            "materiality": "material"
+            "question": "Did Jane have a clear opportunity to plan or suggest a date, or did the dates simply fall into a pattern where you took the lead? Four dates show who planned them, but not by themselves whether she would have made an effort.",
+            "claim_valence": "neutral",
+            "materiality": "optional"
           }
         ],
         "themes": [
@@ -375,53 +405,59 @@
       "generated": {
         "_comment": "Produced by the agent pipeline, not written by hand. Frozen so the hosted deployment — which rebuilds from these files on every boot — shows real output without spending credits on each restart.",
         "by": "gpt-6-luna",
-        "on": "2026-11-12",
+        "on": "2026-11-16",
         "observations": [
           {
+            "kind": "emotional_reaction",
+            "text": "The writer may be feeling uncertain about how to understand these relationship endings and what to do differently.",
+            "certainty": "inferred",
+            "hedge": "I may be reading between the lines, but it sounds like the writer feels uncertain about how to understand these endings and what to do differently. Is that right?"
+          },
+          {
             "kind": "interpretation",
-            "text": "The writer thought planning every date meant they were being a good person to date.",
+            "text": "The writer thought planning every date meant being a good person to date.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer considers that planning every date may have meant they never found out whether any of the women would plan a date.",
+            "text": "The writer considers that planning every date may have meant never finding out whether any of the women would have planned dates.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "interpretation",
-            "text": "The writer says those two possibilities would require completely different things from them.",
+            "text": "The writer says those two possibilities would call for completely different things from the writer.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "What reasons the women gave for ending the relationships, if any.",
+            "text": "The writer does not say what reasons the women gave for ending the relationships.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "missing_information",
-            "text": "Whether any of the women would have planned dates if given the opportunity.",
+            "text": "The writer does not describe how the dates were planned or whether planning was discussed with the women.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer dated three women over the course of a year; each ended the relationship.",
+            "text": "The writer says three women ended relationships with the writer over the course of a year.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "reported_event",
-            "text": "The writer planned every date across all three relationships.",
+            "text": "The writer says the writer planned every date across all three relationships.",
             "certainty": "stated",
             "hedge": null
           },
           {
             "kind": "uncertainty",
-            "text": "The writer does not know whether the problem is that they are not anyone's type or that they never let the relationships get far enough to find out.",
+            "text": "The writer is unsure whether the issue is not being anyone's type or not letting relationships get far enough to find out.",
             "certainty": "stated",
             "hedge": null
           }
@@ -430,55 +466,43 @@
           {
             "criterion_value": "Mutual effort",
             "relation": "complicating",
-            "rationale": "The writer planned every date, so the women’s contribution to planning is unknown; this does not establish whether effort was mutual.",
+            "rationale": "The writer planned every date, which describes the writer's effort but does not show whether the women also planned things.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Mutual effort",
             "relation": "complicating",
-            "rationale": "The writer’s interpretation directly raises the possibility that the women were not given a chance to plan, but does not establish what they would have done.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Mutual effort",
-            "relation": "complicating",
-            "rationale": "Whether any woman would have planned is directly relevant to reciprocal effort, but remains unknown.",
+            "rationale": "The writer wonders whether always planning prevented finding out if the women would plan dates; that possibility is relevant but does not establish what they would have done.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Actually wants me",
             "relation": "complicating",
-            "rationale": "The writer is unsure whether the relationships ended because the women did not choose them or because the relationships did not progress far enough; this is uncertainty, not evidence of the women’s reasons.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Mutual attraction",
-            "relation": "complicating",
-            "rationale": "The writer’s speculation about not being anyone’s type touches mutual attraction, but does not establish whether attraction was mutual in these relationships.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Actually wants me",
-            "relation": "complicating",
-            "rationale": "The reasons for the breakups could clarify whether the women chose the writer because they wanted to, but no reasons are provided.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Mutual attraction",
-            "relation": "complicating",
-            "rationale": "The reasons for the breakups might bear on attraction, but their absence leaves that unsettled.",
-            "source_level": "user_stated"
-          },
-          {
-            "criterion_value": "Wants a committed relationship",
-            "relation": "complicating",
-            "rationale": "The reasons for the breakups might clarify what each woman wanted from the relationship, but they are not given.",
+            "rationale": "Without the reasons the women gave for ending things, these endings do not establish whether they chose the writer because they wanted to.",
             "source_level": "user_stated"
           },
           {
             "criterion_value": "Communication",
             "relation": "complicating",
-            "rationale": "The reasons given, if any, could indicate how the women communicated about ending things; the observation says those reasons are unknown.",
+            "rationale": "The reasons for the endings are not reported, so the observations do not show whether the women communicated what was going on.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual attraction",
+            "relation": "complicating",
+            "rationale": "The reasons for the endings are not reported, so they do not establish whether attraction was mutual.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Wants a committed relationship",
+            "relation": "complicating",
+            "rationale": "The reasons for the endings are not reported, so they do not establish what kind of relationship the women wanted.",
+            "source_level": "user_stated"
+          },
+          {
+            "criterion_value": "Mutual effort",
+            "relation": "complicating",
+            "rationale": "The entry does not say how planning was handled or discussed, which leaves the women's contribution to planning unclear.",
             "source_level": "user_stated"
           }
         ],
@@ -493,22 +517,22 @@
           {
             "claim": "“Three women in a year, all of them decent, all of them ended it, none of them because of anything I did.”",
             "gap_kind": "accountability",
-            "question": "What reasons, if any, did each woman actually give for ending things—and is “none of them because of anything I did” based on what they said, or your interpretation?",
+            "question": "What reasons did each woman actually give, and what supports the conclusion that nothing you did played a part? Jane’s earlier entry says she told you there was “nothing wrong”; did the other two say something comparable, or are their reasons unclear?",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
             "claim": "“I thought that was being a good person to date.”",
             "gap_kind": "circumstances",
-            "question": "Does planning every date, on its own, show the kind of mutual effort you want, or mainly your contribution? Did they have a clear opening to plan dates or otherwise initiate?",
+            "question": "What did planning every date involve in practice—did you ask what they wanted or leave them room to choose, and do you know how they experienced that arrangement?",
             "claim_valence": "positive",
             "materiality": "material"
           },
           {
-            "claim": "“I do not know whether the problem is that I am not anyone’s type, or that I never let it get far enough to find out.”",
-            "gap_kind": "comparison",
-            "question": "What evidence from these relationships distinguishes not being specifically wanted or mutually attracted to from not having enough room to observe their effort? The endings alone may not distinguish those explanations.",
-            "claim_valence": "negative",
+            "claim": "“It might also mean I have never once found out whether any of them would have.”",
+            "gap_kind": "circumstances",
+            "question": "Were there clear openings for any of them to suggest or plan something, or did you usually take the lead before that could happen?",
+            "claim_valence": "neutral",
             "materiality": "material"
           }
         ],
