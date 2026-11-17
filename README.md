@@ -16,33 +16,61 @@ hold.
 
 MGT 409 final project · Christine Little · Yale SOM
 
+## ▸ Open it here: **<https://kryteria.onrender.com>**
+
+Nine demo characters on the sign-in screen, each one click away — no sign-up, nothing to
+type. **A free instance sleeps after about fifteen minutes, so the first load can take a
+minute.** That is the host waking up, not a broken link. If the link is asleep or you
+would rather run it yourself, [Running it](#running-it) below is tested from a fresh
+clone and needs no API key.
+
 ---
 
 ## Status
 
-**Backend and agents are built. The web interface is not yet.** This is an in-progress
-repository, not a finished submission. What works today is verifiable from the test
-suites and the Python API; there is no browser UI to open yet.
+**Complete and deployed.** Backend, seven agents, front end, demo data, report and deck.
 
 | Piece | State |
 |---|---|
-| Data model (33 tables) | built, 203 checks |
-| Agent output contracts | built, 94 checks |
+| Data model | built, 512 checks |
+| Agent output contracts | built, 125 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
+| HTTP API, incl. cross-account isolation | built, 273 checks |
+| Evaluation harness | built, 353 checks |
 | Deterministic demo mode (no API key) | built |
-| HTTP API | built, 129 checks |
 | Privacy architecture | built — isolation, retention, redaction |
-| Synthetic demo account | built, runs with no API key |
-| Front end | not started |
-| `report.html`, `slides.html` | not started |
+| Front end (React + Vite + TS) | built, `dist/` committed so no Node is needed |
+| Nine-character demo | built, analysis frozen from live runs |
+| Hosted deployment | live at kryteria.onrender.com |
+| `report.html`, `slides.html` | built, self-contained |
 
-**476 checks in total**, none of which call a model.
+**1,337 checks across 138 test functions**, five suites, none of which call a model.
+Live model spend across the whole project to date: **$0.202** over 358 calls.
 
 ---
 
 ## Running it
 
-Requires Python 3.12+ (developed on 3.14.7). No database server, no external services.
+No database server, no external services, no Node. **Three commands and a browser.**
+
+**First, check your Python.** This needs **3.12 or newer**, and macOS ships 3.9 as
+`python3` — which is the one thing most likely to cost you ten minutes here.
+
+```bash
+python3 -V
+```
+
+If that prints 3.12 or higher, use `python3` below. If it prints 3.9 or 3.11, look for a
+newer one and use that name instead (`python3.12`, `python3.13`…):
+
+```bash
+ls /opt/homebrew/bin/python3.1* /usr/local/bin/python3.1* 2>/dev/null || brew install python@3.12
+```
+
+The app checks this itself on first import and refuses with the same advice rather than
+failing somewhere confusing later. If you would rather not think about it,
+[Deploying it](#deploying-it) builds a Docker image that pins the interpreter, and
+<https://kryteria.onrender.com> needs nothing at all.
 
 ```bash
 python3 -m venv .venv
@@ -51,21 +79,27 @@ python3 -m venv .venv
 
 ### Start it
 
+Build the demo data. **Both commands** — the first makes the single `demo` account, the
+second makes the nine characters the sign-in screen lists. Running only the first leaves
+the front door empty.
+
 ```bash
-.venv/bin/python -m backend.seed_demo
+.venv/bin/python -m backend.seed_demo && .venv/bin/python -m backend.seed_characters
 ```
+
+Then start it. One process serves the API and the interface, so there is one thing to run
+and one port:
 
 ```bash
 .venv/bin/python -m uvicorn backend.main:app --port 8000
 ```
 
-Then open **http://localhost:8000/api/health** — it reports the mode, the model, whether a
-key was found and *where it looked*, and whether prices are loaded. Interactive API docs
-are at **/docs**.
+Open **<http://localhost:8000>** and click a character. Nothing to type.
 
-`/` serves the built front end. The same process serves the API and the interface, so
-there is one thing to run and one port. If `frontend/dist` is missing, `/` returns a JSON
-status explaining how to build it rather than a bare 404.
+**<http://localhost:8000/api/health>** reports the mode, the model, whether a key was
+found and *where it looked*, and whether prices are loaded. Interactive API docs are at
+**/docs**. `frontend/dist` is committed, so no Node is needed; if it were missing, `/`
+returns a JSON status explaining how to build it rather than a bare 404.
 
 ### The demo: nine people, nothing to type
 
@@ -362,9 +396,14 @@ minimisation is.
 KRYteria may say *"that behaviour may be a form of coercive control."* It may never say
 *"he is an abuser."*
 
-> ⚠️ The support resources in `data/resources_us.json` have **not yet been independently
-> verified** against each organisation's published contact details. Do not rely on them
-> until they have been.
+> All five US entries in `data/resources_us.json` were checked against each
+> organisation's own site, and each row shows its `verified_at` date **on screen** — a
+> dated number can be judged; a bare one asks for trust nobody earned. Two of them
+> (RAINN, 911) refuse automated fetching and were confirmed by a person opening them on
+> 2026-11-16. `data/resources_international.json` holds nine more across five countries
+> plus EU-wide 112. The directory is deliberately **small and not comprehensive** — see
+> `docs/safety_resources_decision.md` for why, and for the three services excluded with
+> their reasons recorded.
 
 ---
 
@@ -449,8 +488,8 @@ backend/
   agents/             seven modules, one per agent
   prompts/            seven runtime prompts, loaded from disk on every call
 data/
-  resources_us.json   curated support directory (unverified — see above)
-  prices.json         per-million-token prices (not yet filled in)
+  resources_us.json   curated support directory, each row dated and verified
+  prices.json         per-million-token prices for gpt-6-luna, from the course figures
 docs/architecture.md
 tests/
   test_offline.py     store layer, no dependencies needed
@@ -482,12 +521,24 @@ cost as *unavailable* rather than printing a zero as though a run were free.
 
 ## Known limitations
 
-- No web interface yet; no `report.html` or `slides.html`.
-- **No live model call has ever been made from this project.** Everything is verified
-  against `TestModel` and the deterministic demo provider.
-- Support resources and model prices are both unverified placeholders.
-- The research knowledge base is drafted but unverified, so no agent cites it yet.
-- No database migrations. A schema change means deleting the database and re-seeding;
-  the store refuses to open a stale one and says exactly how to fix it.
-- Single-region (US) resource directory.
-- Tough Love communication mode is specified but deliberately not built.
+- **No database migrations.** A schema change means deleting the database and
+  re-seeding; the store refuses to open a stale one and says exactly how to fix it. This
+  is acceptable with no real users and needs Alembic before anybody's journal depends
+  on it.
+- **A free instance is not durable storage.** Its disk is ephemeral, so anything a real
+  visitor writes is lost on restart. The demo rebuilds itself on every boot.
+- **Sessions are bounded, not revocable.** They are signed cookies, so signing out
+  deletes the browser's copy and a stolen one stays valid until its fourteen days are up.
+- **Cache writes are not modelled** in cost figures, and the provider never reported a
+  cached-input count, so figures are slightly low on a cold cache and conservative on
+  cache reads. Both stated in the report rather than smoothed over.
+- **33 of 128 evaluation checks need a human** and are marked `manual`. An LLM judge
+  would have automated them and would have been this project's own model grading its own
+  output against its own rubric.
+- **One research entry of nineteen stays pending** — its containing volume is confirmed
+  and the chapter's placement in it is not, so no agent may cite it.
+- **The support directory is small on purpose**, not comprehensive.
+- Date Calendar and Cooldown are designed and deliberately not built (P1).
+- Tough Love communication mode is specified and deliberately not built (P2).
+- SQLite on a host is not production-grade encryption, and this says so rather than
+  implying otherwise.

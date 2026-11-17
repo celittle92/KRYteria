@@ -14,6 +14,10 @@ calls the model provider.
 
 from __future__ import annotations
 
+# Refuse Python 3.9 here, with the fix, rather than failing deeper and later.
+from backend._python_version import require as _require_python
+_require_python()
+
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path

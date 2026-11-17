@@ -41,6 +41,10 @@ Run it:
 
 from __future__ import annotations
 
+# Refuse Python 3.9 here, with the fix, rather than failing deeper and later.
+from backend._python_version import require as _require_python
+_require_python()
+
 import json
 from datetime import date, timedelta
 from pathlib import Path
@@ -613,6 +617,7 @@ def seed(store: Store, *, reset: bool = False,
 
 
 def main() -> int:  # pragma: no cover - convenience entry point
+    import os
     import sys
 
     check_only = "--check" in sys.argv
@@ -633,7 +638,10 @@ def main() -> int:  # pragma: no cover - convenience entry point
     if check_only:
         return 0
 
-    store = Store()
+    # Honour KRYTERIA_DB_PATH, exactly as the running app does. A bare Store()
+    # silently opens the default database, so a host that puts its data on a
+    # mounted disk would seed one file and serve another.
+    store = Store(os.getenv("KRYTERIA_DB_PATH") or None)
     built = seed(store, reset="--reset" in sys.argv)
     print(f"\nSeeded {len(built)} demo accounts. All content is synthetic.\n")
     for c in chars:
