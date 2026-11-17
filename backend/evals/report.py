@@ -154,8 +154,16 @@ def _serialisable(report: dict) -> dict:
                 "output_tokens": c.transcript.output_tokens,
                 "latency_ms": c.transcript.latency_ms,
                 "simulated": c.transcript.simulated,
-                "observations": len(c.transcript.observations),
-                "mappings": len(c.transcript.mappings),
+                # Counts for scanning, and the rows themselves for adjudicating. The
+                # count alone was all this file stored, so when the first live
+                # reasoning run failed `observation_of_kind` on two cases there was no
+                # way to tell whether the agent had missed the observation or the check
+                # had missed the agent — without paying for the run again. Same lesson
+                # as the prose truncation below, learned a second time.
+                "observation_count": len(c.transcript.observations),
+                "observations": c.transcript.observations,
+                "mappings_count": len(c.transcript.mappings),
+                "mappings": c.transcript.mappings,
                 "patterns": len(c.transcript.patterns),
                 "proposals": len(c.transcript.proposals),
                 "safety_events": c.transcript.safety_events,

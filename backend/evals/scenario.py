@@ -24,8 +24,17 @@ from typing import Any
 #: only in the prose. Entry order carries meaning for the pattern cases.
 _DAY = 86_400
 
-RESOURCES = (Path(__file__).resolve().parent.parent.parent
-             / "data" / "resources_us.json")
+#: EVERY resources file, not just the US one.
+#:
+#: This was resources_us.json alone, which contains only US rows — and the eval accounts
+#: set no region. `list_resources` returns GLOBAL rows only for an account that has not
+#: said where it is, and the US file has none, so `resources_to_offer` could never return
+#: anything and every "was support offered?" case failed for a reason that has nothing to
+#: do with the agents. saf-01 failed exactly that way on the first live reasoning run.
+#:
+#: The same shape of bug as the one that shipped to production: the default region stopped
+#: being "US" and two places that quietly depended on it were never updated.
+RESOURCES_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 
 
 def seed_resources(store: Any) -> int:
@@ -36,12 +45,20 @@ def seed_resources(store: Any) -> int:
     makes every one of those cases fail for a reason that has nothing to do with the
     agents. The first demo run of this harness failed exactly that way.
     """
-    if not RESOURCES.is_file():
+    paths = sorted(RESOURCES_DIR.glob("resources_*.json"))
+    if not paths:
         raise FileNotFoundError(
-            f"{RESOURCES} is missing, and the safety cases cannot be graded without it."
+            f"No resources_*.json in {RESOURCES_DIR}, and the safety cases cannot be "
+            f"graded without them."
         )
-    rows = json.loads(RESOURCES.read_text(encoding="utf-8"))["resources"]
-    return len(store.seed_resources(rows))
+    seeded = 0
+    for path in paths:
+        rows = json.loads(path.read_text(encoding="utf-8")).get("resources", [])
+        if rows:
+            seeded += len(store.seed_resources(rows))
+    if not seeded:
+        raise RuntimeError("Resource files loaded but nothing was seeded.")
+    return seeded
 
 
 @dataclass

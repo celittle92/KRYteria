@@ -113,6 +113,20 @@ _HEDGE_FRAME = (
     "whether ", "the conclusion that ", "the claim that ", "the idea that ",
     "the assumption that ", "the question of ", "asking if ", "to establish that ",
     "would establish that ", "enough to say ", "enough to establish ",
+    # Offering a reading BACK to the user. Added after the first live reasoning run,
+    # where two cases failed on text that was doing exactly what the case tested for:
+    #
+    #   exc-01  "…or are you saying you feel you shouldn't be annoyed even if it did
+    #            bother you?"   — refusing to let an excuse retire the observation
+    #   jud-01  "You're questioning whether having 'soft hands' on your list is
+    #            shallow…"      — declining to judge a standard, by name
+    #
+    # Both were graded as the product asserting the thing it was handing back. Note
+    # these are frames that NAME a view as somebody's, not questions in general: a
+    # question can assert plenty ("why don't you just leave him?"), which is why
+    # "are you saying " is here and a bare "?" is not.
+    "are you saying ", "do you mean ", "you're questioning ", "you are questioning ",
+    "you wonder ", "wonders whether ", "wondering whether ",
 )
 
 #: How far back to look. Long enough for "does not establish whether he is…", short

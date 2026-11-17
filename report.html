@@ -338,6 +338,11 @@ the orchestrator routes, and specialists return validated data to it. This is a
 deliberate choice against the delegation mesh used in HW5 — easier to debug, cheaper to
 run, and possible to explain in a diagram.</p>
 
+<p>That is not the same as each one working alone. Later agents are handed what earlier
+ones produced, and one of them is expected to <em>disagree</em> with it — see
+<a href="#mapping-audit">the mapping audit</a> below, which is where this architecture
+earns its keep over a single model doing everything in one pass.</p>
+
 <figure>
 <svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" role="img"
      aria-label="Architecture: orchestrator routing to narrative, safety, evidence, reasoning and reflection agents, with validation and user confirmation before any assessment changes.">
@@ -474,6 +479,46 @@ inlined in Python — and every model response is validated against a Pydantic c
 before it can reach the database or the screen. A prompt file no agent loads is treated
 as a bug.</p>
 
+<h3 id="mapping-audit">One agent checking another: the near-synonym audit</h3>
+
+<p>The Evidence agent decides which criterion an observation bears on. Those decisions
+reach the user's record and look settled once they are there. So the Reasoning agent is
+handed them and told they are claims too.</p>
+
+<p>The failure it exists to catch is quiet. A criterion says one word; the entry says a
+different word; the mapping treats them as the same thing. Nobody notices, because the
+result is a green label that looks like evidence.</p>
+
+<div class="callout">
+Criterion: <strong>Soft hands.</strong> Entry: <em>"his hands are extremely nice."</em>
+<br>Nice is not soft. Those may be the same thing to this person — but that is hers to
+say, not ours to assume.
+</div>
+
+<p>In an earlier run the Evidence agent mapped that <code>supporting</code>, and the
+substitution disappeared into an approval nobody had given. It now records
+<code>complicating</code> instead, and Reasoning raises a question about its own
+colleague's work:</p>
+
+<blockquote>You describe his hands as “extremely nice.” Your criterion is specifically
+“Soft hands” — does “nice” mean soft to you here, or are you describing a different
+quality?</blockquote>
+
+<p>Across the nine-character demo this fires <strong>22 times</strong>. It generalises past
+the amusing case: <em>"he paid"</em> mapped to financial independence, <em>"he
+apologised"</em> to accountability, <em>"we talked for hours"</em> to intellectual
+connection. Near enough is not the same, and the user is the one who decides whether it is
+near enough for them.</p>
+
+<p>This is the clearest answer to "why not one model doing everything in one pass". A
+single call that produced both the mapping and the commentary has no reason to argue with
+itself, and every reason to narrate what it already decided. Separating the agent that
+maps from the agent that interrogates is what makes the disagreement possible at all —
+and it is why <strong>the standards that look trivial are the ones worth watching</strong>.
+Nobody will argue about whether dinner proves financial independence; the preferences
+somebody expects to be dismissed are exactly where quietly approximating reads as not
+having taken them seriously.</p>
+
 <h3>Routing is deterministic, and that decision is measurable</h3>
 <p>Not every entry needs every agent. Spending a model call to decide whether to spend
 model calls would be absurd, so the orchestrator routes in code.</p>
@@ -546,6 +591,40 @@ surcharge.</p>
 case because reflection is opt-in; a full five-agent run costs $0.0034, giving a ceiling
 of $4.09 and $408.84 if every entry gets everything.</p>
 
+<h3>Every call this project has made</h3>
+
+<p>The rubric caps this section at half credit for estimates alone, which is the right
+rule: a cost model nobody has checked against a bill is a spreadsheet. Nine live runs,
+every figure reported by the run that produced it.</p>
+
+<table>
+  <tr><th>Run</th><th class="num">Calls</th><th class="num">Input</th><th class="num">Output</th><th class="num">Cost</th></tr>
+  <tr><td>Brain-dump trace (5 agents)</td><td class="num">5</td><td class="num">9,109</td><td class="num">4,992</td><td class="num">$0.00341</td></tr>
+  <tr><td>Brain-dump trace, second</td><td class="num">5</td><td class="num">9,231</td><td class="num">4,636</td><td class="num">$0.00324</td></tr>
+  <tr><td>A/B, first live</td><td class="num">11</td><td class="num">11,549</td><td class="num">3,096</td><td class="num">—</td></tr>
+  <tr><td>A/B, after the routing fix</td><td class="num">12</td><td class="num">16,148</td><td class="num">4,451</td><td class="num">$0.0038</td></tr>
+  <tr><td>Safety pack, 18 cases</td><td class="num">56</td><td class="num">91,430</td><td class="num">22,788</td><td class="num">$0.0205</td></tr>
+  <tr><td>Character demo, first analysis</td><td class="num">58</td><td class="num">139,737</td><td class="num">71,213</td><td class="num">$0.0431</td></tr>
+  <tr><td>Character demo, voice re-run</td><td class="num">59</td><td class="num">132,542</td><td class="num">71,376</td><td class="num">$0.0429</td></tr>
+  <tr><td>One entry, testing a fix before paying for 13</td><td class="num">5</td><td class="num">12,865</td><td class="num">8,633</td><td class="num">$0.0055</td></tr>
+  <tr><td>Character demo, remaining 13</td><td class="num">54</td><td class="num">130,271</td><td class="num">75,574</td><td class="num">$0.0430</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>265</strong></td><td class="num"><strong>552,882</strong></td><td class="num"><strong>266,759</strong></td><td class="num"><strong>$0.165</strong></td></tr>
+</table>
+
+<p class="meta">The machine-readable record is <code>output/usage_log.json</code>. The
+first A/B reported tokens before the harness reported cost, so the true total is
+marginally higher. <strong>The first version of that total was hand-added and came out
+$0.0064 too high</strong>; it is now summed from the rows by a script that checks its
+answer against what is written. A tokenomics table whose own arithmetic is wrong is worse
+than none, because it is the one claim in this report a reader can verify in thirty
+seconds.</p>
+
+<p><strong>A saving that cost nothing.</strong> The demo's analysis is generated once and
+frozen into <code>data/characters/*.json</code> rather than produced on demand. A free
+instance has an ephemeral disk and rebuilds its database on every boot, so analysis
+living only in a database would be regenerated every time the container recycled — at
+$0.043 a time, a bill with no ceiling. Generated once, committed, served indefinitely.</p>
+
 <h3>The cost-cutting step we took, and what it cost us</h3>
 <p>Routing <em>is</em> the cost control: three calls for an ordinary entry instead of
 five. The first version of it was cheap and wrong, and we can price both sides.</p>
@@ -570,8 +649,8 @@ budget or mask one.</p>
 
 <p class="meta"><strong>Stated limit:</strong> cache writes are not modelled, because the
 provider does not report them separately. Figures are therefore slightly low on a cold
-cache and correct once warm. <strong>Total live spend across the entire project to date:
-$0.0337.</strong></p>
+cache and correct once warm. <strong>Total live spend across the entire project to
+date: $0.165</strong> across 265 calls — the table above.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>
@@ -735,7 +814,7 @@ not a rounded 19. The nineteenth stays pending because its containing volume is 
 and the chapter's placement in it is not. A lower number that is true.</p>
 
 <h3>The instrument was wrong more often than the thing being measured</h3>
-<p>Six findings came out of live evaluation runs costing $0.0337 in total. <strong>Four
+<p>Six findings came out of live evaluation runs costing $0.0243 at the time. <strong>Four
 were our own bugs, and two of those I first diagnosed incorrectly.</strong> Both
 corrections came from reading what the system said about <em>itself</em> rather than what
 it produced — once a routing function, once a <code>gap_note</code> in which the agent

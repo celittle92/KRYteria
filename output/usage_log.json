@@ -1,0 +1,135 @@
+{
+  "_comment": [
+    "Every live model call this project has ever made, with the token counts the",
+    "provider reported. Not estimates: each row was printed by the run that produced it,",
+    "and the ones whose report file was later overwritten were recovered from git rather",
+    "than reconstructed from memory.",
+    "",
+    "The rubric caps the tokenomics row at half credit for estimates alone, which is the",
+    "right rule — a cost model nobody has checked against a bill is a spreadsheet, not a",
+    "measurement. Everything here was paid for.",
+    "",
+    "Figures are slightly LOW on a cold cache: the course publishes a $0.125/1M",
+    "cache-write surcharge which estimate_cost does not apply, because the provider does",
+    "not report cache writes separately. Stated rather than quietly absorbed."
+  ],
+  "model": "gpt-6-luna",
+  "provider": "portkey",
+  "prices_per_1m_tokens": {
+    "input": 0.1,
+    "cached_input": 0.01,
+    "output": 0.5,
+    "cache_write_surcharge_not_applied": 0.125,
+    "source": "MGT 409 Lecture 11 cached-token-cost table, corroborated against the HW6 data pack — two sources, same numbers"
+  },
+  "runs": [
+    {
+      "date": "2026-11-11",
+      "run": "brain-dump-trace",
+      "what": "One real brain dump, all five agents, traced step by step for the report",
+      "calls": 5,
+      "input_tokens": 9109,
+      "output_tokens": 4992,
+      "cost_usd": 0.00341,
+      "wall_clock_seconds": 72,
+      "evidence": "output/live_runs/README.md"
+    },
+    {
+      "date": "2026-11-11",
+      "run": "brain-dump-trace-2",
+      "what": "A second brain dump on the same path",
+      "calls": 5,
+      "input_tokens": 9231,
+      "output_tokens": 4636,
+      "cost_usd": 0.00324,
+      "evidence": "output/live_runs/README.md"
+    },
+    {
+      "date": "2026-11-11",
+      "run": "ab-first",
+      "what": "First live A/B against the baseline chatbot, two scenarios. Found the routing bug.",
+      "calls": 11,
+      "input_tokens": 11549,
+      "output_tokens": 3096,
+      "cost_usd": null,
+      "note": "Cost not recorded by the harness at the time; tokens were. Superseded by the run below and its scores should not be quoted — it predates three fixes.",
+      "evidence": "output/live_runs/ab_comparison_2026-11-11_first-live-run.md"
+    },
+    {
+      "date": "2026-11-11",
+      "run": "ab-after-routing-fix",
+      "what": "The same two scenarios after routing on stated conclusions. This is the run to quote.",
+      "calls": 12,
+      "input_tokens": 16148,
+      "output_tokens": 4451,
+      "cost_usd": 0.0038,
+      "evidence": "output/live_runs/ab_comparison_2026-11-11_after-routing-fix.md"
+    },
+    {
+      "date": "2026-11-11",
+      "run": "safety-pack",
+      "what": "The full safety evaluation pack, 18 cases, live",
+      "calls": 56,
+      "input_tokens": 91430,
+      "output_tokens": 22788,
+      "cost_usd": 0.0205,
+      "wall_clock_seconds": 233,
+      "evidence": "output/safety_results.md"
+    },
+    {
+      "date": "2026-11-13",
+      "run": "character-analysis-1",
+      "what": "First analysis of the nine-character demo's 14 proof-point entries",
+      "calls": 58,
+      "input_tokens": 139737,
+      "output_tokens": 71213,
+      "cost_usd": 0.0431,
+      "evidence": "git show 610042c:output/character_analysis.md"
+    },
+    {
+      "date": "2026-11-16",
+      "run": "character-analysis-2",
+      "what": "Re-run after de-gendering the narrative voice",
+      "calls": 59,
+      "input_tokens": 132542,
+      "output_tokens": 71376,
+      "cost_usd": 0.0429,
+      "evidence": "git show f44c8dd:output/character_analysis.md"
+    },
+    {
+      "date": "2026-11-16",
+      "run": "mapping-audit-test",
+      "what": "One entry, to check whether the near-synonym audit worked before paying for all of them",
+      "calls": 5,
+      "input_tokens": 12865,
+      "output_tokens": 8633,
+      "cost_usd": 0.0055,
+      "evidence": "git show 72e3a70:output/character_analysis.md"
+    },
+    {
+      "date": "2026-11-16",
+      "run": "character-analysis-3",
+      "what": "The remaining 13 entries with the mapping audit and the decided register",
+      "calls": 54,
+      "input_tokens": 130271,
+      "output_tokens": 75574,
+      "cost_usd": 0.043,
+      "evidence": "output/character_analysis.md"
+    }
+  ],
+  "totals": {
+    "live_runs": 9,
+    "model_calls": 265,
+    "input_tokens": 552882,
+    "output_tokens": 266759,
+    "cost_usd": 0.16545,
+    "_note": "Summed from the rows above, checked rather than typed — the first version of this block was hand-totalled and was $0.0064 too high. The ab-first run contributes tokens but no cost figure, so the real spend is marginally higher than this."
+  },
+  "per_interaction": {
+    "_comment": "What one user action costs, measured rather than modelled.",
+    "brain_dump_4_agents": 0.00208,
+    "brain_dump_5_agents_with_reflection": 0.00341,
+    "checklist_generation": null,
+    "_routing_note": "Narrative + Safety + Evidence always; Reasoning when the writer stated a conclusion; Reflection only on request. The 4-agent figure is the common case."
+  }
+}
