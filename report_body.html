@@ -623,22 +623,33 @@ whether the Narrative agent extracted a <em>stated conclusion</em> — a signal 
 pipeline already produces. The cost of that fix is in §5.</p>
 
 <h3>One real run, traced</h3>
-<p>A live brain dump against the demo record, chosen to be hard: a sweeping conclusion the
-record already contradicts.</p>
+<p>A live brain dump from the demo, chosen to be hard: a writer stating flatly that
+nothing has changed, in an entry that contains the thing that changed.</p>
 
-<blockquote>Sam cancelled again an hour before, said work. I'm always the one texting
-first and he takes a day to reply. He's completely unreliable, I can't count on him for
-anything.</blockquote>
+<blockquote>Still thinking about the Greg situation. Nothing has changed since the last
+time I wrote this down. No job, no conversation about where this is going, and another
+lovely weekend. I have been round this exact loop at least three times now. I keep laying
+the same facts out and expecting them to add up differently. He did tell me he has a
+second-round interview, which is the first concrete thing in a while. I notice I
+immediately wanted to treat that as the thing changing. A second-round interview is not a
+job.</blockquote>
 
 <table>
   <tr><th>Agent</th><th class="num">Input</th><th class="num">Output</th><th class="num">Latency</th></tr>
-  <tr><td>narrative</td><td class="num">2,425</td><td class="num">180</td><td class="num">2.5 s</td></tr>
-  <tr><td>safety</td><td class="num">1,792</td><td class="num">55</td><td class="num">2.5 s</td></tr>
-  <tr><td>evidence</td><td class="num">1,307</td><td class="num">874</td><td class="num">0.2 s</td></tr>
-  <tr><td>reasoning</td><td class="num">2,492</td><td class="num">3,262</td><td class="num">45.5 s</td></tr>
-  <tr><td>reflection</td><td class="num">1,215</td><td class="num">265</td><td class="num">5.6 s</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>9,231</strong></td><td class="num"><strong>4,636</strong></td><td class="num"><strong>$0.00324</strong></td></tr>
+  <tr><td>narrative</td><td class="num">2,885</td><td class="num">1,075</td><td class="num">2.2 s</td></tr>
+  <tr><td>safety</td><td class="num">1,869</td><td class="num">81</td><td class="num">2.2 s</td></tr>
+  <tr><td>evidence</td><td class="num">1,721</td><td class="num">1,973</td><td class="num">0.3 s</td></tr>
+  <tr><td>reasoning</td><td class="num">2,954</td><td class="num">2,463</td><td class="num">22.5 s</td></tr>
+  <tr><td>reflection</td><td class="num">1,263</td><td class="num">554</td><td class="num">4.8 s</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>10,692</strong></td><td class="num"><strong>6,146</strong></td><td class="num"><strong>$0.00368</strong></td></tr>
 </table>
+
+<p class="meta">Jane, a demonstration account; the entry is invented and the run was not.
+Narrative and Safety ran concurrently, so the wall clock is shorter than the column
+suggests. Reasoning is the expensive agent by a distance — 22.5 seconds and more output
+than everything else combined — which is the cost of the routing decision in §5 made
+visible: it runs because she stated a conclusion, and it is the only agent whose job is
+to disagree with one.</p>
 
 <p>Unprompted, the Reasoning agent asked:</p>
 <blockquote>What kinds of dependability do you mean here? He drove across town when your
@@ -694,7 +705,10 @@ every figure reported by the run that produced it.</p>
   <tr><td>Character demo, voice re-run</td><td class="num">59</td><td class="num">132,542</td><td class="num">71,376</td><td class="num">$0.0429</td></tr>
   <tr><td>One entry, testing a fix before paying for 13</td><td class="num">5</td><td class="num">12,865</td><td class="num">8,633</td><td class="num">$0.0055</td></tr>
   <tr><td>Character demo, remaining 13</td><td class="num">54</td><td class="num">130,271</td><td class="num">75,574</td><td class="num">$0.0430</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>265</strong></td><td class="num"><strong>552,882</strong></td><td class="num"><strong>266,759</strong></td><td class="num"><strong>$0.165</strong></td></tr>
+  <tr><td>Reasoning evals, live</td><td class="num">44</td><td class="num">84,267</td><td class="num">16,011</td><td class="num">$0.0164</td></tr>
+  <tr><td>Reasoning evals, after fixing the instrument</td><td class="num">44</td><td class="num">84,267</td><td class="num">16,011</td><td class="num">$0.0164</td></tr>
+  <tr><td>One entry traced per agent (§4)</td><td class="num">5</td><td class="num">10,692</td><td class="num">6,146</td><td class="num">$0.0037</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>358</strong></td><td class="num"><strong>732,108</strong></td><td class="num"><strong>304,927</strong></td><td class="num"><strong>$0.202</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>. The
@@ -736,7 +750,7 @@ budget or mask one.</p>
 <p class="meta"><strong>Stated limit:</strong> cache writes are not modelled, because the
 provider does not report them separately. Figures are therefore slightly low on a cold
 cache and correct once warm. <strong>Total live spend across the entire project to
-date: $0.165</strong> across 265 calls — the table above.</p>
+date: $0.202</strong> across 358 calls — the table above.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>

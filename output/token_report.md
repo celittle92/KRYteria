@@ -25,7 +25,7 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-16 | Character demo, voice re-run | 59 | 132,542 | 71,376 | $0.04290 |
 | 11-16 | One entry, to test a fix before paying for 13 | 5 | 12,865 | 8,633 | $0.00550 |
 | 11-16 | Character demo, remaining 13 | 54 | 130,271 | 75,574 | $0.04300 |
-| | **Total** | **265** | **552,882** | **266,759** | **$0.16545** |
+| | **Total** | **358** | **732,108** | **304,927** | **$0.20199** |
 
 The first A/B run reported tokens but not cost, so the real total is marginally higher.
 

@@ -129,9 +129,19 @@ _HEDGE_FRAME = (
     "you wonder ", "wonders whether ", "wondering whether ",
 )
 
-#: How far back to look. Long enough for "does not establish whether he is…", short
-#: enough that a negation in a previous sentence does not excuse a later assertion.
-_NEGATION_WINDOW = 48
+#: How far back to look.
+#:
+#: Was 48, which turned out to be the reason a correct fix looked like a failed one.
+#: "The writer wonders whether having soft hands on the writer's list is shallow" puts
+#: 69 characters between the frame and the needle, so the window clipped "whether" to
+#: "ether" and the cue never matched — while the very same sentence written slightly
+#: shorter was caught. A detector whose answer depends on sentence length is not
+#: detecting what it claims to.
+#:
+#: Widening is bounded by the sentence cut below: the window is truncated at the nearest
+#: preceding ". ", "? ", "! " or "; ", so a longer reach can only ever see more of the
+#: SAME sentence, never a negation belonging to a previous one.
+_NEGATION_WINDOW = 160
 
 
 def _is_negated(hay: str, start: int) -> bool:

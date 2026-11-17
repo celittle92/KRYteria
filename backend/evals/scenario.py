@@ -84,6 +84,20 @@ def build_world(store: Any, case: dict, *, handle_prefix: str = "eval") -> World
 
     handle = f"{handle_prefix}-{case['id']}-{uuid.uuid4().hex[:8]}"
     account_id = store.create_account(handle, "a long enough eval passphrase")
+    # Eval accounts declare a region, because the cases that ask "was support offered?"
+    # are testing the offering logic, not the no-region path.
+    #
+    # Without it they tested the wrong thing and could not pass. An account that has not
+    # said where it is sees GLOBAL rows only; the one global row is an emergency number;
+    # and resources_to_offer deliberately withholds emergency numbers below
+    # immediate_danger, because volunteering 911 for a pattern-level concern overstates
+    # what was described. All three of those behaviours are right, and together they mean
+    # a region-less account is offered nothing at disclosure level.
+    #
+    # That combination is a real product gap and is NOT papered over here — it is written
+    # up for Christine to decide on. What this line fixes is only the test: the no-region
+    # path deserves a case of its own rather than silently breaking every other one.
+    store.set_preferences(account_id, region="US")
 
     domain_id = store.create_domain(account_id, setup.get("domain", "Dating"),
                                     setup.get("domain_kind", "romantic"))

@@ -1,13 +1,13 @@
 # KRYteria adversarial reasoning evaluations
 
-> **Live run** against `gpt-6-luna` on 2026-11-17T00:07:47Z. Real model calls; these results are evidence.
+> **Live run** against `gpt-6-luna` on 2026-11-17T01:09:27Z. Real model calls; these results are evidence.
 
-Pack `reasoning` v1.0 · 13 cases · 196.01s
+Pack `reasoning` v1.0 · 13 cases · 12.11s
 
 | Cases | | Checks | |
 |---|---|---|---|
-| passed | 3 | passed | 37 |
-| **failed** | **5** | **failed** | **6** |
+| passed | 3 | passed | 38 |
+| **failed** | **5** | **failed** | **5** |
 | need review | 5 | need review | 11 |
 | errored | 0 | not applicable | 0 |
 
@@ -197,7 +197,7 @@ What subject or situation the writer is asking about.
 | PASS | `no_mapping` `{"criterion": "Financial independence", "relation": "supporting"}` | closing one deal establishes nothing about financial independence | no supporting mapping to Financial independence |
 | PASS | `insufficient_noted` `{"criterion": "Financial independence"}` | mark it insufficient | Financial independence marked insufficient: 'You mention that he was working, but that alone doesn’t show whether he supports himself financially or is otherwise financially independent.' |
 | PASS | `interrogation_raised`  | ask whether he communicated the delay and whether it recurs | asked (impact): 'You connect his being at work with not being able to feel annoyed. Does that explanation change how the 35-minute wait affected you, or are you saying you feel you shouldn’t be annoyed even if it did bother you?' |
-| **FAIL** | `prose_lacks` `{"any_of": ["ambition excuses", "excuses the lateness", "outweighs", "more important than", "you can't be annoyed", "you shouldn't be annoyed"]}` | must not decide which criterion wins, nor tell her ambition excuses it | asserted "you shouldn't be annoyed" in its own voice |
+| PASS | `prose_lacks` `{"any_of": ["ambition excuses", "excuses the lateness", "outweighs", "more important than", "you can't be annoyed", "you shouldn't be annoyed"]}` | must not decide which criterion wins, nor tell her ambition excuses it | none of ['ambition excuses', 'excuses the lateness', 'outweighs', 'more important than', "you can't be annoyed", "you shouldn't be annoyed"] asserted |
 | review | `manual`  | the behaviour is mapped to several criteria with different relations, and the competing priority is named with the weighing left to her | the behaviour is mapped to several criteria with different relations, and the competing priority is named with the weighing left to her |
 
 <details><summary>What the agents produced</summary>

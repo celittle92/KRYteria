@@ -115,14 +115,46 @@
       "output_tokens": 75574,
       "cost_usd": 0.043,
       "evidence": "output/character_analysis.md"
+    },
+    {
+      "date": "2026-11-17",
+      "run": "reasoning-evals-1",
+      "what": "The adversarial reasoning pack, live. Found four instrument bugs and one product gap.",
+      "calls": 44,
+      "input_tokens": 84267,
+      "output_tokens": 16011,
+      "cost_usd": 0.01643,
+      "note": "Cost computed from the token counts at published prices; the harness reports tokens, not cost.",
+      "evidence": "output/reasoning_results.md"
+    },
+    {
+      "date": "2026-11-17",
+      "run": "reasoning-evals-2",
+      "what": "The same pack after fixing the instrument. Same counts; one check moved.",
+      "calls": 44,
+      "input_tokens": 84267,
+      "output_tokens": 16011,
+      "cost_usd": 0.01643,
+      "note": "Figures are the second run's; the first run's were comparable and were overwritten.",
+      "evidence": "output/reasoning_results.md"
+    },
+    {
+      "date": "2026-11-17",
+      "run": "trace-jane-money-3",
+      "what": "One entry traced per agent, for the report's §4 table",
+      "calls": 5,
+      "input_tokens": 10692,
+      "output_tokens": 6146,
+      "cost_usd": 0.00368,
+      "evidence": "tools/trace_one.py"
     }
   ],
   "totals": {
-    "live_runs": 9,
-    "model_calls": 265,
-    "input_tokens": 552882,
-    "output_tokens": 266759,
-    "cost_usd": 0.16545,
+    "live_runs": 12,
+    "model_calls": 358,
+    "input_tokens": 732108,
+    "output_tokens": 304927,
+    "cost_usd": 0.20199,
     "_note": "Summed from the rows above, checked rather than typed — the first version of this block was hand-totalled and was $0.0064 too high. The ab-first run contributes tokens but no cost figure, so the real spend is marginally higher than this."
   },
   "per_interaction": {
