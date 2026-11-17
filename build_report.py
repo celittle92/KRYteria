@@ -23,8 +23,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 BODY = HERE / "report_body.html"
+SLIDES_BODY = HERE / "slides_body.html"
 SHOTS = HERE / "output" / "screenshots"
 OUT = HERE / "report.html"
+SLIDES_OUT = HERE / "slides.html"
 
 #: Every image the body may reference, by the token used in the HTML.
 IMAGES = {
@@ -42,11 +44,12 @@ def data_uri(path: Path) -> str:
     return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode()}"
 
 
-def main() -> int:
-    if not BODY.is_file():
-        print(f"Missing {BODY}", file=sys.stderr)
+def build(body_path, out_path, label: str) -> int:
+    """Inline every referenced image and write a self-contained file."""
+    if not body_path.is_file():
+        print(f"Missing {body_path}", file=sys.stderr)
         return 1
-    html = BODY.read_text(encoding="utf-8")
+    html = body_path.read_text(encoding="utf-8")
 
     missing, used = [], []
     for token, filename in IMAGES.items():
@@ -69,12 +72,12 @@ def main() -> int:
         print(f"Unresolved placeholders: {sorted(set(left))}", file=sys.stderr)
         return 1
 
-    OUT.write_text(html, encoding="utf-8")
-    kb = OUT.stat().st_size / 1024
+    out_path.write_text(html, encoding="utf-8")
+    kb = out_path.stat().st_size / 1024
     # Report what was actually embedded, not how many are on offer. These differed once
     # — two screenshots were generated and registered but never referenced — and the
     # count said six while the report showed four.
-    print(f"Wrote {OUT.name} — {kb:,.0f} KB, self-contained "
+    print(f"Wrote {out_path.name} — {kb:,.0f} KB, self-contained "
           f"({len(used)} of {len(IMAGES)} registered images inlined).")
     unused = [t for t in IMAGES if t not in used]
     if unused:
@@ -82,12 +85,21 @@ def main() -> int:
     # Count TODOs in the SOURCE, not the built file. Once the images are inlined the
     # output carries megabytes of base64, and "TODO" turns up in it by chance — the
     # warning said three when the report had two.
-    source = BODY.read_text(encoding="utf-8")
+    source = body_path.read_text(encoding="utf-8")
     if "TODO" in source:
         n = source.count("TODO")
-        print(f"  NOTE: {n} TODO marker(s) still in the report. "
+        print(f"  NOTE: {n} TODO marker(s) still in the {label}. "
               "They are styled to be impossible to miss on the page.")
     return 0
+
+
+def main() -> int:
+    rc = build(BODY, OUT, "report")
+    if rc:
+        return rc
+    if SLIDES_BODY.is_file():
+        rc = build(SLIDES_BODY, SLIDES_OUT, "deck")
+    return rc
 
 
 if __name__ == "__main__":

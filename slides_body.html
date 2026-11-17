@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KRYteria — MGT 409</title>
+<style>
+  :root{
+    --ink:#18253A; --ground:#F7F5EF; --sage:#A4B29F; --gray:#777C83;
+    --line:#E2DED3; --contra:#B4674B; --white:#fff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0; padding:0; background:#0E1620; color:var(--ink);
+            font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif}
+  .deck{display:flex; flex-direction:column; align-items:center; gap:28px; padding:28px}
+  .slide{ scroll-margin:28px;
+    width:min(1120px,96vw); aspect-ratio:16/9; background:var(--ground);
+    border-radius:10px; padding:62px 72px; position:relative; overflow:hidden;
+    display:flex; flex-direction:column; justify-content:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.35);
+  }
+  .slide.dark{background:var(--ink); color:var(--ground)}
+  .slide.dark .eyebrow,.slide.dark .num{color:var(--sage)}
+  .slide.dark .lede{color:#D6D2C7}
+  h1{font:400 clamp(34px,4.6vw,62px)/1.06 "Iowan Old Style",Palatino,Georgia,serif; margin:0}
+  h2{font:400 clamp(26px,3.3vw,44px)/1.12 "Iowan Old Style",Palatino,Georgia,serif;
+     margin:0 0 .5em}
+  .eyebrow{font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+           color:var(--gray); margin:0 0 20px; font-weight:600}
+  .lede{font-size:clamp(16px,1.55vw,21px); line-height:1.5; color:#3B4654; max-width:62ch; margin:0}
+  .lede+.lede{margin-top:.85em}
+  b,strong{font-weight:650}
+  .big{font:400 clamp(30px,3.6vw,50px)/1.18 "Iowan Old Style",Palatino,Georgia,serif;
+       max-width:22ch}
+  .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+        gap:18px; margin-top:34px}
+  .kpi{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:16px 18px}
+  .slide.dark .kpi{background:rgba(255,255,255,.055); border-color:rgba(255,255,255,.14)}
+  .kpi span{display:block; font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
+            color:var(--gray); margin-bottom:7px}
+  .slide.dark .kpi span{color:var(--sage)}
+  .kpi b{display:block; font:400 clamp(21px,2.4vw,33px)/1 "Iowan Old Style",Palatino,serif}
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:38px; margin-top:12px}
+  ul{margin:14px 0 0; padding-left:1.1em}
+  li{margin:.5em 0; max-width:54ch}
+  li::marker{color:var(--sage)}
+  .quote{border-left:3px solid var(--sage); padding:4px 0 4px 20px; margin:22px 0 0;
+         font:400 clamp(17px,1.75vw,24px)/1.45 "Iowan Old Style",Palatino,serif;
+         max-width:52ch}
+  .cap{font-size:13.5px; color:var(--gray); margin-top:18px; max-width:66ch}
+  table{border-collapse:collapse; width:100%; margin-top:20px; font-size:14.5px}
+  th,td{text-align:left; padding:8px 12px; border-bottom:1px solid var(--line)}
+  .slide.dark th,.slide.dark td{border-color:rgba(255,255,255,.14)}
+  th{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--gray)}
+  .n{text-align:right; font-variant-numeric:tabular-nums}
+  .no{color:var(--contra); font-weight:600}
+  .yes{color:#4E6B52; font-weight:600}
+  .slide.dark .yes{color:var(--sage)}
+  img{max-width:100%; border-radius:6px; border:1px solid var(--line)}
+  .pg{position:absolute; right:26px; bottom:20px; font-size:12px; color:var(--gray)}
+  .tag{position:absolute; left:72px; top:30px; font-size:12px; letter-spacing:.14em;
+       text-transform:uppercase; color:var(--sage); font-weight:600}
+  @media print{
+    html,body{background:#fff}
+    .deck{gap:0; padding:0}
+    .slide{box-shadow:none; border-radius:0; page-break-after:always; width:100%;
+           aspect-ratio:auto; height:100vh}
+  }
+</style></head><body><div class="deck">
+
+<section class="slide dark" id="s1">
+  <h1>KRYteria</h1>
+  <p class="lede" style="margin-top:18px; font-size:clamp(17px,1.8vw,24px)">
+    Knowledge. Relationships. You.</p>
+  <p class="lede" style="margin-top:34px; max-width:40ch">
+    <b>Relationships are complicated. Standards are not.</b></p>
+  <p class="cap" style="margin-top:40px; color:var(--sage)">
+    Christine Little · MGT 409 AI Foundations · kryteria.onrender.com</p>
+  <div class="pg">1</div>
+</section>
+
+<section class="slide" id="s2">
+  <div class="tag">The problem</div>
+  <p class="big">People are not short of information about their own relationships.</p>
+  <p class="lede" style="margin-top:26px">They are short of a way to hold it still. The
+  evidence is scattered across months of memory, the standard they set in January has
+  quietly moved by June, and the friend they keep asking has started agreeing with them to
+  end the conversation.</p>
+  <p class="lede"><b>The failure is not knowing. It is acting consistently with what you
+  already know.</b></p>
+  <div class="pg">2</div>
+</section>
+
+<section class="slide" id="s3">
+  <div class="tag">What it is</div>
+  <h2>A decision mirror</h2>
+  <p class="lede">It compares three things: what you say you want, what you are actually
+  experiencing, and what you are choosing to do about it.</p>
+  <div class="cols">
+    <div>
+      <p class="eyebrow" style="margin-top:26px">It does</p>
+      <ul>
+        <li>Hold your criteria across months</li>
+        <li>Separate what happened from what you concluded</li>
+        <li>Surface evidence that cuts against you</li>
+        <li>Ask what new information would change your mind</li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-top:26px">It does not</p>
+      <ul>
+        <li><span class="no">No</span> compatibility score, ever</li>
+        <li><span class="no">No</span> stay-or-leave recommendation</li>
+        <li><span class="no">No</span> judgement of your standards</li>
+        <li><span class="no">No</span> labelling anyone toxic or abusive</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg">3</div>
+</section>
+
+<section class="slide" id="s4">
+  <div class="tag">Motivation</div>
+  <h2>The real incumbent is not a product</h2>
+  <p class="lede">It is a general-purpose chatbot, a Notes app, and advice from friends.
+  People already use these. The information is fragmented, the framework is inconsistent,
+  and the analysis has no persistent connection to the standards the person set.</p>
+  <table>
+    <tr><th>Category</th><th>Why it isn't this</th></tr>
+    <tr><td>Couples coaching — Lasting, Paired</td><td>Assumes a relationship and a second willing participant</td></tr>
+    <tr><td>Journalling — Day One, Journey</td><td>Stores the narrative; does nothing with it</td></tr>
+    <tr><td>AI companions — Replika, assistants</td><td>Optimised for agreement; no persistent record of what mattered</td></tr>
+    <tr><td>Therapy — BetterHelp</td><td>A better thing for a different problem. This is not therapy</td></tr>
+  </table>
+  <div class="pg">4</div>
+</section>
+
+<section class="slide dark" id="s5">
+  <div class="tag">The architecture</div>
+  <h2>The Jimmy G Principle</h2>
+  <p class="lede">Importance belongs to a criterion <i>within a profile</i>. Status is what
+  is known about one person against it. They are independent.</p>
+  <table>
+    <tr><th>Criterion</th><th>Husband</th><th>Boyfriend</th><th>One night stand</th></tr>
+    <tr><td>Financial independence</td><td>Mandatory</td><td>Preferred</td><td>Not applicable</td></tr>
+    <tr><td>Physical attraction</td><td>Preferred</td><td>Mandatory</td><td>Mandatory</td></tr>
+    <tr><td>Wants children</td><td>Mandatory</td><td>Preferred</td><td>Not applicable</td></tr>
+  </table>
+  <p class="lede" style="margin-top:24px"><b>Same person. Different profile. Different
+  criteria.</b> The person has not changed; the objective has. No profile ranks above
+  another — enforced in the data model, and in the interface, which pre-selects none.</p>
+  <div class="pg">5</div>
+</section>
+
+<section class="slide" id="s6">
+  <div class="tag">The architecture</div>
+  <h2>Seven agents, one deterministic router</h2>
+  <p class="lede">A controlled workflow, not a chat mesh. The orchestrator routes and makes
+  no model call of its own. Narrative and Safety run <b>concurrently on the raw text</b>,
+  so no mapping can normalise something before the safety layer sees it.</p>
+  <table>
+    <tr><th>Situation</th><th>Agents called</th><th class="n">Cost</th></tr>
+    <tr><td>Ordinary entry</td><td>Narrative + Safety + Evidence</td><td class="n">—</td></tr>
+    <tr><td>The writer drew a conclusion</td><td>+ Reasoning</td><td class="n">$0.00208</td></tr>
+    <tr><td>Reflection requested</td><td>+ Reflection</td><td class="n">$0.00341</td></tr>
+  </table>
+  <p class="cap">The Safety layer takes no profile argument — asserted by a test that reads
+  the function signature, so nobody can add one.</p>
+  <div class="pg">6</div>
+</section>
+
+<section class="slide dark" id="s7">
+  <div class="tag">What is new</div>
+  <h2>One agent checking another</h2>
+  <p class="lede">Evidence decides which criterion an observation bears on. Reasoning is
+  handed those decisions and told they are claims too.</p>
+  <p class="quote">Criterion: <b>Soft hands.</b> Entry: “his hands are extremely nice.”</p>
+  <p class="lede" style="margin-top:22px">Nice is not soft. They may be the same thing to
+  this person — but that is hers to say. An earlier run mapped it <i>supporting</i> and the
+  substitution vanished into an approval nobody gave. Now:</p>
+  <p class="quote">You describe his hands as “extremely nice.” Your criterion is
+  specifically “Soft hands” — does “nice” mean soft to you here?</p>
+  <p class="cap">Fires 22 times across the demo. It generalises: “he paid” → financial
+  independence, “he apologised” → accountability. <b>The standards that look trivial are
+  the ones worth watching</b> — they are where approximating reads as not having taken
+  them seriously.</p>
+  <div class="pg">7</div>
+</section>
+
+<section class="slide" id="s8">
+  <div class="tag">Evidence</div>
+  <h2>One real run, traced</h2>
+  <p class="lede">A writer stating flatly that nothing has changed, in an entry containing
+  the thing that changed.</p>
+  <table>
+    <tr><th>Agent</th><th class="n">Input</th><th class="n">Output</th><th class="n">Latency</th></tr>
+    <tr><td>narrative</td><td class="n">2,885</td><td class="n">1,075</td><td class="n">2.2 s</td></tr>
+    <tr><td>safety</td><td class="n">1,869</td><td class="n">81</td><td class="n">2.2 s</td></tr>
+    <tr><td>evidence</td><td class="n">1,721</td><td class="n">1,973</td><td class="n">0.3 s</td></tr>
+    <tr><td>reasoning</td><td class="n">2,954</td><td class="n">2,463</td><td class="n">22.5 s</td></tr>
+    <tr><td>reflection</td><td class="n">1,263</td><td class="n">554</td><td class="n">4.8 s</td></tr>
+    <tr><td><b>Total</b></td><td class="n"><b>10,692</b></td><td class="n"><b>6,146</b></td><td class="n"><b>$0.00368</b></td></tr>
+  </table>
+  <p class="cap">Reasoning is the expensive agent by a distance — and the only one whose
+  job is to disagree with a conclusion.</p>
+  <div class="pg">8</div>
+</section>
+
+<section class="slide" id="s9">
+  <div class="tag">Tokenomics</div>
+  <h2>Measured, not estimated</h2>
+  <div class="kpis">
+    <div class="kpi"><span>Per brain dump</span><b>$0.0021</b></div>
+    <div class="kpi"><span>100 users / mo</span><b>$2.50</b></div>
+    <div class="kpi"><span>10,000 users / mo</span><b>$249.62</b></div>
+    <div class="kpi"><span>Spent building it</span><b>$0.202</b></div>
+  </div>
+  <p class="lede" style="margin-top:28px"><b>The cost-cutting step, and what it cost us.</b>
+  Routing <i>is</i> the cost control. The first version keyed on a keyword list and saved
+  money by not doing the thing the product is for: across 36 corpus entries it fired 4
+  times, and only 3 of 13 adversarial cases reached the agent written to test them.</p>
+  <p class="lede">Routing on stated conclusions costs <b>+53% per entry</b> — $162.88 to
+  $249.62 at 10,000 users. Worth it.</p>
+  <p class="cap">12 live runs · 358 calls · 732,108 input / 304,927 output tokens. Cache
+  writes are not modelled, so figures are slightly low on a cold cache.</p>
+  <div class="pg">9</div>
+</section>
+
+<section class="slide dark" id="s10">
+  <div class="tag">Safety</div>
+  <h2>Record everything. Withhold the analysis.</h2>
+  <p class="lede">A safety halt is a <b>presentation</b> decision, not a recording one.
+  Being grabbed and prevented from leaving is a behaviour; refusing to write it down makes
+  nobody safer and leaves the record emptiest at the point it matters most.</p>
+  <table>
+    <tr><td>Narrative, themes, Evidence</td><td class="yes">run and persist</td></tr>
+    <tr><td>Reasoning</td><td class="no">skipped — “how often does he grab you?” is a deposition</td></tr>
+    <tr><td>Reflection</td><td class="no">skipped — “what will you do?” is not reflective here</td></tr>
+    <tr><td>The screen</td><td>acknowledgement, safety check, resources — nothing else</td></tr>
+  </table>
+  <p class="cap">The withholding is <b>stated, never silent</b>. And the halt is checked in
+  code, not read off the model's own suggested action — that field comes from the same call
+  that classified the concern, so letting it also decide whether to stop means one
+  misjudgement loses both.</p>
+  <div class="pg">10</div>
+</section>
+
+<section class="slide" id="s11">
+  <div class="tag">Safety</div>
+  <h2>The layer finding it unprompted</h2>
+  <p class="lede">From a demo entry, with nobody labelling anything. The agent classified
+  it <b>physical / potential / note_only</b> and wrote:</p>
+  <p class="quote">He repeatedly pressed after you said you needed to leave and stood
+  between you and your bag, using humor to make objecting feel difficult. His later text
+  also shifted responsibility onto you… That is worth taking seriously; <b>you do not have
+  to decide what to call it.</b></p>
+  <p class="cap">No diagnosis, no legal conclusion, nobody labelled. Over-response is
+  graded as a failure here exactly as minimisation is.</p>
+  <div class="pg">11</div>
+</section>
+
+<section class="slide" id="s12">
+  <div class="tag">Privacy &amp; security</div>
+  <h2>What the code enforces rather than asks for</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li><b>A citation must resolve</b> to a verified row, or the write is refused — fabrication impossible, not discouraged</li>
+        <li><b>No agent moves an assessment.</b> Agents propose; one route moves a status and a person operates it</li>
+        <li><b>Queries are scoped by account</b>, so another user's row is simply not found — <b>404, never 403</b></li>
+      </ul>
+    </div>
+    <div>
+      <ul>
+        <li><b>Location is never inferred.</b> A test spoofs headers, then walks the AST of every route to prove nothing reads the request but cookies</li>
+        <li><b>Anonymous accounts</b>, Argon2id, recovery codes instead of email — no identity on file, no reset landing in a shared inbox</li>
+        <li><b>Sessions expire server-side</b>; brute force throttled per handle, not per IP, because an IP is a location</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pg">12</div>
+</section>
+
+<section class="slide dark" id="s13">
+  <div class="tag">The demo</div>
+  <h2>Nine people, one evening, two records</h2>
+  <p class="lede">Catherine and Adrian describe the same Thursday in separate private
+  accounts. Neither can see the other, and KRYteria never tells either that somebody else
+  wrote about that night.</p>
+  <div class="cols" style="margin-top:22px">
+    <div>
+      <p class="eyebrow">Catherine's record</p>
+      <p class="lede" style="font-size:16px">One communication criterion pulled three ways
+      at once — supporting, contradicting <i>and</i> complicating.</p>
+    </div>
+    <div>
+      <p class="eyebrow">Adrian's record</p>
+      <p class="lede" style="font-size:16px">No contradicting evidence at all. His concerns
+      land as complicating — on <i>his</i> criteria, not hers.</p>
+    </div>
+  </div>
+  <p class="cap">Nine demo accounts, all invented. The analysis is not: it came from a live
+  run and was frozen into the repository, so what is on screen is what the agents produced.</p>
+  <div class="pg">13</div>
+</section>
+
+<section class="slide" id="s14">
+  <div class="tag">The demo</div>
+  <h2>Nothing to type</h2>
+  <img alt="The KRYteria sign-in screen listing nine demo characters, each openable in one click." src="{{FRONT_DOOR}}" style="max-height:52%; object-fit:cover; object-position:top">
+  <p class="cap">kryteria.onrender.com — click a character and you are in. A free instance
+  sleeps after fifteen minutes, so the first load takes about a minute; the screen says so
+  rather than looking broken.</p>
+  <div class="pg">14</div>
+</section>
+
+<section class="slide" id="s15">
+  <div class="tag">What this cost to learn</div>
+  <h2>The instrument was wrong more often than the thing measured</h2>
+  <p class="lede">Of five failures in the live reasoning run, <b>four were the harness</b>:
+  a case that could not pass by construction, two graded as asserting what they were
+  attributing, and a detector whose answer depended on sentence length.</p>
+  <p class="lede">A fifth could not be adjudicated at all, because the artefact stored
+  observations as a <i>count</i>. Evidence that cost money has to be complete.</p>
+  <p class="quote">Check the deterministic component before blaming the expensive one.</p>
+  <p class="cap">The one genuine product failure found this way: routing on a keyword list
+  meant the agent whose job is interrogating generalising claims never saw the most
+  generalising claim in the corpus.</p>
+  <div class="pg">15</div>
+</section>
+
+<section class="slide dark" id="s16">
+  <div class="tag">Limits</div>
+  <h2>Stated, not discovered</h2>
+  <ul>
+    <li><b>Governments cannot keep their own hotlines accurate.</b> Three services were excluded with recorded reasons — one contradicted itself about its own number. If accuracy is the value proposition, that is our decay rate too.</li>
+    <li><b>Cache writes are not modelled</b>, so every cost figure is slightly low on a cold cache.</li>
+    <li><b>One research entry stays pending.</b> Promoting it to round the number up would be the most corrosive thing anyone could do to that layer.</li>
+    <li><b>No migrations</b>, and a free instance is not durable storage. Both said in the README rather than implied otherwise.</li>
+  </ul>
+  <div class="pg">16</div>
+</section>
+
+<section class="slide" id="s17">
+  <h1 style="font-size:clamp(28px,3.4vw,46px)">KRYteria does not validate conclusions.<br>
+  It validates your right to examine them.</h1>
+  <p class="lede" style="margin-top:34px"><b>Your standards are yours. Your decisions are
+  yours. KRYteria helps you see the evidence.</b></p>
+  <p class="cap" style="margin-top:36px">kryteria.onrender.com · github.com/celittle92/KRYteria<br>
+  1,337 tests · 358 live model calls · $0.202</p>
+  <div class="pg">17</div>
+</section>
+
+</div>
+<script>
+  // Arrow keys and space move between slides; everything is on one page so it also
+  // scrolls and prints normally.
+  const slides = [...document.querySelectorAll('.slide')];
+  let i = 0;
+  function go(n){ i = Math.max(0, Math.min(slides.length - 1, n));
+                  slides[i].scrollIntoView({behavior:'smooth', block:'center'}); }
+  addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(i+1); }
+    if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key))          { e.preventDefault(); go(i-1); }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End')  go(slides.length - 1);
+  });
+  // Keep the index honest when somebody scrolls instead of pressing a key.
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting) i = slides.indexOf(en.target);
+  }), {threshold:.5});
+  slides.forEach(s => io.observe(s));
+</script>
+</body></html>
