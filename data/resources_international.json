@@ -54,7 +54,12 @@
       "name": "National Domestic Abuse Helpline (Refuge)",
       "kind": "confidential_support",
       "region": "GB",
-      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment"],
+      "categories": [
+        "physical",
+        "emotional_psychological",
+        "coercive_control",
+        "stalking_harassment"
+      ],
       "phone": "0808 2000 247",
       "url": "https://www.nationaldahelpline.org.uk/chat-to-us-online/",
       "hours": "24 hours a day, 365 days a year",
@@ -66,7 +71,12 @@
       "name": "Women's Aid National Freephone Helpline",
       "kind": "confidential_support",
       "region": "IE",
-      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment"],
+      "categories": [
+        "physical",
+        "emotional_psychological",
+        "coercive_control",
+        "stalking_harassment"
+      ],
       "phone": "1800 341 900",
       "url": "https://www.womensaid.ie/",
       "hours": "24 hours a day, 7 days a week",
@@ -78,7 +88,9 @@
       "name": "Dublin Rape Crisis Centre — National 24-Hour Helpline",
       "kind": "confidential_support",
       "region": "IE",
-      "categories": ["sexual"],
+      "categories": [
+        "sexual"
+      ],
       "phone": "1800 77 8888",
       "url": "https://www.drcc.ie/services/helpline/webchat/",
       "hours": "24/7, all year round",
@@ -103,7 +115,11 @@
       "name": "Are You OK — family violence helpline",
       "kind": "confidential_support",
       "region": "NZ",
-      "categories": ["physical", "emotional_psychological", "coercive_control"],
+      "categories": [
+        "physical",
+        "emotional_psychological",
+        "coercive_control"
+      ],
       "phone": "0800 456 450",
       "url": "https://www.areyouok.org.nz/",
       "hours": "24/7",
@@ -115,7 +131,9 @@
       "name": "Safe to talk — Sexual Harm Helpline",
       "kind": "confidential_support",
       "region": "NZ",
-      "categories": ["sexual"],
+      "categories": [
+        "sexual"
+      ],
       "phone": "0800 044 334",
       "text_line": "4334",
       "url": "https://safetotalk.nz/",
@@ -138,7 +156,9 @@
       "name": "9-8-8 Suicide Crisis Helpline",
       "kind": "confidential_support",
       "region": "CA",
-      "categories": ["self_harm"],
+      "categories": [
+        "self_harm"
+      ],
       "phone": "9-8-8",
       "text_line": "9-8-8",
       "url": "https://988.ca/",
@@ -146,6 +166,19 @@
       "note": "A suicide crisis line, NOT a domestic violence service. Listed only for self-harm concerns. ShelterSafe is the domestic-violence entry for Canada.",
       "source_url": "https://988.ca/",
       "verified_at": "2026-11-12"
+    },
+    {
+      "name": "Find A Helpline — a directory of helplines, worldwide",
+      "kind": "information",
+      "region": "GLOBAL",
+      "categories": [],
+      "url": "https://findahelpline.com/",
+      "hours": "Varies by service",
+      "note": "A finder, not a helpline — it points you to a service where you are, which is the only honest thing to offer somebody whose country KRYteria does not know. Its own site says it partners with \"verified helplines in 175+ countries\" who \"verify their information with us directly\", and describes what it finds as \"free, anonymous and confidential\". On hours it says helplines are \"often available 24/7\" — often, not always.",
+      "source_url": "https://findahelpline.com/",
+      "verified_at": "2026-11-17",
+      "verified_by": "claude, by reading the site",
+      "verification_note": "Added because a user who has not set a region was being offered NOTHING at disclosure level: the only GLOBAL row was an emergency number, and resources_to_offer rightly withholds emergency numbers below immediate_danger.\n\nThree things recorded rather than smoothed over. (1) It is operated by ThroughLine Limited, a company, not a charity — its site solicits commercial partnerships. (2) Its page title claims 24/7 without qualification while the body says \"often\"; the hedged wording is the one used above. (3) Its country count contradicts IASP, whose page describes the same directory as covering \"over 150 countries\" against findahelpline's own \"175+\". The figure above is the site's own claim about itself, attributed as such.\n\nConsidered and rejected: Befrienders Worldwide, whose own homepage does not state that its services are free and whose country figures (193 reached, 35 member) do not match the figures IASP quotes for it (349 centres, 32 countries); and IASP itself, which states it \"is not a crisis centre and does not provide direct support\"."
     }
   ]
 }

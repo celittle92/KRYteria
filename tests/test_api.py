@@ -835,6 +835,56 @@ def test_an_unknown_api_path_is_a_404_and_not_the_single_page_app() -> None:
           page.headers.get("content-type", "").startswith("text/html"))
 
 
+def test_someone_who_has_not_said_where_they_are_is_still_offered_something() -> None:
+    """A region-less account must not be offered nothing at a serious concern level.
+
+    This was live, and no single piece of it was a bug. An account that has not said
+    where it is sees GLOBAL rows only — right, because a US number offered to somebody in
+    Osaka is the same failure as an invented one. ``resources_to_offer`` withholds
+    emergency numbers below ``immediate_danger`` — right, because volunteering 911 for a
+    pattern-level concern overstates what was described. And the only GLOBAL row was an
+    emergency number.
+
+    Three correct behaviours composing into a wrong outcome: disclose physical harm with
+    no region set, and KRYteria offered nothing at all. The fix was a global entry that
+    is not an emergency service — a directory, which is the only honest thing to hand
+    somebody whose country you do not know.
+
+    The emergency number must still be withheld below immediate danger. Fixing the first
+    problem by loosening that would trade one wrong answer for another.
+    """
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    from backend.agents import safety as _safety
+    from backend.models import SafetyOutput as _SafetyOutput
+    from backend.seed_characters import load_shared_reference_data
+    from backend.store import Store as _Store
+
+    store = _Store(_P(_tf.mkdtemp()) / "noregion.db")
+    load_shared_reference_data(store)
+    account_id = store.create_account("no-region-user", "a long enough passphrase")
+    check("the account really has no region",
+          (store.get_account(account_id) or {}).get("region") is None)
+
+    for level in ("potential", "pattern", "disclosure"):
+        offered = _safety.resources_to_offer(store, account_id, _SafetyOutput(
+            concern_detected=True, category="physical", concern_level=level,
+            suggested_action="offer_resources", acknowledgement="x", rationale="y"))
+        check(f"something is offered at {level}", bool(offered),
+              "a region-less account was offered nothing")
+        check(f"and no emergency number is volunteered at {level}",
+              all(r["kind"] != "emergency" for r in offered),
+              str([r["name"] for r in offered]))
+
+    urgent = _safety.resources_to_offer(store, account_id, _SafetyOutput(
+        concern_detected=True, category="physical", concern_level="immediate_danger",
+        suggested_action="halt_and_route", acknowledgement="x", rationale="y"))
+    check("an emergency number IS surfaced at immediate danger",
+          any(r["kind"] == "emergency" for r in urgent),
+          str([r["name"] for r in urgent]))
+
+
 def test_a_fresh_deployment_has_resources_and_research() -> None:
     """The two things whose absence fails silently.
 

@@ -150,3 +150,54 @@ Each from the organisation's own page. **Not yet committed to
 - The UK Silent Solution system (page 404).
 - Whether the Refuge helpline serves anyone other than women, or covers all of the UK —
   its page states neither.
+
+---
+
+## 2026-11-17 — a global entry that is not an emergency number
+
+Added `Find A Helpline` as a GLOBAL row, `kind: information`.
+
+**Why.** The live reasoning evals failed a safety case for "no resources offered", and
+the cause was not a bug. The Safety agent classified correctly (`physical`,
+`disclosure`), `should_offer_resources` said yes, and nothing came back — because the
+only GLOBAL row was an emergency number and `resources_to_offer` deliberately withholds
+emergency numbers below `immediate_danger`. Volunteering 911 for a pattern-level concern
+overstates what was described, and that rule is right.
+
+Three correct behaviours composed into a wrong outcome: **an account that had not set a
+region was offered nothing at all when disclosing physical harm.**
+
+**What was added, and what it is not.** Find A Helpline is a *directory*, not a service,
+and the entry says so in its first clause. Describing a finder as a line somebody can
+call would be the same class of error as inventing a number. `kind` is `information`
+rather than `confidential_support` for the same reason.
+
+For a user whose country KRYteria does not know, a finder is the only honest thing to
+offer. It is also the shape of answer this directory's whole posture argues for: we do
+not guess where somebody is, so we hand them something that will ask.
+
+**Recorded, not smoothed over.**
+
+- It is operated by **ThroughLine Limited, a company**, not a charity, and its site
+  solicits commercial partnerships. That does not make it unsuitable; it makes it
+  something a reader should know.
+- Its page title claims 24/7 without qualification while the body says helplines are
+  *"often"* available 24/7. The hedged wording is the one in the entry.
+- Its country count contradicts IASP, which describes the same directory as covering
+  "over 150 countries" against Find A Helpline's own "175+". The entry uses the site's
+  own claim about itself, attributed as such.
+- Its "trusted by" logos include several large technology companies. Disclosed here
+  because the reader should weigh it, not because it affected the choice.
+
+**Considered and rejected.**
+
+- **Befrienders Worldwide** — its own homepage does not state that its services are
+  free, and its country figures (193 reached, 35 member countries) do not match the
+  figures IASP quotes for it (349 centres, 32 countries). An organisation whose numbers
+  disagree across sources is exactly what this directory's rules exist to keep out.
+- **IASP** — states plainly that it "is not a crisis centre and does not provide direct
+  support". Citable as a reference page; not a service entry.
+
+**Still outstanding.** No individual helpline reached *through* the directory has been
+verified by us, and cannot be — that is the directory's job and its claim, not ours. The
+entry promises a finder, which is all it is.
