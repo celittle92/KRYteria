@@ -47,6 +47,14 @@
   .todo{background:#FDF3EC; border:2px dashed var(--contra); border-radius:6px; padding:1rem 1.2rem; margin:1.4rem 0; color:#7A3F27}
   .todo strong{letter-spacing:.04em}
   .meta{font-size:.9rem; color:var(--gray)}
+  /* A citation that is worth keeping but not worth a paragraph of the page. Folded
+     shut by default; prints shut, which is the point. */
+  .cite{font-size:.7em; vertical-align:super; text-decoration:none; color:var(--sage);
+        font-weight:600; padding:0 .15em}
+  .cite-note{margin:.6rem 0 1.4rem; font-size:.86rem; color:var(--gray)}
+  .cite-note summary{cursor:pointer; color:var(--sage); font-weight:600}
+  .cite-note p{margin:.6rem 0 0}
+
   .kpi{display:flex; gap:1rem; flex-wrap:wrap; margin:1.4rem 0}
   .kpi div{flex:1 1 8rem; background:#FFF; border:1px solid var(--line); border-radius:6px; padding:.8rem 1rem}
   .kpi b{display:block; font-size:1.5rem; font-variant-numeric:tabular-nums}
@@ -80,9 +88,18 @@ they fail to act consistently with information they already hold.</p>
   <tr><th>Run locally</th><td>Clone, <code>python3 -m venv .venv</code>, <code>pip install -r requirements.txt</code>, <code>.venv/bin/python -m backend.seed_demo</code>, then <code>uvicorn backend.main:app</code>. <code>.env</code> is found in the repo folder, the folder above it, or the environment.</td></tr>
 </table>
 
+<figure>
+  <img alt="The KRYteria sign-in screen listing nine demo characters, each openable in one click." src="{{FRONT_DOOR}}">
+  <figcaption>What a grader meets. Nine invented people, each openable in a click — no
+  sign-up, no handle, no passphrase. Opening two of them side by side is the fastest way
+  to see the argument in §3: Catherine and Adrian describe the same Thursday evening in
+  separate private accounts, and neither is ever told the other wrote a word about
+  it.</figcaption>
+</figure>
+
 <div class="todo">
-  <strong>TODO before submission</strong> — one real user's reaction (§7); verify RAINN
-  and 911 in a browser (§8); add <code>zlisto</code> as a collaborator.
+  <strong>TODO before submission</strong> — one real user's reaction (§7); add
+  <code>zlisto</code> as a collaborator.
 </div>
 
 <!-- ───────────────────────────── 2. MOTIVATION ───────────────────────────── -->
@@ -131,7 +148,7 @@ contradictory evidence, identify uncertainty, and recognize patterns over time.<
 </div>
 
 <p>The goal is not to build another dating-advice chatbot that tells people what they want
-to hear. It is to create an AI-supported decision tool that can be empathetic without
+to hear. It is to create an agentic decision tool that can be empathetic without
 being blindly agreeable, analytical without being judgmental, and useful without taking
 away user agency.</p>
 
@@ -150,43 +167,44 @@ have.</strong></p>
 above.</p>
 
 <table>
-  <tr><th>Category</th><th>Examples</th><th>What it does</th><th>Why it isn't this</th></tr>
+  <tr><th>Category</th><th>Examples</th><th>What it does</th><th>Why it isn't KRYteria</th></tr>
   <tr>
     <td>Couples / relationship coaching</td>
     <td>Lasting, Paired, Relish</td>
-    <td>Structured exercises and lessons for people already in a relationship, usually both partners.</td>
-    <td>Assumes a relationship and a willing second participant. Teaches a curriculum rather than examining the user's own standards.</td>
+    <td>Structured relationship exercises, guided learning, assessments, and coaching intended to strengthen an existing romantic relationship.</td>
+    <td>Primarily addresses the health and development of an existing relationship, often with both partners participating. It does not center on an individual's independent evaluation of a prospective or current partner against their own configurable criteria.</td>
   </tr>
   <tr>
-    <td>Journalling</td>
+    <td>Journaling &amp; reflection</td>
     <td>Day One, Journey, Reflectly</td>
-    <td>Captures what happened, with prompts and mood tracking.</td>
-    <td>Stores the narrative and does nothing with it. No criteria, no evidence mapping, no contradiction.</td>
+    <td>Captures personal experiences and reflections through journal entries, prompts, mood tracking, and, in some products, AI-assisted summaries or reflection.</td>
+    <td>Primarily supports personal expression and reflection. It does not organize relationship experiences into a persistent, user-defined criteria framework or systematically evaluate supporting, contradicting, and unresolved evidence against those criteria.</td>
   </tr>
   <tr>
-    <td>AI companions</td>
-    <td>Replika, and general assistants used this way</td>
-    <td>Conversation, support, company.</td>
-    <td>Optimised for engagement and agreement. No persistent record of what the user said mattered.</td>
+    <td>AI companions &amp; general-purpose AI</td>
+    <td>Replika; general-purpose AI assistants used for relationship advice</td>
+    <td>Provides conversational support, companionship, and personalized responses to users' questions, concerns, and experiences.</td>
+    <td>Primarily organized around conversation and support rather than a structured decision-support process. It does not inherently maintain independently configurable relationship profiles, evaluate evidence against user-defined criteria, or distinguish confirmed observations from AI-generated interpretations and unresolved questions.</td>
   </tr>
   <tr>
-    <td>Therapy marketplaces</td>
-    <td>BetterHelp and similar</td>
-    <td>Access to a licensed professional.</td>
-    <td>A different and better thing for a different problem. KRYteria is not therapy and says so on every screen.</td>
+    <td>Online therapy platforms</td>
+    <td>BetterHelp and similar services</td>
+    <td>Connects users with licensed mental health professionals for ongoing therapeutic support through online messaging and scheduled sessions.</td>
+    <td>Provides clinical mental health services for a different purpose. KRYteria is not therapy, does not diagnose or treat mental health conditions, and is not a substitute for professional care.</td>
   </tr>
 </table>
 
-<p><strong>The real incumbent is none of these.</strong> It is a general-purpose chatbot
-plus a Notes app plus a friend who is getting tired of the conversation. That is what
-KRYteria is measured against in §3 — not a feature table, a head-to-head on the same
-model.</p>
+<p><strong>The real incumbent is none of these.</strong> It is the combination of a
+general-purpose chatbot, a Notes app, and informal advice from friends. People already use
+these tools to process relationship experiences, but the information is fragmented, the
+framework is inconsistent, and the analysis often has no persistent connection to the
+standards the individual originally establishes.</p>
 
-<div class="todo">
-  <strong>TODO</strong> — these are category-level comparisons made from public
-  positioning. Before submission, open two or three of them and confirm the one-line
-  description is fair.
-</div>
+<p>That is what KRYteria is measured against in §3: not a feature-by-feature comparison
+with a single competing product, but the existing behavior and collection of tools people
+use to solve this problem today.</p>
+
+
 
 <!-- ───────────────────────────── 3. WHAT IS NEW ───────────────────────────── -->
 <h2>3. What is new here</h2>
@@ -221,18 +239,22 @@ does not become a deficiency simply because it matters in another context.</p>
 <p><strong>Where the name comes from.</strong> The Jimmy G Principle is named after former
 NFL quarterback Jimmy Garoppolo, whose public persona provides a memorable illustration of
 the distinction between physical and mental attraction. His appearance might make him an
-appealing prospect for a casual encounter, while his public interviews and documented
-reputation for poor texting and communication might leave a hypothetical prospective
-partner less interested in pursuing a deeper relationship.</p>
+appealing prospect, but his public interviews and documented reputation for poor texting
+and communication might leave a hypothetical prospective partner turned off from a
+potential deeper connection.<a class="cite" href="#jimmyg-src" id="jimmyg-ref">1</a></p>
 
-<p class="meta">Documented, specifically: during Super Bowl LIV week in January 2020, 49ers
-tight end George Kittle called Garoppolo <em>"the worst texter of all time,"</em> describing
-messages left unanswered and Garoppolo later admitting he had seen them and simply not
-replied — <em>"he's a bad texter. Bad communication."</em> Garoppolo conceded the point to
-reporters himself, and general manager John Lynch has made the same joke.
-(<a href="https://www.nbcsportsbayarea.com/nfl/49ers-jimmy-garoppolo-admits-hes-a-bad-texter-with-george-kittle/1250788/">NBC
-Sports Bay Area</a>.) The claim is about a public, self-admitted communication habit —
-nothing about his character, and nothing KRYteria would ever record about a real person.</p>
+<details class="cite-note" id="jimmyg-src">
+  <summary>1 — the source for that claim</summary>
+  <p>During Super Bowl LIV week in January 2020, 49ers tight end George Kittle called
+  Garoppolo <em>"the worst texter of all time,"</em> describing messages left unanswered
+  and Garoppolo later admitting he had seen them and simply not replied —
+  <em>"he's a bad texter. Bad communication."</em> Garoppolo conceded the point to
+  reporters himself, and general manager John Lynch has made the same joke.
+  (<a href="https://www.nbcsportsbayarea.com/nfl/49ers-jimmy-garoppolo-admits-hes-a-bad-texter-with-george-kittle/1250788/">NBC
+  Sports Bay Area</a>.) The claim is about a public, self-admitted communication habit —
+  nothing about his character, and nothing KRYteria would ever record about a real
+  person.</p>
+</details>
 
 <p>For our founder, the distinction is particularly straightforward: someone can be
 attractive enough to inspire physical interest without being someone she would want to
@@ -291,7 +313,9 @@ user's objectives and standards, rather than assigning them a single overall ver
 
 <figure>
   <img alt="Catherine's My KRYteria screen: two independently configured profiles, each criterion carrying its own importance tier." src="{{PROFILES_DARK}}">
-  <figcaption>Catherine's two profiles, independently configured. Every criterion carries
+  <figcaption><strong>Catherine is one of nine demonstration accounts</strong>; every
+  person, entry and assessment in them is invented. Her two profiles, independently
+  configured. Every criterion carries
   its own tier <em>here</em> and can carry a different one in the other profile —
   changing one never reaches into the other. Beside each is “Doesn't apply here”, because
   whether a standard applies is the user's call and not a property of the relationship
@@ -393,10 +417,12 @@ earns its keep over a single model doing everything in one pass.</p>
   <text class="s" x="170" y="282" text-anchor="middle">maps to profile-specific criteria</text>
 
   <path class="l" d="M170 298 L170 326"/>
+  <text class="s" x="178" y="316" text-anchor="start">the mappings, to be checked</text>
 
   <rect class="b" x="60" y="328" width="220" height="52"/>
-  <text class="t" x="170" y="348" text-anchor="middle">Reasoning</text>
-  <text class="s" x="170" y="364" text-anchor="middle">interrogation · cross-criterion</text>
+  <text class="t" x="170" y="346" text-anchor="middle">Reasoning</text>
+  <text class="s" x="170" y="361" text-anchor="middle">interrogation · cross-criterion</text>
+  <text class="s" x="170" y="374" text-anchor="middle">audits Evidence's near-synonyms</text>
 
   <rect class="b" x="310" y="246" width="160" height="52"/>
   <text class="t" x="390" y="266" text-anchor="middle">Reflection</text>
@@ -420,7 +446,9 @@ earns its keep over a single model doing everything in one pass.</p>
 <figcaption>Narrative and Safety run concurrently on the raw text, so no mapping can
 normalise something before the safety layer sees it. Reasoning runs when the writer
 stated a conclusion; Reflection when it is wanted. Criteria serves Checklist Mode and
-costs nothing on a journal entry.</figcaption>
+costs nothing on a journal entry. Note the edge into Reasoning: it is handed what
+Evidence decided, and is expected to disagree with it — the one place in this
+architecture where an agent's output is treated as a claim rather than a result.</figcaption>
 </figure>
 
 <h3>Who does what, and what each one may touch</h3>
@@ -468,11 +496,58 @@ stops an interpretation quietly becoming a finding.</p>
   </tr>
 </table>
 
-<p><strong>Only one agent can reach the research layer, and only part of it.</strong> The
-lookup returns verified findings only, withholds anything marked safety-adjacent, and
-carries each finding's caveat and <em>do-not</em> list back with it so the limits travel
-with the claim instead of sitting in a file nobody reads. 18 of 19 curated findings are
-verified; 17 reach this agent.</p>
+<h3>The research layer: what is in it, and what it is not allowed to do</h3>
+
+<p>KRYteria can draw on published behavioural research when suggesting what a criterion
+might look like in practice. Nineteen curated findings across seven areas — attachment,
+emotional regulation, interpersonal communication, conflict resolution, relationship
+satisfaction and commitment, social psychology and reciprocity, and personality and
+behavioural research.</p>
+
+<p><strong>Only one agent can reach it, and only part of it.</strong> The Criteria agent
+holds the lookup; Narrative, Evidence, Reasoning and Reflection cannot call it at all.
+The lookup returns verified findings only, withholds anything marked safety-adjacent, and
+carries each finding's caveat and <em>do-not</em> list back with it, so the limits travel
+with the claim instead of sitting in a file nobody reads.</p>
+
+<p>Three things make this a layer rather than a liability.</p>
+
+<p><strong>A citation must resolve, or it is a fabrication.</strong> A
+<code>research_ref</code> has to match the ref of a <em>verified</em> row, and
+<code>link_evidence</code> refuses anything else. Requiring a non-empty citation would
+only guarantee the model wrote something — and a model told to cite always writes
+something, plausible and specific and possibly invented. Requiring it to <em>resolve</em>
+makes fabrication impossible rather than discouraged. The cost is that the research layer
+is exactly as broad as the curated set, which for a product arguing for evidence over
+assumption is the right trade.</p>
+
+<p><strong>Only reputable sources, enforced in code.</strong>
+<code>backend/sources.py</code> is an allowlist — <code>.gov</code>, <code>.edu</code>,
+academic country domains matched by pattern, scholarly publishers, DOI and PubMed,
+library catalogues — and both the add and verify paths refuse a URL that does not pass,
+so there is no second door. An allowlist rather than a blocklist, because a blocklist is a
+list of the bad sites somebody already thought of and the one that matters is always the
+one nobody listed. Note that <code>academia.edu</code> is explicitly refused: the
+<code>.edu</code> belongs to the company, which is why a naive suffix test is not enough.</p>
+
+<p><strong>Three epistemic levels, kept apart on screen.</strong> An established research
+finding, a research-informed behavioural suggestion derived from it, and the agent's own
+read of this situation are different claims and are labelled as such. Attachment theory
+must not let the product diagnose somebody's attachment style from three text messages.</p>
+
+<p><strong>Status: 18 of 19 verified, 17 reach the agent.</strong> One is withheld as
+safety-adjacent — it may inform how the safety layer <em>describes</em> a behaviour and
+nothing else. One stays pending: the containing handbook is confirmed, but nothing found
+places the chapter in it or at what pages. It is left pending on purpose. Promoting it to
+round the number up would be the single most corrosive thing anyone could do to this
+layer.</p>
+
+<p class="meta">What "verified" means here, stated because it is narrower than it sounds:
+a human opened a qualifying source and confirmed the work exists at that reference and
+that the drafted finding is a fair summary of what it is known for. It does <em>not</em>
+mean somebody read the full paper. Verification also caught two wrong citations that care
+in drafting would not have — both subtitles belonging to a different printing of the right
+book, one also carrying a co-author the catalogue record does not name.</p>
 
 <p>Each agent loads its own prompt from <code>backend/prompts/</code> at runtime — never
 inlined in Python — and every model response is validated against a Pydantic contract
@@ -518,6 +593,17 @@ and it is why <strong>the standards that look trivial are the ones worth watchin
 Nobody will argue about whether dinner proves financial independence; the preferences
 somebody expects to be dismissed are exactly where quietly approximating reads as not
 having taken them seriously.</p>
+
+<figure>
+  <img alt="The Journal screen with an entry open: what you wrote, then observations grouped by kind, the criteria the entry bears on with the agent's reasoning, and the questions it asked." src="{{JOURNAL_DARK}}">
+  <figcaption>Where that reasoning becomes readable. The Journal shows an entry, then
+  what KRYteria made of it: observations grouped by kind so a reported event never sits
+  beside a conclusion as though they were the same thing, each criterion the entry bears
+  on with the relation and the agent's own rationale, and the questions it asked.
+  Catherine is a demonstration account and every word in it is invented — but the
+  analysis is not authored. It came from a live run and was frozen into the repository,
+  so what is on screen is what the agents actually produced.</figcaption>
+</figure>
 
 <h3>Routing is deterministic, and that decision is measurable</h3>
 <p>Not every entry needs every agent. Spending a model call to decide whether to spend

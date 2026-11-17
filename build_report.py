@@ -48,11 +48,12 @@ def main() -> int:
         return 1
     html = BODY.read_text(encoding="utf-8")
 
-    missing = []
+    missing, used = [], []
     for token, filename in IMAGES.items():
         placeholder = "{{" + token + "}}"
         if placeholder not in html:
-            continue
+            continue              # registered but not referenced; reported at the end
+        used.append(token)
         path = SHOTS / filename
         if not path.is_file():
             missing.append(filename)
@@ -70,10 +71,20 @@ def main() -> int:
 
     OUT.write_text(html, encoding="utf-8")
     kb = OUT.stat().st_size / 1024
+    # Report what was actually embedded, not how many are on offer. These differed once
+    # — two screenshots were generated and registered but never referenced — and the
+    # count said six while the report showed four.
     print(f"Wrote {OUT.name} — {kb:,.0f} KB, self-contained "
-          f"({len(IMAGES)} images inlined).")
-    if "TODO" in html:
-        n = html.count("TODO")
+          f"({len(used)} of {len(IMAGES)} registered images inlined).")
+    unused = [t for t in IMAGES if t not in used]
+    if unused:
+        print(f"  NOTE: registered but unused: {', '.join(sorted(unused))}")
+    # Count TODOs in the SOURCE, not the built file. Once the images are inlined the
+    # output carries megabytes of base64, and "TODO" turns up in it by chance — the
+    # warning said three when the report had two.
+    source = BODY.read_text(encoding="utf-8")
+    if "TODO" in source:
+        n = source.count("TODO")
         print(f"  NOTE: {n} TODO marker(s) still in the report. "
               "They are styled to be impossible to miss on the page.")
     return 0

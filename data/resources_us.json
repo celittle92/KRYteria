@@ -35,18 +35,30 @@
       "name": "Emergency services (911)",
       "kind": "emergency",
       "region": "US",
-      "categories": ["physical", "sexual", "stalking_harassment", "coercive_control"],
+      "categories": [
+        "physical",
+        "sexual",
+        "stalking_harassment",
+        "coercive_control"
+      ],
       "phone": "911",
       "note": "For immediate danger. Call if you are in danger right now.",
-      "verified_at": "2026-11-07",
-      "verification_note": "NOT re-verified 2026-11-12: both fcc.gov and 911.gov returned HTTP 403 to automated requests. Provenance gap, not an accuracy doubt. Confirm in a browser and update the date.",
-      "source_url": null
+      "verified_at": "2026-11-16",
+      "verification_note": "Verified by opening 911.gov. The automated fetch had returned 403; a browser did not.",
+      "source_url": "https://www.911.gov/",
+      "verified_by": "christine, in a browser"
     },
     {
       "name": "National Domestic Violence Hotline",
       "kind": "confidential_support",
       "region": "US",
-      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment", "sexual"],
+      "categories": [
+        "physical",
+        "emotional_psychological",
+        "coercive_control",
+        "stalking_harassment",
+        "sexual"
+      ],
       "phone": "1-800-799-SAFE (7233)",
       "text_line": "Text START to 88788",
       "url": "https://www.thehotline.org/",
@@ -60,7 +72,13 @@
       "name": "Deaf Hotline (video phone)",
       "kind": "confidential_support",
       "region": "US",
-      "categories": ["physical", "emotional_psychological", "coercive_control", "stalking_harassment", "sexual"],
+      "categories": [
+        "physical",
+        "emotional_psychological",
+        "coercive_control",
+        "stalking_harassment",
+        "sexual"
+      ],
       "phone": "855-812-1001",
       "url": "https://www.thehotline.org/",
       "note": "A video phone service for Deaf and hard-of-hearing callers, listed by the National Domestic Violence Hotline.",
@@ -72,20 +90,26 @@
       "name": "RAINN National Sexual Assault Hotline",
       "kind": "confidential_support",
       "region": "US",
-      "categories": ["sexual"],
+      "categories": [
+        "sexual"
+      ],
       "phone": "1-800-656-HOPE (4673)",
-      "url": "https://rainn.org/",
+      "url": "https://rainn.org/help-and-healing/hotline/",
       "hours": "24/7",
-      "note": "Confidential support for sexual assault, coercion, and unwanted contact.",
-      "verified_at": "2026-11-07",
-      "verification_note": "NOT re-verified 2026-11-12: rainn.org, /get-help and hotline.rainn.org all returned HTTP 403 to automated requests. Provenance gap, not an accuracy doubt. Confirm in a browser and update the date.",
-      "source_url": null
+      "note": "Confidential support for sexual assault, coercion, and unwanted contact. Phone, online chat, text, Signal, WhatsApp, and Spanish.",
+      "verified_at": "2026-11-16",
+      "verification_note": "Verified by opening the page. The automated fetch had returned 403 on every RAINN URL, which was a provenance gap and not an accuracy doubt — a person settled in two minutes what a script could not do at all. The page confirms 800.656.HOPE, 'Free, Confidential, 24/7 Support', and a text route (HOPE to 64673) that this entry had been missing.",
+      "source_url": "https://rainn.org/help-and-healing/hotline/",
+      "text": "Text HOPE to 64673",
+      "verified_by": "christine, in a browser"
     },
     {
       "name": "988 Suicide & Crisis Lifeline",
       "kind": "confidential_support",
       "region": "US",
-      "categories": ["self_harm"],
+      "categories": [
+        "self_harm"
+      ],
       "phone": "988",
       "text_line": "988",
       "url": "https://chat.988lifeline.org/",
