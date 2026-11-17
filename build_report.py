@@ -51,6 +51,15 @@ def build(body_path, out_path, label: str) -> int:
         return 1
     html = body_path.read_text(encoding="utf-8")
 
+    # Template-only blocks. The body files are openable HTML, which is useful while
+    # editing and is also a trap: opening report_body.html shows {{PLACEHOLDER}} text
+    # where the screenshots go, and it looks like the images are broken. It has caught
+    # the author twice. The template therefore carries a loud banner saying "open
+    # report.html instead", and that banner is stripped here so it never ships.
+    stripped = len(re.findall(r"<!-- BUILD:STRIP-START", html))
+    html = re.sub(r"<!-- BUILD:STRIP-START.*?BUILD:STRIP-END -->\n?", "", html,
+                  flags=re.DOTALL)
+
     missing, used = [], []
     for token, filename in IMAGES.items():
         placeholder = "{{" + token + "}}"
@@ -78,7 +87,8 @@ def build(body_path, out_path, label: str) -> int:
     # — two screenshots were generated and registered but never referenced — and the
     # count said six while the report showed four.
     print(f"Wrote {out_path.name} — {kb:,.0f} KB, self-contained "
-          f"({len(used)} of {len(IMAGES)} registered images inlined).")
+          f"({len(used)} of {len(IMAGES)} registered images inlined"
+          f"{f', {stripped} template-only block(s) stripped' if stripped else ''}).")
     unused = [t for t in IMAGES if t not in used]
     if unused:
         print(f"  NOTE: registered but unused: {', '.join(sorted(unused))}")

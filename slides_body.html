@@ -13,41 +13,51 @@
   .deck{display:flex; flex-direction:column; align-items:center; gap:28px; padding:28px}
   .slide{ scroll-margin:28px;
     width:min(1120px,96vw); aspect-ratio:16/9; background:var(--ground);
-    border-radius:10px; padding:62px 72px; position:relative; overflow:hidden;
+    border-radius:10px; padding:48px 72px 42px; position:relative; overflow:hidden;
     display:flex; flex-direction:column; justify-content:center;
     box-shadow:0 10px 40px rgba(0,0,0,.35);
   }
   .slide.dark{background:var(--ink); color:var(--ground)}
   .slide.dark .eyebrow,.slide.dark .num{color:var(--sage)}
   .slide.dark .lede{color:#D6D2C7}
+  .slide.dark .cap{color:#9AA4B0}
   h1{font:400 clamp(34px,4.6vw,62px)/1.06 "Iowan Old Style",Palatino,Georgia,serif; margin:0}
-  h2{font:400 clamp(26px,3.3vw,44px)/1.12 "Iowan Old Style",Palatino,Georgia,serif;
-     margin:0 0 .5em}
+  h2{font:400 clamp(24px,3.1vw,42px)/1.12 "Iowan Old Style",Palatino,Georgia,serif;
+     margin:0 0 .3em}
   .eyebrow{font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
-           color:var(--gray); margin:0 0 20px; font-weight:600}
-  .lede{font-size:clamp(16px,1.55vw,21px); line-height:1.5; color:#3B4654; max-width:62ch; margin:0}
-  .lede+.lede{margin-top:.85em}
+           color:var(--gray); margin:0 0 12px; font-weight:600}
+  .lede{font-size:clamp(15px,1.5vw,20px); line-height:1.5; color:#3B4654; max-width:62ch; margin:0}
+  .lede+.lede{margin-top:.8em}
+  .sm{font-size:clamp(14px,1.28vw,17px); line-height:1.45}
   b,strong{font-weight:650}
-  .big{font:400 clamp(30px,3.6vw,50px)/1.18 "Iowan Old Style",Palatino,Georgia,serif;
-       max-width:22ch}
+  .big{font:400 clamp(28px,3.5vw,48px)/1.18 "Iowan Old Style",Palatino,Georgia,serif;
+       max-width:24ch}
   .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-        gap:18px; margin-top:34px}
-  .kpi{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:16px 18px}
+        gap:16px; margin-top:26px}
+  .kpi{background:var(--white); border:1px solid var(--line); border-radius:8px; padding:15px 17px}
   .slide.dark .kpi{background:rgba(255,255,255,.055); border-color:rgba(255,255,255,.14)}
   .kpi span{display:block; font-size:11.5px; letter-spacing:.09em; text-transform:uppercase;
             color:var(--gray); margin-bottom:7px}
   .slide.dark .kpi span{color:var(--sage)}
-  .kpi b{display:block; font:400 clamp(21px,2.4vw,33px)/1 "Iowan Old Style",Palatino,serif}
-  .cols{display:grid; grid-template-columns:1fr 1fr; gap:38px; margin-top:12px}
-  ul{margin:14px 0 0; padding-left:1.1em}
-  li{margin:.5em 0; max-width:54ch}
+  .kpi b{display:block; font:400 clamp(20px,2.3vw,32px)/1 "Iowan Old Style",Palatino,serif}
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:36px; margin-top:10px}
+  .cols3{display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:22px}
+  .cols.wide-left{grid-template-columns:1.25fr 1fr}
+  .cols.wide-right{grid-template-columns:1fr 1.15fr}
+  .cols>div{min-width:0}
+  ul{margin:12px 0 0; padding-left:1.05em}
+  li{margin:.45em 0; max-width:54ch}
   li::marker{color:var(--sage)}
-  .quote{border-left:3px solid var(--sage); padding:4px 0 4px 20px; margin:22px 0 0;
-         font:400 clamp(17px,1.75vw,24px)/1.45 "Iowan Old Style",Palatino,serif;
+  .quote{border-left:3px solid var(--sage); padding:3px 0 3px 18px; margin:18px 0 0;
+         font:400 clamp(15px,1.55vw,21px)/1.45 "Iowan Old Style",Palatino,serif;
          max-width:52ch}
-  .cap{font-size:13.5px; color:var(--gray); margin-top:18px; max-width:66ch}
-  table{border-collapse:collapse; width:100%; margin-top:20px; font-size:14.5px}
-  th,td{text-align:left; padding:8px 12px; border-bottom:1px solid var(--line)}
+  .quote.them{border-left-color:var(--gray)}
+  .quote cite{display:block; font:500 12px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;
+              font-style:normal; color:var(--gray); margin-top:6px; letter-spacing:.03em}
+  .cap{font-size:13px; color:var(--gray); margin-top:14px; max-width:68ch}
+  table{border-collapse:collapse; width:100%; margin-top:16px; font-size:14px}
+  th,td{text-align:left; padding:6px 11px; border-bottom:1px solid var(--line);
+        vertical-align:top}
   .slide.dark th,.slide.dark td{border-color:rgba(255,255,255,.14)}
   th{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--gray)}
   .n{text-align:right; font-variant-numeric:tabular-nums}
@@ -55,8 +65,14 @@
   .yes{color:#4E6B52; font-weight:600}
   .slide.dark .yes{color:var(--sage)}
   img{max-width:100%; border-radius:6px; border:1px solid var(--line)}
+  .shot{flex:0 1 auto; min-height:0; object-fit:cover; object-position:top}
+  .diagram{flex:0 1 auto; min-height:0; display:flex; justify-content:center;
+           margin:4px 0 2px}
+  .diagram svg{max-width:100%; max-height:100%; height:auto}
+  .todo{border:2px dashed var(--contra); border-radius:8px; padding:12px 16px;
+        margin-top:18px; font-size:13.5px; color:var(--contra); max-width:70ch}
   .pg{position:absolute; right:26px; bottom:20px; font-size:12px; color:var(--gray)}
-  .tag{position:absolute; left:72px; top:30px; font-size:12px; letter-spacing:.14em;
+  .tag{position:absolute; left:72px; top:28px; font-size:12px; letter-spacing:.14em;
        text-transform:uppercase; color:var(--sage); font-weight:600}
   @media print{
     html,body{background:#fff}
@@ -66,6 +82,7 @@
   }
 </style></head><body><div class="deck">
 
+<!-- ─────────────────────────── 1. TITLE ─────────────────────────── -->
 <section class="slide dark" id="s1">
   <h1>KRYteria</h1>
   <p class="lede" style="margin-top:18px; font-size:clamp(17px,1.8vw,24px)">
@@ -77,134 +94,232 @@
   <div class="pg">1</div>
 </section>
 
+<!-- ─────────────────────────── 2. THE PROBLEM ─────────────────────────── -->
 <section class="slide" id="s2">
   <div class="tag">The problem</div>
-  <p class="big">People are not short of information about their own relationships.</p>
-  <p class="lede" style="margin-top:26px">They are short of a way to hold it still. The
-  evidence is scattered across months of memory, the standard they set in January has
-  quietly moved by June, and the friend they keep asking has started agreeing with them to
-  end the conversation.</p>
-  <p class="lede"><b>The failure is not knowing. It is acting consistently with what you
+  <p class="big">Somebody deciding whether to keep going.</p>
+  <p class="lede" style="margin-top:22px">Four months into dating someone. A friendship
+  that has started costing more than it gives. A boundary at work that keeps getting
+  crossed. The question is always the same one: <i>was that a problem, or was it me?</i></p>
+  <p class="lede"><b>They are not short of information.</b> The evidence is scattered
+  across months of memory, the standard they set in January has quietly moved by June, and
+  the friend they keep asking has started agreeing with them to end the conversation.</p>
+  <p class="lede">The failure is not knowing. It is <b>acting consistently with what you
   already know.</b></p>
   <div class="pg">2</div>
 </section>
 
+<!-- ─────────────────────────── 3. WHAT IT DOES ─────────────────────────── -->
 <section class="slide" id="s3">
   <div class="tag">What it is</div>
   <h2>A decision mirror</h2>
   <p class="lede">It compares three things: what you say you want, what you are actually
   experiencing, and what you are choosing to do about it.</p>
-  <div class="cols">
+  <div class="cols wide-right" style="margin-top:16px">
     <div>
-      <p class="eyebrow" style="margin-top:26px">It does</p>
-      <ul>
-        <li>Hold your criteria across months</li>
-        <li>Separate what happened from what you concluded</li>
-        <li>Surface evidence that cuts against you</li>
-        <li>Ask what new information would change your mind</li>
-      </ul>
+      <p class="eyebrow">1 — Hold the standard</p>
+      <p class="lede sm">Your criteria, written once and kept, each carrying its importance
+      <i>within a profile</i>.</p>
+      <p class="eyebrow" style="margin-top:16px">2 — Read what happened</p>
+      <p class="lede sm">Write the messy version. The agents separate what happened from
+      what you concluded, and map each observation to the criteria it bears on —
+      supporting, contradicting, or <i>complicating</i>.</p>
+      <p class="eyebrow" style="margin-top:16px">3 — Hand the record back</p>
+      <p class="lede sm">State a conclusion and it answers with your own entries, including
+      the ones that cut against you.</p>
     </div>
-    <div>
-      <p class="eyebrow" style="margin-top:26px">It does not</p>
-      <ul>
-        <li><span class="no">No</span> compatibility score, ever</li>
-        <li><span class="no">No</span> stay-or-leave recommendation</li>
-        <li><span class="no">No</span> judgement of your standards</li>
-        <li><span class="no">No</span> labelling anyone toxic or abusive</li>
-      </ul>
+    <div style="display:flex; flex-direction:column; min-height:0">
+      <img class="shot" alt="My KRYteria: two independent profiles side by side, Boyfriend and Husband, and below them the criteria in the open profile, each with its own Mandatory, Preferred or Aspirational tier." src="{{PROFILES_DARK}}" style="max-height:322px">
     </div>
   </div>
+  <p class="cap" style="margin-top:16px; max-width:none"><b>And four things it will never do.</b>
+  <span class="no">No</span> compatibility score · <span class="no">No</span>
+  stay-or-leave recommendation · <span class="no">No</span> judgement of your standards ·
+  <span class="no">No</span> diagnosing anyone or assigning a definitive label. It
+  challenges your reasoning, never your standards.</p>
   <div class="pg">3</div>
 </section>
 
+<!-- ─────────────────────────── 4. WHAT IS DIFFERENT ─────────────────────────── -->
 <section class="slide" id="s4">
-  <div class="tag">Motivation</div>
+  <div class="tag">What is different</div>
   <h2>The real incumbent is not a product</h2>
-  <p class="lede">It is a general-purpose chatbot, a Notes app, and advice from friends.
-  People already use these. The information is fragmented, the framework is inconsistent,
-  and the analysis has no persistent connection to the standards the person set.</p>
-  <table>
-    <tr><th>Category</th><th>Why it isn't this</th></tr>
-    <tr><td>Couples coaching — Lasting, Paired</td><td>Assumes a relationship and a second willing participant</td></tr>
-    <tr><td>Journalling — Day One, Journey</td><td>Stores the narrative; does nothing with it</td></tr>
-    <tr><td>AI companions — Replika, assistants</td><td>Optimised for agreement; no persistent record of what mattered</td></tr>
-    <tr><td>Therapy — BetterHelp</td><td>A better thing for a different problem. This is not therapy</td></tr>
-  </table>
+  <div class="cols wide-left">
+    <div>
+      <p class="lede sm" style="max-width:none">A general-purpose chatbot, a Notes app,
+      and advice from friends.</p>
+      <table>
+        <tr><th>Category</th><th>Core distinction</th></tr>
+        <tr><td>Couples coaching<br><span style="color:var(--gray)">Lasting, Paired, Relish</span></td>
+            <td>Strengthens an existing relationship</td></tr>
+        <tr><td>Journalling<br><span style="color:var(--gray)">Day One, Journey, Reflectly</span></td>
+            <td>Captures personal experiences</td></tr>
+        <tr><td>AI companions<br><span style="color:var(--gray)">Replika, general assistants</span></td>
+            <td>Provides conversational support</td></tr>
+        <tr><td>Online therapy<br><span style="color:var(--gray)">BetterHelp</span></td>
+            <td>Provides clinical care</td></tr>
+        <tr><td><b>KRYteria</b></td>
+            <td><b>Evaluates experiences against individually defined criteria</b></td></tr>
+      </table>
+      <p class="cap" style="margin-top:10px">The claim is not that these cannot discuss a
+      relationship — it is that persistent, independently configurable criteria and
+      evidence-based assessment are the <b>organising architecture</b> here.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-top:4px">The Jimmy G Principle</p>
+      <p class="lede sm">Importance belongs to a criterion <i>within a profile</i>. Status
+      is what is known about one person against it. The two are independent, and that is
+      the architecture, not a joke.</p>
+      <table>
+        <tr><th>Importance, per profile</th><th>Husband</th><th>One&nbsp;night</th></tr>
+        <tr><td>Financial independence</td><td>Mandatory</td><td>Aspirational</td></tr>
+        <tr><td>Physical attraction</td><td>Preferred</td><td>Mandatory</td></tr>
+        <tr><td>Wants children</td><td>Mandatory</td><td><i>set aside</i></td></tr>
+      </table>
+      <p class="cap"><b>Same person. Different profile. Different criteria.</b> The person
+      has not changed; the objective has. No profile ranks above another — enforced in the
+      data model, and in an interface that pre-selects none of them.</p>
+      <p class="cap" style="margin-top:8px"><i>Set aside</i> is <b>not a fourth tier</b>.
+      Importance and status are separate columns on separate tables, and so is the flag
+      that takes a criterion out of one profile.</p>
+    </div>
+  </div>
   <div class="pg">4</div>
 </section>
 
-<section class="slide dark" id="s5">
-  <div class="tag">The architecture</div>
-  <h2>The Jimmy G Principle</h2>
-  <p class="lede">Importance belongs to a criterion <i>within a profile</i>. Status is what
-  is known about one person against it. They are independent.</p>
-  <table>
-    <tr><th>Criterion</th><th>Husband</th><th>Boyfriend</th><th>One night stand</th></tr>
-    <tr><td>Financial independence</td><td>Mandatory</td><td>Preferred</td><td>Not applicable</td></tr>
-    <tr><td>Physical attraction</td><td>Preferred</td><td>Mandatory</td><td>Mandatory</td></tr>
-    <tr><td>Wants children</td><td>Mandatory</td><td>Preferred</td><td>Not applicable</td></tr>
-  </table>
-  <p class="lede" style="margin-top:24px"><b>Same person. Different profile. Different
-  criteria.</b> The person has not changed; the objective has. No profile ranks above
-  another — enforced in the data model, and in the interface, which pre-selects none.</p>
+<!-- ─────────────────────────── 5. THE AGENTS ─────────────────────────── -->
+<section class="slide" id="s5">
+  <div class="tag">How it works</div>
+  <h2>A controlled workflow, not a chat mesh</h2>
+  <div style="display:grid; grid-template-columns:1fr 212px; gap:26px; align-items:center;
+              min-height:0; flex:0 1 auto">
+  <div class="diagram">
+<svg viewBox="0 0 720 440" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Architecture: orchestrator routing to narrative, safety, evidence, reasoning and reflection agents, with validation and user confirmation before any assessment changes.">
+  <defs>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#777C83"/>
+    </marker>
+    <style>
+      .b{fill:#FFF;stroke:#E2DED3;stroke-width:1.5;rx:8}
+      .t{font:600 12px ui-sans-serif,system-ui,sans-serif;fill:#18253A}
+      .s{font:10px ui-sans-serif,system-ui,sans-serif;fill:#777C83}
+      .l{stroke:#777C83;stroke-width:1.2;fill:none;marker-end:url(#a)}
+      .safety{fill:#FBF3EF;stroke:#B4674B}
+      .gate{fill:#F2F5F1;stroke:#A4B29F}
+    </style>
+  </defs>
+
+  <rect class="b" x="250" y="8" width="220" height="42"/>
+  <text class="t" x="360" y="27" text-anchor="middle">Brain Dump</text>
+  <text class="s" x="360" y="42" text-anchor="middle">narrative + person + profile</text>
+  <path class="l" d="M360 50 L360 76"/>
+
+  <rect class="b" x="250" y="78" width="220" height="46"/>
+  <text class="t" x="360" y="97" text-anchor="middle">Orchestrator</text>
+  <text class="s" x="360" y="112" text-anchor="middle">routes · budget caps · execution log</text>
+
+  <path class="l" d="M300 124 L170 156"/>
+  <path class="l" d="M420 124 L550 156"/>
+
+  <rect class="b" x="60" y="158" width="220" height="58"/>
+  <text class="t" x="170" y="178" text-anchor="middle">Narrative</text>
+  <text class="s" x="170" y="194" text-anchor="middle">observations · interpretations</text>
+  <text class="s" x="170" y="208" text-anchor="middle">uncertainty · themes</text>
+
+  <rect class="b safety" x="440" y="158" width="220" height="58"/>
+  <text class="t" x="550" y="178" text-anchor="middle">Safety Layer</text>
+  <text class="s" x="550" y="194" text-anchor="middle">abuse · coercion · danger</text>
+  <text class="s" x="550" y="208" text-anchor="middle">no profile argument, ever</text>
+
+  <text class="s" x="360" y="192" text-anchor="middle">run together,</text>
+  <text class="s" x="360" y="205" text-anchor="middle">on the raw text</text>
+
+  <path class="l" d="M170 216 L170 244"/>
+  <path class="l" d="M550 216 L550 244 L470 244"/>
+
+  <rect class="b" x="60" y="246" width="220" height="52"/>
+  <text class="t" x="170" y="266" text-anchor="middle">Evidence</text>
+  <text class="s" x="170" y="282" text-anchor="middle">maps to profile-specific criteria</text>
+
+  <path class="l" d="M170 298 L170 326"/>
+  <text class="s" x="178" y="316" text-anchor="start">the mappings, to be checked</text>
+
+  <rect class="b" x="60" y="328" width="220" height="52"/>
+  <text class="t" x="170" y="346" text-anchor="middle">Reasoning</text>
+  <text class="s" x="170" y="361" text-anchor="middle">interrogation · cross-criterion</text>
+  <text class="s" x="170" y="374" text-anchor="middle">audits Evidence's near-synonyms</text>
+
+  <rect class="b" x="310" y="246" width="160" height="52"/>
+  <text class="t" x="390" y="266" text-anchor="middle">Reflection</text>
+  <text class="s" x="390" y="282" text-anchor="middle">questions · alternatives</text>
+
+  <rect class="b" x="310" y="328" width="160" height="52"/>
+  <text class="t" x="390" y="348" text-anchor="middle">Criteria</text>
+  <text class="s" x="390" y="364" text-anchor="middle">off the brain-dump path</text>
+
+  <path class="l" d="M280 354 L306 354"/>
+
+  <rect class="b gate" x="500" y="300" width="200" height="80"/>
+  <text class="t" x="600" y="326" text-anchor="middle">Validation + the user</text>
+  <text class="s" x="600" y="344" text-anchor="middle">Pydantic contracts, then</text>
+  <text class="s" x="600" y="358" text-anchor="middle">accept / reject / edit.</text>
+  <text class="s" x="600" y="372" text-anchor="middle">No agent moves a status.</text>
+  <path class="l" d="M470 354 L496 348"/>
+
+  <text class="s" x="360" y="416" text-anchor="middle">Three model calls for an ordinary entry. Five at most — a hard ceiling in code, not a request in a prompt.</text>
+</svg>
+  </div>
+  <div>
+    <p class="cap" style="margin-top:0">Seven specialists; the orchestrator routes and
+    makes <b>no model call of its own</b>.</p>
+    <p class="cap">Narrative and Safety run concurrently on the raw text, so no mapping can
+    normalise something before the safety layer sees it — and the safety layer takes
+    <b>no profile argument</b>, asserted by a test that reads the function signature.</p>
+    <p class="cap">Reasoning is handed what Evidence decided, and is expected to
+    <b>disagree with it</b>.</p>
+  </div>
+  </div>
   <div class="pg">5</div>
 </section>
 
+<!-- ─────────────────────────── 6. ONE REAL RUN ─────────────────────────── -->
 <section class="slide" id="s6">
-  <div class="tag">The architecture</div>
-  <h2>Seven agents, one deterministic router</h2>
-  <p class="lede">A controlled workflow, not a chat mesh. The orchestrator routes and makes
-  no model call of its own. Narrative and Safety run <b>concurrently on the raw text</b>,
-  so no mapping can normalise something before the safety layer sees it.</p>
-  <table>
-    <tr><th>Situation</th><th>Agents called</th><th class="n">Cost</th></tr>
-    <tr><td>Ordinary entry</td><td>Narrative + Safety + Evidence</td><td class="n">—</td></tr>
-    <tr><td>The writer drew a conclusion</td><td>+ Reasoning</td><td class="n">$0.00208</td></tr>
-    <tr><td>Reflection requested</td><td>+ Reflection</td><td class="n">$0.00341</td></tr>
-  </table>
-  <p class="cap">The Safety layer takes no profile argument — asserted by a test that reads
-  the function signature, so nobody can add one.</p>
+  <div class="tag">One real run</div>
+  <h2>The entry that contained what changed</h2>
+  <p class="lede sm" style="margin-top:-4px; max-width:none">A live brain dump, chosen to be
+  hard: a writer stating flatly that nothing has changed.</p>
+  <div class="cols wide-right" style="margin-top:10px">
+    <div>
+      <table style="margin-top:6px">
+        <tr><th>Agent</th><th class="n">In</th><th class="n">Out</th><th class="n">Latency</th><th class="n">Cost</th></tr>
+        <tr><td>narrative</td><td class="n">2,885</td><td class="n">1,075</td><td class="n">2.2 s</td><td class="n"></td></tr>
+        <tr><td>safety</td><td class="n">1,869</td><td class="n">81</td><td class="n">2.2 s</td><td class="n"></td></tr>
+        <tr><td>evidence</td><td class="n">1,721</td><td class="n">1,973</td><td class="n">0.3 s</td><td class="n"></td></tr>
+        <tr><td>reasoning</td><td class="n">2,954</td><td class="n">2,463</td><td class="n">22.5 s</td><td class="n"></td></tr>
+        <tr><td>reflection</td><td class="n">1,263</td><td class="n">554</td><td class="n">4.8 s</td><td class="n"></td></tr>
+        <tr><td><b>Total</b></td><td class="n"><b>10,692</b></td><td class="n"><b>6,146</b></td><td class="n"><b>32.0 s</b></td><td class="n"><b>$0.0037</b></td></tr>
+      </table>
+      <p class="quote" style="margin-top:10px">He drove across town when your car broke
+      down; does that count as the kind of follow-through you need, or is support in an
+      emergency different from keeping planned dates?
+      <cite>Reasoning agent, unprompted — citing an entry from five weeks earlier</cite></p>
+    </div>
+    <div>
+      <img class="shot" alt="The Patterns screen: a moderate-evidence finding with three supporting entries, one contradicting, two alternative explanations, and what is still unknown." src="{{PATTERNS_DARK}}" style="max-height:224px">
+      <p class="cap" style="margin-top:9px">Five agents here because she asked for
+      reflection; an ordinary entry runs three, at <b>$0.0021</b>. What it saved, on
+      screen:
+      <span class="yes">3 entries support this</span> · <span class="no">1 cuts against
+      it</span>, with the counterpoint named, two alternative explanations, and what is
+      still unknown.</p>
+    </div>
+  </div>
   <div class="pg">6</div>
 </section>
 
+<!-- ─────────────────────────── 7. TOKENOMICS ─────────────────────────── -->
 <section class="slide dark" id="s7">
-  <div class="tag">What is new</div>
-  <h2>One agent checking another</h2>
-  <p class="lede">Evidence decides which criterion an observation bears on. Reasoning is
-  handed those decisions and told they are claims too.</p>
-  <p class="quote">Criterion: <b>Soft hands.</b> Entry: “his hands are extremely nice.”</p>
-  <p class="lede" style="margin-top:22px">Nice is not soft. They may be the same thing to
-  this person — but that is hers to say. An earlier run mapped it <i>supporting</i> and the
-  substitution vanished into an approval nobody gave. Now:</p>
-  <p class="quote">You describe his hands as “extremely nice.” Your criterion is
-  specifically “Soft hands” — does “nice” mean soft to you here?</p>
-  <p class="cap">Fires 22 times across the demo. It generalises: “he paid” → financial
-  independence, “he apologised” → accountability. <b>The standards that look trivial are
-  the ones worth watching</b> — they are where approximating reads as not having taken
-  them seriously.</p>
-  <div class="pg">7</div>
-</section>
-
-<section class="slide" id="s8">
-  <div class="tag">Evidence</div>
-  <h2>One real run, traced</h2>
-  <p class="lede">A writer stating flatly that nothing has changed, in an entry containing
-  the thing that changed.</p>
-  <table>
-    <tr><th>Agent</th><th class="n">Input</th><th class="n">Output</th><th class="n">Latency</th></tr>
-    <tr><td>narrative</td><td class="n">2,885</td><td class="n">1,075</td><td class="n">2.2 s</td></tr>
-    <tr><td>safety</td><td class="n">1,869</td><td class="n">81</td><td class="n">2.2 s</td></tr>
-    <tr><td>evidence</td><td class="n">1,721</td><td class="n">1,973</td><td class="n">0.3 s</td></tr>
-    <tr><td>reasoning</td><td class="n">2,954</td><td class="n">2,463</td><td class="n">22.5 s</td></tr>
-    <tr><td>reflection</td><td class="n">1,263</td><td class="n">554</td><td class="n">4.8 s</td></tr>
-    <tr><td><b>Total</b></td><td class="n"><b>10,692</b></td><td class="n"><b>6,146</b></td><td class="n"><b>$0.00368</b></td></tr>
-  </table>
-  <p class="cap">Reasoning is the expensive agent by a distance — and the only one whose
-  job is to disagree with a conclusion.</p>
-  <div class="pg">8</div>
-</section>
-
-<section class="slide" id="s9">
   <div class="tag">Tokenomics</div>
   <h2>Measured, not estimated</h2>
   <div class="kpis">
@@ -213,140 +328,132 @@
     <div class="kpi"><span>10,000 users / mo</span><b>$249.62</b></div>
     <div class="kpi"><span>Spent building it</span><b>$0.202</b></div>
   </div>
-  <p class="lede" style="margin-top:28px"><b>The cost-cutting step, and what it cost us.</b>
+  <p class="lede" style="margin-top:24px"><b>The cost-cutting step, and what it cost us.</b>
   Routing <i>is</i> the cost control. The first version keyed on a keyword list and saved
   money by not doing the thing the product is for: across 36 corpus entries it fired 4
   times, and only 3 of 13 adversarial cases reached the agent written to test them.</p>
-  <p class="lede">Routing on stated conclusions costs <b>+53% per entry</b> — $162.88 to
-  $249.62 at 10,000 users. Worth it.</p>
-  <p class="cap">12 live runs · 358 calls · 732,108 input / 304,927 output tokens. Cache
-  writes are not modelled, so figures are slightly low on a cold cache.</p>
+  <p class="lede">Routing on <b>stated conclusions</b> instead costs <b>+53% per
+  entry</b> — $162.88 to $249.62 at 10,000 users. Worth it.</p>
+  <p class="cap">12 live runs · 358 calls · 732,108 input / 304,927 output tokens, at
+  $0.10/$0.50 per 1M. Per-account and global daily token caps are enforced in the
+  orchestrator, in code. Cache writes are not modelled, so figures are slightly low on a
+  cold cache.</p>
+  <div class="pg">7</div>
+</section>
+
+<!-- ─────────────────────────── 8. SAFETY ─────────────────────────── -->
+<section class="slide" id="s8">
+  <div class="tag">Safety</div>
+  <h2>Record everything. Withhold the analysis.</h2>
+  <div class="cols wide-right">
+    <div>
+      <p class="eyebrow" style="margin-top:14px">What the layer found, unprompted</p>
+      <p class="lede sm">An ordinary demo entry. Nobody labelled anything, and no criterion
+      mentions safety. Classified <b>physical / potential / note&nbsp;only</b>:</p>
+      <p class="quote">He repeatedly pressed after you said you needed to leave and stood
+      between you and your bag, using humor to make objecting feel difficult… That is worth
+      taking seriously; <b>you do not have to decide what to call it.</b></p>
+      <p class="cap">No diagnosis, no legal conclusion, nobody labelled. Over-response is
+      graded as a failure here exactly as minimisation is.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-top:14px">The defence, and the test holding it</p>
+      <p class="lede sm">A halt is a <b>presentation</b> decision, not a recording one.
+      Being grabbed and prevented from leaving is a behaviour; refusing to write it down
+      leaves the record emptiest at the point it matters most.</p>
+      <table>
+        <tr><td>Narrative, themes, Evidence</td><td class="yes">run and persist</td></tr>
+        <tr><td>Reasoning</td><td class="no">skipped — a deposition</td></tr>
+        <tr><td>Reflection</td><td class="no">skipped — not reflective here</td></tr>
+        <tr><td>The screen</td><td>acknowledgement, safety check, resources — nothing else</td></tr>
+      </table>
+      <p class="cap"><b>The code shipped the other way once:</b> the orchestrator returned
+      before the save, so the entry a user was most serious about was the one KRYteria
+      recorded least. A test now asserts the halt is set <i>before</i> the save, and that
+      it is read from code — never off the model's own suggested action, which comes from
+      the same call that classified the concern.</p>
+    </div>
+  </div>
+  <div class="pg">8</div>
+</section>
+
+<!-- ─────────────────────────── 9. IMPACT ─────────────────────────── -->
+<section class="slide" id="s9">
+  <div class="tag">Impact</div>
+  <h2>Measured against how this is done today</h2>
+  <p class="lede sm" style="max-width:none">Not "users felt better". The claim is that <b>KRYteria makes a
+  person's own inconsistency visible, and nothing they use today does</b> — measured on the
+  same entries, the same model, and prose only, so the structure we emit earns no points.</p>
+  <div class="cols" style="margin-top:8px">
+    <div>
+      <p class="eyebrow" style="margin-bottom:0">A general-purpose chatbot, fair prompt</p>
+      <p class="quote them" style="margin-top:10px">That sounds exhausting — especially if
+      you've repeatedly been left handling things you thought you could count on him for.
+      What happened most recently that brought this up?</p>
+      <p class="cap" style="margin-top:6px">Warm, reasonable, blind to all three of her
+      prior entries.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:0">KRYteria, same entry</p>
+      <p class="quote" style="margin-top:10px">How do you reconcile that conclusion with
+      the earlier notes that he was on time for dinner, rescheduled a day ahead, and texted
+      when he was leaving on the late occasion?</p>
+      <p class="cap" style="margin-top:6px">Counter-evidence from her own record, by entry
+      id, unprompted.</p>
+    </div>
+  </div>
+  <table style="margin-top:4px">
+    <tr><th>Produced at all</th><th class="n">KRYteria</th><th class="n">Chatbot</th>
+        <th style="text-transform:none; letter-spacing:0; font-size:13px; color:var(--gray)">Prose score across six dimensions</th></tr>
+    <tr><td>Evidence mappings · contradicting or complicating</td><td class="n">2 · 2</td><td class="n">0 · 0</td>
+        <td rowspan="2" style="font-size:13.5px"><b>5–3</b> on the contradiction scenario,
+        <b>4–4</b> on the flattering one. The chatbot failed the two dimensions it
+        structurally cannot do: naming the standard at stake, and surfacing the record.</td></tr>
+    <tr><td>Questions raised · traceable to entry ids</td><td class="n">2 · yes</td><td class="n">0 · no</td></tr>
+  </table>
+  <p class="cap" style="margin-top:6px; max-width:none"><b>Who would carry it:</b> a
+  university <b>student-support or wellbeing programme</b>, as one optional
+  self-reflection tool. <b>Not therapy, not a crisis service, not a counselor</b> — and not
+  a replacement for one; a tool that complements, as users learn their own patterns.
+  10,000 students &asymp; <b>$250/month</b>. <span class="no">TODO before submission: one real user,
+  15 minutes, with a quote or a before/after.</span></p>
   <div class="pg">9</div>
 </section>
 
+<!-- ─────────────────────────── 10. LIMITS ─────────────────────────── -->
 <section class="slide dark" id="s10">
-  <div class="tag">Safety</div>
-  <h2>Record everything. Withhold the analysis.</h2>
-  <p class="lede">A safety halt is a <b>presentation</b> decision, not a recording one.
-  Being grabbed and prevented from leaving is a behaviour; refusing to write it down makes
-  nobody safer and leaves the record emptiest at the point it matters most.</p>
-  <table>
-    <tr><td>Narrative, themes, Evidence</td><td class="yes">run and persist</td></tr>
-    <tr><td>Reasoning</td><td class="no">skipped — “how often does he grab you?” is a deposition</td></tr>
-    <tr><td>Reflection</td><td class="no">skipped — “what will you do?” is not reflective here</td></tr>
-    <tr><td>The screen</td><td>acknowledgement, safety check, resources — nothing else</td></tr>
-  </table>
-  <p class="cap">The withholding is <b>stated, never silent</b>. And the halt is checked in
-  code, not read off the model's own suggested action — that field comes from the same call
-  that classified the concern, so letting it also decide whether to stop means one
-  misjudgement loses both.</p>
-  <div class="pg">10</div>
-</section>
-
-<section class="slide" id="s11">
-  <div class="tag">Safety</div>
-  <h2>The layer finding it unprompted</h2>
-  <p class="lede">From a demo entry, with nobody labelling anything. The agent classified
-  it <b>physical / potential / note_only</b> and wrote:</p>
-  <p class="quote">He repeatedly pressed after you said you needed to leave and stood
-  between you and your bag, using humor to make objecting feel difficult. His later text
-  also shifted responsibility onto you… That is worth taking seriously; <b>you do not have
-  to decide what to call it.</b></p>
-  <p class="cap">No diagnosis, no legal conclusion, nobody labelled. Over-response is
-  graded as a failure here exactly as minimisation is.</p>
-  <div class="pg">11</div>
-</section>
-
-<section class="slide" id="s12">
-  <div class="tag">Privacy &amp; security</div>
-  <h2>What the code enforces rather than asks for</h2>
+  <div class="tag">Limits &amp; next steps</div>
+  <h2>Stated, not discovered</h2>
   <div class="cols">
     <div>
       <ul>
-        <li><b>A citation must resolve</b> to a verified row, or the write is refused — fabrication impossible, not discouraged</li>
-        <li><b>No agent moves an assessment.</b> Agents propose; one route moves a status and a person operates it</li>
-        <li><b>Queries are scoped by account</b>, so another user's row is simply not found — <b>404, never 403</b></li>
+        <li><b>Governments cannot keep their own hotlines accurate.</b> Three services were
+        excluded with recorded reasons — one contradicted itself about its own number. If
+        accuracy is the value proposition, that is our decay rate too.</li>
+        <li><b>One research entry stays pending.</b> Rounding the number up would be the
+        most corrosive thing anyone could do to that layer.</li>
+        <li><b>No migrations, and a free instance is not durable storage.</b> Said in the
+        README rather than implied otherwise.</li>
+      </ul>
+      <p class="eyebrow" style="margin-top:20px">Next</p>
+      <ul style="margin-top:6px">
+        <li>The user test, then a second on a non-romantic domain.</li>
+        <li>Migrations, before anybody's journal depends on it.</li>
+        <li>Re-verify resources on a schedule, not before a deadline.</li>
       </ul>
     </div>
-    <div>
-      <ul>
-        <li><b>Location is never inferred.</b> A test spoofs headers, then walks the AST of every route to prove nothing reads the request but cookies</li>
-        <li><b>Anonymous accounts</b>, Argon2id, recovery codes instead of email — no identity on file, no reset landing in a shared inbox</li>
-        <li><b>Sessions expire server-side</b>; brute force throttled per handle, not per IP, because an IP is a location</li>
-      </ul>
+    <div style="display:flex; flex-direction:column; min-height:0">
+      <img class="shot" alt="The KRYteria sign-in screen, listing nine demo characters each openable in one click." src="{{FRONT_DOOR}}" style="max-height:188px; object-position:center bottom">
+      <p class="cap" style="margin-top:9px">Nothing to type: click a character and you are
+      in. A free instance sleeps after fifteen minutes, so the first load takes about a
+      minute — the screen says so rather than looking broken.</p>
+      <p class="quote" style="margin-top:18px">KRYteria does not validate conclusions. It
+      validates your right to examine them.</p>
+      <p class="cap" style="margin-top:16px">kryteria.onrender.com<br>github.com/celittle92/KRYteria<br>
+      1,337 tests · 358 live model calls · $0.202</p>
     </div>
   </div>
-  <div class="pg">12</div>
-</section>
-
-<section class="slide dark" id="s13">
-  <div class="tag">The demo</div>
-  <h2>Nine people, one evening, two records</h2>
-  <p class="lede">Catherine and Adrian describe the same Thursday in separate private
-  accounts. Neither can see the other, and KRYteria never tells either that somebody else
-  wrote about that night.</p>
-  <div class="cols" style="margin-top:22px">
-    <div>
-      <p class="eyebrow">Catherine's record</p>
-      <p class="lede" style="font-size:16px">One communication criterion pulled three ways
-      at once — supporting, contradicting <i>and</i> complicating.</p>
-    </div>
-    <div>
-      <p class="eyebrow">Adrian's record</p>
-      <p class="lede" style="font-size:16px">No contradicting evidence at all. His concerns
-      land as complicating — on <i>his</i> criteria, not hers.</p>
-    </div>
-  </div>
-  <p class="cap">Nine demo accounts, all invented. The analysis is not: it came from a live
-  run and was frozen into the repository, so what is on screen is what the agents produced.</p>
-  <div class="pg">13</div>
-</section>
-
-<section class="slide" id="s14">
-  <div class="tag">The demo</div>
-  <h2>Nothing to type</h2>
-  <img alt="The KRYteria sign-in screen listing nine demo characters, each openable in one click." src="{{FRONT_DOOR}}" style="max-height:52%; object-fit:cover; object-position:top">
-  <p class="cap">kryteria.onrender.com — click a character and you are in. A free instance
-  sleeps after fifteen minutes, so the first load takes about a minute; the screen says so
-  rather than looking broken.</p>
-  <div class="pg">14</div>
-</section>
-
-<section class="slide" id="s15">
-  <div class="tag">What this cost to learn</div>
-  <h2>The instrument was wrong more often than the thing measured</h2>
-  <p class="lede">Of five failures in the live reasoning run, <b>four were the harness</b>:
-  a case that could not pass by construction, two graded as asserting what they were
-  attributing, and a detector whose answer depended on sentence length.</p>
-  <p class="lede">A fifth could not be adjudicated at all, because the artefact stored
-  observations as a <i>count</i>. Evidence that cost money has to be complete.</p>
-  <p class="quote">Check the deterministic component before blaming the expensive one.</p>
-  <p class="cap">The one genuine product failure found this way: routing on a keyword list
-  meant the agent whose job is interrogating generalising claims never saw the most
-  generalising claim in the corpus.</p>
-  <div class="pg">15</div>
-</section>
-
-<section class="slide dark" id="s16">
-  <div class="tag">Limits</div>
-  <h2>Stated, not discovered</h2>
-  <ul>
-    <li><b>Governments cannot keep their own hotlines accurate.</b> Three services were excluded with recorded reasons — one contradicted itself about its own number. If accuracy is the value proposition, that is our decay rate too.</li>
-    <li><b>Cache writes are not modelled</b>, so every cost figure is slightly low on a cold cache.</li>
-    <li><b>One research entry stays pending.</b> Promoting it to round the number up would be the most corrosive thing anyone could do to that layer.</li>
-    <li><b>No migrations</b>, and a free instance is not durable storage. Both said in the README rather than implied otherwise.</li>
-  </ul>
-  <div class="pg">16</div>
-</section>
-
-<section class="slide" id="s17">
-  <h1 style="font-size:clamp(28px,3.4vw,46px)">KRYteria does not validate conclusions.<br>
-  It validates your right to examine them.</h1>
-  <p class="lede" style="margin-top:34px"><b>Your standards are yours. Your decisions are
-  yours. KRYteria helps you see the evidence.</b></p>
-  <p class="cap" style="margin-top:36px">kryteria.onrender.com · github.com/celittle92/KRYteria<br>
-  1,337 tests · 358 live model calls · $0.202</p>
-  <div class="pg">17</div>
+  <div class="pg">10</div>
 </section>
 
 </div>

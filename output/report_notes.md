@@ -12,7 +12,7 @@ That makes evidence collection the work, and the writing the easy part.
 figure names the file it came from. If something is an intention rather than a fact, it
 lives under *Still missing*.
 
-Last updated 2026-11-11.
+Last updated 2026-11-16.
 
 ---
 
@@ -21,16 +21,16 @@ Last updated 2026-11-11.
 | Rubric row | Pts | Evidence it demands | Have it? |
 |---|---|---|---|
 | The idea — novelty + real value | 21 | — (judged) | **Strong** |
-| The app works | 15 | real tools, real data, no crashes | **Strong** |
+| The app works | 15 | real tools, real data, no crashes | **Strong** — hosted and current at kryteria.onrender.com |
 | Staff can run it | 5 | fresh clone, ≤10 min, all-or-nothing | **Untested** |
-| Look + feel | 10 | — (judged) | Partial |
-| Motivation + what's new | 8 | named existing products compared against | **Missing** |
-| Agent design | 10 | one real run traced step by step + screenshots | Have the run, **need screenshots** |
-| Tokenomics | 8 | real token counts from real runs | **Have it** |
-| Safety | 8 | a defense shown *stopping* something | **Have the harness, need a live run** |
-| Impact + metrics | 5 | a real user tried it | **Missing** |
-| Report design | 2 | — | not started |
-| Slides content + design | 8 | — | not started |
+| Look + feel | 10 | — (judged) | **Have it** — six screenshots, both themes, in `output/screenshots/` |
+| Motivation + what's new | 8 | named existing products compared against | **Have it** — report §2, four categories with named products |
+| Agent design | 10 | one real run traced step by step + screenshots | **Have it** — report §4 (Jane, 12 Nov), `tools/trace_one.py`, SVG diagram |
+| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 12 runs / 358 calls / $0.20199 |
+| Safety | 8 | a defense shown *stopping* something | **Have it** — `output/safety_results.*` plus the demo entry in report §6 |
+| Impact + metrics | 5 | a real user tried it | **Still missing the user.** The A/B against a chatbot on the same model is done |
+| Report design | 2 | — | **Have it** — `report.html`, self-contained, 6 images inlined |
+| Slides content + design | 8 | — | **Have it** — `slides.html`, 10 slides, diagram + 3 screenshots inlined |
 
 ---
 
@@ -354,32 +354,43 @@ disposable.*
 | Agents / runtime prompt files | 7 / 8 |
 | API routes | 54 |
 | Backend Python | 8,685 lines |
-| Tests | 3,391 lines, **1,110 checks**, 5 suites, all free |
+| Tests | **1,337 checks** across 138 test functions, 5 suites, all free (re-counted 2026-11-16) |
 | Front end | 3,107 lines, 8 screens, React + Vite + TS + Tailwind |
 | Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
 | Research | 19 findings, 18 verified |
-| Live model spend to date | **$0.0270** |
+| Live model spend to date | **$0.20199** (12 runs, 358 calls — `output/token_report.md`) |
 
 ---
 
-## Slides — 10 max, reveal.js from CDN
+## Slides — built 2026-11-16, ten of them
 
-Suggested order from the course page, with what each slide already has:
+`slides_body.html` → `slides.html` through the same `build_report.py` that builds the
+report, so both files inline their images the same way and cannot drift apart.
 
-1. **Title** — KRYteria · Knowledge. Relationships. You. + repo and hosted links.
-2. **Problem** — people aren't short of information; they fail to act consistently with
-   information they already hold.
-3. **What's new** — the two-dimensional model and profile independence (the Jimmy G
-   Principle); privacy as architecture.
-4. **Agent diagram** — needs redrawing.
-5. **Demo screenshots** — Brain Dump → evidence → trace view. *Both themes.*
-6. **Cost** — the table in §4. Include the +53% trade.
-7. **Safety** — a defense stopping something; needs the live safety run.
-8. **Impact** — needs the real user.
-9. **The honest slide** — "we measured our central claim and it failed, here's what we
-   found." Most decks don't have one; this one has it for free.
-10. **Next steps** — the Limits list.
+The first draft ran to seventeen slides and was restructured on Christine's reading of
+it: *"the presentation needs to make the product understandable before it makes the
+grader admire the debugging. The deck's biggest content omission is impact."* What went
+out was the privacy/security implementation detail, the instrument-failure slide and the
+resource-directory investigation — all three moved into the report rather than deleted,
+and the security material had to be **written** for §6, because it had only ever existed
+in `output/harness.md`.
+
+| # | Slide | What carries it |
+|---|---|---|
+| 1 | KRYteria | the brand line and the two links |
+| 2 | The problem | *who* — somebody deciding whether to keep going |
+| 3 | A decision mirror | three capabilities + the My KRYteria screenshot + the four nevers |
+| 4 | What is different | the four-category table **and** the Jimmy G profile table |
+| 5 | A controlled workflow | the architecture **diagram**, not the agent-count table |
+| 6 | One real run | the five-agent trace, the unprompted question, the Patterns screenshot |
+| 7 | Tokenomics | four figures + the +53% routing trade |
+| 8 | Safety | one concrete event **and** the two tests holding the defence |
+| 9 | Impact | chatbot vs KRYteria on the same entry, the capability table, 5–3 / 4–4 |
+| 10 | Limits and next steps | the limits list, what's next, the front-door screenshot |
+
+Every slide was measured in a browser at 1120×630 and none overflows its frame.
+Slide 9 still carries a visible TODO for the real user test.
 
 Both HTML files must open by **double-clicking**, on any computer, with every screenshot
 **embedded** (base64, not linked).
@@ -440,21 +451,87 @@ missing is mostly packaging.
 
 ---
 
+## Printed page count — measured 2026-11-17
+
+The assignment asks for **10–15 pages when printed**. Measured in a browser at the
+printed column width (letter, 0.5in margins, so a 624px column) against 960px of usable
+page height:
+
+| | Pages |
+|---|--:|
+| Before any print stylesheet | **31.0** |
+| With the tightened `@media print` block (10.5pt, capped figure heights) | **21.0** |
+| Target | 10–15 |
+
+Where the 21 pages are:
+
+| Section | Pages |
+|---|--:|
+| Title + summary | 0.9 |
+| 2. Motivation | 2.5 |
+| 3. What is new here | 3.7 |
+| 4. The agents | **5.4** |
+| 5. Tokenomics | 2.0 |
+| 6. Safety | 2.7 |
+| 7. Impact | 1.6 |
+| 8. Limits and next steps | 2.1 |
+
+### After the prose pass, and after fixing the typography
+
+| | Pages | Note |
+|---|--:|---|
+| Before any print stylesheet | 31.0 | |
+| Tightened `@media print` block | 21.0 | |
+| After a full prose pass | 19.7 | net of ~2.5 pages the feedback *added* |
+| **After one text size for all prose** | **17.7** | Christine's catch |
+
+**Christine's observation was worth two pages and I had not seen it.** The document was
+running four prose sizes that nobody had chosen: body 16px, a lede 17.9px, a caption
+13.4px, a table 14.7px. They came from editing the stylesheet over three weeks, not from a
+decision. Everything that is prose — paragraphs, ledes, list items, blockquotes, captions,
+meta notes — is now **one size**, set once on `html` and inherited; distinction comes from
+colour, weight and position. Tables keep a smaller size deliberately, because they are
+scanned rather than read. The print block changes a single number.
+
+**This also corrected an earlier estimate of mine.** The four optional passages were
+measured at the old size and reported as ~2.9 pages. At the new size they are **1.68**:
+
+| Candidate | Pages |
+|---|--:|
+| §8 resource-directory decay table | 0.54 |
+| §4 research layer | 0.46 |
+| §6 the three live-run findings | 0.45 |
+| §8 "the instrument was wrong" | 0.23 |
+
+So cutting **all four** lands at **16.0**, not 15, and the typography fix alone was worth
+more than all of them together. Reaching 15 would mean dropping screenshots the agent-design
+row is scored on. **Recommendation: cut nothing, or at most the two smallest (0.68 pp →
+17.0).** The page count sits under *Report design*, worth 2 points; the content sits under
+rows worth roughly 47, five capped at half credit without specific named evidence.
+
+---
+
 ## Still missing — the actual to-do list
 
-1. ~~`report.html`~~ **drafted 2026-11-12** — ~14 printed pages, self-contained,
-   4 real screenshots + an SVG diagram inlined. Three TODO blocks remain, styled
-   to be impossible to miss: hosted URL, the real-user quote, and confirming the
-   competitor one-liners. Edit `report_body.html`, then `python build_report.py`.
-   **`slides.html` — 8 points, not started.**
-2. **A real user** — 5 points, plus it is a Tier 3 requirement.
-3. **Named competitor comparison** — 4 points, pure desk work.
+1. ~~`report.html`~~ **drafted 2026-11-12, revised through 2026-11-16.**
+   Self-contained, 6 screenshots + an SVG diagram inlined. Edit `report_body.html`,
+   then `.venv/bin/python build_report.py` — which builds the deck from
+   `slides_body.html` in the same pass.
+   ~~`slides.html`~~ **built 2026-11-16**, ten slides; see the Slides section above.
+2. **A real user** — 5 points, plus it is a Tier 3 requirement. **This is now the only
+   FAIL in `check_submission.py`**, and the only visible TODO left in either HTML file.
+3. ~~Named competitor comparison~~ **done** — report §2, Christine's own four-category
+   table, carried onto slide 4.
 4. ~~Live safety run~~ **done 2026-11-11** — see §5. Three findings to act on.
-5. **Screenshots**: trace view, both themes, a safety response, the Progress screen.
+5. ~~Screenshots~~ **done 2026-11-16** — six in `output/screenshots/`, both themes,
+   produced by `tools/screenshots.sh` (must run in a real terminal; the sandbox blocks
+   Chrome's ProcessSingleton socket).
 6. **Fresh-clone dry run** — 5 points, all-or-nothing, never attempted.
-7. **Hosting decision** + `output/hosted_url.txt`.
-8. `output/harness.md`, `output/usage_log.json`, `output/token_report.md` — named in
-   `submission_spec.json`, none written.
+7. ~~Hosting decision~~ **done** — live at kryteria.onrender.com, auto-deploy on push,
+   recorded in `output/hosted_url.txt`.
+8. ~~`output/harness.md`, `output/usage_log.json`, `output/token_report.md`~~
+   **all three written**; the usage totals are generated from the rows rather than
+   hand-added, after the first hand-totalled version came out $0.0064 too high.
 9. **Verify `data/resources_us.json`** against each organisation's own site. Unchecked
    since 2026-11-07, and it is the one dataset where being wrong matters most.
    `data/resources_international.json` is **done** — nine entries across five countries
