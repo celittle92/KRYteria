@@ -49,7 +49,7 @@ supersedes the old one. This is what lets the product notice that a standard qui
 easier — destroy the history and that insight is gone.
 
 ```bash
-python3 tests/test_offline.py        # 512 checks, needs no packages at all
+python3 tests/test_offline.py        # 515 checks, needs no packages at all
 ```
 
 ---
@@ -210,6 +210,22 @@ passphrase is also refused during cooldown, a success clears the counter, and it
 disables an account, because lockout against a known handle would be a denial-of-service
 primitive.
 
+**And a fourth, found later by audit: sign-up was not throttled.** This module's own
+docstring had said all along that it covered sign-up, sign-in and recovery; the sign-up
+route never called it. That left the one endpoint running Argon2id unconditionally as the
+cheapest way to make the app do expensive work, and made *"that handle is taken"* an
+unmetered way to test whether a handle exists. A docstring is not an enforcement
+mechanism, which is the whole argument of §3.
+
+**A fifth, in the privacy layer rather than the security one.**
+`record_checklist_observation` took `account_id` and only *stamped* it on the row — it
+never checked it — and `list_checklist`'s count query grouped by item and person with no
+account at all. A write from one session could therefore be counted onto another
+account's screen, which is the one thing this product says is structurally impossible.
+Reproduced with two accounts, fixed in both places, and pinned by
+`test_another_account_cannot_plant_or_see_a_checklist_observation`. **Stamping an id is
+not the same as asserting it**, and the two read almost identically at a glance.
+
 ```bash
 .venv/bin/python tests/test_api.py        # 273 checks, including all of the above
 ```
@@ -300,7 +316,7 @@ from a new browser is the one most likely to lose the race with the boot.
 ## 10. Verifying all of it
 
 ```bash
-python3      tests/test_offline.py      # 512 — store layer, needs no packages
+python3      tests/test_offline.py      # 515 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 125 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
 .venv/bin/python tests/test_api.py          # 273 — HTTP, isolation, security, retention
@@ -312,8 +328,16 @@ start without `--yes-spend-credits`, after printing the call count.**
 
 ### Known limits, stated rather than discovered
 
-- **Cache writes are not modelled** — the provider does not report them separately, so
-  every cost figure is slightly low on a cold cache and correct once warm.
+- **Cache accounting is incomplete in both directions.** Cache *writes* are not modelled
+  because the provider does not report them separately, so figures are slightly low on a
+  cold cache. And no artefact preserved a cached-*input* count, because `trace_one.py`
+  and the usage log printed input, output, latency and cost but not that column — the
+  §4 traced run's recorded cost implies about 5,140 cached tokens that nothing wrote
+  down. The column is recorded as unknown, never as zero, and `trace_one.py` now prints
+  it.
+- **Sessions are bounded, not revocable.** They are signed cookies, so signing out
+  deletes the browser's copy and a stolen one stays valid until its fourteen days are up.
+  Revoking on demand needs a server-side session table.
 - **One research entry stays pending.** Its containing volume is confirmed; nothing found
   places the chapter in it. Promoting it to round the number up would be the most
   corrosive thing anyone could do to that layer.

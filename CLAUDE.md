@@ -41,7 +41,8 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   says about itself before diagnosing what it produced.**
 - **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
   / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total
-  live spend across the project to date: **$0.0305**.
+  **measured** live spend to date: **$0.18556** across 11 of 12 runs — two are not fully
+  measured and are excluded rather than estimated (`output/token_report.md`).
 - **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
   call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
   checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
@@ -93,7 +94,8 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
     human can do in two minutes what an automated fetch cannot do at all.
   - Added `Deaf Hotline (video phone)` 855-812-1001, surfaced during that check — the US
     set had no accessible route for Deaf callers.
-- **`SCHEMA_VERSION` is `2026-11-12.1`** (added `accounts.region`). Delete
+- **`SCHEMA_VERSION` is `2026-11-13.1`.** (It was `2026-11-12.1` when `accounts.region`
+  landed; the character demo moved it again.) Delete
   `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
   verifications now, so they come back.
 - **The Safety agent deliberately has no tools and no research lookup.** It runs
@@ -150,7 +152,8 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   - Themes are deleted by `discard` and survive `analysis_only`, like observations.
   - **Seeded in the demo and rendered on My Progress** ("What you keep coming back to").
     Counts and dates only — never a score, and the copy says so.
-- **`SCHEMA_VERSION` is now `2026-11-11.1`** (added `entry_themes`). An existing
+- **`SCHEMA_VERSION` was `2026-11-11.1`** when `entry_themes` landed; it is
+  `2026-11-13.1` now. An existing
   `data/kryteria.db` will be refused until it is deleted and re-seeded.
 
 - **The eval harness runs the two packs that nobody could run before 2026-11-11.**
@@ -245,7 +248,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,158 checks in total as of 2026-11-12. Run all five after any change to `backend/`.
+  1,340 checks across 139 test functions as of 2026-11-17, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
@@ -274,8 +277,9 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   back-compat — calling it emits a deprecation warning on every model call.
   `costs.usage_from_result` tests for the usage object's attributes rather than for
   callability, so the logs stay clean. Do not "simplify" that check back to `callable()`.
-- **No live model call has ever been made from this project.** Verify edits with the three
-  suites and with `TestModel`; a paid run needs Christine's go-ahead and an estimate first.
+- **Paid runs happen now, and still need her go-ahead and an estimate first.** Twelve to
+  date. Verify ordinary edits with the five suites and `TestModel` — never by exercising
+  the live agents.
 - **`data/prices.json` is filled in** (2026-11-11), from MGT 409 Lecture 11's "Cached
   Token Cost" table and corroborated against this workspace's HW6 data pack — two
   sources, same numbers. `gpt-6-luna`: **$0.10 input / $0.01 cached / $0.50 output** per
@@ -348,15 +352,20 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
 - **Do not claim the provider retains nothing.** Erasure governs this database only.
   Portkey's and the upstream provider's retention and training policies are unconfirmed —
   `docs/privacy.md` §5 lists the open questions.
-- **`data/resources_us.json` is unverified.** The hotline numbers and URLs were entered
-  from the charter text on 2026-11-07 and have not been checked against each
-  organisation's own site. Do that before the demo and before submission.
+- **`data/resources_us.json` is verified**, all five rows, each carrying its own
+  `verified_at` shown on screen. RAINN and 911 refuse automated fetching and were
+  confirmed by Christine opening them on 2026-11-16. Re-verify before each release and
+  update the date when you do — a stale date is honest, a fresh date on an unchecked row
+  is not.
 - **No `.env` in this folder, and it must stay that way.** `app_config.py` looks here
   first, then each folder above (the workspace root holds `PORTKEY_API_KEY`), then the
   process environment — which is how a host supplies it. `.env.example` lists names only.
 - The model is pinned to `gpt-6-luna` in `app_config.REQUIRED_OPENAI_MODEL`, the single
   place the name appears. `OPENAI_MODEL` is read but cannot win.
-- **Nothing is committed and there is no GitHub repo yet.** Git writes and `gh` fail in
-  sandboxed Bash; use the Terminal panel (`gh` is at `../.tools/gh/bin/gh`).
+- **The repo is live and PRIVATE** at <https://github.com/celittle92/KRYteria>, and the
+  app is deployed at <https://kryteria.onrender.com> with auto-deploy on push. Git writes
+  and `gh` fail in sandboxed Bash; use the Terminal panel (`gh` is at
+  `../.tools/gh/bin/gh`). **`zlisto` is not a collaborator yet** — that is a release-day
+  step, on Christine's instruction.
 - Pre-submission check, from the workspace root (offline; FAILs are the to-do list):
   `python3 check_submission.py KRYteria`

@@ -354,7 +354,7 @@ disposable.*
 | Agents / runtime prompt files | 7 / 8 |
 | API routes | 54 |
 | Backend Python | 8,685 lines |
-| Tests | **1,337 checks** across 138 test functions, 5 suites, all free (re-counted 2026-11-16) |
+| Tests | **1,340 checks** across 139 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
 | Front end | 3,107 lines, 8 screens, React + Vite + TS + Tailwind |
 | Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
@@ -642,6 +642,62 @@ against a criterion absent from its profile, no cross-account anything. No agent
 Recovery codes handle the no-row case through the dummy-hash path. The frontend/backend
 contract resolves route by route. Eval figures (31 cases, 128 checks, 95 automatic + 33
 manual) and research figures (19/18/17) are consistent everywhere.
+
+---
+
+## Cross-document consistency pass — 2026-11-17
+
+Christine: *"I do not want to send anything out of date or inaccurate."* So the numbers
+are now checked by a script rather than by care.
+
+**`tools/check_consistency.py`** derives every repeated quantity from the source —
+`schema.sql`, `backend/prompts/`, `backend/agents/`, `data/characters/*.json`,
+`data/resources_*.json`, the research pack, `usage_log.json`, the eval artefacts — and
+compares it against what `README.md`, `report_body.html`, `slides_body.html`,
+`harness.md`, `token_report.md` and `docs/` claim. `--tests` additionally runs all five
+suites for the real check count. Exit code 1 on any disagreement, so it can gate a commit.
+
+```bash
+python3 tools/check_consistency.py --tests
+```
+
+**What it caught on the first run, after a whole day of hand-checking:**
+
+| | Was | Source says |
+|---|---|---|
+| test functions | 138 in README, report and notes | **139** — my own regression test added one |
+| `test_offline` count in harness.md | 512, twice | **515** |
+| report_notes total | 1,337 | **1,340** |
+| `CLAUDE.md` | 1,158 checks, two stale `SCHEMA_VERSION`s, "no live model call has ever been made", "nothing is committed and there is no GitHub repo yet", "`resources_us.json` is unverified", $0.0305 spend | all current |
+
+**Two lessons worth keeping.** First, the checker's initial regexes produced seven false
+positives (`\d+ of (\d+)` happily matches "11 of 12 runs" and "33 of 128 checks"), and a
+checker that cries wolf is worse than none — it is now anchored on the words around each
+number, and it *reports which claims its patterns matched nowhere*, because a pattern that
+finds nothing is false comfort. Second, it cannot read prose: *"the front end is not
+started"* was wrong for a week and contains no digits.
+
+**And it bit me while being written.** Passing `env={...}` to `subprocess.run` replaced
+the environment instead of extending it, which dropped `TMPDIR`; Python's `tempfile` then
+fell through to the **current directory** and left **125 `tmp*/` directories in the repo
+root**. Untracked, nothing reached the remote — but this project commits with `git add
+-A`, so it was one careless command from shipping. Fixed by inheriting the environment,
+and the clean-up is verified by re-running.
+
+### Prose, read by hand because no script can
+
+- **README repository layout** omitted `frontend/` entirely, along with `backend/api/`,
+  `backend/evals/`, `throttle.py`, `security_headers.py`, `tools/` and
+  `data/characters/`, and listed a `tests/evals/` path for packs that live elsewhere. A
+  grader reading it got a map with the whole interface missing. Rewritten, and a script
+  now confirms **all 47 listed paths exist**.
+- **README routing description** still said four calls fire "when there is a
+  generalisation to interrogate" — that was the keyword gate, removed on 2026-11-11.
+  Routing keys on a *stated conclusion*, and four agents is the common case.
+- **harness.md §6** gained the two findings that came after it was written (the
+  unthrottled sign-up, the cross-account checklist write) and its *Known limits* now
+  carry the cached-input gap and the bounded-not-revocable sessions.
+- Every command `harness.md` claims was **run again** and still works.
 
 ---
 

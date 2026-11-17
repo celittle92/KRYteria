@@ -44,7 +44,7 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,340 checks across 138 test functions**, five suites, none of which call a model.
+**1,340 checks across 139 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.186** over 314 calls, across 11 of 12 runs — two are not fully measured and are excluded rather than estimated.
 
 ---
@@ -478,24 +478,52 @@ this project does not claim otherwise.
 
 ```
 backend/
+  main.py             one process serves the API and the built front end
   schema.sql          34 tables; the comments explain the non-obvious constraints
   store.py            every agent tool reaches the database through here
   models.py           Pydantic output contracts for every agent
-  security.py         Argon2id
+  security.py         Argon2id passphrases and recovery codes
+  security_headers.py CSP, frame-ancestors 'none', HSTS only over https
+  throttle.py         brute-force protection, keyed per handle rather than per IP
   provider.py         model-provider abstraction: live / demo / test
   demo_provider.py    deterministic, keyless; a product mode, not a test double
   costs.py            measured token accounting
-  agents/             seven modules, one per agent
+  sources.py          the allowlist a research citation must come from
+  seed_demo.py        the single `demo` account
+  seed_characters.py  the nine demo characters, from data/characters/
+  agents/             seven modules, one per agent, plus the orchestrator
+  api/                the HTTP routes, each scoped by account
+  evals/              the harness that runs the adversarial packs
   prompts/            eight runtime prompts (seven agents + the A/B baseline)
+frontend/
+  src/                React + Vite + TypeScript; eight screens
+  dist/               built, and committed on purpose — a grader needs no Node
 data/
+  characters/         nine demo accounts, analysis frozen from live runs
   resources_us.json   curated support directory, each row dated and verified
+  resources_international.json   ten more across five countries, plus EU-wide 112
+  research/           the curated knowledge base; a citation must resolve into it
   prices.json         per-million-token prices for gpt-6-luna, from the course figures
-docs/architecture.md
+  themes.json         the closed theme vocabulary
+docs/
+  privacy.md          the privacy architecture, and what it does NOT promise
+  architecture.md     the frozen Milestone-1 plan, kept unedited
+  safety_resources_decision.md   why the directory is small and dated
 tests/
-  test_offline.py     store layer, no dependencies needed
+  test_offline.py     store layer, runs on a bare Python with nothing installed
   test_contracts.py   agent output contracts
   test_wiring.py      hashing, provider, agent construction, budget caps
-  evals/              adversarial reasoning and safety scenarios
+  test_api.py         the HTTP layer, including isolation between accounts
+  test_evals.py       the eval harness — mostly that it refuses rather than skips
+  evals/              the adversarial reasoning and safety packs
+tools/
+  check_consistency.py   every number in the docs, checked against the source
+  fresh_clone_check.sh   the dry run: clone, .env one level up, follow the README
+  trace_one.py           run one entry live and print the per-agent trace
+  screenshots.sh         regenerate the report's screenshots
+output/                report.html and slides.html evidence: usage, evals, screenshots
+report.html            the submitted report, self-contained
+slides.html            the submitted deck, self-contained
 ```
 
 No prompt is inlined as a string literal in Python. Every agent names its prompt file and
@@ -510,8 +538,9 @@ prompt asking a model to be frugal:
 
 - Per-account and global **daily token caps**, checked before a run starts.
 - **Hard ceiling of five model calls** per request. No loops.
-- The orchestrator routes to the **minimum**: three calls for an ordinary entry, four when
-  there is a generalisation to interrogate, five only when reflection is wanted.
+- The orchestrator routes to the **minimum**: three calls for an entry that draws no
+  conclusion, four when the writer stated one and Reasoning has something to interrogate
+  (the common case, $0.00208), five only when reflection is wanted.
 - Retrieval is always a tool call, never a model call.
 
 `data/prices.json` carries the course's published figures for `gpt-6-luna` — $0.10
