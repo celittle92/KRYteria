@@ -31,12 +31,23 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
     The plaintext exists in this response and nowhere else. It is not stored, cannot be
     re-sent, and is not recoverable from the database.
     """
+    # Throttled per handle, like sign-in and recovery. `throttle.py` always said it
+    # covered sign-up and this route did not call it — which left the one endpoint that
+    # runs Argon2id unconditionally as the cheapest way to make the app do expensive
+    # work, and made "that handle is taken" an unmetered existence oracle.
+    try:
+        throttle.check(body.handle)
+    except throttle.TooManyAttempts as e:
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(e),
+                            headers={"Retry-After": str(e.retry_after)})
     try:
         account_id = store.create_account(body.handle, body.passphrase)
     except WeakPassphrase as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     except sqlite3.IntegrityError:
+        throttle.record_failure(body.handle)
         raise HTTPException(status.HTTP_409_CONFLICT, "That handle is taken.")
+    throttle.record_success(body.handle)
     recovery_code = store.issue_recovery_code(account_id)
     issue_session(response, account_id)
     return {**store.get_account(account_id), "recovery_code": recovery_code}

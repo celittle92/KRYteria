@@ -25,15 +25,36 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-16 | Character demo, voice re-run | 59 | 132,542 | 71,376 | $0.04290 |
 | 11-16 | One entry, to test a fix before paying for 13 | 5 | 12,865 | 8,633 | $0.00550 |
 | 11-16 | Character demo, remaining 13 | 54 | 130,271 | 75,574 | $0.04300 |
-| | **Total** | **358** | **732,108** | **304,927** | **$0.20199** |
+| 11-17 | Reasoning evals, live | — | — | — | — |
+| 11-17 | Reasoning evals, after fixing the instrument | 44 | 84,267 | 16,011 | $0.01643 |
+| 11-17 | One entry traced per agent (report §4) | 5 | 10,692 | 6,146 | $0.00368 |
+| | **Total** | **314** | **647,841** | **288,916** | **$0.18556** |
 
-The first A/B run reported tokens but not cost, so the real total is marginally higher.
+**Two of the twelve runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artefact an hour later. So the real spend is **higher than $0.18556 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modelled*.
 
 **A note on how that total was produced.** The first version of this table was
 hand-totalled and came out $0.0064 too high. It is now summed from the rows by a script
 that compares its answer against what is written. A tokenomics section whose own
 arithmetic is wrong is worse than no tokenomics section, because it is the one part of a
 report a reader can check in thirty seconds.
+
+**Two corrections on 2026-11-17, both found by audit rather than by noticing.** First,
+three paid runs were missing from this table while the Total already counted them — nine
+rows summing to $0.16545 under a total of $0.20199. They are restored above.
+
+Second, `usage_log.json` held **two byte-identical rows** for the reasoning evals: 44
+calls, 84,267 input, 16,011 output, $0.01643, twice. Two live runs agreeing to the digit
+is not a thing that happens — but the explanation was not the obvious one. Git has the
+eval artefact committed **twice that night**, at 00:07:47Z (196.01s, 37 checks passed, 6
+failed) and at 01:09:27Z (12.11s, 38 passed, 5 failed). **Both were real billed runs.**
+What happened was that the second run overwrote the first's artefact, and the log was
+filled in by copying the surviving figures onto both rows — which turned a guess into
+something that read as a measurement.
+
+So the first run keeps its row with **every figure null**, and the total counts only what
+was actually measured: **$0.20199 → $0.18556 across eleven measured runs**, with the real
+spend about $0.016 higher. A number that is honestly incomplete beats one that is
+confidently wrong, and this file exists to make that difference visible.
 
 ---
 

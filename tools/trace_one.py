@@ -75,17 +75,32 @@ def main() -> int:
         occurred_on=row.get("occurred_on"),
     ))
 
-    print(f"{'agent':<12}{'input':>9}{'output':>9}{'latency':>10}")
-    print("-" * 40)
+    # The cached column exists because it was missing once and that cost a real number.
+    # The §4 run's recorded cost sits $0.00046 below what the uncached arithmetic gives,
+    # which implies about 5,140 cached input tokens — so the provider reported them, the
+    # cost already reflects them, and nothing wrote the figure down. "not reported" and
+    # "not recorded" are different admissions and only one of them is ours.
+    print(f"{'agent':<12}{'input':>9}{'cached':>9}{'output':>9}{'latency':>10}")
+    print("-" * 49)
+    cached_total, any_cached = 0, False
     for step in res.steps:
         u = step.usage
         tin = getattr(u, "input_tokens", 0) if u else 0
         tout = getattr(u, "output_tokens", 0) if u else 0
-        print(f"{step.agent:<12}{tin:>9,}{tout:>9,}{step.latency_ms / 1000:>9.1f}s"
+        tcac = getattr(u, "cached_input_tokens", None) if u else None
+        if tcac is not None:
+            any_cached = True
+            cached_total += tcac
+        print(f"{step.agent:<12}{tin:>9,}{(f'{tcac:,}' if tcac is not None else '—'):>9}"
+              f"{tout:>9,}{step.latency_ms / 1000:>9.1f}s"
               + ("" if step.ok else f"   ERROR: {step.error}"))
-    print("-" * 40)
-    print(f"{'TOTAL':<12}{res.input_tokens:>9,}{res.output_tokens:>9,}"
+    print("-" * 49)
+    print(f"{'TOTAL':<12}{res.input_tokens:>9,}"
+          f"{(f'{cached_total:,}' if any_cached else '—'):>9}{res.output_tokens:>9,}"
           f"{'':>10}  ${res.cost_usd:.5f}  ({res.model_calls} calls)")
+    if not any_cached:
+        print("\nThe provider reported no cached-input count on any call in this run.\n"
+              "That is recorded as unknown, never as zero.")
 
     if res.errors:
         print(f"\nerrors: {res.errors}")

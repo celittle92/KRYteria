@@ -119,23 +119,24 @@
     {
       "date": "2026-11-17",
       "run": "reasoning-evals-1",
-      "what": "The adversarial reasoning pack, live. Found four instrument bugs and one product gap.",
-      "calls": 44,
-      "input_tokens": 84267,
-      "output_tokens": 16011,
-      "cost_usd": 0.01643,
-      "note": "Cost computed from the token counts at published prices; the harness reports tokens, not cost.",
-      "evidence": "output/reasoning_results.md"
+      "what": "The adversarial reasoning pack, live. 37 checks passed, 6 failed. Found four instrument bugs and one product gap.",
+      "calls": null,
+      "input_tokens": null,
+      "output_tokens": null,
+      "cost_usd": null,
+      "wall_clock_seconds": 196,
+      "note": "A real billed run — output/reasoning_results.md at commit 378414f records it as 'Live run ... Real model calls' at 2026-11-17T00:07:47Z, 196.01s. Its token figures are LOST: the second run overwrote the artefact an hour later. Recorded as unknown rather than copied from the second run, which is what this log did briefly and which made an estimate look like a measurement. The project's real spend is therefore about $0.016 higher than the total below.",
+      "evidence": "git show 378414f:output/reasoning_results.md"
     },
     {
       "date": "2026-11-17",
       "run": "reasoning-evals-2",
-      "what": "The same pack after fixing the instrument. Same counts; one check moved.",
+      "what": "The same pack after fixing the instrument. 38 checks passed, 5 failed.",
       "calls": 44,
       "input_tokens": 84267,
       "output_tokens": 16011,
       "cost_usd": 0.01643,
-      "note": "Figures are the second run's; the first run's were comparable and were overwritten.",
+      "note": "These are the SECOND run's measured figures. They were briefly recorded twice, once for each run, which made the first run's numbers look measured when they were a guess. The row above now says so instead.",
       "evidence": "output/reasoning_results.md"
     },
     {

@@ -32,7 +32,7 @@ clone and needs no API key.
 
 | Piece | State |
 |---|---|
-| Data model | built, 512 checks |
+| Data model | built, 515 checks |
 | Agent output contracts | built, 125 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
 | HTTP API, incl. cross-account isolation | built, 273 checks |
@@ -44,8 +44,8 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,337 checks across 138 test functions**, five suites, none of which call a model.
-Live model spend across the whole project to date: **$0.202** over 358 calls.
+**1,340 checks across 138 test functions**, five suites, none of which call a model.
+Measured live model spend to date: **$0.186** over 314 calls, across 11 of 12 runs — two are not fully measured and are excluded rather than estimated.
 
 ---
 
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-976 checks in total. The first needs no installed packages at all — it stubs the password
+1,340 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
@@ -327,7 +327,7 @@ spends no model call of its own deciding how to route.
 A seventh agent, Criteria, serves the criteria screen and Checklist Mode and sits off the
 brain-dump path entirely.
 
-Full detail in [`docs/architecture.md`](docs/architecture.md).
+Full detail in §4 of `report.html`. [`docs/architecture.md`](docs/architecture.md) is the **frozen Milestone-1 plan** from before any of it was built, kept unedited as a record of what was intended — useful beside the result, misleading on its own.
 
 ### The three-level model
 
@@ -478,7 +478,7 @@ this project does not claim otherwise.
 
 ```
 backend/
-  schema.sql          33 tables; the comments explain the non-obvious constraints
+  schema.sql          34 tables; the comments explain the non-obvious constraints
   store.py            every agent tool reaches the database through here
   models.py           Pydantic output contracts for every agent
   security.py         Argon2id
@@ -486,7 +486,7 @@ backend/
   demo_provider.py    deterministic, keyless; a product mode, not a test double
   costs.py            measured token accounting
   agents/             seven modules, one per agent
-  prompts/            seven runtime prompts, loaded from disk on every call
+  prompts/            eight runtime prompts (seven agents + the A/B baseline)
 data/
   resources_us.json   curated support directory, each row dated and verified
   prices.json         per-million-token prices for gpt-6-luna, from the course figures
@@ -514,7 +514,9 @@ prompt asking a model to be frugal:
   there is a generalisation to interrogate, five only when reflection is wanted.
 - Retrieval is always a tool call, never a model call.
 
-`data/prices.json` has no prices yet, so `estimate_cost` returns `0.0` and the app reports
+`data/prices.json` carries the course's published figures for `gpt-6-luna` — $0.10
+input, $0.01 cached input, $0.50 output per million tokens — so `estimate_cost` returns a
+real number. For a model it has no prices for it still returns `0.0` and the app reports
 cost as *unavailable* rather than printing a zero as though a run were free.
 
 ---

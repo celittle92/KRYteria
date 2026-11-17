@@ -1295,10 +1295,15 @@ class Store:
             rows = [dict(r) for r in conn.execute(sql, args)]
             if person_id is not None:
                 for row in rows:
+                    # Scoped by account_id as well as item and person. Without it,
+                    # an observation written from another account's session against a
+                    # guessed item id would be counted onto this screen — the one thing
+                    # this product says is structurally impossible.
                     counts = conn.execute(
                         "SELECT state, COUNT(*) AS n FROM checklist_observations"
-                        " WHERE checklist_item_id = ? AND person_id = ? GROUP BY state",
-                        (row["id"], person_id),
+                        " WHERE checklist_item_id = ? AND person_id = ?"
+                        " AND account_id = ? GROUP BY state",
+                        (row["id"], person_id, account_id),
                     ).fetchall()
                     by_state = {r["state"]: int(r["n"]) for r in counts}
                     row["times_observed"] = by_state.get("observed", 0)
@@ -1324,6 +1329,14 @@ class Store:
         if state not in CHECKLIST_STATES:
             raise StoreError(f"state must be one of {CHECKLIST_STATES}, got {state!r}")
         with self.write() as conn:
+            # Stamping account_id on the row is not the same as checking it. Every id
+            # that arrives from outside gets asserted, so a guessed item or person id
+            # cannot plant a row in somebody else's record.
+            self._assert_owns(conn, "checklist_items", checklist_item_id, account_id)
+            if person_id is not None:
+                self._assert_owns(conn, "people", person_id, account_id)
+            if entry_id is not None:
+                self._assert_owns(conn, "entries", entry_id, account_id)
             cur = conn.execute(
                 "INSERT INTO checklist_observations (account_id, checklist_item_id,"
                 " person_id, entry_id, state, note, occurred_on, created_at)"

@@ -1,5 +1,16 @@
 # KRYteria — architecture, for approval
 
+> **This is a frozen Milestone-1 design record from 2026-11-07, kept as written.**
+> It describes what was *planned* before the agents, the API and the front end were
+> built, and it has deliberately not been edited since — a design document rewritten to
+> match what got built stops being evidence of anything.
+>
+> **It is therefore out of date on purpose.** Where it says the agent layer is "designed,
+> not written", 17 tables, 95 checks, or that no virtual environment exists, read it as
+> the plan rather than the state. For what KRYteria actually is now, see
+> [`../README.md`](../README.md) and §4 of `report.html`: seven agents built, 34 tables,
+> 1,340 checks across five suites, a React front end, and a live deployment.
+
 Milestone 1 artifact. The build brief asks for the architecture, dependency list, schema
 and plan before application code. The data layer below is **built and tested** (95 offline
 checks passing); the agent layer is **designed, not written**, and is what this document

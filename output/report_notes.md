@@ -26,7 +26,7 @@ Last updated 2026-11-16.
 | Look + feel | 10 | — (judged) | **Have it** — six screenshots, both themes, in `output/screenshots/` |
 | Motivation + what's new | 8 | named existing products compared against | **Have it** — report §2, four categories with named products |
 | Agent design | 10 | one real run traced step by step + screenshots | **Have it** — report §4 (Jane, 12 Nov), `tools/trace_one.py`, SVG diagram |
-| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 12 runs / 358 calls / $0.20199 |
+| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 12 runs, 11 measured / 314 calls / $0.18556 |
 | Safety | 8 | a defense shown *stopping* something | **Have it** — `output/safety_results.*` plus the demo entry in report §6 |
 | Impact + metrics | 5 | a real user tried it | **Still missing the user.** The A/B against a chatbot on the same model is done |
 | Report design | 2 | — | **Have it** — `report.html`, self-contained, 6 images inlined |
@@ -359,7 +359,7 @@ disposable.*
 | Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
 | Research | 19 findings, 18 verified |
-| Live model spend to date | **$0.20199** (12 runs, 358 calls — `output/token_report.md`) |
+| Live model spend to date | **$0.18556** measured (12 runs, 11 measured, 314 calls — `output/token_report.md`) |
 
 ---
 
@@ -508,6 +508,140 @@ more than all of them together. Reaching 15 would mean dropping screenshots the 
 row is scored on. **Recommendation: cut nothing, or at most the two smallest (0.68 pp →
 17.0).** The page count sits under *Report design*, worth 2 points; the content sits under
 rows worth roughly 47, five capped at half credit without specific named evidence.
+
+---
+
+## Audit against the requirements page — 2026-11-17
+
+Read the page in full and checked every row. **Three real findings, all of which a fresh
+clone would have caught and nothing else would.**
+
+### 1. The README path left the front door empty
+
+`README.md` told a grader to run `backend.seed_demo` and start the server. That creates
+the single `demo` account and **none of the nine characters** — so the sign-in screen the
+report, the deck and the README all showcase as *"nine invented people, each one click
+away"* listed **zero**. Verified by running the README verbatim against a throwaway
+database: `GET /api/demo/characters` returned `0`. The start section now runs both
+seeders and says why.
+
+### 2. The README's Status section described a different project
+
+It still read *"Backend and agents are built. The web interface is not yet… there is no
+browser UI to open yet"*, with `Front end | not started` and `report.html, slides.html |
+not started`, and claimed **476 checks** against an actual **1,337**. The repo link is the
+first thing a grader opens. Rewritten, with the hosted URL at the very top where the
+requirements ask for it, and Known limitations brought current.
+
+### 3. macOS ships Python 3.9 as `python3`
+
+The README's first instruction was `python3 -m venv .venv`. On a stock Mac that builds a
+3.9 environment and fails later and confusingly — a pip resolver error, or a `TypeError:
+unsupported operand type(s) for |` from inside a library. Against a ten-minute limit, a
+confusing error spends all of it. `backend/_python_version.py` now refuses on the
+application's entry points with the remedy in the message.
+
+It is **not** in `backend/__init__.py`, where it was first put: that broke
+`tests/test_offline.py`, which runs the store layer on the system interpreter with
+nothing installed, deliberately. The precise claim is *the store layer runs on 3.9; the
+application does not.*
+
+### Also fixed
+- **The CLI seeders ignored `KRYTERIA_DB_PATH`** — only `api/deps.py` read it, so a host
+  with a mounted disk would seed one file and serve another.
+- **F toggles full screen in the deck**, which the requirements page tells graders to
+  expect.
+
+### The dry run, finally run
+
+`tools/fresh_clone_check.sh` reproduces the staff layout — `.env` one level above a fresh
+clone — and follows the README. **All green in 13 seconds against a 10-minute limit**,
+including `env_source` proving the app found the key one level up. That is the 5-point
+*teaching staff can run it* row, which had never been attempted.
+
+### Where the points still are
+
+| Row | Pts | State |
+|---|--:|---|
+| Staff can run it | 5 | **Closed today.** Dry run passes from a clone. |
+| Impact + metrics | 5 | **Capped at half** until a real user tries it. The only open FAIL. |
+| Agent design | 10 | Evidence is "screenshots of what each agent did". The trace view exists in the app but no screenshot of it is in the report — one live brain dump (~$0.0034) would produce one. |
+| Tokenomics | 8 | The same screenshot would also satisfy "app screenshots — the app can display its own token usage". |
+| Everything else | — | Evidence present. |
+
+**Demo video:** optional, and it insures *It works* (15) and *Look + feel* (10) against a
+sleeping instance. `output/demo_script.md` has the shot list.
+
+---
+
+## Independent audit of the codebase — 2026-11-17
+
+A separate pass over the repository looking for bugs and inconsistencies nobody had
+found. **Everything below was re-verified by hand before being acted on**, and one of its
+findings corrected an error I had introduced the same day.
+
+### Fixed in the product
+
+| | Found | Verified how |
+|---|---|---|
+| **Cross-account checklist writes** | `record_checklist_observation` *stamped* `account_id` on the row and never checked it, and `list_checklist`'s count query grouped by item and person with **no account at all**. A write from one session could be counted onto another account's screen — the one thing this product says is structurally impossible. | Reproduced with two accounts, then proved refused. Regression test `test_another_account_cannot_plant_or_see_a_checklist_observation`. |
+| **`/api/auth/signup` was not throttled** | `throttle.py`'s own docstring said it covered sign-up; the route never called it. The one endpoint that runs Argon2id unconditionally, and an unmetered "that handle is taken" existence oracle. | Read against `signin` and `recover`, which both throttle. Now matches. |
+
+### Fixed in the deliverables
+
+| | Was | Now |
+|---|---|---|
+| **The hosted sign-in instruction did not work** | `report.html`'s title table told graders to sign in as `demo` / `kryteria-demo-account`. Boot seeding runs `seed_characters` only, so the hosted app has no `demo` account. | Verified live: `POST /api/auth/signin` → **401**. Replaced with "click any of the nine characters. Nothing to type", which is what the figure caption two lines below already said. |
+| **The spend table was missing three paid runs** | `token_report.md` listed 9 rows summing to 265 calls / $0.16545 under a Total of 358 / $0.20199 — in a file whose own text says a tokenomics section with bad arithmetic is worse than none. | The three 2026-11-17 runs restored. 12 rows now sum exactly to the Total. |
+| **The mapping audit "fires 24 times"** | **My error, made earlier the same day.** I counted every `gap_kind: "definition"` row in the character files. Two of the 24 are hand-authored account-level seed rows, not agent output. | Counted by location: 22 in `entries[].generated.interrogations`, 2 at top level. **22 is right**, and `harness.md` had it right all along. |
+| **`run_usage` does not exist** | Named in §5 as carrying `cached_tokens_reported`. | Grepped the whole repo: it appears nowhere. The flag is set in `store.get_run`. Corrected. |
+| **"No call ever reported a cached-input count"** | Asserted in §5 and as "not reported" on all five rows of the §4 trace table. | **Probably false.** Every run reconciles against the published prices to within rounding *except* the §4 trace: recorded $0.00368 against $0.00414 uncached, a gap of $0.00046 ≈ **5,140 cached input tokens**. So the provider did report them and nothing wrote the number down. §5 now says that, the column says *not recorded*, and `trace_one.py` prints the cached column so a re-run captures it. |
+| Counts that had drifted | 976 checks (README), 33 tables, "seven runtime prompts", "nine entries" in the resource directory, 1,337 tests | 1,340 / 34 / eight / ten / 1,340, each counted from the source. |
+| `docs/architecture.md` | Linked from the README as "full detail", while still saying the agent layer is "designed, not written", 17 tables, and "venv does not exist". | Banner at the top marking it a **frozen Milestone-1 plan**, kept unedited on purpose; README points at report §4 for the current architecture. |
+| `docs/privacy.md` §8 | "the front end does not exist yet" | It does, and states the privacy promise before anything is typed. |
+
+### The duplicate was not a duplicate, and the question I asked was wrong
+
+Christine answered "drop the duplicate", and while applying it the *old note on the row
+being dropped* turned out to contradict my own framing — it said "Figures are the second
+run's; the first run's were comparable and were overwritten." So I checked git instead of
+the log.
+
+**`output/reasoning_results.md` was committed twice that night**, and the two versions are
+different runs:
+
+| | commit | timestamp | wall clock | checks |
+|---|---|---|---|---|
+| Run 1 | `378414f` | 2026-11-17T00:07:47Z | 196.01s | 37 passed, 6 failed |
+| Run 2 | `57f07f9` | 2026-11-17T01:09:27Z | 12.11s | 38 passed, 5 failed |
+
+Both say *"Live run … Real model calls; these results are evidence."* **Both were billed.**
+What actually happened is that the second run overwrote the first's artefact, and the log
+was then filled in by copying the surviving figures onto both rows — which is how an
+estimate came to read as a measurement, in a file whose first line is *measured, never
+invented*.
+
+**So neither answer I offered was right.** Keeping both rows double-counted $0.01643;
+dropping one erased a real paid run. The first run keeps its row with **every figure
+null** and a note pointing at `git show 378414f:output/reasoning_results.md`, and the
+totals count only what was measured: **$0.20199 → $0.18556 across 11 measured runs of 12**,
+with the real spend about $0.016 higher plus the first A/B run's unrecorded cost.
+
+Both the report and `token_report.md` now state that as a **bound** rather than filling it
+in. The lesson is the session's recurring one in a new place: the instrument was wrong,
+not the measurement, and the evidence that settled it was in git rather than in the
+artefact the log pointed at.
+
+### Came back clean
+
+`frontend/dist/` is **not** stale — rebuilt seven seconds after the last `src` change and
+committed in the same commit, confirmed by content (strings from that commit are in the
+shipped bundle), not just mtime. Seed and demo data: no dangling references, no assessment
+against a criterion absent from its profile, no cross-account anything. No agent path to
+`set_assessment`. Nothing reads the request but cookies. Session expiry has no off-by-one.
+Recovery codes handle the no-row case through the dummy-hash path. The frontend/backend
+contract resolves route by route. Eval figures (31 cases, 128 checks, 95 automatic + 33
+manual) and research figures (19/18/17) are consistent everywhere.
 
 ---
 

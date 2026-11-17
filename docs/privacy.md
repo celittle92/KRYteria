@@ -197,7 +197,7 @@ Honest gaps, so nobody reads this document as a completed checklist:
 
 - **Provider retention is unconfirmed** (section 5). The largest open item.
 - **The privacy promise is not yet visible in onboarding.** It must be shown when somebody
-  signs up, not buried in terms — the front end does not exist yet.
+  signs up, not buried in terms. **Built:** the landing page states it before anything is typed, and the sign-up screen repeats it beside the passphrase field.
 - **No encryption at rest.** SQLite on disk. The README says so and does not claim
   otherwise.
 - **`interrogations.claim` stores the user's words verbatim** by design, so a follow-up

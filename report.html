@@ -110,7 +110,7 @@ they fail to act consistently with information they already hold.</p>
 
 <table>
   <tr><th>Repository</th><td><a href="https://github.com/celittle92/KRYteria">github.com/celittle92/KRYteria</a></td></tr>
-  <tr><th>Hosted</th><td><a href="https://kryteria.onrender.com">kryteria.onrender.com</a> — sign in as <code>demo</code> / <code>kryteria-demo-account</code>. A free instance sleeps after about fifteen minutes, so the first load may take a minute.</td></tr>
+  <tr><th>Hosted</th><td><a href="https://kryteria.onrender.com">kryteria.onrender.com</a> — click any of the nine characters on the sign-in screen. Nothing to type. A free instance sleeps after about fifteen minutes, so the first load may take a minute.</td></tr>
   <tr><th>Model</th><td><code>gpt-6-luna</code>, pinned in one place (<code>app_config.REQUIRED_OPENAI_MODEL</code>)</td></tr>
   <tr><th>Run locally</th><td>Clone, <code>python3 -m venv .venv</code>, <code>pip install -r requirements.txt</code>, <code>.venv/bin/python -m backend.seed_demo</code>, then <code>uvicorn backend.main:app</code>. <code>.env</code> is found in the repo folder, the folder above it, or the environment.</td></tr>
 </table>
@@ -665,7 +665,7 @@ raises a question about its colleague's work:</p>
 “Soft hands” — does “nice” mean soft to you here, or are you describing a different
 quality?</blockquote>
 
-<p>Across the nine-character demo this fires <strong>24 times</strong>, and it
+<p>Across the nine-character demo this fires <strong>22 times</strong>, and it
 generalises past the amusing case: <em>"he paid"</em> → financial independence, <em>"he
 apologised"</em> → accountability, <em>"we talked for hours"</em> → intellectual
 connection. This is the clearest answer to "why not one model doing everything in one
@@ -713,11 +713,11 @@ job.</blockquote>
 
 <table>
   <tr><th>Agent</th><th class="num">Input</th><th class="num">Cached input</th><th class="num">Output</th><th class="num">Latency</th><th class="num">Cost</th></tr>
-  <tr><td>narrative</td><td class="num">2,885</td><td class="num">not reported</td><td class="num">1,075</td><td class="num">2.2 s</td><td class="num"></td></tr>
-  <tr><td>safety</td><td class="num">1,869</td><td class="num">not reported</td><td class="num">81</td><td class="num">2.2 s</td><td class="num"></td></tr>
-  <tr><td>evidence</td><td class="num">1,721</td><td class="num">not reported</td><td class="num">1,973</td><td class="num">0.3 s</td><td class="num"></td></tr>
-  <tr><td>reasoning</td><td class="num">2,954</td><td class="num">not reported</td><td class="num">2,463</td><td class="num">22.5 s</td><td class="num"></td></tr>
-  <tr><td>reflection</td><td class="num">1,263</td><td class="num">not reported</td><td class="num">554</td><td class="num">4.8 s</td><td class="num"></td></tr>
+  <tr><td>narrative</td><td class="num">2,885</td><td class="num">not recorded</td><td class="num">1,075</td><td class="num">2.2 s</td><td class="num"></td></tr>
+  <tr><td>safety</td><td class="num">1,869</td><td class="num">not recorded</td><td class="num">81</td><td class="num">2.2 s</td><td class="num"></td></tr>
+  <tr><td>evidence</td><td class="num">1,721</td><td class="num">not recorded</td><td class="num">1,973</td><td class="num">0.3 s</td><td class="num"></td></tr>
+  <tr><td>reasoning</td><td class="num">2,954</td><td class="num">not recorded</td><td class="num">2,463</td><td class="num">22.5 s</td><td class="num"></td></tr>
+  <tr><td>reflection</td><td class="num">1,263</td><td class="num">not recorded</td><td class="num">554</td><td class="num">4.8 s</td><td class="num"></td></tr>
   <tr><td><strong>Total</strong></td><td class="num"><strong>10,692</strong></td><td class="num"><strong>—</strong></td><td class="num"><strong>6,146</strong></td><td class="num"><strong>32.0 s</strong></td><td class="num"><strong>$0.00368</strong></td></tr>
 </table>
 
@@ -754,24 +754,49 @@ mention it; the chatbot in §3's comparison cannot see it.</p>
 $0.01 cached input, $0.50 output per million tokens, plus a $0.125/M cache-write
 surcharge.</p>
 
-<h3>Cached input: the number we were never given</h3>
-<p><strong>No call this project has made has ever reported a cached-input count</strong>,
-so every figure below prices the whole prompt at the full $0.10 input rate.
-<code>costs.Usage</code> reads <code>cache_read_tokens</code>, <code>cached_tokens</code>
-and <code>cache_read_input_tokens</code> off the provider's usage object and, when none is
-present, stores <strong><code>None</code> rather than zero</strong> — "the cache was cold"
-and "we were not told" are different facts, and merging them is wrong in a way no reader
-can see. <code>run_usage</code> carries a <code>cached_tokens_reported</code> flag for the
-same reason.</p>
+<h3>Cached input: what we captured, and what we failed to</h3>
+<p><strong>No artefact in this project preserves a cached-input count</strong>, and the
+reason is our own instrument rather than the provider. <code>costs.Usage</code> reads
+<code>cache_read_tokens</code>, <code>cached_tokens</code> and
+<code>cache_read_input_tokens</code> off the provider's usage object and, when none is
+present, stores <strong><code>None</code> rather than zero</strong> — "the cache was
+cold" and "we were not told" are different facts, and merging them is wrong in a way no
+reader can see. <code>store.get_run</code> carries a <code>cached_tokens_reported</code>
+flag for the same reason. But <code>tools/trace_one.py</code> and
+<code>output/usage_log.json</code> both print input, output, latency and cost — and not
+the cached column. The figure was computed and then thrown away.</p>
 
-<p>The error runs in both directions and they do not cancel. <strong>Conservative on cache
-reads:</strong> any prefix the provider did reuse was billed here at ten times the cached
-rate, so real spend is at most what is printed. <strong>Low on cache writes:</strong> the
-$0.125/M surcharge on the first call that writes a prefix is not modelled, because the
-provider does not report those separately either. Prompts here are small and history is
-retrieved rather than replayed whole, so prefixes are a minority of each call's input and
-neither correction moves a $0.0021 brain dump by a cent — but an exact-looking figure
-nobody can reproduce is worth less than an approximate one whose error bars are named.</p>
+<p><strong>The arithmetic says at least one run did report one.</strong> Every row in the
+usage log reconciles against the published prices to within rounding — except the §4
+traced run:</p>
+
+<table>
+  <tr><th>Run</th><th class="num">Recorded cost</th><th class="num">Cost if no input was cached</th><th class="num">Implied cached input</th></tr>
+  <tr><td>Brain-dump trace</td><td class="num">$0.00341</td><td class="num">$0.00341</td><td class="num">0</td></tr>
+  <tr><td>A/B, after the routing fix</td><td class="num">$0.00380</td><td class="num">$0.00384</td><td class="num">~450</td></tr>
+  <tr><td>Safety pack, 18 cases</td><td class="num">$0.02050</td><td class="num">$0.02054</td><td class="num">~410</td></tr>
+  <tr><td>Reasoning evals</td><td class="num">$0.01643</td><td class="num">$0.01643</td><td class="num">~25</td></tr>
+  <tr><td><strong>One entry traced per agent (§4)</strong></td><td class="num"><strong>$0.00368</strong></td><td class="num"><strong>$0.00414</strong></td><td class="num"><strong>~5,140</strong></td></tr>
+</table>
+
+<p class="meta">The first four gaps are rounding. The last is not: $0.00046 at the
+nine-cents-per-million spread between cached and uncached input is about 5,140 tokens, or
+roughly half that run's prompt. So the provider <em>did</em> report cached input on that
+run, the cost figure already reflects it, and the number itself is gone. That is the
+third time this project has found its own instrument at fault rather than the thing it
+was measuring, and it is why the §4 table below says <em>not recorded</em> rather than
+<em>not reported</em> — those are different admissions and only one of them is ours.
+<code>trace_one.py</code> now prints the column.</p>
+
+<p>What this does to the figures, in both directions, because they do not cancel.
+<strong>Slightly high:</strong> wherever the provider served cached input and we have no
+count, the arithmetic in this report bills it at the full rate, so real spend is at most
+what is printed. <strong>Slightly low:</strong> the $0.125/M surcharge on a call that
+<em>writes</em> a prefix into the cache is not modelled, because that is not reported
+separately either. Prompts here are small and history is retrieved rather than replayed
+whole, so neither correction moves a $0.0021 brain dump by a cent — but an exact-looking
+figure nobody can reproduce is worth less than an approximate one whose error bars are
+named.</p>
 
 <div class="kpi">
   <div><span>Per brain dump</span><b>$0.0021</b></div>
@@ -787,8 +812,10 @@ of $4.09 and $408.84 if every entry gets everything.</p>
 <h3>Every call this project has made</h3>
 
 <p>The rubric caps this section at half credit for estimates alone, which is the right
-rule: a cost model nobody has checked against a bill is a spreadsheet. Twelve live runs,
-every figure reported by the run that produced it.</p>
+rule: a cost model nobody has checked against a bill is a spreadsheet. Twelve live
+runs, every figure reported by the run that produced it — and two rows deliberately left
+blank, because a figure nobody measured does not belong in a column of figures that
+were.</p>
 
 <table>
   <tr><th>Run</th><th class="num">Calls</th><th class="num">Input</th><th class="num">Output</th><th class="num">Cost</th></tr>
@@ -801,10 +828,10 @@ every figure reported by the run that produced it.</p>
   <tr><td>Character demo, voice re-run</td><td class="num">59</td><td class="num">132,542</td><td class="num">71,376</td><td class="num">$0.0429</td></tr>
   <tr><td>One entry, testing a fix before paying for 13</td><td class="num">5</td><td class="num">12,865</td><td class="num">8,633</td><td class="num">$0.0055</td></tr>
   <tr><td>Character demo, remaining 13</td><td class="num">54</td><td class="num">130,271</td><td class="num">75,574</td><td class="num">$0.0430</td></tr>
-  <tr><td>Reasoning evals, live</td><td class="num">44</td><td class="num">84,267</td><td class="num">16,011</td><td class="num">$0.0164</td></tr>
+  <tr><td>Reasoning evals, live</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
   <tr><td>Reasoning evals, after fixing the instrument</td><td class="num">44</td><td class="num">84,267</td><td class="num">16,011</td><td class="num">$0.0164</td></tr>
   <tr><td>One entry traced per agent (§4)</td><td class="num">5</td><td class="num">10,692</td><td class="num">6,146</td><td class="num">$0.0037</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>358</strong></td><td class="num"><strong>732,108</strong></td><td class="num"><strong>304,927</strong></td><td class="num"><strong>$0.202</strong></td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>314</strong></td><td class="num"><strong>647,841</strong></td><td class="num"><strong>288,916</strong></td><td class="num"><strong>$0.186</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>. The
@@ -845,8 +872,10 @@ budget or mask one.</p>
 
 <p class="meta"><strong>Stated limit:</strong> cache writes are not modelled, because the
 provider does not report them separately. Figures are therefore slightly low on a cold
-cache and correct once warm. <strong>Total live spend across the entire project to
-date: $0.202</strong> across 358 calls — the table above.</p>
+cache and correct once warm. <strong>Measured live spend across the entire project to
+date: $0.186</strong> across 314 calls — the table above. Two of the twelve runs are not
+fully measured and are excluded rather than estimated, so the true figure is higher by
+roughly $0.016 plus one run's unrecorded cost.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>
@@ -1078,7 +1107,7 @@ support resources across six countries, in one sitting, answered it:</p>
 confidently wrong. <strong>A comprehensive directory is a promise to stay accurate
 forever, made by a project that cannot keep it.</strong></p>
 
-<p>So the claim was narrowed rather than the dataset widened: nine entries we can stand
+<p>So the claim was narrowed rather than the dataset widened: ten entries we can stand
 behind, each showing <strong>its verification date</strong> because a dated number can be
 judged and a bare one asks for trust nobody earned; three services excluded with reasons
 recorded and a test keeping them out; and one line that cannot go stale because it stores
@@ -1123,7 +1152,7 @@ evaluation harness that only ever confirms the product is not measuring anything
 <div class="callout">
   <p><strong>Knowledge is the tool. Relationships are the context. You are the
   priority.</strong></p>
-  <p class="meta">1,337 automated checks across 138 test functions, five suites, all free to run. KRYteria is not
+  <p class="meta">1,340 automated checks across 138 test functions, five suites, all free to run. KRYteria is not
   therapy and not a crisis service.</p>
 </div>
 

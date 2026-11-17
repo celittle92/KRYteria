@@ -171,6 +171,35 @@ def test_another_account_cannot_reach_or_count_themes() -> None:
     check("and the intruder's own trends are empty", s.theme_trends(intruder) == [])
 
 
+def test_another_account_cannot_plant_or_see_a_checklist_observation() -> None:
+    """The one hole an audit found, and the shape of it is worth remembering.
+
+    ``record_checklist_observation`` took ``account_id`` and only *stamped* it on the
+    row — it never checked it — and ``list_checklist``'s count query grouped by item and
+    person with no account at all. So a write from one session could be counted onto
+    another account's screen. Stamping an id is not the same as asserting it, and this
+    test exists because those two read almost identically at a glance.
+    """
+    from backend.store import NotOwned
+
+    s, acct, dom = fresh()
+    crit = s.create_criterion(acct, value="Soft hands", desired_behavior="soft")
+    prof = s.create_profile(acct, "P")
+    s.add_criterion_to_profile(acct, prof, crit)
+    person = s.upsert_person(acct, "A")
+    item = s.save_checklist_items(
+        acct, crit, [{"text": "x", "source_level": "agent_hypothesis"}])[0]
+    s.record_checklist_observation(acct, item, person_id=person, state="observed")
+    check("the owner's own observation counts",
+          s.list_checklist(acct, crit, person_id=person)[0]["times_observed"] == 1)
+
+    intruder = s.create_account("intruder", "a-long-enough-passphrase")
+    expect_raises("another account cannot observe against this item", NotOwned,
+            s.record_checklist_observation, intruder, item, person_id=person)
+    check("and the owner's counts are untouched",
+          s.list_checklist(acct, crit, person_id=person)[0]["times_observed"] == 1)
+
+
 def test_the_prompt_block_is_built_from_the_vocabulary() -> None:
     """So the file the store validates against and the list the model sees cannot drift."""
     from backend.themes import ids, prompt_block

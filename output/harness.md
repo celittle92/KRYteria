@@ -20,8 +20,8 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,337 checks**, all offline, no API key, no network |
-| Spend | 12 live runs, 358 calls, **$0.202** — `output/usage_log.json` |
+| Tests | 5 suites, **1,340 checks**, all offline, no API key, no network |
+| Spend | 12 live runs, 11 of them fully measured: 314 calls, **$0.186** — `output/usage_log.json` |
 
 ---
 
