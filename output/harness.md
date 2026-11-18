@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,345 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,396 checks**, all offline, no API key, no network |
 | Spend | 14 live runs — 13 with token counts, 12 with a cost: 324 calls, **$0.195** — `output/usage_log.json` |
 
 ---
@@ -112,11 +112,26 @@ it. These cannot.
 | A thin pattern cannot overclaim | Below three distinct entries it cannot exceed `insufficient`; a confident finding must offer an alternative |
 | Sources must be reputable | `backend/sources.py` is an allowlist, enforced on both the add and verify paths |
 | A profile is never deleted | Rename and archive only; a test asserts the delete route does not exist |
+| The app never writes the user's standards | A pasted list is parsed deterministically in `backend/paste.py` — **no model call** — and a line that only names a standard becomes a criterion with an empty `desired_behavior` rather than an invented sentence |
+| Bulk convenience assigns no importance | `add_criteria_to_profile` puts everything at one neutral tier and leaves settings already chosen alone; Mandatory is the user's statement about what is disqualifying |
 
 **Why an allowlist and not a blocklist.** A blocklist is a list of the bad sites somebody
 already thought of, and the one that matters is always the one nobody listed. An allowlist
 is wrong in the safe direction. Note `academia.edu` is explicitly refused — the `.edu`
 belongs to the company, which is why a naive suffix test is not enough.
+
+**Getting a list in, without the app editing it.** Added 2026-11-17, after the author made
+her own account and hit the wall in minutes: somebody who already knows what they want has
+usually already written it down, and typing it back one field at a time is where they
+leave. `POST /api/criteria/parse` reads a pasted list and **writes nothing**;
+`POST /api/criteria/bulk` creates the rows she approved, in one transaction. The parse step
+is deliberately not a model call — a model asked to tidy somebody's standards will improve
+them, and the Criteria agent's indicator suggestions are a thing she opts into, not
+something that happens silently to twenty rows. `backend/paste.py` therefore appears in no
+`scripts` entry of `submission_spec.json`, because it loads no prompt and should not
+pretend to. It refuses rather than truncates: an over-long line is reported, never cut
+down, and an unsplittable one is kept whole as the value rather than guessed at.
+`POST /api/profiles/{id}/criteria/bulk` is the matching move at the profile level.
 
 ---
 

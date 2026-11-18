@@ -39,6 +39,18 @@ export interface Criterion {
   created_at: string;
 }
 
+/** One line of a pasted list, and what the parser made of it. Nothing is saved yet. */
+export interface ParsedLine {
+  line_no: number;
+  source: string;
+  value: string;
+  desired_behavior: string;
+  /** Why this line cannot become a criterion, in words meant for the user. */
+  skipped: string | null;
+  /** The existing or earlier value this one repeats. */
+  duplicate_of: string | null;
+}
+
 export interface ProfileCriterion extends Criterion {
   criterion_id: number;
   tier: Tier;
@@ -249,6 +261,13 @@ export const api = {
   criteria: () => get<Criterion[]>("/api/criteria"),
   createCriterion: (b: { value: string; desired_behavior: string; why_it_matters?: string | null }) =>
     post<Criterion>("/api/criteria", b),
+  /** Parse a pasted list. Writes nothing — the preview step before `createCriteria`. */
+  parsePaste: (text: string) =>
+    post<{ lines: ParsedLine[]; ready: number }>("/api/criteria/parse", { text }),
+  /** Create the reviewed rows. One transaction: all of them, or none. */
+  createCriteria: (
+    items: { value: string; desired_behavior?: string; why_it_matters?: string | null }[],
+  ) => post<{ created: number; criteria: Criterion[] }>("/api/criteria/bulk", { items }),
   reviseCriterion: (id: number, b: Record<string, unknown>) =>
     post<Criterion>(`/api/criteria/${id}/revise`, b),
   criterionHistory: (id: number) => get<Criterion[]>(`/api/criteria/${id}/history`),
@@ -290,6 +309,13 @@ export const api = {
   }) => post<{ id: number }>(`/api/checklist/${itemId}/observe`, b),
   addToProfile: (id: number, b: { criterion_id: number; tier?: Tier; relevance?: string }) =>
     post<ProfileCriterion[]>(`/api/profiles/${id}/criteria`, b),
+  /**
+   * Add many at once. `criterion_ids` omitted means every active library criterion.
+   * Anything already on the profile keeps the tier and relevance it has.
+   */
+  addManyToProfile: (id: number, b: { criterion_ids?: number[] | null; tier?: Tier }) =>
+    post<{ added: number; already_there: number; criteria: ProfileCriterion[] }>(
+      `/api/profiles/${id}/criteria/bulk`, b),
   setTier: (profileId: number, criterionId: number, tier: Tier) =>
     patch<ProfileCriterion[]>(`/api/profiles/${profileId}/criteria/${criterionId}`, { tier }),
   /** Relevance is per profile, like the tier. Changing it never touches another. */

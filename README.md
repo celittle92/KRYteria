@@ -44,7 +44,7 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,345 checks across 140 test functions**, five suites, none of which call a model.
+**1,396 checks across 149 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.195** over 324 calls across 14 runs. Thirteen reported token counts and twelve reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,345 checks in total. The first needs no installed packages at all — it stubs the password
+1,396 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.

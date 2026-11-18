@@ -93,6 +93,35 @@ class CriterionIn(BaseModel):
     examples: list[str] = Field(default_factory=list)
 
 
+class PasteIn(BaseModel):
+    """Text the user pasted. The route that takes this writes nothing at all.
+
+    Parsing and creating are two endpoints on purpose: she sees what the parser made of
+    her list, fixes anything it got wrong, and only then does anything land in her
+    library.
+    """
+
+    text: str = Field(min_length=1, max_length=50_000)
+
+
+class PastedCriterion(BaseModel):
+    """One reviewed row on its way into the library.
+
+    ``desired_behavior`` is optional here and required on :class:`CriterionIn`, and the
+    difference is deliberate. Typing a criterion one at a time is a moment to say what
+    meeting it looks like; pasting eighteen is not, and filling that field in for her
+    would be the app writing her standards.
+    """
+
+    value: str = Field(min_length=1, max_length=200)
+    desired_behavior: str = Field(default="", max_length=1000)
+    why_it_matters: str | None = Field(default=None, max_length=2000)
+
+
+class CriteriaBulk(BaseModel):
+    items: list[PastedCriterion] = Field(min_length=1, max_length=200)
+
+
 class CriterionRevision(BaseModel):
     """A revision writes a new version; it never edits the old row in place."""
 
@@ -131,6 +160,17 @@ class ProfileCriterionIn(BaseModel):
     criterion_id: int
     tier: Tier = "preferred"
     relevance: Relevance = "relevant"
+
+
+class ProfileCriteriaBulk(BaseModel):
+    """Add many library criteria to one profile.
+
+    ``criterion_ids = None`` means every active criterion in the library. ``tier``
+    applies to the ones being added and to nothing already on the profile.
+    """
+
+    criterion_ids: list[int] | None = None
+    tier: Tier = "preferred"
 
 
 class TierChange(BaseModel):

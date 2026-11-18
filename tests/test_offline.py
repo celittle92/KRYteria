@@ -1734,6 +1734,112 @@ def test_usage_accumulates() -> None:
     check("global usage sees the account", glob["input_tokens"] == 300)
 
 
+# ---------------------------------------------------------------- pasting a list
+
+def test_paste_parses_the_shapes_people_actually_write() -> None:
+    """Dashes, colons, bullets, numbers — and a name on its own line."""
+    from backend.paste import parse_paste
+
+    r = parse_paste(
+        "Financial independence — takes responsibility for his own obligations\n"
+        "- Emotional availability: can say how he feels without being asked twice\n"
+        "3. Follow-through - does what he said he would do\n"
+        "• Makes me laugh\n"
+        "\n"
+        "   Non-negotiable honesty\n"
+    )
+    values = [l.value for l in r.ready]
+    check("every line became a criterion", len(r.ready) == 5, str(values))
+    check("an em dash splits", r.ready[0].desired_behavior.startswith("takes responsibility"))
+    check("a bullet is stripped", values[1] == "Emotional availability", values[1])
+    check("a colon splits", r.ready[1].desired_behavior.startswith("can say how he feels"))
+    check("numbering is stripped", values[2] == "Follow-through", values[2])
+    check("a name alone is a criterion", values[3] == "Makes me laugh", values[3])
+    check("and it carries no invented behaviour", r.ready[3].desired_behavior == "")
+    # The one that matters: an unspaced hyphen inside a word is NOT a separator.
+    check("a hyphenated word survives whole", values[4] == "Non-negotiable honesty", values[4])
+
+
+def test_paste_never_shortens_or_invents() -> None:
+    """A standard cut off mid-sentence is not her standard. Refuse it instead."""
+    from backend.paste import MAX_VALUE, parse_paste
+
+    long_one = "x" * (MAX_VALUE + 1)
+    r = parse_paste(f"Kindness\n{long_one}\n")
+    check("the good line is still usable", len(r.ready) == 1)
+    skipped = [l for l in r.lines if l.skipped]
+    check("the long line is skipped, not truncated", len(skipped) == 1)
+    check("nothing was shortened", all(len(l.value) <= MAX_VALUE for l in r.ready))
+    check("the reason is in words for the user", "shorten it" in (skipped[0].skipped or ""))
+
+
+def test_paste_spots_what_she_already_has() -> None:
+    """Re-pasting a list must not silently double the library."""
+    from backend.paste import parse_paste
+
+    r = parse_paste("kindness\nAmbition\n", existing=["Kindness"])
+    dupes = [l for l in r.lines if l.duplicate_of]
+    check("case-insensitive duplicate found", len(dupes) == 1, str(dupes))
+    check("it names what it matched", dupes[0].duplicate_of == "Kindness")
+    check("the duplicate is not in the ready set", [l.value for l in r.ready] == ["Ambition"])
+    check("a repeat inside one paste is caught too",
+          len(parse_paste("Kindness\nkindness ").ready) == 1)
+
+
+def test_paste_has_a_ceiling() -> None:
+    from backend.paste import MAX_LINES, parse_paste
+
+    r = parse_paste("\n".join(f"Standard {i}" for i in range(MAX_LINES + 50)))
+    check("it stops at the limit", len(r.ready) <= MAX_LINES, str(len(r.ready)))
+    check("and says why", any("limit" in (l.skipped or "") for l in r.lines))
+
+
+def test_bulk_create_is_all_or_nothing() -> None:
+    s, acct, _ = fresh()
+    ids = s.create_criteria(acct, [
+        {"value": "Kindness", "desired_behavior": "is kind when it costs him something"},
+        {"value": "Makes me laugh"},
+    ])
+    check("both landed", len(ids) == 2)
+    rows = {c["value"]: c for c in s.list_criteria(acct)}
+    check("a pasted name with no behaviour is allowed",
+          rows["Makes me laugh"]["desired_behavior"] == "")
+    expect_raises("a blank value is refused", StoreError, s.create_criteria, acct,
+                  [{"value": "Fine"}, {"value": "  "}])
+    check("and nothing from the failed batch landed", len(s.list_criteria(acct)) == 2)
+
+
+def test_add_all_assigns_no_importance_of_its_own() -> None:
+    """Mandatory is a statement about what is disqualifying. A button must not make it."""
+    s, acct, dom, prof = fresh_profile()
+    ids = s.create_criteria(acct, [{"value": v} for v in ("Kindness", "Ambition", "Humour")])
+    s.add_criterion_to_profile(acct, prof, ids[0], tier="mandatory")
+
+    result = s.add_criteria_to_profile(acct, prof, None)
+    check("it added only what was missing", len(result["added"]) == 2, str(result))
+    check("and counted the rest", result["already_there"] == 1)
+
+    rows = {r["value"]: r for r in s.list_profile_criteria(acct, prof)}
+    check("all three are on the profile", len(rows) == 3)
+    check("the new ones arrive at the neutral tier", rows["Ambition"]["tier"] == "preferred")
+    check("a tier she already chose is untouched", rows["Kindness"]["tier"] == "mandatory")
+
+    again = s.add_criteria_to_profile(acct, prof, None)
+    check("running it twice adds nothing", again["added"] == [])
+
+
+def test_add_all_cannot_reach_another_account() -> None:
+    s, acct, dom, prof = fresh_profile()
+    other = s.create_account("someone-else", "another-long-passphrase")
+    theirs = s.create_criteria(other, [{"value": "Theirs"}])[0]
+    mine = s.create_criteria(acct, [{"value": "Mine"}])[0]
+
+    expect_raises("another account's criterion is refused", Exception,
+                  s.add_criteria_to_profile, acct, prof, [mine, theirs])
+    check("and nothing from that call landed", s.list_profile_criteria(acct, prof) == [])
+    check("their library is untouched", len(s.list_criteria(other)) == 1)
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

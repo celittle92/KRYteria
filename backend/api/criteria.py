@@ -14,16 +14,19 @@ duplicates settings and records provenance.
 from __future__ import annotations
 
 import sqlite3
+from dataclasses import asdict
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from ..paste import parse_paste
 from ..store import NotOwned, Store, StoreError
 from .deps import (
     current_account_id, get_provider, get_store, owned_criterion, owned_profile,
 )
 from .schemas import (
-    ChecklistObservationIn, CopyCriteria, CriterionIn, CriterionRevision, IndicatorRequest,
-    ProfileCriterionIn, ProfileEdit, ProfileIn, TierChange,
+    ChecklistObservationIn, CopyCriteria, CriteriaBulk, CriterionIn, CriterionRevision,
+    IndicatorRequest, PasteIn, ProfileCriteriaBulk, ProfileCriterionIn, ProfileEdit,
+    ProfileIn, TierChange,
 )
 
 router = APIRouter(prefix="/api", tags=["criteria"])
@@ -56,6 +59,52 @@ def create_criterion(
         why_it_matters=body.why_it_matters, examples=body.examples,
     )
     return next(c for c in store.list_criteria(account_id, status="all") if c["id"] == cid)
+
+
+@router.post("/criteria/parse")
+def parse_criteria_paste(
+    body: PasteIn,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Parse a pasted list of standards. **Writes nothing.**
+
+    Somebody who already knows what they want has usually already written it down
+    somewhere. This reads that list and shows back what it made of it — including the
+    lines it could not use and the ones already in her library — so she can correct it
+    before a single row is created. ``/api/criteria/bulk`` is the step that writes.
+
+    There is no model call here, and that is a product decision as much as a cost one: a
+    model asked to tidy up somebody's standards will improve them, and they are not ours
+    to improve.
+    """
+    existing = [c["value"] for c in store.list_criteria(account_id)]
+    result = parse_paste(body.text, existing=existing)
+    return {
+        "lines": [asdict(line) for line in result.lines],
+        "ready": len(result.ready),
+    }
+
+
+@router.post("/criteria/bulk", status_code=status.HTTP_201_CREATED)
+def create_criteria(
+    body: CriteriaBulk,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Create several criteria at once, after the user has reviewed them.
+
+    One transaction: all of them land or none do. Half a pasted list, with no way to tell
+    which half, is worse than an error.
+    """
+    try:
+        created = store.create_criteria(
+            account_id, [item.model_dump() for item in body.items]
+        )
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+    by_id = {c["id"]: c for c in store.list_criteria(account_id, status="all")}
+    return {"created": len(created), "criteria": [by_id[i] for i in created]}
 
 
 @router.post("/criteria/{criterion_id}/revise")
@@ -221,6 +270,40 @@ def add_criterion_to_profile(
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     return store.list_profile_criteria(account_id, profile_id)
+
+
+@router.post("/profiles/{profile_id}/criteria/bulk", status_code=status.HTTP_201_CREATED)
+def add_criteria_to_profile(
+    profile_id: int,
+    body: ProfileCriteriaBulk,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Add many library criteria to this profile — "add all", or a chosen subset.
+
+    With one profile, the library and the profile are usually the same list, and clicking
+    eighteen pills is busywork rather than a decision. Removing the ones that do not
+    belong here is the decision, and it stays one click each.
+
+    Everything arrives at the same neutral tier. Mandatory means a failure is potentially
+    disqualifying, and that is the user's call to make per criterion, not a side effect of
+    a convenience button. Anything already on the profile keeps the settings it has.
+    """
+    owned_profile(store, account_id, profile_id)
+    try:
+        result = store.add_criteria_to_profile(
+            account_id, profile_id, body.criterion_ids, tier=body.tier,
+        )
+    except NotOwned as e:
+        # Another account's criterion is a 404, exactly as a single add would be.
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+    return {
+        "added": len(result["added"]),
+        "already_there": result["already_there"],
+        "criteria": store.list_profile_criteria(account_id, profile_id),
+    }
 
 
 @router.patch("/profiles/{profile_id}/criteria/{criterion_id}")

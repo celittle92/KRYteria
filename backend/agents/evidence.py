@@ -44,9 +44,14 @@ def format_criteria(profile_name: str, criteria: Sequence[dict]) -> str:
                 "Do not assess it and do not report it as missing information."
             )
         else:
+            # A criterion pasted in as a list may name a standard without saying what
+            # meeting it looks like, and the app does not write that half for the user.
+            # Send the name alone rather than a trailing dash and an empty description,
+            # which reads as a field the model should fill in.
+            behaviour = (c.get("desired_behavior") or "").strip()
             lines.append(
-                f"  [{c['criterion_id']}] {c['value']} ({c['tier']}) — "
-                f"{c['desired_behavior']}"
+                f"  [{c['criterion_id']}] {c['value']} ({c['tier']})"
+                + (f" — {behaviour}" if behaviour else "")
             )
     lines.append(
         "\nThese are the only criteria in scope. The user may hold others under different "

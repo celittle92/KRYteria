@@ -31,7 +31,7 @@ import re
 import secrets
 import sqlite3
 import uuid
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from contextlib import contextmanager
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -674,6 +674,44 @@ class Store:
             )
             return int(cur.lastrowid)
 
+    def create_criteria(
+        self, account_id: int, items: Sequence[Mapping[str, Any]],
+    ) -> list[int]:
+        """Add several standards in ONE transaction — the pasted-list path.
+
+        All or nothing on purpose. Somebody pasting eighteen standards and getting eleven,
+        with no way to tell which seven failed, is worse off than somebody who got an
+        error and can paste again.
+
+        ``desired_behavior`` may be empty here, and that is the point: a pasted line that
+        only names a standard produces a criterion that only names a standard. The app
+        does not write the other half for her. See ``backend/paste.py``.
+        """
+        if not items:
+            return []
+        rows = []
+        for item in items:
+            value = str(item.get("value", "")).strip()
+            if not value:
+                raise StoreError("Every criterion needs a value.")
+            rows.append((
+                account_id, uuid.uuid4().hex, value,
+                str(item.get("desired_behavior") or "").strip(),
+                item.get("why_it_matters"),
+                json.dumps(list(item.get("examples") or [])), _now(),
+            ))
+        with self.write() as conn:
+            created = []
+            for row in rows:
+                cur = conn.execute(
+                    "INSERT INTO criteria (account_id, lineage_id, version, value,"
+                    " desired_behavior, why_it_matters, examples_json, status, created_at)"
+                    " VALUES (?, ?, 1, ?, ?, ?, ?, 'active', ?)",
+                    row,
+                )
+                created.append(int(cur.lastrowid))
+            return created
+
     # ----------------------------------------------------------------- profiles
 
     def create_profile(
@@ -783,6 +821,55 @@ class Store:
                 (profile_id, criterion_id, tier, relevance, copied_from_profile_id, _now()),
             )
             return int(cur.lastrowid)
+
+    def add_criteria_to_profile(
+        self, account_id: int, profile_id: int,
+        criterion_ids: Sequence[int] | None = None, *, tier: str = "preferred",
+    ) -> dict[str, Any]:
+        """Select many library criteria into one profile — the "add all" path.
+
+        ``criterion_ids=None`` means every active criterion in the user's library. That
+        is the common case for somebody with one profile: the library and the profile are
+        the same list, and adding them one pill at a time is busywork, not a decision.
+
+        What this does NOT do is decide how much any of them matters. Everything arrives
+        at ``tier``, which the caller may set and which defaults to the same neutral
+        middle the single-add path uses. Mandatory is a statement about what is
+        disqualifying, and KRYteria has no business making it on somebody's behalf.
+
+        Anything already on the profile is left exactly as it is — same tier, same
+        relevance, same ``copied_from_profile_id``. Re-running this is safe and is not a
+        way to reset settings somebody chose.
+        """
+        if tier not in TIERS:
+            raise StoreError(f"tier must be one of {TIERS}, got {tier!r}")
+        with self.write() as conn:
+            self._assert_owns(conn, "profiles", profile_id, account_id)
+            if criterion_ids is None:
+                wanted = [int(r["id"]) for r in conn.execute(
+                    "SELECT id FROM criteria WHERE account_id = ? AND status = 'active'"
+                    " ORDER BY value", (account_id,),
+                )]
+            else:
+                wanted = [int(c) for c in criterion_ids]
+                for cid in wanted:
+                    self._assert_owns(conn, "criteria", cid, account_id)
+            present = {int(r["criterion_id"]) for r in conn.execute(
+                "SELECT criterion_id FROM profile_criteria WHERE profile_id = ?",
+                (profile_id,),
+            )}
+            added = []
+            for cid in wanted:
+                if cid in present:
+                    continue
+                conn.execute(
+                    "INSERT INTO profile_criteria (profile_id, criterion_id, tier,"
+                    " relevance, created_at) VALUES (?, ?, ?, 'relevant', ?)",
+                    (profile_id, cid, tier, _now()),
+                )
+                present.add(cid)
+                added.append(cid)
+            return {"added": added, "already_there": len(wanted) - len(added)}
 
     def set_profile_tier(self, account_id: int, profile_id: int, criterion_id: int,
                          tier: str) -> None:

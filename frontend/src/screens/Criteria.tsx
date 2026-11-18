@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
-  api, type Criterion, type Person, type Profile, type ProfileCriterion, type Status,
-  type Tier, type Relevance,
+  api, type Criterion, type ParsedLine, type Person, type Profile,
+  type ProfileCriterion, type Status, type Tier, type Relevance,
 } from "../api";
 import {
   Card, Empty, ErrorNote, Eyebrow, Pill, Section, Spinner, StatusPill, TierPill,
@@ -335,6 +335,7 @@ export default function Criteria() {
           </Card>
         )}
         <NewCriterion onCreated={() => refresh()} />
+        <PasteCriteria onCreated={() => refresh()} />
       </Section>
     </div>
   );
@@ -458,6 +459,198 @@ function NewCriterion({ onCreated }: { onCreated: () => void }) {
   );
 }
 
+/**
+ * Paste a list you already wrote somewhere else.
+ *
+ * Two steps, and the first one writes nothing: the parser shows back what it made of
+ * every line — including the ones it could not use and the ones already in the library —
+ * and she corrects it before anything is created. Nothing here calls a model. A model
+ * asked to tidy somebody's standards will improve them, and they are not ours to
+ * improve: a line that names a standard without saying what meeting it looks like goes
+ * in exactly that way, and she can fill the rest in whenever she wants to.
+ */
+function PasteCriteria({ onCreated }: { onCreated: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [lines, setLines] = useState<ParsedLine[] | null>(null);
+  const [edits, setEdits] = useState<Record<number, { value: string; behavior: string }>>({});
+  const [skip, setSkip] = useState<Set<number>>(new Set());
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  function reset() {
+    setText(""); setLines(null); setEdits({}); setSkip(new Set()); setError(null);
+  }
+
+  if (!open) {
+    return (
+      <button className="btn-quiet mt-4 ml-3" onClick={() => setOpen(true)}>
+        Paste a list
+      </button>
+    );
+  }
+
+  const usable = (lines ?? []).filter((l) => !l.skipped);
+  const unusable = (lines ?? []).filter((l) => l.skipped);
+  const chosen = usable.filter((l) => !skip.has(l.line_no));
+
+  async function read() {
+    setBusy(true); setError(null);
+    try {
+      const r = await api.parsePaste(text);
+      setLines(r.lines);
+      // A line that repeats something already in her library starts unticked. It is
+      // still shown, and still tickable — re-adding is hers to decide, not ours to block.
+      setSkip(new Set(r.lines.filter((l) => l.duplicate_of).map((l) => l.line_no)));
+      setEdits(Object.fromEntries(r.lines.map((l) =>
+        [l.line_no, { value: l.value, behavior: l.desired_behavior }])));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally { setBusy(false); }
+  }
+
+  async function save() {
+    setBusy(true); setError(null);
+    try {
+      const items = chosen.map((l) => ({
+        value: edits[l.line_no]?.value ?? l.value,
+        desired_behavior: edits[l.line_no]?.behavior ?? l.desired_behavior,
+      })).filter((i) => i.value.trim());
+      if (!items.length) { setError("Nothing ticked to add."); return; }
+      await api.createCriteria(items);
+      reset(); setOpen(false); onCreated();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally { setBusy(false); }
+  }
+
+  return (
+    <Card className="p-6 mt-4">
+      <h3 className="font-serif text-lg">Paste your list</h3>
+      <p className="text-sm text-muted mt-1 max-w-reading leading-relaxed">
+        One standard per line. If you also wrote what meeting it looks like, put it after
+        a dash or a colon — <span className="text-faint">Follow-through — does what he
+        said he would do</span>. If you didn't, that's fine: the name alone is a
+        criterion, and KRYteria won't write the rest for you.
+      </p>
+
+      {lines === null ? (
+        <>
+          <textarea
+            className="field mt-4 font-mono text-sm"
+            rows={9}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            aria-label="Your list of standards, one per line"
+            placeholder={"Financial independence — takes responsibility for his own obligations\nEmotional availability: can say how he feels without being asked twice\nFollow-through\nMakes me laugh"}
+          />
+          {error && <div className="mt-4"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
+          <div className="flex gap-3 mt-4">
+            <button className="btn-accent" disabled={busy || !text.trim()} onClick={read}>
+              {busy ? "Reading…" : "Read my list"}
+            </button>
+            <button className="btn-quiet" onClick={() => { reset(); setOpen(false); }}>
+              Cancel
+            </button>
+          </div>
+          <p className="text-xs text-faint mt-3">
+            Nothing is saved until you've seen what this made of it.
+          </p>
+        </>
+      ) : (
+        <>
+          <p className="text-sm text-muted mt-4">
+            {usable.length} {usable.length === 1 ? "standard" : "standards"} read.
+            Edit anything that came out wrong, untick anything you don't want.
+          </p>
+
+          {usable.length > 0 && (
+            <ul className="divide-y divide-[rgb(var(--line))] mt-4 border-y border-[rgb(var(--line))]">
+              {usable.map((l) => {
+                const e = edits[l.line_no] ?? { value: l.value, behavior: l.desired_behavior };
+                const on = !skip.has(l.line_no);
+                return (
+                  <li key={l.line_no} className="py-3">
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        className="mt-2.5"
+                        checked={on}
+                        aria-label={`Add ${e.value}`}
+                        onChange={() => setSkip((s) => {
+                          const n = new Set(s);
+                          if (on) n.add(l.line_no); else n.delete(l.line_no);
+                          return n;
+                        })}
+                      />
+                      <div className="grow min-w-0 space-y-2">
+                        <input
+                          className="field"
+                          value={e.value}
+                          disabled={!on}
+                          aria-label="What you value"
+                          onChange={(ev) => setEdits((m) => ({
+                            ...m, [l.line_no]: { ...e, value: ev.target.value } }))}
+                        />
+                        <input
+                          className="field text-sm"
+                          value={e.behavior}
+                          disabled={!on}
+                          aria-label="What meeting it looks like (optional)"
+                          placeholder="What meeting it looks like — optional, and yours to add later"
+                          onChange={(ev) => setEdits((m) => ({
+                            ...m, [l.line_no]: { ...e, behavior: ev.target.value } }))}
+                        />
+                        {l.duplicate_of && (
+                          <p className="text-xs text-faint">
+                            You already have “{l.duplicate_of}”. Ticked off by default —
+                            tick it back on if you meant to add it again.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {unusable.length > 0 && (
+            <div className="mt-4">
+              <Eyebrow>Lines this couldn't use</Eyebrow>
+              <ul className="mt-2 space-y-1">
+                {unusable.map((l) => (
+                  <li key={l.line_no} className="text-xs text-faint">
+                    <span className="text-muted">{l.source}</span> — {l.skipped}
+                  </li>
+                ))}
+              </ul>
+              <p className="text-xs text-faint mt-2">
+                Nothing was shortened or rewritten to make it fit.
+              </p>
+            </div>
+          )}
+
+          {error && <div className="mt-4"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
+
+          <div className="flex flex-wrap gap-3 mt-5">
+            <button className="btn-accent" disabled={busy || chosen.length === 0} onClick={save}>
+              {busy ? "Adding…" : `Add ${chosen.length} to my library`}
+            </button>
+            <button className="btn-quiet" disabled={busy} onClick={() => setLines(null)}>
+              Back to the text
+            </button>
+            <button className="btn-quiet" disabled={busy}
+                    onClick={() => { reset(); setOpen(false); }}>
+              Cancel
+            </button>
+          </div>
+        </>
+      )}
+    </Card>
+  );
+}
+
 function NewProfile({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -532,11 +725,39 @@ function AddToProfile({ profileId, library, already, onAdded, onError }: {
 }) {
   const available = library.filter((c) => !already.has(c.id));
   const [busy, setBusy] = useState<number | null>(null);
+  const [addingAll, setAddingAll] = useState(false);
   if (available.length === 0) return null;
 
   return (
     <div className="mt-5">
-      <Eyebrow>Add from your library — alphabetical</Eyebrow>
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <Eyebrow>Add from your library — alphabetical</Eyebrow>
+        {available.length > 1 && (
+          <button
+            className="text-xs text-accent hover:underline disabled:text-faint"
+            disabled={addingAll}
+            onClick={async () => {
+              setAddingAll(true);
+              try {
+                // No ids: the server adds every active criterion not already here, in
+                // one transaction, and leaves anything already on the profile alone.
+                await api.addManyToProfile(profileId, {});
+                onAdded();
+              } catch (e) { onError(e instanceof Error ? e.message : String(e)); }
+              finally { setAddingAll(false); }
+            }}
+          >
+            {addingAll ? "Adding…" : `Add all ${available.length}`}
+          </button>
+        )}
+      </div>
+      {available.length > 1 && (
+        <p className="text-xs text-faint mb-2 max-w-reading leading-relaxed">
+          They all arrive as Preferred — how much each one matters here is yours to set,
+          not something a button should decide. Take off anything that doesn't belong in
+          this profile with “Doesn't apply here”.
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
         {available.map((c) => (
           <button

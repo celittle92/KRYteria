@@ -305,6 +305,18 @@ def test_data_isolation() -> None:
         check(f"bob gets 404 observing against item {probe}", r.status_code == 404,
               f"got {r.status_code}")
 
+    # The bulk paths are new doors into the same rows, so they get the same probe.
+    r = bob.post(f"/api/profiles/{prof['id']}/criteria/bulk", json={})
+    check("bob cannot add-all into alice's profile", r.status_code == 404,
+          f"got {r.status_code}")
+    bobs_profile = bob.post("/api/profiles", json={"name": "Mine"}).json()
+    r = bob.post(f"/api/profiles/{bobs_profile['id']}/criteria/bulk",
+                 json={"criterion_ids": [crit["id"]]})
+    check("bob cannot pull alice's criterion into his own profile",
+          r.status_code == 404, f"got {r.status_code}")
+    check("and his profile stayed empty",
+          bob.get(f"/api/profiles/{bobs_profile['id']}/criteria").json() == [])
+
     # Alice's data is untouched.
     check("alice still has her criterion", len(alice.get("/api/criteria").json()) == 1)
     check("alice's criterion is unchanged",
@@ -1358,6 +1370,66 @@ def test_demo_reset_refuses_a_real_account() -> None:
     r = c.post("/api/demo/reset")
     check("reset refuses a real account", r.status_code == 403, f"got {r.status_code}")
     check("and says why", "real account" in r.json()["detail"])
+
+
+def test_pasting_a_list_shows_it_back_before_it_saves_anything() -> None:
+    """Parse and create are two endpoints so she sees the parse before it lands."""
+    c = new_client("paster")
+    text = ("Financial independence — takes responsibility for his own obligations\n"
+            "- Emotional availability: says how he feels\n"
+            "Makes me laugh\n")
+
+    r = c.post("/api/criteria/parse", json={"text": text})
+    check("parse answers", r.status_code == 200, f"got {r.status_code}")
+    body = r.json()
+    check("it read three lines", body["ready"] == 3, str(body["ready"]))
+    check("PARSING SAVED NOTHING", c.get("/api/criteria").json() == [])
+
+    r = c.post("/api/criteria/bulk", json={"items": [
+        {"value": l["value"], "desired_behavior": l["desired_behavior"]}
+        for l in body["lines"]]})
+    check("bulk create answers 201", r.status_code == 201, f"got {r.status_code}")
+    check("it reports what it made", r.json()["created"] == 3)
+    library = c.get("/api/criteria").json()
+    check("all three are in the library", len(library) == 3, str(len(library)))
+    laugh = next(x for x in library if x["value"] == "Makes me laugh")
+    check("a name with no behaviour went in as a name with no behaviour",
+          laugh["desired_behavior"] == "")
+
+    # A second paste of the same list is reported, not silently doubled.
+    again = c.post("/api/criteria/parse", json={"text": text}).json()
+    check("the re-paste is all duplicates", again["ready"] == 0, str(again["ready"]))
+    check("and each one names what it matched",
+          all(l["duplicate_of"] for l in again["lines"]))
+
+    check("an empty paste is refused",
+          c.post("/api/criteria/parse", json={"text": ""}).status_code == 422)
+
+
+def test_add_all_fills_a_profile_without_deciding_what_matters() -> None:
+    c = new_client("adder")
+    c.post("/api/criteria/bulk", json={"items": [
+        {"value": "Kindness"}, {"value": "Ambition"}, {"value": "Humour"}]})
+    prof = c.post("/api/profiles", json={"name": "Partner KRYteria"}).json()
+    library = c.get("/api/criteria").json()
+    c.post(f"/api/profiles/{prof['id']}/criteria",
+           json={"criterion_id": library[0]["id"], "tier": "mandatory"})
+
+    r = c.post(f"/api/profiles/{prof['id']}/criteria/bulk", json={})
+    check("add-all answers 201", r.status_code == 201, f"got {r.status_code}")
+    body = r.json()
+    check("it added the two that were missing", body["added"] == 2, str(body))
+    check("and said the third was already there", body["already_there"] == 1)
+
+    rows = {x["value"]: x for x in body["criteria"]}
+    check("the profile now holds all three", len(rows) == 3)
+    check("the chosen tier survived", rows[library[0]["value"]]["tier"] == "mandatory")
+    check("and nothing new was made Mandatory",
+          all(v["tier"] == "preferred" for k, v in rows.items()
+              if k != library[0]["value"]))
+
+    again = c.post(f"/api/profiles/{prof['id']}/criteria/bulk", json={}).json()
+    check("running it again is a no-op", again["added"] == 0, str(again))
 
 
 def main() -> int:
