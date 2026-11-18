@@ -28,9 +28,11 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-17 | Reasoning evals, live | — | — | — | — |
 | 11-17 | Reasoning evals, after fixing the instrument | 44 | 84,267 | 16,011 | $0.01643 |
 | 11-17 | One entry traced per agent (report §4) | 5 | 10,692 | 6,146 | $0.00368 |
-| | **Total** | **314** | **647,841** | **288,916** | **$0.18556** |
+| 11-17 | Trace screenshot, capture lost to a page remount | 5 | 10,976 | 6,934 | $0.00456 |
+| 11-17 | Trace screenshot, captured | 5 | 11,021 | 7,122 | $0.00466 |
+| | **Total** | **324** | **669,838** | **302,972** | **$0.19478** |
 
-**Two of the twelve runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artefact an hour later. So the real spend is **higher than $0.18556 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modelled*.
+**Two of the fourteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artefact an hour later. So the real spend is **higher than $0.18556 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modelled*.
 
 **A note on how that total was produced.** The first version of this table was
 hand-totalled and came out $0.0064 too high. It is now summed from the rows by a script

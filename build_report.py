@@ -36,6 +36,7 @@ IMAGES = {
     "PROFILES_DARK": "profiles-dark.png",
     "PROGRESS_DARK": "progress-dark.png",
     "JOURNAL_DARK": "journal-dark.png",
+    "TRACE_DARK": "trace-dark.png",
 }
 
 

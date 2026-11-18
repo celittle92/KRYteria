@@ -148,6 +148,30 @@
       "output_tokens": 6146,
       "cost_usd": 0.00368,
       "evidence": "tools/trace_one.py"
+    },
+    {
+      "date": "2026-11-17",
+      "run": "trace-screenshot-1",
+      "what": "Live brain dump for the §4 trace screenshot. The page remounted after the POST and the in-memory analysis was lost, so the capture failed; the run itself completed.",
+      "calls": 5,
+      "input_tokens": 10976,
+      "cached_input_tokens": 0,
+      "output_tokens": 6934,
+      "cost_usd": 0.00456,
+      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO — a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
+      "evidence": "output/screenshots/trace-dark.png"
+    },
+    {
+      "date": "2026-11-17",
+      "run": "trace-screenshot-2",
+      "what": "The same entry again, captured this time. Produced output/screenshots/trace-dark.png — the per-agent trace the Agent-design row asks for.",
+      "calls": 5,
+      "input_tokens": 11021,
+      "cached_input_tokens": 0,
+      "output_tokens": 7122,
+      "cost_usd": 0.00466,
+      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO — a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
+      "evidence": "output/screenshots/trace-dark.png"
     }
   ],
   "totals": {

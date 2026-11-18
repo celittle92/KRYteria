@@ -26,7 +26,7 @@ Last updated 2026-11-16.
 | Look + feel | 10 | — (judged) | **Have it** — six screenshots, both themes, in `output/screenshots/` |
 | Motivation + what's new | 8 | named existing products compared against | **Have it** — report §2, four categories with named products |
 | Agent design | 10 | one real run traced step by step + screenshots | **Have it** — report §4 (Jane, 12 Nov), `tools/trace_one.py`, SVG diagram |
-| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 12 runs, 11 measured / 314 calls / $0.18556 |
+| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 14 runs, 13 measured / 324 calls / $0.19478 |
 | Safety | 8 | a defense shown *stopping* something | **Have it** — `output/safety_results.*` plus the demo entry in report §6 |
 | Impact + metrics | 5 | a real user tried it | **Still missing the user.** The A/B against a chatbot on the same model is done |
 | Report design | 2 | — | **Have it** — `report.html`, self-contained, 6 images inlined |
@@ -359,7 +359,7 @@ disposable.*
 | Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
 | Research | 19 findings, 18 verified |
-| Live model spend to date | **$0.18556** measured (12 runs, 11 measured, 314 calls — `output/token_report.md`) |
+| Live model spend to date | **$0.19478** measured (14 runs, 13 measured, 324 calls — `output/token_report.md`) |
 
 ---
 
@@ -698,6 +698,47 @@ and the clean-up is verified by re-running.
   unthrottled sign-up, the cross-account checklist write) and its *Known limits* now
   carry the cached-input gap and the bounded-not-revocable sessions.
 - Every command `harness.md` claims was **run again** and still works.
+
+---
+
+## The trace screenshot — 2026-11-17
+
+The Agent-design row (10 pts) names its evidence as *"one real run traced step by step
+with screenshots of what each agent did"*, and the report had the trace as a **table of
+numbers** with no screenshot. `output/screenshots/trace-dark.png` closes that, and the
+same image also satisfies Tokenomics' *"real token counts … in logs or app screenshots
+(the app can display its own token usage)"*.
+
+**It cost two runs, not one — $0.00922 rather than the $0.0034 estimated.** The first
+completed (`status = ok`, 82 seconds, five agents) but the page remounted after the POST
+and the trace lives only in component state, so the capture was lost. Both runs are in
+`usage_log.json`; neither is hidden.
+
+**Two things worth knowing about the trace view itself.** It is behind a disclosure
+button — *"See what each part of KRYteria did"* — which is the right default for a
+reflective product and is why nothing appeared at first. And it is reachable **only in
+the moments after a brain dump**: the Journal has no trace view, so a grader clicking
+around would never find it. That is a real limitation of the evidence, not just of the
+screenshot, and is worth a Journal link if there is time.
+
+### And it corrected §5 a second time, in the right direction
+
+Yesterday's conclusion was *"no call this project has made has ever reported a
+cached-input count."* These two runs disprove it: `cached_input_tokens` was populated on
+**all ten calls**, reporting **zero** — a cold cache, five distinct prompts. Both runs
+then reconcile against the published prices **to the cent**:
+
+| Run | Input | Cached | Output | Recorded | Priced uncached |
+|---|--:|--:|--:|--:|--:|
+| Trace screenshot, first | 10,976 | 0 *(reported)* | 6,934 | $0.00456 | $0.00456 |
+| Trace screenshot, second | 11,021 | 0 *(reported)* | 7,122 | $0.00466 | $0.00466 |
+
+So the provider reports it, the accounting captures it, and on a cold cache the honest
+answer to "how many cached input tokens" is **zero** rather than a dash. The §4 traced
+run's $0.00046 gap is now the single unexplained figure in the log, and §5 leaves it
+standing as one instead of explaining it away.
+
+**Spend: $0.18556 → $0.19478 across 14 runs** (13 with token counts, 12 with a cost).
 
 ---
 

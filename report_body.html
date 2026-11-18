@@ -748,6 +748,18 @@ an emergency different from keeping planned dates?
 mention it; the chatbot in §3's comparison cannot see it.</p>
 
 <figure>
+  <img alt="The execution trace in the app: a table headed How this was produced, listing narrative, safety, evidence, reasoning and reflection with each agent's input tokens, output tokens and latency in milliseconds." src="{{TRACE_DARK}}">
+  <figcaption><strong>What each agent did, in the app rather than in a log.</strong> A
+  live run on 17 November, opened with <em>"See what each part of KRYteria did"</em>:
+  five agents, their tokens and their latency. Reasoning is again the expensive one —
+  3,210 in, 3,303 out, 51 seconds, more than all four others together — because it is the
+  only agent whose job is to disagree. The line underneath is the privacy rule holding at
+  the point it would be easiest to break: <em>"Tool names and counts only. Nothing you
+  wrote is recorded here."</em> This run cost <strong>$0.00466</strong> and is row 14 of
+  <code>output/usage_log.json</code>.</figcaption>
+</figure>
+
+<figure>
   <img alt="The Patterns screen showing a moderate-evidence finding with supporting and contradicting entries, alternative explanations, and unknowns." src="{{PATTERNS_DARK}}">
   <figcaption>The finding it saved. <span class="good">3 entries support this</span> ·
   <span class="bad">1 cuts against it</span>, with the counterpoint named, two alternative
@@ -764,49 +776,42 @@ mention it; the chatbot in §3's comparison cannot see it.</p>
 $0.01 cached input, $0.50 output per million tokens, plus a $0.125/M cache-write
 surcharge.</p>
 
-<h3>Cached input: what we captured, and what we failed to</h3>
-<p><strong>No artefact in this project preserves a cached-input count</strong>, and the
-reason is our own instrument rather than the provider. <code>costs.Usage</code> reads
-<code>cache_read_tokens</code>, <code>cached_tokens</code> and
-<code>cache_read_input_tokens</code> off the provider's usage object and, when none is
-present, stores <strong><code>None</code> rather than zero</strong> — "the cache was
-cold" and "we were not told" are different facts, and merging them is wrong in a way no
-reader can see. <code>store.get_run</code> carries a <code>cached_tokens_reported</code>
-flag for the same reason. But <code>tools/trace_one.py</code> and
-<code>output/usage_log.json</code> both print input, output, latency and cost — and not
-the cached column. The figure was computed and then thrown away.</p>
+<h3>Cached input: measured at last, and it is zero</h3>
+<p>The assignment asks for input, <em>cached</em> input and output. For most of this
+project the middle column was missing, and the reason was our own instrument rather than
+the provider: <code>costs.Usage</code> reads <code>cache_read_tokens</code>,
+<code>cached_tokens</code> and <code>cache_read_input_tokens</code> and stores
+<strong><code>None</code> rather than zero</strong> when none is present — "the cache was
+cold" and "we were not told" are different facts — but <code>trace_one.py</code> and the
+usage log both printed input, output, latency and cost, and not that column. The figure
+was computed and thrown away.</p>
 
-<p><strong>The arithmetic says at least one run did report one.</strong> Every row in the
-usage log reconciles against the published prices to within rounding — except the §4
-traced run:</p>
+<p><strong>Two runs on 17 November settled it.</strong> Ten calls, and
+<code>cached_input_tokens</code> was populated on <em>every one</em> — reporting
+<strong>zero</strong>. A cold cache, which is what five agents with five distinct prompts
+should produce. Both runs then reconcile against the published prices to the cent:</p>
 
 <table>
-  <tr><th>Run</th><th class="num">Recorded cost</th><th class="num">Cost if no input was cached</th><th class="num">Implied cached input</th></tr>
-  <tr><td>Brain-dump trace</td><td class="num">$0.00341</td><td class="num">$0.00341</td><td class="num">0</td></tr>
-  <tr><td>A/B, after the routing fix</td><td class="num">$0.00380</td><td class="num">$0.00384</td><td class="num">~450</td></tr>
-  <tr><td>Safety pack, 18 cases</td><td class="num">$0.02050</td><td class="num">$0.02054</td><td class="num">~410</td></tr>
-  <tr><td>Reasoning evals</td><td class="num">$0.01643</td><td class="num">$0.01643</td><td class="num">~25</td></tr>
-  <tr><td><strong>One entry traced per agent (§4)</strong></td><td class="num"><strong>$0.00368</strong></td><td class="num"><strong>$0.00414</strong></td><td class="num"><strong>~5,140</strong></td></tr>
+  <tr><th>Run</th><th class="num">Input</th><th class="num">Cached input</th><th class="num">Output</th><th class="num">Recorded</th><th class="num">Priced as uncached</th></tr>
+  <tr><td>Trace screenshot, first</td><td class="num">10,976</td><td class="num">0 <em>(reported)</em></td><td class="num">6,934</td><td class="num">$0.00456</td><td class="num">$0.00456</td></tr>
+  <tr><td>Trace screenshot, second</td><td class="num">11,021</td><td class="num">0 <em>(reported)</em></td><td class="num">7,122</td><td class="num">$0.00466</td><td class="num">$0.00466</td></tr>
 </table>
 
-<p class="meta">The first four gaps are rounding. The last is not: $0.00046 at the
-nine-cents-per-million spread between cached and uncached input is about 5,140 tokens, or
-roughly half that run's prompt. So the provider <em>did</em> report cached input on that
-run, the cost figure already reflects it, and the number itself is gone. That is the
-third time this project has found its own instrument at fault rather than the thing it
-was measuring, and it is why the §4 table below says <em>not recorded</em> rather than
-<em>not reported</em> — those are different admissions and only one of them is ours.
-<code>trace_one.py</code> now prints the column.</p>
+<p class="meta">So the provider does report the count, our accounting does capture it, and
+on a cold cache it is zero — which is the honest answer to "how many cached input tokens
+does a run use" rather than a dash. <strong>One figure stays unexplained:</strong> the §4
+traced run recorded $0.00368 against $0.00414 priced as uncached, a gap of $0.00046 —
+about 5,140 tokens at the nine-cents-per-million spread. Either it was served cached
+input that nothing wrote down, or its cost was recorded under conditions these two runs
+did not reproduce. It is left as an open discrepancy rather than explained away, and
+<code>trace_one.py</code> now prints the column so the next run cannot repeat it.</p>
 
-<p>What this does to the figures, in both directions, because they do not cancel.
-<strong>Slightly high:</strong> wherever the provider served cached input and we have no
-count, the arithmetic in this report bills it at the full rate, so real spend is at most
-what is printed. <strong>Slightly low:</strong> the $0.125/M surcharge on a call that
-<em>writes</em> a prefix into the cache is not modelled, because that is not reported
-separately either. Prompts here are small and history is retrieved rather than replayed
-whole, so neither correction moves a $0.0021 brain dump by a cent — but an exact-looking
-figure nobody can reproduce is worth less than an approximate one whose error bars are
-named.</p>
+<p>The remaining known gap runs the other way. The <strong>$0.125/M surcharge on a call
+that <em>writes</em> a prefix into the cache is not modelled</strong>, because that is not
+reported separately either — so figures are slightly low on a cold cache, which is
+precisely the condition measured above. Neither correction moves a $0.0021 brain dump by
+a cent, but an exact-looking figure nobody can reproduce is worth less than an
+approximate one whose error bars are named.</p>
 
 <div class="kpi">
   <div><span>Per brain dump</span><b>$0.0021</b></div>
@@ -822,7 +827,7 @@ of $4.09 and $408.84 if every entry gets everything.</p>
 <h3>Every call this project has made</h3>
 
 <p>The rubric caps this section at half credit for estimates alone, which is the right
-rule: a cost model nobody has checked against a bill is a spreadsheet. Twelve live
+rule: a cost model nobody has checked against a bill is a spreadsheet. Fourteen live
 runs, every figure reported by the run that produced it — and two rows deliberately left
 blank, because a figure nobody measured does not belong in a column of figures that
 were.</p>
@@ -841,7 +846,7 @@ were.</p>
   <tr><td>Reasoning evals, live</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
   <tr><td>Reasoning evals, after fixing the instrument</td><td class="num">44</td><td class="num">84,267</td><td class="num">16,011</td><td class="num">$0.0164</td></tr>
   <tr><td>One entry traced per agent (§4)</td><td class="num">5</td><td class="num">10,692</td><td class="num">6,146</td><td class="num">$0.0037</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>314</strong></td><td class="num"><strong>647,841</strong></td><td class="num"><strong>288,916</strong></td><td class="num"><strong>$0.186</strong></td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>324</strong></td><td class="num"><strong>669,838</strong></td><td class="num"><strong>302,972</strong></td><td class="num"><strong>$0.195</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>. The
@@ -883,9 +888,9 @@ budget or mask one.</p>
 <p class="meta"><strong>Stated limit:</strong> cache writes are not modelled, because the
 provider does not report them separately. Figures are therefore slightly low on a cold
 cache and correct once warm. <strong>Measured live spend across the entire project to
-date: $0.186</strong> across 314 calls — the table above. Two of the twelve runs are not
-fully measured and are excluded rather than estimated, so the true figure is higher by
-roughly $0.016 plus one run's unrecorded cost.</p>
+date: $0.186</strong> across 324 calls — the table above. Two of the fourteen runs lack a cost figure and are
+excluded rather than estimated, so the true figure is higher by roughly $0.016 plus the
+first A/B run's unrecorded cost.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>

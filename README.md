@@ -45,7 +45,7 @@ clone and needs no API key.
 | `report.html`, `slides.html` | built, self-contained |
 
 **1,340 checks across 139 test functions**, five suites, none of which call a model.
-Measured live model spend to date: **$0.186** over 314 calls, across 11 of 12 runs — two are not fully measured and are excluded rather than estimated.
+Measured live model spend to date: **$0.195** over 324 calls across 14 runs. Thirteen reported token counts and twelve reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
 
