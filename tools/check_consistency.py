@@ -187,7 +187,12 @@ def main() -> int:
             # legitimate per-suite breakdowns (515 offline, 273 API…) or the 128 eval
             # checks, which are a different population; and `report_notes.md` quotes the
             # old wrong totals on purpose, inside the account of how they were wrong.
-            for m in re.finditer(r"([\d,]{5,6}) (?:automated )?checks", text):
+            # "checks" OR "tests": the deck's own headline line says "1,340 tests ·
+            # 324 live model calls · $0.195", and matching only the word this file's
+            # author happened to use let the biggest number on the last slide go stale
+            # by 82 while every prose mention stayed current. A consistency checker that
+            # knows one synonym is a consistency checker for one document.
+            for m in re.finditer(r"([\d,]{5,6}) (?:automated )?(?:checks|tests)", text):
                 if int(m.group(1).replace(",", "")) != checks:
                     print(f"  MISMATCH {path}: says {m.group(1)} checks, actual {checks:,}")
                     problems += 1

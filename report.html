@@ -1104,6 +1104,23 @@ is provided, so only two distinct entries can be cited here.
 threshold — because a fix made the day before had hidden the current entry from it. An
 evaluation harness that only ever confirms the product is not measuring anything.</p>
 
+<h3>Documented is not disclosed</h3>
+<p>The last finding came from the author opening her own hosted account. The free tier
+cannot attach a disk, so every account is erased on each restart and deploy —
+<strong>a fact written down in three files, explained carefully in each, and never once
+said to the person about to type into the sign-up form.</strong> The database was even
+placed at <code>/data</code> specifically so a disk could be mounted there later. It was
+understood, planned around, and undisclosed.</p>
+
+<p>That is a different failure from the two above, and the common root is the part worth
+keeping: <strong>every check this project runs verifies an artifact, and none of them
+asks whether a claim ever reached a person.</strong> The consistency checker compares
+documents against source and was green. Both audits read the deployment notes and found
+them accurate. A README is not where somebody learns their journal is disposable. The app
+now says it above the first field, and the container image defaults to <em>keeps
+nothing</em> — so a deployment has to claim durability deliberately, rather than promise
+it by omission on every host that has none.</p>
+
 <h3>Known limits</h3>
 <ul>
   <li><strong>Cache writes are not modelled</strong> in cost figures; they are slightly low on a cold cache.</li>
@@ -1112,7 +1129,7 @@ evaluation harness that only ever confirms the product is not measuring anything
   <li><strong>33 of 128 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
   <li><strong>Date Calendar and Cooldown are designed and not built.</strong> P1, deliberately.</li>
   <li><strong>SQLite on a host is not production-grade encryption</strong>, and the README says so rather than implying otherwise.</li>
-  <li><strong>The hosted instance keeps nothing</strong> — a free tier cannot attach a disk, so every account is erased on each restart and deploy. The fact was documented in three files and said to nobody signing up, which is an app accepting a relationship journal it knows it cannot keep; the sign-up screen now carries it above the first field, driven by a flag the container defaults to <em>“keeps nothing”</em> so durability must be claimed deliberately. Durability itself needs a paid instance with a disk.</li>
+  <li><strong>The hosted instance keeps nothing</strong>, and now says so before you type. Durability needs a paid instance with a disk; the demonstration deployment is not one, deliberately.</li>
   <li><strong>Sessions are bounded, not revocable.</strong> They are signed cookies, so signing out deletes the browser's copy and a stolen one stays valid until its fourteen days are up. Revoking on demand needs a server-side session table; the fourteen-day cap is the bound until there is one.</li>
 </ul>
 
