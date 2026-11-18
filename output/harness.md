@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,396 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,422 checks**, all offline, no API key, no network |
 | Spend | 14 live runs — 13 with token counts, 12 with a cost: 324 calls, **$0.195** — `output/usage_log.json` |
 
 ---
@@ -362,5 +362,10 @@ start without `--yes-spend-credits`, after printing the call count.**
 - **No migrations.** A schema change requires deleting the database and re-seeding, and
   `Store()` refuses to open a stale one rather than failing later. Right trade with no
   real users; needs Alembic before anybody's journal depends on it.
-- **A hosted free instance is not durable storage**, and the README says so rather than
-  implying otherwise.
+- **A hosted free instance is not durable storage**, and since 2026-11-18 the *app* says
+  so — on the sign-up screen above the first field, in Settings beside the export button,
+  and on `/api/health` — rather than only the README. `backend/durability.py` holds the
+  flag and the sentence; the container image defaults to "keeps nothing", so a deployment
+  must opt in to claiming durability after mounting a real disk. Before that the fact was
+  written in three files and said to nobody who was about to type into it, which is an app
+  accepting a relationship journal it knew it could not keep.

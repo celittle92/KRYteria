@@ -1372,6 +1372,18 @@ def test_demo_reset_refuses_a_real_account() -> None:
     check("and says why", "real account" in r.json()["detail"])
 
 
+def test_health_states_what_this_deployment_keeps() -> None:
+    """A grader, an operator and the sign-up screen all read the same field."""
+    r = TestClient(app).get("/api/health")
+    body = r.json()
+    check("health answers anonymously", r.status_code == 200)
+    check("it says whether storage is durable", "storage_durable" in body)
+    check("and says it in words too", bool(body.get("storage_note")))
+    check("the note matches the flag",
+          ("erased" in body["storage_note"]) is not body["storage_durable"],
+          str(body.get("storage_durable")))
+
+
 def test_pasting_a_list_shows_it_back_before_it_saves_anything() -> None:
     """Parse and create are two endpoints so she sees the parse before it lands."""
     c = new_client("paster")

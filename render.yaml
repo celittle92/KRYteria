@@ -56,6 +56,30 @@ services:
       - key: KRYTERIA_SEED_ON_BOOT
         value: "true"
 
+      # THE APP TELLS THE USER THIS, not just this file. A free Render web service cannot
+      # attach a disk at all, so the database is erased on every restart and every deploy.
+      # That was true before and documented in three files; what was missing is that the
+      # person signing up was never told, which is an app that accepts a relationship
+      # journal knowing it cannot keep it. backend/durability.py turns this flag into the
+      # notice on the sign-up and settings screens and a field on /api/health.
+      #
+      # TO MAKE IT TRUE, both halves are required, in this order:
+      #   1. Move the service to a paid instance and attach a disk mounted at /data
+      #      (the Dockerfile already puts the database there for exactly this). Uncomment
+      #      the `disk:` block below and set `plan: starter`.
+      #   2. Set this to "true". Seeding is idempotent and only ever touches the
+      #      synthetic accounts, so a real disk underneath needs no other change.
+      # Setting this to "true" without step 1 makes the app lie on the screen where it
+      # matters most.
+      - key: KRYTERIA_STORAGE_DURABLE
+        value: "false"
+
+    # Uncomment together with `plan: starter` above to keep what people write.
+    # disk:
+    #   name: kryteria-data
+    #   mountPath: /data
+    #   sizeGB: 1
+
       # DELIBERATE AND IT COSTS MONEY: a hosted instance in live mode spends real Portkey
       # credits whenever anybody uses it. That is the right call for an AI course — a
       # demo-mode deployment would show graders a deterministic fixture rather than the

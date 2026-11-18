@@ -18,9 +18,17 @@ export default function Settings({ account, onChange }: {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  // Null on failure rather than a default: an unanswered question about durability must
+  // not render as a reassurance. See backend/durability.py.
+  const [storage, setStorage] = useState<{ durable: boolean; note: string } | null>(null);
+
   useEffect(() => {
     api.usage().then(setUsage).catch(() => {});
     api.retentionReport().then(setRetention).catch(() => {});
+    api.health()
+      .then((h) => setStorage({
+        durable: h.storage_durable !== false, note: String(h.storage_note ?? "") }))
+      .catch(() => {});
   }, []);
 
   async function save(p: Parameters<typeof api.setPreferences>[0]) {
@@ -130,6 +138,19 @@ export default function Settings({ account, onChange }: {
       </Section>
 
       <Section title="Your data" subtitle="Yours to take, and yours to destroy.">
+        {storage && !storage.durable && (
+          <div className="mb-5 rounded-lg border border-contradict/50 bg-contradict/10 p-4">
+            <p className="eyebrow text-contradict">Nothing here is kept</p>
+            <p className="text-sm text-ink mt-1.5 max-w-reading leading-relaxed">
+              {storage.note}
+            </p>
+            <p className="text-xs text-muted mt-2 max-w-reading leading-relaxed">
+              Downloading below is the only way to keep any of this. The file is the whole
+              record — criteria, profiles, entries, observations, assessments and
+              decisions.
+            </p>
+          </div>
+        )}
         <div className="flex flex-wrap gap-3">
           <button
             className="btn-quiet"

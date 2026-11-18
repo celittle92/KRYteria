@@ -1734,6 +1734,62 @@ def test_usage_accumulates() -> None:
     check("global usage sees the account", glob["input_tokens"] == 300)
 
 
+# ---------------------------------------------------------------- durability
+
+def test_a_deployment_must_opt_in_to_claiming_it_keeps_anything() -> None:
+    """The default for a container is "this keeps nothing", and that direction matters.
+
+    Defaulting the other way makes the app promise durability by omission on every host
+    that has none — which is exactly what happened before this existed.
+    """
+    import os
+
+    from backend import durability
+
+    before = os.environ.get(durability.ENV_VAR)
+    try:
+        for value in ("false", "0", "no", "off", "FALSE"):
+            os.environ[durability.ENV_VAR] = value
+            check(f"{value!r} means not durable", not durability.storage_is_durable())
+            check(f"{value!r} gets the ephemeral note",
+                  durability.storage_note() == durability.EPHEMERAL_NOTE)
+        for value in ("true", "1", "yes", "on"):
+            os.environ[durability.ENV_VAR] = value
+            check(f"{value!r} means durable", durability.storage_is_durable())
+        os.environ.pop(durability.ENV_VAR, None)
+        check("unset is a real filesystem, so durable", durability.storage_is_durable())
+    finally:
+        if before is None:
+            os.environ.pop(durability.ENV_VAR, None)
+        else:
+            os.environ[durability.ENV_VAR] = before
+
+
+def test_the_container_and_the_host_both_declare_no_durability() -> None:
+    """The flag is useless if the files that deploy the app do not set it."""
+    docker = (PROJECT_DIR / "Dockerfile").read_text()
+    render = (PROJECT_DIR / "render.yaml").read_text()
+    check("the image defaults to keeping nothing",
+          "KRYTERIA_STORAGE_DURABLE=false" in docker)
+    check("the hosted service says so explicitly",
+          "KRYTERIA_STORAGE_DURABLE" in render and 'value: "false"' in render)
+    # If somebody attaches a disk they must also flip the flag, so the two cannot drift
+    # into an app that keeps data and says it does not, or the reverse.
+    check("and the upgrade path is written down next to it",
+          "mountPath: /data" in render)
+
+
+def test_the_warning_text_says_what_actually_happens() -> None:
+    """No euphemism. 'May not persist' is not what 'erased on restart' means."""
+    from backend.durability import EPHEMERAL_NOTE
+
+    for word in ("erased", "restart", "Export"):
+        check(f"the notice says {word!r}", word in EPHEMERAL_NOTE)
+    check("and it does not hedge",
+          "may not" not in EPHEMERAL_NOTE.lower()
+          and "might" not in EPHEMERAL_NOTE.lower())
+
+
 # ---------------------------------------------------------------- pasting a list
 
 def test_paste_parses_the_shapes_people_actually_write() -> None:

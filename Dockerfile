@@ -47,7 +47,13 @@ ENV PATH="/opt/venv/bin:$PATH" \
     PORT=8000 \
     # The demo must exist however often the host recycles the process. See
     # backend/main._seed_on_boot.
-    KRYTERIA_SEED_ON_BOOT=true
+    KRYTERIA_SEED_ON_BOOT=true \
+    # A container's filesystem is disposable unless somebody mounts a disk, so the
+    # default for a deployed image is "this does not keep anything" and the app says so
+    # on the sign-up screen. An operator who mounts a real disk sets this to true and
+    # earns the other message. Defaulting the other way would make the app promise
+    # durability by omission on every host that has none. See backend/durability.py.
+    KRYTERIA_STORAGE_DURABLE=false
 
 COPY --from=build /opt/venv /opt/venv
 

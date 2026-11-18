@@ -26,7 +26,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import costs
+from . import costs, durability
 from .api import account, assess, auth, criteria, journal
 from .api.deps import get_provider, get_store
 from .security_headers import SecurityHeaders
@@ -162,6 +162,10 @@ def health():
         "model_override_ignored": model_override_ignored,
         "prices_loaded": costs.have_prices_for(info.model_name),
         "database": str(store.db_path),
+        # Said here as well as on screen, so a grader or an operator can see what this
+        # deployment actually promises without having to read render.yaml.
+        "storage_durable": durability.storage_is_durable(),
+        "storage_note": durability.storage_note(),
         "frontend_built": FRONTEND_DIST.is_dir(),
         "note": (
             "Running in demo mode — no API key needed, nothing is billed, and all "

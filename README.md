@@ -44,7 +44,7 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,396 checks across 149 test functions**, five suites, none of which call a model.
+**1,422 checks across 153 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.195** over 324 calls across 14 runs. Thirteen reported token counts and twelve reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,396 checks in total. The first needs no installed packages at all — it stubs the password
+1,422 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
@@ -290,6 +290,16 @@ or a redeploy. `KRYTERIA_SEED_ON_BOOT=true` turns that from data loss into a sel
 demo: the synthetic account is rebuilt on every boot, so the demo is always there however
 often the host recycles the process. It is idempotent and only ever touches the synthetic
 account.
+
+**The app says this itself, on the screen where it matters.** `KRYTERIA_STORAGE_DURABLE`
+(`backend/durability.py`) tells KRYteria whether its disk survives a restart, and when it
+does not, the sign-up screen carries the notice **above the first field** and Settings
+repeats it beside the export button. The default for the container image is `false`, so a
+deployment has to opt *in* to claiming durability after actually mounting a disk —
+defaulting the other way makes the app promise durability by omission on every host that
+has none. `/api/health` reports both the flag and the sentence. This was added after the
+limitation had been documented in `render.yaml`, the `Dockerfile` and this file, and said
+to nobody who was about to type into it.
 
 **Anything a real visitor writes is lost when the instance restarts.** This is a class
 demonstration deployment and it should not be mistaken for durable storage. Attaching a
@@ -557,12 +567,17 @@ cost as *unavailable* rather than printing a zero as though a run were free.
   is acceptable with no real users and needs Alembic before anybody's journal depends
   on it.
 - **A free instance is not durable storage.** Its disk is ephemeral, so anything a real
-  visitor writes is lost on restart. The demo rebuilds itself on every boot.
+  visitor writes is lost on restart. The demo rebuilds itself on every boot, and the app
+  states the limitation on the sign-up screen and in Settings rather than leaving it in
+  this file. Making it durable needs a paid instance with a disk mounted at `/data`
+  (`render.yaml` carries the commented block) and `KRYTERIA_STORAGE_DURABLE=true`.
 - **Sessions are bounded, not revocable.** They are signed cookies, so signing out
   deletes the browser's copy and a stolen one stays valid until its fourteen days are up.
-- **Cache writes are not modelled** in cost figures, and the provider never reported a
-  cached-input count, so figures are slightly low on a cold cache and conservative on
-  cache reads. Both stated in the report rather than smoothed over.
+- **Cache writes are not modelled** in cost figures, because the provider does not report
+  them separately, so figures are slightly low on a cold cache and correct once warm. The
+  cached-input count itself *is* reported and captured — measured at zero across ten calls
+  on two 17 November runs, which is what a cold cache should produce. Stated in the report
+  rather than smoothed over.
 - **33 of 128 evaluation checks need a human** and are marked `manual`. An LLM judge
   would have automated them and would have been this project's own model grading its own
   output against its own rubric.

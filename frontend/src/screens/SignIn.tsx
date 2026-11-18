@@ -75,6 +75,16 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
 
   useEffect(() => { loadCharacters(); }, [loadCharacters]);
 
+  // What this deployment actually keeps. Asked rather than assumed, and left null on a
+  // failure: an unanswered question must not render as a reassurance.
+  const [storage, setStorage] = useState<{ durable: boolean; note: string } | null>(null);
+  useEffect(() => {
+    api.health()
+      .then((h) => setStorage({
+        durable: h.storage_durable !== false, note: String(h.storage_note ?? "") }))
+      .catch(() => setStorage(null));
+  }, []);
+
   async function enterDemo(c: DemoCharacter) {
     setEnteringAs(c.handle);
     setError(null);
@@ -229,6 +239,21 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
                 ? "The six words you were given when you created the account."
                 : "Welcome back."}
             </p>
+
+            {/* Before the first field, not after the button. Somebody who is about to
+                write about their relationship needs to know what this instance keeps
+                BEFORE they type, and a notice underneath the thing it qualifies is a
+                notice written for the author rather than the reader. */}
+            {storage && !storage.durable && (
+              <div className="mt-5 rounded-lg border border-contradict/50 bg-contradict/10 p-4">
+                <p className="eyebrow text-contradict">Nothing here is kept</p>
+                <p className="text-sm text-ink mt-1.5 leading-relaxed">{storage.note}</p>
+                <p className="text-xs text-muted mt-2 leading-relaxed">
+                  The download is under Settings once you are in, and it gives you the
+                  whole record in one file.
+                </p>
+              </div>
+            )}
 
             <form onSubmit={submit} className="mt-6 space-y-4">
               <div>

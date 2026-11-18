@@ -1112,6 +1112,7 @@ evaluation harness that only ever confirms the product is not measuring anything
   <li><strong>33 of 128 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
   <li><strong>Date Calendar and Cooldown are designed and not built.</strong> P1, deliberately.</li>
   <li><strong>SQLite on a host is not production-grade encryption</strong>, and the README says so rather than implying otherwise.</li>
+  <li><strong>The hosted instance keeps nothing</strong> — a free tier cannot attach a disk, so every account is erased on each restart and deploy. The fact was documented in three files and said to nobody signing up, which is an app accepting a relationship journal it knows it cannot keep; the sign-up screen now carries it above the first field, driven by a flag the container defaults to <em>“keeps nothing”</em> so durability must be claimed deliberately. Durability itself needs a paid instance with a disk.</li>
   <li><strong>Sessions are bounded, not revocable.</strong> They are signed cookies, so signing out deletes the browser's copy and a stolen one stays valid until its fourteen days are up. Revoking on demand needs a server-side session table; the fourteen-day cap is the bound until there is one.</li>
 </ul>
 
@@ -1126,7 +1127,7 @@ evaluation harness that only ever confirms the product is not measuring anything
 <div class="callout">
   <p><strong>Knowledge is the tool. Relationships are the context. You are the
   priority.</strong></p>
-  <p class="meta">1,396 automated checks across 149 test functions, five suites, all free to run. KRYteria is not
+  <p class="meta">1,422 automated checks across 153 test functions, five suites, all free to run. KRYteria is not
   therapy and not a crisis service.</p>
 </div>
 
