@@ -523,6 +523,84 @@ def test_the_entry_under_analysis_is_not_offered_as_earlier_evidence() -> None:
           "[4]" in only_today)
 
 
+# ------------------------------------------------- whose conduct is this entry about
+
+def test_an_observation_knows_whose_conduct_it_describes() -> None:
+    """`about` decides whether a sentence may become evidence about another person."""
+    from backend.models import ExtractedObservation
+
+    o = ExtractedObservation(kind="reported_event", text="I didn't reply until 10 PM",
+                             about="me")
+    check("it records the writer", o.about == "me")
+    # Frozen analysis predates the field. It must still load, and must not silently
+    # become "about them" — that is the bug, not the fallback.
+    old = ExtractedObservation(kind="reported_event", text="She said consistency matters")
+    check("an older observation defaults to unclear", old.about == "unclear")
+
+
+def test_repetition_is_collapsed_not_multiplied() -> None:
+    """25 rows for one entry, a third of them the same gap, is a case being built."""
+    from backend.models import EvidenceMapping, EvidenceOutput, InsufficientNote
+
+    out = EvidenceOutput(
+        mappings=[
+            EvidenceMapping(criterion_id=1, observation_index=0, relation="complicating"),
+            EvidenceMapping(criterion_id=1, observation_index=0, relation="supporting"),
+            EvidenceMapping(criterion_id=2, observation_index=0, relation="complicating"),
+        ],
+        insufficient=[
+            InsufficientNote(criterion_id=1, why="you have not described her response"),
+            InsufficientNote(criterion_id=1, why="her response is not described"),
+            InsufficientNote(criterion_id=3, why="nothing here about timing"),
+        ],
+    )
+    check("one row per observation-and-criterion", len(out.mappings) == 2,
+          str([(m.criterion_id, m.observation_index) for m in out.mappings]))
+    check("the first reading of a pair survives", out.mappings[0].relation == "complicating")
+    check("a different criterion is untouched", out.mappings[1].criterion_id == 2)
+    check("one unsettled note per criterion", len(out.insufficient) == 2)
+    check("and it is the first one", "not described her response" in out.insufficient[0].why)
+
+
+def test_reflection_is_told_when_the_entry_is_about_the_writer() -> None:
+    from backend.agents.orchestrator import _mostly_about_the_writer
+
+    class O:
+        def __init__(self, about): self.about = about
+
+    class N:
+        def __init__(self, abouts): self.observations = [O(a) for a in abouts]
+
+    check("half or more is enough", _mostly_about_the_writer(N(["me", "me", "them"])))
+    check("a minority is not", not _mostly_about_the_writer(N(["me", "them", "them"])))
+    check("exactly half counts", _mostly_about_the_writer(N(["me", "them"])))
+    check("no observations adds no instruction", not _mostly_about_the_writer(N([])))
+    check("a missing narrative adds no instruction", not _mostly_about_the_writer(None))
+    # Unknown must not read as "about the writer": an app that lectures somebody about
+    # their own behaviour on no evidence is worse than one that says nothing.
+    check("unclear is not me", not _mostly_about_the_writer(N(["unclear", "unclear"])))
+
+
+def test_the_regression_cases_from_the_test_run_are_in_the_pack() -> None:
+    """A failure corrected without a case is a failure waiting to come back."""
+    import json
+
+    pack = json.loads((PROJECT_DIR / "tests" / "evals" / "reasoning_evals.json").read_text())
+    ids = {c["id"] for c in pack["cases"]}
+    for case_id in ("bur-01", "imp-01", "ovm-01"):
+        check(f"{case_id} is in the pack", case_id in ids)
+    modes = pack["failure_modes"]
+    for mode in ("burden_shift", "imputation", "overmapping"):
+        check(f"{mode} is a named failure mode", mode in modes)
+    # The harness refuses an unknown check name rather than skipping it, so a case
+    # naming one that does not exist would be an error, not a quiet pass.
+    from backend.evals.checks import _REGISTRY as REGISTRY
+
+    for case in pack["cases"]:
+        for spec in case.get("checks", []):
+            check(f"{case['id']}: {spec['check']} is implemented", spec["check"] in REGISTRY)
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

@@ -228,7 +228,11 @@ def from_brain_dump(result: Any, names: CriterionNames,
     if result.narrative:
         for o in result.narrative.observations:
             t.observations.append({
+                # getattr: analysis frozen before `about` existed, and the hand-rolled
+                # stubs in tests/test_evals.py, both predate the field. Treat a missing
+                # value as "not determined" rather than crashing the grader.
                 "kind": o.kind, "text": o.text,
+                "about": getattr(o, "about", "unclear"),
                 "certainty": o.certainty, "hedge": o.hedge,
             })
             # An observation the agent classified as the user's interpretation is the

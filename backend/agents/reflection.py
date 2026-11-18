@@ -42,6 +42,7 @@ def compose_input(
     safety_fired: bool = False,
     cooldown_visits: int = 0,
     new_evidence_since_last: bool = True,
+    mostly_about_the_writer: bool = False,
 ) -> str:
     parts = [
         "The user's entry:",
@@ -49,6 +50,19 @@ def compose_input(
         entry_text.strip(),
         "<<<END JOURNAL ENTRY>>>",
     ]
+    if mostly_about_the_writer:
+        # Reflection does not see the observations, so the one fact it needs from them is
+        # handed over explicitly. Without this the agent asks about the other person's
+        # compatibility on an entry whose subject was the writer's own conduct — which is
+        # the failure the `about` field was added to prevent.
+        parts += [
+            "",
+            "NOTE: most of this entry is about the WRITER'S own conduct, choices and "
+            "uncertainty rather than about the person being assessed. Ask about their "
+            "own agency — what they would choose, change, or need to be true — not about "
+            "whether the other person can accommodate them. Hold them to account without "
+            "blaming them, and do not turn the question into an accusation.",
+        ]
     if broader_evidence:
         parts += [
             "",

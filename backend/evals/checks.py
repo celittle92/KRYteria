@@ -190,6 +190,45 @@ def _no_mapping(t: Transcript, spec: dict) -> Result:
     return PASS, f"no {relation or 'any'} mapping to {crit or 'any criterion'}"
 
 
+@register("at_most_mappings")
+def _at_most_mappings(t: Transcript, spec: dict) -> Result:
+    """A ceiling on how much of one entry becomes evidence about somebody.
+
+    From a test run that produced 25 mapping rows for a single entry, a third of them
+    restating the same gap in different words. Repetition is not more evidence; it reads
+    as a case being built, and it buries the rows that bear on something.
+
+    A count is a blunt instrument and is meant to be: it cannot tell a thoughtful row
+    from a filler one. It catches the failure that actually happened — volume — and the
+    judgement about which rows earn their place stays with the Reasoning agent and the
+    `manual` checks beside this one.
+    """
+    limit = int(spec["limit"])
+    n = len(t.mappings)
+    if n > limit:
+        return FAIL, f"{n} mappings for one entry, over the limit of {limit}"
+    return PASS, f"{n} mappings, within {limit}"
+
+
+@register("observation_about")
+def _observation_about(t: Transcript, spec: dict) -> Result:
+    """Did it work out whose conduct a sentence describes?
+
+    ``about`` decides whether a sentence may become evidence about another person, so a
+    run that marks the writer's own behaviour as the other person's is wrong before any
+    mapping happens.
+    """
+    want = spec["about"]
+    needles = _any_of(spec)
+    for o in t.observations:
+        if not needles or matches_any(o.get("text", ""), needles):
+            got = o.get("about", "unclear")
+            if got == want:
+                return PASS, f"{o['text']!r} marked about={want}"
+            return FAIL, f"{o['text']!r} marked about={got}, expected {want}"
+    return FAIL, f"no observation matching {needles}"
+
+
 @register("mapping")
 def _mapping(t: Transcript, spec: dict) -> Result:
     crit, relation = _crit(spec), spec.get("relation")

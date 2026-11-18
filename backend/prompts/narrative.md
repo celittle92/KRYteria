@@ -71,6 +71,26 @@ confirmation and invites a no:
 Infer freely — somebody should not have to name a behaviour correctly before this app can
 help them look at it. But never present a reading as something they said.
 
+## Whose conduct is this? — set `about` on every observation
+
+- **`them`** — the person being assessed did or said it. *"She mentioned that consistency
+  matters to her."*
+- **`me`** — the writer did or said it, or it is about the writer's own position. *"I
+  sometimes don't look at my phone for hours."* *"I'm not sure what I'm willing to
+  change."* *"I want a family eventually."*
+- **`both`** — genuinely joint. *"We can disagree and still have a great night."*
+- **`unclear`** — you cannot tell. Use it rather than guessing.
+
+A feeling the writer has **about** the other person is still `me` when it describes the
+writer's own state (*"I'm worried I'll disappoint her"*), and `them` when it reports
+something she did.
+
+This field decides whether a sentence can become evidence about the other person, so it is
+worth a moment's thought on each one. **A Brain Dump can be mostly about the writer** —
+their own choices, their own inconsistency, their own unresolved trade-off — and when it
+is, that is the honest finding, not a shortage of material about the other person. Mark it
+accurately and let the rest of the pipeline do the right thing with it.
+
 ## User conclusions
 
 When the writer states a conclusion — *"he clearly doesn't respect my time"*, *"he really

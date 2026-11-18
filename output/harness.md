@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,422 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,521 checks**, all offline, no API key, no network |
 | Spend | 14 live runs — 13 with token counts, 12 with a cost: 324 calls, **$0.195** — `output/usage_log.json` |
 
 ---
@@ -112,6 +112,8 @@ it. These cannot.
 | A thin pattern cannot overclaim | Below three distinct entries it cannot exceed `insufficient`; a confident finding must offer an alternative |
 | Sources must be reputable | `backend/sources.py` is an allowlist, enforced on both the add and verify paths |
 | A profile is never deleted | Rename and archive only; a test asserts the delete route does not exist |
+| The writer's own conduct is not evidence about somebody else | Every observation carries `about`; an entry that is mostly `me` is named as such to Evidence and Reflection rather than converted into questions about the other person |
+| One entry cannot become a page of rows | `EvidenceOutput` collapses duplicate (observation, criterion) pairs and keeps one unsettled note per criterion |
 | The app never writes the user's standards | A pasted list is parsed deterministically in `backend/paste.py` — **no model call** — and a line that only names a standard becomes a criterion with an empty `desired_behavior` rather than an invented sentence |
 | Bulk convenience assigns no importance | `add_criteria_to_profile` puts everything at one neutral tier and leaves settings already chosen alone; Mandatory is the user's statement about what is disqualifying |
 
@@ -119,6 +121,24 @@ it. These cannot.
 already thought of, and the one that matters is always the one nobody listed. An allowlist
 is wrong in the safe direction. Note `academia.edu` is explicitly refused — the `.edu`
 belongs to the company, which is why a naive suffix test is not enough.
+
+**The burden-shift, found by running the product rather than reading it.** On 2026-11-18
+the author wrote a Brain Dump into a demo account from the perspective of a writer
+describing *his own* inconsistency — unanswered messages, unpredictable hours, no settled
+view of what he was willing to change — and read what came back. Twenty-five mapping rows,
+most of them `complicating`, most ending *"…but this does not establish whether she can
+live with it."* Questions about whether she keeps a tally and whether discussing things
+with her becomes a fight. **He wrote about himself and got back a page of doubts about
+her.**
+
+The mechanism is worth recording because it is not the obvious one. Those phrases were not
+invented: *"instead of keeping a tally"* and *"without it becoming a fight"* are clauses of
+**his own criteria**, in his own words. The pipeline had no representation of *whose
+conduct a sentence describes*, so every sentence about him was matched against criteria
+that describe her, and his own standards were read back as open questions about a woman who
+had done nothing in the entry. `ExtractedObservation.about` is the fix at the contract
+level; the four behavioural rules live in `narrative.md`, `evidence.md`, `reasoning.md` and
+`reflection.md`, with regression cases `bur-01`, `imp-01` and `ovm-01`.
 
 **Getting a list in, without the app editing it.** Added 2026-11-17, after the author made
 her own account and hit the wall in minutes: somebody who already knows what they want has

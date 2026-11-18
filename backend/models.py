@@ -30,6 +30,22 @@ ObservationKind = Literal[
     "missing_information", "uncertainty",
 ]
 Certainty = Literal["stated", "inferred"]
+#: Whose conduct an observation describes.
+#:
+#: Added 2026-11-18 after a test run on a Brain Dump that was mostly about the *writer* —
+#: his own unanswered messages, his own unpredictable hours, his own uncertainty about what
+#: he was willing to change. Every one of those became a mapping against criteria that
+#: describe the other person, and so every rationale ended "…but this does not establish
+#: whether she can live with it." Twenty rows of doubt about a woman who, in that entry,
+#: had done nothing but say that consistency mattered to her.
+#:
+#: The pipeline had no way to say "this sentence is about you". Now it does. The rules that
+#: use it live in the Evidence, Reasoning and Reflection prompts, because which of these a
+#: sentence is cannot be decided by a regular expression.
+#:
+#: ``unclear`` is the default so that analysis frozen before this field existed still
+#: loads. It means "not determined", never "about them".
+ObservationSubject = Literal["me", "them", "both", "unclear"]
 EvidenceRelation = Literal["supporting", "contradicting", "complicating", "unrelated"]
 SourceLevel = Literal[
     "established_research", "research_informed", "agent_hypothesis", "user_stated"
@@ -113,6 +129,13 @@ class ExtractedObservation(_NoScoresNoLabels):
 
     kind: ObservationKind
     text: str = Field(min_length=1)
+    about: ObservationSubject = Field(
+        default="unclear",
+        description="Whose conduct this describes: the writer ('me'), the person being "
+                    "assessed ('them'), both, or unclear. A Brain Dump about the "
+                    "writer's own behaviour must not become a page of open questions "
+                    "about the other person.",
+    )
     certainty: Certainty = "stated"
     hedge: str | None = Field(
         default=None,
@@ -257,6 +280,42 @@ class EvidenceOutput(_NoScoresNoLabels):
         description="Observations that relate to no criterion. They stay in the journal "
                     "without being assigned artificial significance — never force-fit.",
     )
+
+    @model_validator(mode="after")
+    def _collapse_repetition(self):
+        """One mapping per (observation, criterion); one unsettled note per criterion.
+
+        A test run produced twenty-five mapping rows for a single entry, of which a
+        third said the same thing in different words — five separate rows ending "this
+        does not establish whether she can live with that." Repetition is not more
+        evidence; it reads as a case being built, and it buries the two or three rows
+        that actually bear on something.
+
+        This is deliberately the *narrow*, deterministic half of the fix: it removes
+        exact structural duplicates only. Judging that two differently-worded rows make
+        the same point is the Reasoning agent's job, and telling the model not to
+        generate them in the first place is the prompt's — see `evidence.md`. Nothing
+        here drops a row carrying information another row does not.
+        """
+        seen: set[tuple[int, int]] = set()
+        kept = []
+        for m in self.mappings:
+            key = (m.observation_index, m.criterion_id)
+            if key in seen:
+                continue
+            seen.add(key)
+            kept.append(m)
+        self.mappings = kept
+
+        seen_criteria: set[int] = set()
+        notes = []
+        for n in self.insufficient:
+            if n.criterion_id in seen_criteria:
+                continue
+            seen_criteria.add(n.criterion_id)
+            notes.append(n)
+        self.insufficient = notes
+        return self
 
 
 # ---------------------------------------------------------------- Reasoning Agent

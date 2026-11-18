@@ -35,6 +35,57 @@ a reason. It gets shown to the user. It is not an empty state and it is not a fa
 *"You haven't described a conversation about what either of you wants, so relationship
 intentions remains unsettled."*
 
+## An entry about the writer is not evidence about the other person
+
+Every observation carries `about`: `me`, `them`, `both` or `unclear`. It is load-bearing.
+
+Criteria describe **the person being assessed**. An observation marked `me` describes the
+writer. It is not evidence about somebody else's character, however relevant it feels to
+the relationship, and converting it into one is the most damaging thing you can do here.
+
+> The writer describes his own unanswered messages, his own unpredictable hours, and his
+> own uncertainty about what he is willing to change. Mapping each of those against *"an
+> unpredictable schedule is a fact she can live with"* produces a page of open questions
+> about a woman who, in this entry, did nothing at all. **He wrote about himself and got
+> back a list of doubts about her.**
+
+An `me` observation goes in `unmapped_observation_indexes` unless **both** of these hold:
+
+1. The criterion is specifically about the other person's *response* to that conduct, and
+2. the entry actually describes her response.
+
+Condition 2 is the one that gets skipped. *"I work unpredictable hours"* plus a criterion
+*"she can live with unpredictable hours"* is **not** a mapping — her side is absent. It is
+an `insufficient` note on that criterion, written as what has not been observed yet
+(*"you have not described how she responded to the new hours"*), never as a question about
+her capacity.
+
+**When most of the entry is `me`, say so plainly in the `insufficient` notes** rather than
+producing thin mappings to fill the page. *"Most of this entry is about your own position
+rather than about her, so there is little here that settles anything about Catherine."*
+That is a real finding and the most useful sentence you can write about such an entry.
+
+## Not every sentence needs a home
+
+One observation, one criterion, one row — and only where it genuinely bears. The failure
+to avoid is a page of rows that each end *"but this does not establish…"*. That is not
+twenty findings; it is one finding repeated twenty times, and it buries the two or three
+rows that do bear on something.
+
+Before writing a mapping, ask what a reader learns from it that they would not learn from
+the rows already there. If the answer is nothing, do not write it.
+
+- **Do not map the same point twice** under different criteria because the wording nearly
+  fits both.
+- **Do not turn a `missing_information` or `uncertainty` observation into a mapping.** "It
+  is unknown what we have discussed" is not evidence; at most it is one `insufficient`
+  note on one criterion.
+- **One `insufficient` note per criterion**, covering everything unsettled about it.
+- **`complicating` is not the safe default.** It means *relevant but context-dependent* —
+  the apology after the argument, the lateness with a reason. An observation that simply
+  does not inform the criterion is **`unrelated`**, or it is not mapped at all. Reaching
+  for `complicating` to avoid a judgement is how twenty rows happen.
+
 ### The criterion's own words are the test, not a near-synonym
 
 A criterion says what it says. When an observation uses a *different word* and you would
@@ -53,6 +104,28 @@ This matters most on the criteria that look small. Nobody will argue with you ab
 whether dinner proves financial independence. The standards somebody expects to be
 dismissed are exactly the ones where quietly approximating reads as not having taken it
 seriously — and this product's whole claim is that it takes them as written.
+
+### But a criterion is a standard, not a checklist of clauses
+
+The near-synonym check fires when the entry **says something** and you would have to swap
+one word for another to make it fit. It does **not** fire on silence.
+
+A criterion like *"Funny, and does not explain the joke"* is one standard, phrased in the
+user's voice. It is not two tests. If the entry says she is funny and says nothing about
+explaining jokes, the honest reading is that the entry supports the criterion as far as it
+goes — not that a second requirement is outstanding.
+
+**Never generate an unsettled item out of a clause the entry simply did not mention.**
+That is manufacturing doubt from silence, and when the clause describes something the user
+hopes to avoid — *keeping a tally*, *it becoming a fight*, *interests she would drop for
+me* — repeating it back as an open question **imputes that behaviour to a person who was
+never described doing it.** The wording came from the user's own fear; handing it back as
+a finding about her is the worst thing in this whole file.
+
+If a clause genuinely matters and genuinely is not addressed, that is **at most one**
+`insufficient` note on **that one criterion**, phrased about the evidence and not about
+her: *"this entry doesn't describe how she raises a problem"* — never *"it does not show
+whether she keeps a tally."*
 
 ## Rationales are addressed to the user
 

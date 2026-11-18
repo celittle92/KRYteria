@@ -53,6 +53,26 @@ MAX_AGENT_CALLS = 5
 WITHHOLD_ANALYSIS_AT = ("disclosure", "immediate_danger")
 
 
+def _mostly_about_the_writer(narrative) -> bool:
+    """Is this entry mainly about the writer's own conduct rather than the other person?
+
+    Half or more of the observations marked ``about == "me"``. Deliberately a blunt count
+    rather than a judgement: it only decides whether Reflection is *told* that the entry
+    leans that way, and the agent still reads the entry itself. A threshold that tried to
+    be clever would be another hand-written rule standing between a user and the agent
+    whose job this is.
+
+    Unknown or absent narrative, or an entry with no observations, is False: this adds an
+    instruction, and adding one on no evidence is how an app starts lecturing people about
+    their own behaviour.
+    """
+    obs = getattr(narrative, "observations", None) or []
+    if not obs:
+        return False
+    mine = sum(1 for o in obs if getattr(o, "about", "unclear") == "me")
+    return mine * 2 >= len(obs)
+
+
 def routing_policy() -> str:
     """The orchestrator's own runtime prompt.
 
@@ -332,6 +352,7 @@ class Orchestrator:
                 postponement_count=postponements,
                 probe_due=probe_due,
                 safety_fired=bool(result.safety and result.safety.concern_detected),
+                mostly_about_the_writer=_mostly_about_the_writer(result.narrative),
             )
             seq += 1
             result.steps.append(reflection_step)

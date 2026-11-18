@@ -60,11 +60,32 @@ def format_criteria(profile_name: str, criteria: Sequence[dict]) -> str:
     return "\n".join(lines)
 
 
+#: How each `about` value is announced to the agents. Spelled out rather than passed as a
+#: bare enum: "me" in a list of observations is easy to skim past, and this field decides
+#: whether a sentence may become evidence about somebody else.
+_ABOUT = {
+    "me": "  (ABOUT THE WRITER — their own conduct, not evidence about the other person)",
+    "them": "  (about the person being assessed)",
+    "both": "  (about both of them)",
+    "unclear": "  (whose conduct this describes is unclear)",
+}
+
+
 def format_observations(narrative: NarrativeOutput) -> str:
     lines = ["Observations extracted from the entry, by index:"]
     for i, obs in enumerate(narrative.observations):
         mark = "" if obs.certainty == "stated" else "  (INFERRED — not something the user said)"
-        lines.append(f"  [{i}] {obs.kind}: {obs.text}{mark}")
+        lines.append(f"  [{i}] {obs.kind}: {obs.text}{mark}{_ABOUT.get(obs.about, '')}")
+    mine = sum(1 for o in narrative.observations if o.about == "me")
+    if mine and mine >= len(narrative.observations) / 2:
+        # Said once, loudly, rather than left for the agent to notice from the marks. An
+        # entry that is mostly about the writer is the case this whole rule exists for.
+        lines.append(
+            f"\nNOTE: {mine} of {len(narrative.observations)} observations are about the "
+            "WRITER'S own conduct. This entry is largely about them, not about the person "
+            "being assessed. Do not convert it into a page of open questions about "
+            "somebody who barely appears in it."
+        )
     if narrative.user_conclusions:
         lines.append(
             "\nConclusions the user stated. These are their interpretations, not events, "
