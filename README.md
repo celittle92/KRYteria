@@ -35,7 +35,7 @@ clone and needs no API key.
 | Data model | built, 515 checks |
 | Agent output contracts | built, 125 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
-| HTTP API, incl. cross-account isolation | built, 273 checks |
+| HTTP API, incl. cross-account isolation | built, 278 checks |
 | Evaluation harness | built, 353 checks |
 | Deterministic demo mode (no API key) | built |
 | Privacy architecture | built — isolation, retention, redaction |
@@ -44,14 +44,14 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,340 checks across 139 test functions**, five suites, none of which call a model.
+**1,345 checks across 140 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.195** over 324 calls across 14 runs. Thirteen reported token counts and twelve reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
 
 ## Running it
 
-No database server, no external services, no Node. **Three commands and a browser.**
+No database server, no external services, no Node. **Four commands and a browser.**
 
 **First, check your Python.** This needs **3.12 or newer**, and macOS ships 3.9 as
 `python3` — which is the one thing most likely to cost you ten minutes here.
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,340 checks in total. The first needs no installed packages at all — it stubs the password
+1,345 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.

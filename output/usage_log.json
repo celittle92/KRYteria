@@ -175,12 +175,14 @@
     }
   ],
   "totals": {
-    "live_runs": 12,
-    "model_calls": 358,
-    "input_tokens": 732108,
-    "output_tokens": 304927,
-    "cost_usd": 0.20199,
-    "_note": "Summed from the rows above, checked rather than typed — the first version of this block was hand-totalled and was $0.0064 too high. The ab-first run contributes tokens but no cost figure, so the real spend is marginally higher than this."
+    "live_runs": 14,
+    "runs_with_token_counts": 13,
+    "runs_with_a_cost_figure": 12,
+    "model_calls": 324,
+    "input_tokens": 669838,
+    "output_tokens": 302972,
+    "cost_usd": 0.19478,
+    "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 — the figures from before two corrections. A note claiming verification is not verification; the check is."
   },
   "per_interaction": {
     "_comment": "What one user action costs, measured rather than modelled.",

@@ -31,12 +31,22 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
     The plaintext exists in this response and nowhere else. It is not stored, cannot be
     re-sent, and is not recoverable from the database.
     """
-    # Throttled per handle, like sign-in and recovery. `throttle.py` always said it
-    # covered sign-up and this route did not call it — which left the one endpoint that
-    # runs Argon2id unconditionally as the cheapest way to make the app do expensive
-    # work, and made "that handle is taken" an unmetered existence oracle.
+    # Throttled on a SEPARATE key from sign-in, and the separation is the point.
+    #
+    # `throttle.py` keeps one counter per key. Charging failed sign-ups to the bare
+    # handle would let anyone lock an existing account out of its own sign-in by
+    # posting sign-ups for that handle until the counter tripped — the 409 means the
+    # handle exists, so the request being penalised is not a guess and the counter it
+    # fills belongs to somebody else. Namespacing keeps what this is actually for:
+    # bounding how often an unauthenticated caller can make the server run Argon2id.
+    #
+    # It does NOT make "that handle is taken" unobservable — one request still answers
+    # that, and no rate limit changes it. An earlier version of this comment claimed it
+    # closed an "unmetered existence oracle", which was overstated; the honest claim is
+    # the Argon2id bound.
+    signup_key = f"signup:{body.handle}"
     try:
-        throttle.check(body.handle)
+        throttle.check(signup_key)
     except throttle.TooManyAttempts as e:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(e),
                             headers={"Retry-After": str(e.retry_after)})
@@ -45,9 +55,9 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
     except WeakPassphrase as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     except sqlite3.IntegrityError:
-        throttle.record_failure(body.handle)
+        throttle.record_failure(signup_key)
         raise HTTPException(status.HTTP_409_CONFLICT, "That handle is taken.")
-    throttle.record_success(body.handle)
+    throttle.record_success(signup_key)
     recovery_code = store.issue_recovery_code(account_id)
     issue_session(response, account_id)
     return {**store.get_account(account_id), "recovery_code": recovery_code}

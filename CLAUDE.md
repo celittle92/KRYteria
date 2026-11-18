@@ -247,7 +247,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,340 checks across 139 test functions as of 2026-11-17, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,345 checks across 140 test functions as of 2026-11-17, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
@@ -364,7 +364,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
 - **The repo is live and PRIVATE** at <https://github.com/celittle92/KRYteria>, and the
   app is deployed at <https://kryteria.onrender.com> with auto-deploy on push. Git writes
   and `gh` fail in sandboxed Bash; use the Terminal panel (`gh` is at
-  `../.tools/gh/bin/gh`). **`zlisto` is not a collaborator yet** — that is a release-day
-  step, on Christine's instruction.
+  `../.tools/gh/bin/gh`). **`zlisto` was added as a collaborator 2026-11-17** — done, not an
+  open item.
 - Pre-submission check, from the workspace root (offline; FAILs are the to-do list):
   `python3 check_submission.py KRYteria`

@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,340 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,345 checks**, all offline, no API key, no network |
 | Spend | 14 live runs — 13 with token counts, 12 with a cost: 324 calls, **$0.195** — `output/usage_log.json` |
 
 ---
@@ -227,7 +227,7 @@ Reproduced with two accounts, fixed in both places, and pinned by
 not the same as asserting it**, and the two read almost identically at a glance.
 
 ```bash
-.venv/bin/python tests/test_api.py        # 273 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 278 checks, including all of the above
 ```
 
 ---
@@ -319,7 +319,7 @@ from a new browser is the one most likely to lose the race with the boot.
 python3      tests/test_offline.py      # 515 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 125 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 273 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_api.py          # 278 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 353 — the harness, mostly that it REFUSES
 ```
 

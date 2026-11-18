@@ -296,6 +296,15 @@ def test_data_isolation() -> None:
     r = bob.delete(f"/api/entries/{entry['id']}")
     check("bob cannot delete alice's entry", r.status_code == 404, f"got {r.status_code}")
 
+    # The one cross-account WRITE this test did not cover, which is exactly where the
+    # hole was: `record_checklist_observation` stamped account_id without checking it,
+    # and when the check was added the new NotOwned took an old exit that returned 422.
+    # A 404 here is the contract; anything else is a bug even when nothing leaks.
+    for probe in (1, 2, 3):
+        r = bob.post(f"/api/checklist/{probe}/observe", json={"state": "observed"})
+        check(f"bob gets 404 observing against item {probe}", r.status_code == 404,
+              f"got {r.status_code}")
+
     # Alice's data is untouched.
     check("alice still has her criterion", len(alice.get("/api/criteria").json()) == 1)
     check("alice's criterion is unchanged",
@@ -977,6 +986,32 @@ def test_security_headers_are_on_every_response() -> None:
     check("object-src is closed", "object-src 'none'" in csp, csp[:120])
     check("Permissions-Policy denies geolocation",
           "geolocation=()" in r.headers.get("Permissions-Policy", ""))
+
+
+def test_signup_throttling_cannot_lock_somebody_out_of_their_own_account() -> None:
+    """Rate-limiting sign-up must not become a denial-of-service against an owner.
+
+    `throttle.py` keeps one counter per key. Charging failed sign-ups to the bare handle
+    let anyone lock an existing account out of its OWN sign-in by posting sign-ups for
+    that handle until the counter tripped — and a 409 means the handle exists, so the
+    request being penalised is not a guess and the counter it fills belongs to somebody
+    else. Sign-up is therefore throttled on a separate `signup:` key.
+    """
+    from backend import throttle
+    throttle.reset()
+
+    owner = new_client("victim")
+    hostile = new_client("attacker")
+
+    codes = [hostile.post("/api/auth/signup",
+                          json={"handle": "victim", "passphrase": "x-long-enough-passphrase"}
+                          ).status_code for _ in range(12)]
+    check("sign-up itself is still rate-limited", 429 in codes, f"got {sorted(set(codes))}")
+
+    r = owner.post("/api/auth/signin",
+                   json={"handle": "victim", "passphrase": "a long enough passphrase"})
+    check("the owner can still sign in", r.status_code == 200,
+          f"got {r.status_code} — the attacker filled the owner's counter")
 
 
 def test_credential_endpoints_are_throttled() -> None:

@@ -17,7 +17,7 @@ import sqlite3
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from ..store import Store, StoreError
+from ..store import NotOwned, Store, StoreError
 from .deps import (
     current_account_id, get_provider, get_store, owned_criterion, owned_profile,
 )
@@ -352,6 +352,12 @@ def observe_indicator(
             account_id, item_id, person_id=body.person_id, entry_id=body.entry_id,
             state=body.state, note=body.note, occurred_on=body.occurred_on,
         )
+    except NotOwned as e:
+        # Reaching another account's row is a 404, never a 403 and never a 422:
+        # `store.NotOwned` says so and every sibling route honours it. This one did
+        # not, because until the ownership assert was added the only StoreError it
+        # could raise was a bad `state`. A new exception took the old exit.
+        raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))
     except StoreError as e:
         raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
     return {

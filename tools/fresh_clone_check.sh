@@ -54,13 +54,23 @@ done
 step "Python, the way the README tells them to check it"
 PY=python3
 V=$("$PY" -c 'import sys;print("%d.%d"%sys.version_info[:2])' 2>/dev/null || echo none)
+# Compare numerically. `3.[2-9]*` is a glob, not a version test: it matched 3.9, which
+# is the stock-macOS interpreter this whole check exists to catch, so the rehearsal
+# passed on the one machine where the real thing fails.
+MAJOR=${V%%.*}; MINOR=${V#*.}
 case "$V" in
-  3.1[2-9]|3.[2-9]*) ok "python3 is $V" ;;
+  none) MAJOR=0; MINOR=0 ;;
+esac
+if [ "${MAJOR:-0}" -gt 3 ] 2>/dev/null || { [ "${MAJOR:-0}" -eq 3 ] && [ "${MINOR:-0}" -ge 12 ]; } 2>/dev/null; then
+  ok "python3 is $V"
+else
+  case "$V" in
   *) for c in python3.14 python3.13 python3.12; do
        command -v "$c" >/dev/null 2>&1 && { PY="$c"; ok "python3 is $V, using $c instead (as the README says)"; break; }
      done
      [ "$PY" = python3 ] && bad "no Python 3.12+ found — the README's fallback is Docker or the hosted link" ;;
-esac
+  esac
+fi
 
 step "Install, exactly as the README says"
 cd "$REPO" || exit 1

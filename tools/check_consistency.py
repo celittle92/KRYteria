@@ -90,9 +90,13 @@ def truth() -> dict[str, object]:
     return t
 
 
-def run_suites() -> int:
-    """The real check count, by running them. Free: no API key, no network."""
-    total = 0
+def run_suites() -> tuple[int, int]:
+    """The real check count, by running them. Free: no API key, no network.
+
+    Returns (checks_passing, failures). A suite that FAILS used to print a warning and
+    leave the exit code alone, so the one thing most worth gating on did not gate.
+    """
+    total = broken = 0
     for name, interp in (("test_offline", "python3"),
                          ("test_contracts", ".venv/bin/python"),
                          ("test_wiring", ".venv/bin/python"),
@@ -109,12 +113,14 @@ def run_suites() -> int:
         m = re.search(r"(\d+) passed, (\d+) failed", out.stdout)
         if not m:
             print(f"  !! could not read a result from {name}")
+            broken += 1
             continue
         passed, failed = int(m.group(1)), int(m.group(2))
         if failed:
             print(f"  !! {name}: {failed} FAILED")
+            broken += failed
         total += passed
-    return total
+    return total, broken
 
 
 # --------------------------------------------------------------------------- claims
@@ -125,9 +131,10 @@ def claims(t: dict[str, object]) -> list[tuple[str, object, str]]:
     return [
         ("schema tables",            t["tables"],      r"(\d+) tables"),
         ("demo characters",          t["characters"],  r"(nine|\d+)[- ]character demo"),
-        ("demo profiles",            t["demo_profiles"], r"(\d+) profiles"),
-        ("demo criteria",            t["demo_criteria"], r"(\d+) criteria,"),
-        ("demo entries",             t["demo_entries"],  r"(\d+) entries,"),
+        # The per-character totals (18 profiles, 90 criteria, 33 entries, 173
+        # assessments) are counted in truth() and deliberately NOT claimed here: no
+        # deliverable states them, so a pattern for them can only ever match nothing.
+        # Counting something is not the same as claiming it.
         # Anchored on the words around them. A loose `\d+ of (\d+)` also matches
         # "11 of 12 runs", "33 of 128 checks" and "3 of 13 cases", and a checker that
         # cries wolf gets ignored, which is worse than not having one.
@@ -144,7 +151,6 @@ def claims(t: dict[str, object]) -> list[tuple[str, object, str]]:
         ("output tokens",            n(t["tokens_out"]), r"([\d,]{7,}) output"),
         ("resources, intl",          t["resources_intl"],
          r"(ten|nine|\d+) entries we can stand"),
-        ("runs, measured",           t["runs_measured"], r"(\d+) measured runs"),
         ("runs, total",              t["runs_total"],    r"(\d+) live\s+runs"),
     ]
 
@@ -164,10 +170,15 @@ def main() -> int:
 
     if args.tests:
         print("\nRunning the suites (free, no API key)…")
-        checks = run_suites()
+        checks, broken = run_suites()
+        problems += broken
         print(f"  {'checks passing':28} {checks}")
         print(f"  {'test functions':28} {t['test_functions']}")
-        for path in DELIVERABLES + ["output/report_notes.md", "CLAUDE.md"]:
+        # report_notes.md is a working record that deliberately QUOTES the old wrong
+        # totals inside its account of how they were wrong ("claimed 476 checks against
+        # an actual 1,337"). Checking it turns its honesty into a failure, which is the
+        # cries-wolf mode this file's docstring warns about. It is not a deliverable.
+        for path in DELIVERABLES + ["CLAUDE.md"]:
             f = HERE / path
             if not f.is_file():
                 continue
@@ -205,14 +216,58 @@ def main() -> int:
                     problems += 1
                 seen.add(label)
 
+    # A pattern that matches nothing is not a pass. This printed four such claims
+    # beside "0 problem(s)" for a day, which is the exact shape of false comfort this
+    # script exists to remove.
     never = [c[0] for c in claims(t) if c[0] not in seen]
     if never:
-        print("\n  Claims whose pattern matched nowhere (check the regex, not the docs):")
+        print("\n  UNCHECKED — these claims' patterns matched nowhere, so nothing was")
+        print("  verified. Fix the regex, or drop the claim if the docs no longer state it:")
         for label in never:
             print(f"    - {label}")
+        problems += len(never)
+
+    # The usage log carries a `totals` block that the report cites as its record. It
+    # claimed to be "summed from the rows, checked rather than typed" while holding
+    # figures from before two corrections, and nothing checked it. Now something does.
+    log = json.loads((HERE / "output/usage_log.json").read_text(encoding="utf-8"))
+    measured = [r for r in log["runs"] if r["calls"] is not None]
+    want = {
+        "live_runs": len(log["runs"]),
+        "runs_with_token_counts": len(measured),
+        "runs_with_a_cost_figure": sum(1 for r in log["runs"] if r.get("cost_usd") is not None),
+        "model_calls": sum(r["calls"] for r in measured),
+        "input_tokens": sum(r["input_tokens"] for r in measured),
+        "output_tokens": sum(r["output_tokens"] for r in measured),
+        "cost_usd": round(sum(r.get("cost_usd") or 0 for r in measured), 5),
+    }
+    have = log.get("totals", {})
+    for key, expected in want.items():
+        if have.get(key) != expected:
+            print(f"  MISMATCH usage_log.json totals.{key}: says {have.get(key)!r}, "
+                  f"rows say {expected!r}")
+            problems += 1
+    else:
+        if all(have.get(k) == v for k, v in want.items()):
+            print("  OK  usage_log.json totals block agrees with its own rows")
+
+    # Every row printed in the report's spend table, not just its Total.
+    rpt = (HERE / "report_body.html").read_text(encoding="utf-8")
+    seg = rpt[rpt.index("Every call this project has made"):rpt.index("The machine-readable record")]
+    printed = len(re.findall(r'<tr><td>(?!<strong>)', seg))
+    if printed != len(log["runs"]):
+        print(f"  MISMATCH report spend table prints {printed} rows for "
+              f"{len(log['runs'])} runs — a reader adding the column gets a different total")
+        problems += 1
+    else:
+        print(f"  OK  report spend table prints all {printed} runs")
 
     # The spend table has to add up to its own Total and to the log.
-    md = (HERE / "output/token_report.md").read_text(encoding="utf-8")
+    tr = HERE / "output/token_report.md"
+    if not tr.is_file():
+        print("  MISMATCH output/token_report.md is missing")
+        return 1
+    md = tr.read_text(encoding="utf-8")
     rows = re.findall(r"^\| \d\d-\d\d \| .+? \| (\d+|—) \| ([\d,]+|—) \| ([\d,]+|—) \| (\$[\d.]+|—) \|",
                       md, re.M)
     num = lambda x: 0 if x == "—" else int(x.replace(",", ""))

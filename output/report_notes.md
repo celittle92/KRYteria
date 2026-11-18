@@ -354,7 +354,7 @@ disposable.*
 | Agents / runtime prompt files | 7 / 8 |
 | API routes | 54 |
 | Backend Python | 8,685 lines |
-| Tests | **1,340 checks** across 139 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
+| Tests | **1,345 checks** across 140 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
 | Front end | 3,107 lines, 8 screens, React + Vite + TS + Tailwind |
 | Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
@@ -739,6 +739,113 @@ run's $0.00046 gap is now the single unexplained figure in the log, and §5 leav
 standing as one instead of explaining it away.
 
 **Spend: $0.18556 → $0.19478 across 14 runs** (13 with token counts, 12 with a cost).
+
+---
+
+## Pre-submission verification — 2026-11-17
+
+Christine asked for the app, the report and the slides to be quadruple-checked. Four
+independent passes, plus two reviewers briefed not to take the documentation's word for
+anything.
+
+### The four passes, all green
+
+| | Result |
+|---|---|
+| **Hosted app** | Woke in 53s (free tier), `mode: live`, model pinned, key found, prices loaded. The served bundle hash `index-BLQHVsIV.js` is **identical to the committed `dist/`**, so the deployment is the repo. CSP, `x-frame-options: DENY`, nosniff, Referrer-Policy and HSTS all present. |
+| **Isolation in production** | Catherine owns entries 13–16; Jane's 1–3 return **404, not 403**. The guarantee holds on the live instance, not only in tests. |
+| **Fresh clone from GitHub** | Not the local checkout — the remote, with `.env` one folder above. **17 seconds**, every check green, `env_source` proving the key was found one level up. |
+| **UI** | All eight screens render; no errors, no stuck spinners. 1,340 checks pass. Both HTML files have **zero remote must-fetch resources**. |
+
+Two things that looked like bugs and are not: six of nine characters have no Patterns
+(that is `MIN_SUPPORT = 3`, and the empty state says so honestly), and "compatibility" on
+My Progress is a criterion Catherine wrote, not a score.
+
+### What the audit found that the four passes did not — all three mine
+
+**The tokenomics section failed the check it invites the reader to make.** It says the
+table is the one claim a reader can verify in thirty seconds. It was not verifiable:
+
+1. **The spend table printed 12 rows under a 14-run total.** Adding the visible column
+   gave 314 calls and $0.186; the printed total said 324 and $0.195. I had added the two
+   trace-screenshot runs to `token_report.md` and to the log, and not to the report.
+2. **$0.186 and $0.195 appeared in the same section**, both labelled "324 calls" — a bulk
+   replace that caught the bold total and missed the prose.
+3. **`usage_log.json`'s `totals` block was two corrections stale** — 12 runs / 358 calls /
+   $0.20199 — under a `_note` reading *"Summed from the rows above, checked rather than
+   typed."* A claim of verification where none happened, in the machine-readable file the
+   report cites as its record.
+
+**And my consistency checker reported "0 problem(s)" over all three**, because it
+validated the rows against the log and never the log's own totals block, nor the row
+count the reader actually sees. It also printed four claims whose patterns matched
+nothing — *beside* the clean exit code. **A pattern that matches nothing is not a pass**,
+and the checker now counts those as problems, validates the totals block, and checks that
+the report prints one row per run. The four speculative claims are gone: those quantities
+are counted in `truth()` but stated in no deliverable, and counting is not claiming.
+
+Verified after the fix by adding the column the way a grader would: **14 rows → 324 calls,
+669,838 in, 302,972 out, $0.1948**, against a printed total of 324 / 669,838 / 302,972 /
+$0.195.
+
+### Smaller, also fixed
+- The `prose_lacks` needle list quoted six of the artefact's seven.
+- The `<!-- 7. IMPACT -->` comment sat above an `<h3>` still belonging to §6.
+- `frontend/tsconfig.tsbuildinfo`, a TypeScript build cache, was tracked. Untracked and ignored.
+- README promised "three commands" and listed four.
+- **The competitor table now says where it comes from:** the products' own public
+  descriptions, and *nobody on this project signed up for them and used them*. The rubric
+  asks for named products and they are named — but `report_notes.md` itself said none had
+  been examined, and the report should not have implied otherwise.
+- The §4 figure is a **different run** from the §4 table. That was disclosed in passing;
+  the caption now opens with it.
+
+### Open, for Christine
+
+- **18.3 printed pages** against a 10–15 limit (17.3 before today's additions).
+- **Two TODO boxes still ship** in `report.html`, one on slide 9. Both are honest — the
+  user test and the `zlisto` collaborator step — but they are the first thing a grader
+  sees at the top of the report.
+- **The repo is private and `zlisto` is not a collaborator.** Release-day step, but if it
+  ships as-is the grader cannot clone it, which risks far more than the repo row.
+
+---
+
+## Second audit: this week's code — 2026-11-17
+
+A separate reviewer on the four newest commits only, since that is the least-reviewed
+code in the repo. All five suites green. Five real findings, **three of them in things I
+wrote to catch problems**, which is its own lesson.
+
+### Fixed
+
+| | What was wrong | Proof |
+|---|---|---|
+| **`fresh_clone_check.sh` accepted Python 3.9** | `3.1[2-9]\|3.[2-9]*` is a glob, not a version test — `3.[2-9]*` matches **3.9**. So on the stock-macOS interpreter the `_python_version` guard exists to catch, the rehearsal printed `PASS python3 is 3.9` and never tried the fallback. The check defeated its own purpose. | Now compares major/minor numerically: 3.9 and 3.11 rejected and fall back, 3.12/3.14 accepted. |
+| **A cross-account checklist write returned 422, not 404** | `NotOwned` subclasses `StoreError`, and `observe_indicator` already caught `StoreError` → 422. When I added the ownership assert, the new exception took an old exit. `store.NotOwned`'s own docstring says *"the HTTP layer turns this into 404, never 403"*, and every sibling route honours it. | `NotOwned` caught first → **404**, verified with two accounts across three item ids. |
+| **Sign-up throttling could lock an owner out of their own account** | One counter per handle, shared across sign-up, sign-in and recovery. A 409 means the handle *exists* — so the penalised request is not a guess, and the counter it fills belongs to somebody else. Twelve hostile sign-ups tripped the victim's sign-in. | Sign-up now throttles on a separate `signup:` key. Verified: 12 hostile sign-ups return 409 then **429**, and the owner still signs in **200**. |
+| **The consistency gate was red on a false positive** | `[\d,]{5,6}` matched `1,158` inside `report_notes.md`'s *historical quotation* of a number that used to be wrong. The file's own comment claimed this case was exempt; the code did not implement the exemption. | `report_notes.md` is a working record, not a deliverable, and is no longer scanned. |
+| **A FAILING test suite did not fail the gate** | `run_suites()` printed `!! N FAILED` and returned only the passing count; `problems` was never incremented. The one thing most worth gating on did not gate. | Returns `(passing, failures)`; failures and unparseable output both count as problems. |
+
+Both behavioural fixes are pinned by tests: the checklist 404 is now inside
+`test_data_isolation` (it was **the one cross-account write path that test never
+covered** — which is precisely where the hole was), and
+`test_signup_throttling_cannot_lock_somebody_out_of_their_own_account` is new.
+**1,340 → 1,345 checks, 139 → 140 functions**, and the checker caught every stale count
+across five files the moment they moved.
+
+### Not a bug, worth knowing
+- `_assert_owns` needs no `via=` for the three new tables — each carries a direct
+  `account_id NOT NULL`.
+- No legitimate caller breaks: the Checklist UI never sends `entry_id` and draws
+  `person_id` from the account's own list; no seeder writes `checklist_observations`.
+- The 3.12 guard is genuinely reachable: every guarded module parses on 3.9, so the
+  message appears before any newer syntax runs.
+- `build_report.py`'s strip regex is non-greedy and cannot span blocks; a rebuild is
+  byte-identical to what is committed.
+- One overstated comment corrected: throttling sign-up does **not** close an "existence
+  oracle" — one request still answers that, and no rate limit changes it. What it buys is
+  a bound on how often an unauthenticated caller can make the server run Argon2id.
 
 ---
 

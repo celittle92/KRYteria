@@ -40,3 +40,6 @@ output/demo_runs/
 
 # OS
 .DS_Store
+
+# TypeScript build cache. Regenerated on every build; no reason to ship it.
+frontend/tsconfig.tsbuildinfo
