@@ -958,9 +958,9 @@ organisation whose own site prints two different phone numbers for itself, and a
 pan-European "helpline" that is an advocacy office open Monday to Thursday. The response
 was to narrow the claim rather than widen the dataset — see §8.</p>
 
-<h3>Security: three gaps the app shipped with</h3>
+<h3>Security: four gaps the app shipped with</h3>
 
-<p>Safety and security are different problems and this project needed both. All three of
+<p>Safety and security are different problems and this project needed both. All four of
 these were found by review rather than by incident, which is the only good way to find
 them.</p>
 
@@ -992,6 +992,23 @@ otherwise an attacker interleaves a known-good attempt and the counter never tri
 success clears the counter, so somebody who fumbles their own passphrase is not locked out
 for the evening. And it never disables an account: lockout against a known handle would
 hand anybody a way to keep its owner out.</p>
+
+<p><strong>And that counter had a blind spot: a fresh handle met no limit at all.</strong>
+It is keyed on the handle and cleared by a success, so a script that never reuses one was
+never slowed. Unlimited account creation is a lever on the only resource this app
+spends — <strong>about seventeen new accounts exhaust the 2,000,000-token global daily
+budget</strong>, after which KRYteria analyses nothing for anybody. The money was never
+the exposure: that cap counts input and output together, so even at output prices the
+worst day is roughly a dollar. <em>Availability</em> was. Account creation is now bounded
+for the application as a whole, twelve an hour and forty a day — the second window
+because an hourly limit alone can be trickled under.</p>
+
+<p class="meta">A limiter with no key is itself a denial-of-service primitive, so the
+argument has to be that tripping it costs very little: the entire demo opens in one click
+and needs no account, and the bound refuses <em>creation</em> while leaving every existing
+user's sign-in, journal and analysis untouched. The alternative takes analysis away from
+everybody at once, and does it quietly. It is keyless for the same reason the counter
+above is keyed on a handle — rate-limiting by IP would mean learning where somebody is.</p>
 
 <h3>No email, and a way back in anyway</h3>
 
@@ -1150,7 +1167,7 @@ about somebody. Four rules sit on it, each with a regression case:</p>
 </ul>
 
 <p>The same entry, through the pipeline as it stands — a measured comparison, because a
-prompt change is the one kind of change the 1,543 offline checks cannot verify:</p>
+prompt change is the one kind of change the 1,556 offline checks cannot verify:</p>
 
 <table>
   <tr><th>On the same entry</th><th class="num">Before</th><th class="num">Now</th></tr>
@@ -1218,7 +1235,7 @@ somebody learns their journal is disposable.</p>
 <div class="callout">
   <p><strong>Knowledge is the tool. Relationships are the context. You are the
   priority.</strong></p>
-  <p class="meta">1,543 automated checks across 157 test functions, five suites, all free to run. KRYteria is not
+  <p class="meta">1,556 automated checks across 159 test functions, five suites, all free to run. KRYteria is not
   therapy and not a crisis service.</p>
 </div>
 

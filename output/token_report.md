@@ -118,6 +118,10 @@ Enforced in `backend/agents/orchestrator.py`, in code, not asked for in a prompt
 - **A hard ceiling of five model calls per request.** No loops, no "one more pass".
 - Simulated usage never reaches the usage table, so demo mode cannot exhaust a budget or
   mask one.
+- Account creation is bounded for the whole application (12/hour, 40/day). The
+  per-handle counter is cleared by a successful sign-up, so a script using a fresh handle
+  each time met no limit — and ~17 new accounts exhaust the 2,000,000 global daily cap.
+  The cap held the money to about a dollar a day; what it could not hold was availability.
 - Credential endpoints are throttled per handle, so the sign-in path cannot be used to
   generate load either.
 

@@ -47,6 +47,12 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
     signup_key = f"signup:{body.handle}"
     try:
         throttle.check(signup_key)
+        # And a bound with no key at all. The per-handle counter above is cleared by a
+        # successful sign-up, so a script using a fresh handle each time met no limit —
+        # and seventeen new accounts can exhaust the global daily token budget, which
+        # takes analysis away from everybody, including whoever is marking this. Checked
+        # before create_account because that is where Argon2id runs.
+        throttle.check_new_account()
     except throttle.TooManyAttempts as e:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(e),
                             headers={"Retry-After": str(e.retry_after)})
@@ -58,6 +64,7 @@ def sign_up(body: SignUp, response: Response, store: Store = Depends(get_store))
         throttle.record_failure(signup_key)
         raise HTTPException(status.HTTP_409_CONFLICT, "That handle is taken.")
     throttle.record_success(signup_key)
+    throttle.record_new_account()
     recovery_code = store.issue_recovery_code(account_id)
     issue_session(response, account_id)
     return {**store.get_account(account_id), "recovery_code": recovery_code}

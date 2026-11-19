@@ -1896,6 +1896,62 @@ def test_add_all_cannot_reach_another_account() -> None:
     check("their library is untouched", len(s.list_criteria(other)) == 1)
 
 
+def test_the_account_creation_bound_uses_two_rolling_windows() -> None:
+    """The windows themselves, driven by injected clocks rather than by waiting.
+
+    `tests/test_api.py` proves the route refuses. It cannot prove that the allowance
+    comes back, because that would mean a test sleeping for an hour. Here `now` is a
+    parameter, so both windows are checkable in microseconds — and "does it ever let
+    anybody back in" is the property most worth having a test for, since a limiter that
+    silently never resets is a self-inflicted outage.
+    """
+    from backend import throttle
+
+    throttle.reset()
+    t0 = 1_000_000.0
+
+    for i in range(throttle.MAX_NEW_ACCOUNTS_PER_HOUR):
+        throttle.check_new_account(now=t0 + i)
+        throttle.record_new_account(now=t0 + i)
+
+    expect_raises("the hourly bound trips", throttle.TooManyAttempts,
+                  throttle.check_new_account, now=t0 + 60)
+
+    # Just inside the hour: still refused. Just outside: allowed again.
+    expect_raises("still refused at 59 minutes", throttle.TooManyAttempts,
+                  throttle.check_new_account, now=t0 + 3540)
+    throttle.check_new_account(now=t0 + 3601)
+    check("the hourly allowance returns after an hour", True)
+
+    # Now the trickle a bare hourly limit would permit: a steady drip, under the hourly
+    # bound every time, until the daily bound catches it.
+    throttle.reset()
+    spacing = 600.0           # ten minutes apart — six an hour, half the hourly bound
+    n = 0
+    try:
+        for i in range(throttle.MAX_NEW_ACCOUNTS_PER_DAY + 10):
+            throttle.check_new_account(now=t0 + i * spacing)
+            throttle.record_new_account(now=t0 + i * spacing)
+            n += 1
+    except throttle.TooManyAttempts:
+        pass
+    check("a trickle under the hourly bound is still stopped by the daily one",
+          n == throttle.MAX_NEW_ACCOUNTS_PER_DAY,
+          f"created {n}, expected {throttle.MAX_NEW_ACCOUNTS_PER_DAY}")
+
+    # And a day later it is clear again. A bound that never lifts is an outage.
+    throttle.check_new_account(now=t0 + 86400 + (throttle.MAX_NEW_ACCOUNTS_PER_DAY * spacing))
+    check("the daily allowance returns after a day", True)
+
+    # The narrow reset must not disarm the brute-force counters beside it.
+    throttle.reset()
+    throttle.record_failure("somebody")
+    throttle.reset_new_accounts()
+    check("reset_new_accounts leaves the per-handle counters alone",
+          throttle._attempts.get("somebody") is not None)
+    throttle.reset()
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

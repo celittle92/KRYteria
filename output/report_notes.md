@@ -354,7 +354,7 @@ disposable.*
 | Agents / runtime prompt files | 7 / 8 |
 | API routes | 57 |
 | Backend Python | 11,278 lines |
-| Tests | **1,543 checks** across 157 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
+| Tests | **1,556 checks** across 159 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
 | Front end | 4,812 lines, 8 screens, React + Vite + TS + Tailwind |
 | Eval cases | 36 (18 safety, 18 reasoning), 108 automatic + 37 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |

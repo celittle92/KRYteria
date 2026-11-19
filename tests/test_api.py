@@ -47,6 +47,15 @@ def check(label: str, condition: bool, detail: str = "") -> None:
 
 
 def new_client(handle: str) -> TestClient:
+    # This suite creates dozens of accounts in a second, which is precisely the shape
+    # `throttle.check_new_account` exists to refuse. Stand that one bound down here so
+    # that tests about profiles and journals are not gated on a rate limiter; the bound
+    # itself is exercised deliberately in
+    # `test_account_creation_is_bounded_for_the_application_as_a_whole`. Narrow on
+    # purpose — clearing all throttle state would disarm the brute-force tests too.
+    from backend import throttle
+    throttle.reset_new_accounts()
+
     c = TestClient(app)
     r = c.post("/api/auth/signup",
                json={"handle": handle, "passphrase": "a long enough passphrase"})
@@ -1442,6 +1451,68 @@ def test_add_all_fills_a_profile_without_deciding_what_matters() -> None:
 
     again = c.post(f"/api/profiles/{prof['id']}/criteria/bulk", json={}).json()
     check("running it again is a no-op", again["added"] == 0, str(again))
+
+
+def test_account_creation_is_bounded_for_the_application_as_a_whole() -> None:
+    """A fresh handle every time used to meet no limit at all.
+
+    The per-handle counter is cleared by a successful sign-up, so a script that never
+    reuses a handle was never slowed down — and about seventeen new accounts exhaust the
+    2,000,000-token global daily budget, after which KRYteria analyses nothing for
+    anybody. The money was never the exposure (that cap holds the worst day to roughly a
+    dollar); the availability was.
+
+    The three properties below are the whole argument for a limiter that has no key.
+    A keyless bound is itself a denial-of-service primitive, so what matters is that
+    tripping it costs a visitor very little and costs an existing user nothing.
+    """
+    from backend import throttle
+
+    throttle.reset()
+    c = TestClient(app)
+
+    codes = [
+        c.post("/api/auth/signup",
+               json={"handle": f"flood-{i}", "passphrase": "a long enough passphrase"}
+               ).status_code
+        for i in range(throttle.MAX_NEW_ACCOUNTS_PER_HOUR)
+    ]
+    check("the hourly allowance is actually spendable",
+          codes == [201] * throttle.MAX_NEW_ACCOUNTS_PER_HOUR,
+          f"got {sorted(set(codes))} — a genuine visitor must not meet this")
+
+    r = c.post("/api/auth/signup",
+               json={"handle": "flood-over", "passphrase": "a long enough passphrase"})
+    check("one more is refused", r.status_code == 429, f"got {r.status_code}")
+    check("and it says how long to wait", "retry-after" in
+          {k.lower() for k in r.headers}, str(dict(r.headers)))
+
+    # Property 1: it refuses CREATION, never ACCESS. Everybody already using the app is
+    # unaffected — this is what keeps the limiter from being worse than what it prevents.
+    signin = c.post("/api/auth/signin",
+                    json={"handle": "flood-0", "passphrase": "a long enough passphrase"})
+    check("an existing account can still sign in while it is tripped",
+          signin.status_code == 200, f"got {signin.status_code}")
+
+    # Property 2: a 409 creates nothing, so it must not spend the allowance. Otherwise
+    # anybody could close the door for everyone else without opening it once.
+    throttle.reset()
+    taken = c.post("/api/auth/signup",
+                   json={"handle": "flood-0", "passphrase": "a long enough passphrase"})
+    check("re-using a handle still conflicts", taken.status_code == 409,
+          f"got {taken.status_code}")
+    after = c.post("/api/auth/signup",
+                   json={"handle": "flood-fresh", "passphrase": "a long enough passphrase"})
+    check("a refused sign-up did not consume the allowance",
+          after.status_code == 201, f"got {after.status_code}")
+
+    # Property 3: the day bound exists so a patient script cannot trickle under the hour
+    # bound forever, which is the gap an hourly-only limit leaves open.
+    check("there is a daily bound as well as an hourly one",
+          throttle.MAX_NEW_ACCOUNTS_PER_DAY > throttle.MAX_NEW_ACCOUNTS_PER_HOUR,
+          "an hourly limit alone is trickle-able")
+
+    throttle.reset()
 
 
 def main() -> int:

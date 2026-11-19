@@ -120,6 +120,19 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   destroyed all 18 signatures — the one part of that knowledge base a human had signed.
   `load_research_pack` honours them and still applies the source gate on the way in, so
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
+- **Two throttles, and they are different shapes** (`backend/throttle.py`). The first is
+  keyed on the handle being attempted and guards *access*; it is not per-IP because an IP
+  is a location and this app promises never to infer one. The second has **no key at all**
+  and guards *creation*: the per-handle counter is cleared by a successful sign-up, so a
+  script using a fresh handle each time met no limit, and **~17 new accounts exhaust the
+  2,000,000-token global daily cap**, after which nothing analyses for anybody. The money
+  was never the exposure (that cap holds the worst day near a dollar); availability was.
+  **12 new accounts/hour, 40/day**, two windows because an hourly bound alone is
+  trickle-able. A keyless limiter is itself a DoS primitive, so the justification is that
+  tripping it costs little: the whole demo opens in one click with no account, and it
+  refuses creation while leaving every existing user untouched. `new_client` in
+  `tests/test_api.py` calls **`reset_new_accounts()`**, deliberately narrow — clearing all
+  throttle state there would disarm the brute-force tests.
 - **Profiles: rename + archive, never delete.** `PATCH /api/profiles/{id}` edits the
   label; `POST /api/profiles/{id}/archive?archived=` hides or restores. **Do not add a
   per-profile delete route** — nine tables reference a profile, most cascading, and it
@@ -247,7 +260,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,543 checks across 157 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,556 checks across 159 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
