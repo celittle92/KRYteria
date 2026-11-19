@@ -49,7 +49,7 @@ supersedes the old one. This is what lets the product notice that a standard qui
 easier — destroy the history and that insight is gone.
 
 ```bash
-python3 tests/test_offline.py        # 515 checks, needs no packages at all
+python3 tests/test_offline.py        # 574 checks, needs no packages at all
 ```
 
 ---
@@ -137,8 +137,27 @@ invented: *"instead of keeping a tally"* and *"without it becoming a fight"* are
 conduct a sentence describes*, so every sentence about him was matched against criteria
 that describe her, and his own standards were read back as open questions about a woman who
 had done nothing in the entry. `ExtractedObservation.about` is the fix at the contract
-level; the four behavioural rules live in `narrative.md`, `evidence.md`, `reasoning.md` and
+level; the behavioural rules live in `narrative.md`, `evidence.md`, `reasoning.md` and
 `reflection.md`, with regression cases `bur-01`, `imp-01` and `ovm-01`.
+
+**The correction had its own failure mode, which is the part worth keeping.** Verified by
+re-running the same entry live — the only way to check a prompt change — the fix worked
+and introduced two faults. One question was built on a premise the entry did not contain
+(*"you've decided to tell Catherine…"*), the same imputation failure pointed at the
+**writer**, because the rule forbade inventing a behaviour for the person being assessed
+and said nothing about the person writing. And four *correct* mappings were lost: his
+description of her intelligence, career and humour arrived as one `emotional_reaction`
+marked `me` and were not mapped at all. Both are closed and confirmed by a third run.
+`narrative.md` now **splits a sentence that does two jobs** — his feeling (`me`) and what
+it reports about her (`them`), because qualities count and not only actions — and
+`evidence.md` records that **some criteria are about the writer's own experience**
+(*Physical attraction*, *chemistry*), which a `me` observation answers rather than fails.
+Regression cases `imp-02` and `lst-01`, failure mode `evidence_loss`.
+
+One of the two causes was not in a prompt at all: `agents/evidence._ABOUT["me"]` ended
+*"not evidence about the other person"*, an absolute printed beside every observation and
+sitting closer to the model than the nuance it contradicted. **A label says what a thing
+is; what to do with it belongs where the exceptions can live.**
 
 **Getting a list in, without the app editing it.** Added 2026-11-17, after the author made
 her own account and hit the wall in minutes: somebody who already knows what they want has
@@ -225,7 +244,9 @@ open questions.
 
 ## 6. Security
 
-Three gaps, all of which the app shipped with, all found by review rather than incident.
+Six gaps, all of which the app shipped with, all found by review or audit rather than by
+incident. The first three came from one review, and each of the three after it was found
+by going back and looking again — which is the honest summary of how this section grew.
 
 **Sessions did not expire.** `URLSafeSerializer` signatures are valid forever; the
 `max_age` on `set_cookie` is an instruction to the *browser* about when to stop sending a
@@ -261,8 +282,23 @@ Reproduced with two accounts, fixed in both places, and pinned by
 `test_another_account_cannot_plant_or_see_a_checklist_observation`. **Stamping an id is
 not the same as asserting it**, and the two read almost identically at a glance.
 
+**A sixth, inside the throttle itself: a fresh handle met no limit at all.**
+`throttle.check` is keyed on the handle being attempted and `record_success` clears that
+key, so a script posting a new handle every time was never slowed. Unlimited account
+creation is a lever on the only resource this app spends — the per-account cap is 120,000
+tokens a day and the global cap is 2,000,000, so **about seventeen new accounts exhaust
+the global budget** and then nothing analyses for anybody until midnight UTC. The money
+was never the exposure; that cap holds the worst day near a dollar. Availability was.
+`throttle.check_new_account` now bounds creation for the application as a whole — 12 an
+hour, 40 a day, two windows because an hourly bound alone can be trickled under at six an
+hour. It has **no key**, for the same reason the counter above is keyed on a handle
+rather than an IP. A keyless limiter is itself a denial-of-service primitive, so the
+justification has to be that tripping it costs little: the whole demo opens in one click
+and needs no account, and it refuses *creation* while leaving every existing user's
+sign-in, journal and analysis untouched.
+
 ```bash
-.venv/bin/python tests/test_api.py        # 278 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 309 checks, including all of the above
 ```
 
 ---
@@ -351,11 +387,11 @@ from a new browser is the one most likely to lose the race with the boot.
 ## 10. Verifying all of it
 
 ```bash
-python3      tests/test_offline.py      # 515 — store layer, needs no packages
-.venv/bin/python tests/test_contracts.py    # 125 — output contracts, demo provider
+python3      tests/test_offline.py      # 574 — store layer, needs no packages
+.venv/bin/python tests/test_contracts.py    # 215 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 278 — HTTP, isolation, security, retention
-.venv/bin/python tests/test_evals.py        # 353 — the harness, mostly that it REFUSES
+.venv/bin/python tests/test_api.py          # 309 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_evals.py        # 384 — the harness, mostly that it REFUSES
 ```
 
 All five are free, offline, and need no API key. **Live runs cost money and refuse to

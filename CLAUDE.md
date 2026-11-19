@@ -120,6 +120,17 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   destroyed all 18 signatures — the one part of that knowledge base a human had signed.
   `load_research_pack` honours them and still applies the source gate on the way in, so
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
+- **`tools/check_consistency.py --tests` now checks the per-suite breakdown too**, not
+  only the project-wide total. It had to: the README and harness advertised
+  515/125/278/353 against an actual 574/215/309/384 while `1,556 checks` was re-derived
+  every run and right every time. **A total that is right over parts that are wrong is the
+  most persuasive kind of wrong.** Three rules: a three-figure count before "checks"/"cases"
+  must be one the project can produce (membership, not equality — five suites plus three
+  eval-pack figures are all in play); a count annotated on a command
+  (`tests/test_api.py  # 309`) is checked against that named suite; and `(?<!of )` plus
+  `(?<![\d,])` keep it from firing on "1,556 checks" or on *"3 of 13 adversarial cases"*,
+  which is true history. **Do not re-add a comment listing numbers it declines to check** —
+  the old one named 515 and 273 as legitimate, which is exactly what they stopped being.
 - **Two throttles, and they are different shapes** (`backend/throttle.py`). The first is
   keyed on the handle being attempted and guards *access*; it is not per-IP because an IP
   is a location and this app promises never to infer one. The second has **no key at all**

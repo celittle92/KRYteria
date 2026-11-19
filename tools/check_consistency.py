@@ -79,6 +79,30 @@ def truth() -> dict[str, object]:
     t["research_total"] = len(notes)
     t["research_verified"] = sum(1 for n in notes if n.get("verified_at"))
 
+    # The two evaluation packs. A different population from the test suites, and the
+    # reason three-figure "N checks" could not be checked before: 145 eval checks and
+    # 309 API checks are both legitimate, so a bare number tells you nothing without
+    # knowing which population it belongs to. Counting both makes the question decidable.
+    ev_cases = ev_checks = ev_manual = 0
+    for p in ("tests/evals/safety_evals.json", "tests/evals/reasoning_evals.json"):
+        for case in json.loads(read(p))["cases"]:
+            ev_cases += 1
+            for c in case.get("checks", []):
+                ev_checks += 1
+                if c.get("check") == "manual":
+                    ev_manual += 1
+    t["eval_cases"] = ev_cases
+    t["eval_checks"] = ev_checks
+    t["eval_manual"] = ev_manual
+    t["eval_automatic"] = ev_checks - ev_manual
+    # Per-pack case counts as well as the combined one. Both packs are quoted separately
+    # in the deliverables ("Safety pack, 18 cases"), and a rule that only knew the
+    # combined 36 would call those wrong.
+    t["eval_cases_per_pack"] = sorted({
+        len(json.loads(read(p))["cases"])
+        for p in ("tests/evals/safety_evals.json", "tests/evals/reasoning_evals.json")
+    })
+
     runs = json.loads(read("output/usage_log.json"))["runs"]
     measured = [r for r in runs if r["calls"] is not None]
     t["runs_total"] = len(runs)
@@ -90,13 +114,21 @@ def truth() -> dict[str, object]:
     return t
 
 
-def run_suites() -> tuple[int, int]:
+def run_suites() -> tuple[int, int, dict[str, int]]:
     """The real check count, by running them. Free: no API key, no network.
 
-    Returns (checks_passing, failures). A suite that FAILS used to print a warning and
-    leave the exit code alone, so the one thing most worth gating on did not gate.
+    Returns (checks_passing, failures, per_suite). A suite that FAILS used to print a
+    warning and leave the exit code alone, so the one thing most worth gating on did not
+    gate.
+
+    ``per_suite`` exists because the project-wide total was the only figure being
+    checked, and the breakdown underneath it drifted badly while the total stayed
+    correct: the README and harness advertised 515/125/278/353 against actual
+    574/215/309/384. Every one of those was written down once and never looked at again.
+    A total that is right over parts that are wrong is the most persuasive kind of wrong.
     """
     total = broken = 0
+    per_suite: dict[str, int] = {}
     for name, interp in (("test_offline", "python3"),
                          ("test_contracts", ".venv/bin/python"),
                          ("test_wiring", ".venv/bin/python"),
@@ -120,7 +152,8 @@ def run_suites() -> tuple[int, int]:
             print(f"  !! {name}: {failed} FAILED")
             broken += failed
         total += passed
-    return total, broken
+        per_suite[name] = passed
+    return total, broken, per_suite
 
 
 # --------------------------------------------------------------------------- claims
@@ -152,6 +185,13 @@ def claims(t: dict[str, object]) -> list[tuple[str, object, str]]:
         ("resources, intl",          t["resources_intl"],
          r"(ten|nine|\d+) entries we can stand"),
         ("runs, total",              t["runs_total"],    r"(\d+) live\s+runs"),
+        # "37 of 145 evaluation checks need a human" slips past the membership rule in
+        # main(): the `of` exclusion there blocks the 145 deliberately, and 37 is not
+        # followed by the word "checks". Anchored on its own wording instead, which is
+        # how the research figures are handled a few lines up. It was advertising
+        # 33 of 128 after the pack grew by five cases.
+        ("eval manual",  t["eval_manual"], r"(\d+) of \d+ evaluation checks"),
+        ("eval checks",  t["eval_checks"], r"\d+ of (\d+) evaluation checks"),
     ]
 
 
@@ -170,10 +210,12 @@ def main() -> int:
 
     if args.tests:
         print("\nRunning the suites (free, no API key)…")
-        checks, broken = run_suites()
+        checks, broken, per_suite = run_suites()
         problems += broken
         print(f"  {'checks passing':28} {checks}")
         print(f"  {'test functions':28} {t['test_functions']}")
+        for name, n in per_suite.items():
+            print(f"  {'  ' + name:28} {n}")
         # report_notes.md is a working record that deliberately QUOTES the old wrong
         # totals inside its account of how they were wrong ("claimed 476 checks against
         # an actual 1,337"). Checking it turns its honesty into a failure, which is the
@@ -201,6 +243,57 @@ def main() -> int:
                     print(f"  MISMATCH {path}: says {m.group(1)} test functions, "
                           f"actual {t['test_functions']}")
                     problems += 1
+
+            # Three-figure counts: the per-suite breakdown and the eval packs.
+            #
+            # These used to be skipped, with a comment saying they were "legitimate
+            # per-suite breakdowns (515 offline, 273 API…)" — which was true when it was
+            # written and false by the time anybody read it. The README and harness were
+            # advertising 515/125/278/353 against an actual 574/215/309/384 while the
+            # project-wide total was checked on every run and correct every time.
+            #
+            # A bare three-figure number cannot be checked against one expected value,
+            # because several populations are in play at once: five suites, plus the
+            # eval packs' total, automatic and manual counts. So the rule is membership
+            # rather than equality — a number before the word "checks" has to be one the
+            # project can actually produce. That cannot tell "515 offline checks" from
+            # "515 API checks", and it does not claim to; it catches a number that
+            # belongs to nothing, which is what every one of these had become.
+            # Two exclusions, both learned by running this and reading what it caught:
+            #
+            #   (?<![\d,])  — otherwise "1,556 checks" matches as "556 checks" and the
+            #                 project-wide total is reported as a bogus per-suite one.
+            #   (?<!of )    — "only 3 of 13 adversarial cases reached the agent" is a
+            #                 true statement about November 11, when the pack held 13.
+            #                 A history that stays accurate is not drift, and the
+            #                 existing claims() comment already flags `N of M` as the
+            #                 shape that cries wolf.
+            legitimate = set(per_suite.values()) | {
+                t["eval_checks"], t["eval_automatic"], t["eval_manual"], t["eval_cases"],
+            } | set(t["eval_cases_per_pack"])
+            for m in re.finditer(r"(?<!of )(?<![\d,])(\d{2,3}) "
+                                 r"(?:automatic |wiring |adversarial )?"
+                                 r"(?:checks|cases)\b", text):
+                if int(m.group(1)) not in legitimate:
+                    ctx = text[max(0, m.start() - 70):m.end() + 30].replace("\n", " ")
+                    print(f"  MISMATCH {path}: {m.group(1)} is not a count this project "
+                          f"produces (suites {sorted(per_suite.values())}, evals "
+                          f"{t['eval_checks']}/{t['eval_automatic']}/{t['eval_manual']}/"
+                          f"{t['eval_cases']})")
+                    print(f"           …{ctx.strip()}…")
+                    problems += 1
+
+            # And the shape the rule above cannot see: a count hung off the command
+            # itself, `tests/test_offline.py   # 515 — store layer`. No "checks" word to
+            # anchor on, and it is the version a reader is most likely to trust, because
+            # it sits on the line they are about to copy and run. Anchored on the suite
+            # filename, so this one knows exactly which number it is looking at.
+            for name, n in per_suite.items():
+                for m in re.finditer(rf"tests/{name}\.py\s*#\s*(\d+)", text):
+                    if int(m.group(1)) != n:
+                        print(f"  MISMATCH {path}: {name} is annotated "
+                              f"{m.group(1)}, actual {n}")
+                        problems += 1
 
     print("\nClaims in the deliverables:")
     seen: set[str] = set()

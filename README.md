@@ -32,11 +32,11 @@ clone and needs no API key.
 
 | Piece | State |
 |---|---|
-| Data model | built, 515 checks |
-| Agent output contracts | built, 125 checks |
+| Data model | built, 574 checks |
+| Agent output contracts | built, 215 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
-| HTTP API, incl. cross-account isolation | built, 278 checks |
-| Evaluation harness | built, 353 checks |
+| HTTP API, incl. cross-account isolation | built, 309 checks |
+| Evaluation harness | built, 384 checks |
 | Deterministic demo mode (no API key) | built |
 | Privacy architecture | built — isolation, retention, redaction |
 | Front end (React + Vite + TS) | built, `dist/` committed so no Node is needed |
@@ -192,7 +192,7 @@ other's rows every way the API allows.
 
 ### Evaluations, and the A/B against a general-purpose chatbot
 
-31 adversarial cases — 18 on safety, graded in **both** failure directions, and 13 on
+36 adversarial cases — 18 on safety, graded in **both** failure directions, and 18 on
 reasoning quality — plus a head-to-head against the way this is done today.
 
 ```bash
@@ -579,7 +579,7 @@ cost as *unavailable* rather than printing a zero as though a run were free.
   cached-input count itself *is* reported and captured — measured at zero across ten calls
   on two 17 November runs, which is what a cold cache should produce. Stated in the report
   rather than smoothed over.
-- **33 of 128 evaluation checks need a human** and are marked `manual`. An LLM judge
+- **37 of 145 evaluation checks need a human** and are marked `manual`. An LLM judge
   would have automated them and would have been this project's own model grading its own
   output against its own rubric.
 - **One research entry of nineteen stays pending** — its containing volume is confirmed
