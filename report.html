@@ -1106,117 +1106,91 @@ is provided, so only two distinct entries can be cited here.
 threshold — because a fix made the day before had hidden the current entry from it. An
 evaluation harness that only ever confirms the product is not measuring anything.</p>
 
-<h3>He wrote about himself and got back a page of doubts about her</h3>
-<p>The sharpest finding came from writing a Brain Dump into the product rather than
-reading the code. A writer describes <em>his own</em> inconsistency — unanswered messages
-until 10pm, unpredictable hours, no settled view of what he is willing to change. KRYteria
-returned <strong>twenty-five mapping rows</strong>, most of them <em>complicating</em>,
-most ending <em>"…but this does not establish whether she can live with it."</em> It asked
-whether she keeps a tally, and whether discussing things with her becomes a fight.</p>
+<h3>Whose conduct is this?</h3>
+<p>The sharpest finding came from writing a Brain Dump into the product rather than reading
+the code. A writer described <em>his own</em> inconsistency — unanswered messages until
+10pm, unpredictable hours, no settled view of what he was willing to change — and KRYteria
+returned twenty-five mapping rows asking whether <em>she</em> keeps a tally and whether
+discussing things with <em>her</em> becomes a fight. Those phrases were not invented: they
+are clauses of <strong>his own criteria, in his own words</strong>, handed back as doubts
+about a woman who had done nothing in the entry. It reads as evidence precisely because the
+words are his. <strong>The pipeline had no representation of whose conduct a sentence
+describes.</strong></p>
 
-<p>The mechanism is not the obvious one. <strong>Those phrases were not invented — they
-are clauses of his own criteria</strong>, in his own words: <em>"raises a problem once,
-directly, instead of keeping a tally"</em>, <em>"can say what she needs without it
-becoming a fight."</em> The pipeline had no representation of <em>whose conduct a sentence
-describes</em>, so every sentence about him was matched against criteria that describe
-her, and <strong>his own standards came back as open questions about a woman who had done
-nothing in the entry.</strong> It reads as evidence precisely because the words are his.</p>
+<p>It has one now. Every observation carries <code>about</code> — <em>me</em>,
+<em>them</em>, <em>both</em>, <em>unclear</em> — defaulting to <em>unclear</em> and never to
+<em>them</em>, so analysis made before the field existed cannot silently become a claim
+about somebody. Four rules sit on it, each with a regression case:</p>
 
-<p>Observations now carry <code>about</code> — <em>me</em>, <em>them</em>, <em>both</em>,
-<em>unclear</em>, defaulting to <em>unclear</em> and never to <em>them</em> — and an entry
-that is mostly about the writer is named as such rather than converted. Three rules
-followed from the same run: never build a question around a behaviour the entry did not
-describe; a criterion is one standard in the user's voice, not a checklist of separately
-testable clauses; and not every sentence needs a home in the criteria library. All three
-carry regression cases. The same run also produced the clearest thing the product has
-done unprompted — <em>"your November 12 entry says you took a job with more travel and
-unpredictable hours"</em>, correctly dated and correctly recalled across entries, which is
-the move a stateless chatbot cannot make.</p>
+<ul>
+  <li><strong>An entry about the writer is named, not converted.</strong> <em>"Most of this
+  entry is about your own schedule, communication habits and uncertainty, rather than
+  Catherine's response"</em> is a finding, and a more useful one than twenty rows of
+  manufactured doubt.</li>
+  <li><strong>A sentence that does two jobs is split.</strong> <em>"I like her — she's
+  smart, she's funny, she has her own career"</em> is his feeling <em>and</em> four things
+  about her. Qualities count, not only actions; the grammar of <em>"I admire her
+  intelligence"</em> does not make her intelligence a fact about him.</li>
+  <li><strong>Some criteria are about the writer's own experience.</strong> <em>Physical
+  attraction — "I want to be near her."</em> Her conduct alone cannot answer that, so a
+  <code>me</code> observation is the evidence it asks for rather than one to discard.</li>
+  <li><strong>No question opens on a premise the entry does not state</strong> — no
+  decision, intention or commitment, for either person. A criterion is one standard in the
+  user's voice, not a checklist of clauses to interrogate separately.</li>
+</ul>
 
-<p><strong>The same entry was then re-run against the fixed prompts</strong> — five calls,
-$0.0052, the fifteenth row in §5 — because a prompt change is the one kind of change the
-1,543 offline checks cannot verify:</p>
+<p>The same entry, through the pipeline as it stands — a measured comparison, because a
+prompt change is the one kind of change the 1,543 offline checks cannot verify:</p>
 
 <table>
-  <tr><th>On the same entry</th><th class="num">Before</th><th class="num">After</th></tr>
-  <tr><td>Mapping rows</td><td class="num">25</td><td class="num">2</td></tr>
-  <tr><td>Unsettled notes</td><td class="num">8</td><td class="num">2</td></tr>
+  <tr><th>On the same entry</th><th class="num">Before</th><th class="num">Now</th></tr>
+  <tr><td>Mapping rows</td><td class="num">25</td><td class="num">4</td></tr>
+  <tr><td>Unsettled notes</td><td class="num">8</td><td class="num">3</td></tr>
   <tr><td>Questions about whether she could accommodate him</td><td class="num">5</td><td class="num">0</td></tr>
-  <tr><td>Observations about the writer, of 21</td><td class="num">not represented</td><td class="num">15</td></tr>
+  <tr><td>Supporting mappings about her own qualities</td><td class="num">4</td><td class="num">4</td></tr>
+  <tr><td>Observations attributed to the writer, of 22</td><td class="num">not represented</td><td class="num">16</td></tr>
 </table>
 
-<p>The reflection changed from the tension between his role and his relationship to
-<em>"Let's examine what you can realistically choose, rather than what you hope Catherine
-will understand."</em> And the agent arrived, unprompted, at almost exactly the question
-the critique said it should have asked: <em>"What would a realistic, sustainable level of
-communication from you look like, regardless of what Catherine expects?"</em></p>
+<p>The last two rows are the ones to read together: <strong>the noise fell six-fold and
+nothing real was lost.</strong> Her intelligence, her career, her humour and his attraction
+to her are still mapped <em>supporting</em> — and <em>Physical attraction</em> is now
+evidenced by his own feeling, which is what that criterion actually asks about. The
+reflection reads <em>"Let's examine what you can realistically choose, rather than what you
+hope Catherine will understand,"</em> and where the product once asked whether she keeps a
+tally, it asks <em>"what has Catherine actually asked for when she says consistency
+matters?"</em> Three <em>material</em> questions, which is the stated ceiling.</p>
 
-<p><strong>It also introduced two new faults, which is why the run was worth paying
-for.</strong> One question was built on a premise the entry does not contain — <em>"you've
-decided to tell Catherine what the new schedule actually looks like"</em>, which he never
-said. That is the same imputation failure as before, pointed at the writer instead of at
-her: the rule forbade inventing a behaviour for the person <em>being assessed</em> and said
-nothing about inventing one for the person <em>writing</em>. And four <em>correct</em>
-mappings were lost: his description of her intelligence, her career, her humour and his
-attraction to her all arrived as one observation about his own feelings, marked
-<code>me</code>, and were therefore not mapped at all. The over-correction costs real
-evidence about the person actually being assessed.</p>
-
-<p>Both are now fixed, and the second fix is the more interesting one. The imputation ban
-is symmetric: no question may open with a decision, intention or commitment the entry does
-not state, in either direction. For the lost evidence, the Narrative agent now splits a
-sentence that reports her qualities through his feeling — <em>"she's funny, she has her own
-career"</em> survives the frame it arrived in — and the Evidence agent is told that a
-criterion about the writer's own experience, <em>physical attraction</em> or
-<em>chemistry</em>, is answered by a <code>me</code> observation rather than disqualified by
-one. <strong>One of the two causes was not in a prompt at all.</strong> The label printed
-beside every observation ended <em>"not evidence about the other person"</em> — an absolute
-sitting closer to the model than the nuance it contradicted. A label should say what a
-thing is; what to do with it belongs where the exceptions can live. Two regression cases,
-<code>imp-02</code> and <code>lst-01</code>, hold the line.</p>
-
-<p><strong>A third run of the same entry confirmed both</strong> — the sixteenth row in §5,
-$0.0067. The Narrative agent split the sentence it had swallowed, into <em>"the writer likes
-Catherine and feels attracted to her"</em> and <em>"describes Catherine as smart and funny,
-says she has her own career and opinions, and says she challenges the writer."</em> All four
-lost mappings came back as <em>supporting</em>, and <em>Physical attraction</em> was mapped
-from the <code>me</code> observation rather than refused for being one. No question opened on
-an invented premise; one asks <em>"what has Catherine actually asked for when she says
-consistency matters?"</em>, which is the phrasing the prompt recommends. And the earlier
-fixes held — the cross-criterion note says in as many words that the entry's silence about
-explaining jokes <em>"is not a separate gap to interrogate."</em></p>
+<p>The same run produced the clearest thing this product has done unprompted:
+<em>"your November 12 entry says you took a job with more travel and unpredictable
+hours"</em> — correctly dated and correctly recalled across entries, which is the move a
+stateless chatbot cannot make.</p>
 
 <p class="meta">Stated plainly: this was the author testing her own product, and it is
-<strong>not</strong> the independent user test the Impact section still needs. Three runs
-of one entry — 15 calls, two cents, and 29% more per entry than before ($0.0052 → $0.0067
-for longer prompts and more real findings to write up) — bought two product failures found,
-fixed, and confirmed fixed. That is the exchange rate for correcting judgment in a system
-whose judgment is the product, and the fastest way to find what is wrong with it is still
-to use it.</p>
+<strong>not</strong> the independent user test the Impact section still needs. Getting here
+took three paid runs of one entry — 15 calls, two cents, and 29% more per entry than before
+($0.0052 → $0.0067) — because the first correction over-corrected and had to be caught the
+same way. There is no offline check for judgment; the only instrument is use.</p>
 
 <h3>Documented is not disclosed</h3>
-<p>The last finding came from the author opening her own hosted account. The free tier
-cannot attach a disk, so every account is erased on each restart and deploy —
-<strong>a fact written down in three files, explained carefully in each, and never once
-said to the person about to type into the sign-up form.</strong> The database was even
-placed at <code>/data</code> specifically so a disk could be mounted there later. It was
-understood, planned around, and undisclosed.</p>
+<p><strong>The hosted instance keeps nothing, and says so above the sign-up form.</strong>
+It runs on free hosting with a disposable disk, so every account, entry and criterion is
+erased whenever the app restarts or is updated. The container image defaults to <em>keeps
+nothing</em>, so a deployment has to claim durability deliberately rather than promise it
+by omission on every host that has none.</p>
 
-<p>That is a different failure from the two above, and the common root is the part worth
-keeping: <strong>every check this project runs verifies an artifact, and none of them
-asks whether a claim ever reached a person.</strong> The consistency checker compares
-documents against source and was green. Both audits read the deployment notes and found
-them accurate. A README is not where somebody learns their journal is disposable. The app
-now says it above the first field, and the container image defaults to <em>keeps
-nothing</em> — so a deployment has to claim durability deliberately, rather than promise
-it by omission on every host that has none.</p>
+<p>That was true before it was said, which is the part worth keeping. The fact was written
+down in three files, explained carefully in each, and never once put in front of the person
+about to type. <strong>Every check this project runs verifies an artifact; none of them
+asks whether a claim ever reached a person.</strong> The consistency checker was green.
+Both audits read the deployment notes and found them accurate. A README is not where
+somebody learns their journal is disposable.</p>
 
 <h3>Known limits</h3>
 <ul>
   <li><strong>Cache writes are not modelled</strong> in cost figures; they are slightly low on a cold cache.</li>
   <li><strong>No database migrations.</strong> A schema change requires a rebuild. Acceptable with no real users; it needs Alembic before anybody's journal depends on it.</li>
   <li><strong>Provider-chain retention is not established.</strong> Erasure governs this database only. What Portkey and the upstream provider retain is not in writing, so nobody is told their data is never retained anywhere.</li>
-  <li><strong>33 of 128 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
+  <li><strong>37 of 145 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
   <li><strong>Date Calendar and Cooldown are designed and not built.</strong> P1, deliberately.</li>
   <li><strong>SQLite on a host is not production-grade encryption</strong>, and the README says so rather than implying otherwise.</li>
   <li><strong>The hosted instance keeps nothing</strong>, and now says so before you type. Durability needs a paid instance with a disk; the demonstration deployment is not one, deliberately.</li>
