@@ -6,7 +6,7 @@
     "than reconstructed from memory.",
     "",
     "The rubric caps the tokenomics row at half credit for estimates alone, which is the",
-    "right rule — a cost model nobody has checked against a bill is a spreadsheet, not a",
+    "right rule \u2014 a cost model nobody has checked against a bill is a spreadsheet, not a",
     "measurement. Everything here was paid for.",
     "",
     "Figures are slightly LOW on a cold cache: the course publishes a $0.125/1M",
@@ -20,7 +20,7 @@
     "cached_input": 0.01,
     "output": 0.5,
     "cache_write_surcharge_not_applied": 0.125,
-    "source": "MGT 409 Lecture 11 cached-token-cost table, corroborated against the HW6 data pack — two sources, same numbers"
+    "source": "MGT 409 Lecture 11 cached-token-cost table, corroborated against the HW6 data pack \u2014 two sources, same numbers"
   },
   "runs": [
     {
@@ -52,7 +52,7 @@
       "input_tokens": 11549,
       "output_tokens": 3096,
       "cost_usd": null,
-      "note": "Cost not recorded by the harness at the time; tokens were. Superseded by the run below and its scores should not be quoted — it predates three fixes.",
+      "note": "Cost not recorded by the harness at the time; tokens were. Superseded by the run below and its scores should not be quoted \u2014 it predates three fixes.",
       "evidence": "output/live_runs/ab_comparison_2026-11-11_first-live-run.md"
     },
     {
@@ -125,7 +125,7 @@
       "output_tokens": null,
       "cost_usd": null,
       "wall_clock_seconds": 196,
-      "note": "A real billed run — output/reasoning_results.md at commit 378414f records it as 'Live run ... Real model calls' at 2026-11-17T00:07:47Z, 196.01s. Its token figures are LOST: the second run overwrote the artefact an hour later. Recorded as unknown rather than copied from the second run, which is what this log did briefly and which made an estimate look like a measurement. The project's real spend is therefore about $0.016 higher than the total below.",
+      "note": "A real billed run \u2014 output/reasoning_results.md at commit 378414f records it as 'Live run ... Real model calls' at 2026-11-17T00:07:47Z, 196.01s. Its token figures are LOST: the second run overwrote the artefact an hour later. Recorded as unknown rather than copied from the second run, which is what this log did briefly and which made an estimate look like a measurement. The project's real spend is therefore about $0.016 higher than the total below.",
       "evidence": "git show 378414f:output/reasoning_results.md"
     },
     {
@@ -142,7 +142,7 @@
     {
       "date": "2026-11-17",
       "run": "trace-jane-money-3",
-      "what": "One entry traced per agent, for the report's §4 table",
+      "what": "One entry traced per agent, for the report's \u00a74 table",
       "calls": 5,
       "input_tokens": 10692,
       "output_tokens": 6146,
@@ -152,37 +152,49 @@
     {
       "date": "2026-11-17",
       "run": "trace-screenshot-1",
-      "what": "Live brain dump for the §4 trace screenshot. The page remounted after the POST and the in-memory analysis was lost, so the capture failed; the run itself completed.",
+      "what": "Live brain dump for the \u00a74 trace screenshot. The page remounted after the POST and the in-memory analysis was lost, so the capture failed; the run itself completed.",
       "calls": 5,
       "input_tokens": 10976,
       "cached_input_tokens": 0,
       "output_tokens": 6934,
       "cost_usd": 0.00456,
-      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO — a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
+      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO \u2014 a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
       "evidence": "output/screenshots/trace-dark.png"
     },
     {
       "date": "2026-11-17",
       "run": "trace-screenshot-2",
-      "what": "The same entry again, captured this time. Produced output/screenshots/trace-dark.png — the per-agent trace the Agent-design row asks for.",
+      "what": "The same entry again, captured this time. Produced output/screenshots/trace-dark.png \u2014 the per-agent trace the Agent-design row asks for.",
       "calls": 5,
       "input_tokens": 11021,
       "cached_input_tokens": 0,
       "output_tokens": 7122,
       "cost_usd": 0.00466,
-      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO — a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
+      "note": "The provider reported a cached-input count on every call in this run, and it was ZERO \u2014 a cold cache, each agent's prompt being distinct. That is the first time this project has a measured cached figure rather than an absent one, and the cost reconciles to the cent against the uncached prices.",
       "evidence": "output/screenshots/trace-dark.png"
+    },
+    {
+      "date": "2026-11-18",
+      "run": "adrian-burden-shift-after-fix",
+      "what": "Christine's Brain Dump re-run through the pipeline after the burden-shift fix, to check a prompt change the offline suites cannot verify. 5 agents, Adrian's Long-Term Partner KRYteria.",
+      "calls": 5,
+      "input_tokens": 16364,
+      "cached_input_tokens": 0,
+      "output_tokens": 7184,
+      "cost_usd": 0.00523,
+      "note": "Mappings 25 -> 2, unsettled notes 8 -> 2, and the observations split me:15 / both:5 / them:1 \u2014 the entry measured as what it is. Every phrase Christine flagged about Catherine is gone except one, which is now attached to a real mapping rather than to a silence. It also exposed two NEW faults: a question built on a premise the entry does not contain, and four correct supporting mappings about Catherine's own qualities lost to the over-correction. Both recorded rather than tidied away.",
+      "evidence": "output/live_runs/2026-11-18-adrian-after-fix.txt"
     }
   ],
   "totals": {
-    "live_runs": 14,
-    "runs_with_token_counts": 13,
-    "runs_with_a_cost_figure": 12,
-    "model_calls": 324,
-    "input_tokens": 669838,
-    "output_tokens": 302972,
-    "cost_usd": 0.19478,
-    "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 — the figures from before two corrections. A note claiming verification is not verification; the check is."
+    "live_runs": 15,
+    "runs_with_token_counts": 14,
+    "runs_with_a_cost_figure": 13,
+    "model_calls": 329,
+    "input_tokens": 686202,
+    "output_tokens": 310156,
+    "cost_usd": 0.20001,
+    "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 \u2014 the figures from before two corrections. A note claiming verification is not verification; the check is."
   },
   "per_interaction": {
     "_comment": "What one user action costs, measured rather than modelled.",

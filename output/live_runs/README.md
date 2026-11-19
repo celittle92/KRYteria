@@ -284,3 +284,43 @@ were written to test. Cost accepted: +53% per brain dump.
 
 **So the scores in this file predate both the grader fixes and the routing fix. Do not
 quote them.** It is kept as the record of the run that found all three.
+
+---
+
+## 2026-11-18 — Adrian's entry, after the burden-shift fix
+
+`2026-11-18-adrian-entry.txt` is the Brain Dump Christine wrote in Adrian's voice;
+`2026-11-18-adrian-after-fix.txt` is the full run output. 5 calls, 16,364 / 7,184 tokens,
+**$0.00523**. The "before" is the PDF she exported from the app, summarised in
+`AI_prompts.md` Prompt 62.
+
+**Fixed, measured on the same text:** mapping rows 25 → 2; unsettled notes 8 → 2;
+questions about whether Catherine could accommodate him 5 → 0. "Keeps a tally" and
+"explains her jokes" are gone. Observations split `me: 15 / both: 5 / them: 1`, so the
+entry is now measured as what it is. The unsettled note on *Compatible with the hours I
+work* says in as many words that most of the entry is about his own schedule rather than
+her response — the prompt rule landing verbatim. The reflection moved to *"Let's examine
+what you can realistically choose, rather than what you hope Catherine will understand."*
+
+**Two NEW faults this run exposed. Neither is fixed; do not let them quietly disappear.**
+
+1. **A question built on a premise the entry does not contain.** *"You've decided to tell
+   Catherine what the new schedule actually looks like before she experiences it."* He
+   decided no such thing. This is the same imputation failure as before, now pointed at
+   the **writer** instead of the person being assessed — which the reasoning prompt warns
+   about in one direction only. The rule needs to be symmetric.
+2. **Four correct mappings lost.** His description of Catherine's intelligence, her
+   career, her humour and his attraction to her arrived as a single `emotional_reaction`
+   marked `me`, and so were not mapped at all. The old run mapped each of them
+   `supporting`, correctly. The narrative prompt says a feeling about the other person is
+   `me` when it describes the writer's state and `them` when it reports something she did
+   — a sentence doing both needs splitting, or `about` needs a value for it. **The
+   over-correction costs real evidence about the person being assessed.**
+
+**One judgement call, left as it is.** The surviving `definition` question — *"your
+criterion is specifically about her being able to say what she needs without it becoming
+a fight; do these experiences show that particular thing for you?"* — is attached to an
+actual mapping (*"we can disagree and still have a great night"* → *Emotional maturity*),
+so it is the near-synonym audit working on a substitution rather than manufacturing doubt
+from a silence. It is the one phrase from the critique that survived, and it survived for
+a defensible reason.

@@ -801,7 +801,7 @@ of $4.09 and $408.84 if every entry gets everything.</p>
 <h3>Every call this project has made</h3>
 
 <p>The rubric caps this section at half credit for estimates alone, which is the right
-rule: a cost model nobody has checked against a bill is a spreadsheet. Fourteen live
+rule: a cost model nobody has checked against a bill is a spreadsheet. Fifteen live
 runs, with two figures deliberately left blank, because a figure nobody measured does not
 belong in a column of figures that were.</p>
 
@@ -821,13 +821,14 @@ belong in a column of figures that were.</p>
   <tr><td>One entry traced per agent (§4)</td><td class="num">5</td><td class="num">10,692</td><td class="num">6,146</td><td class="num">$0.0037</td></tr>
   <tr><td>Trace screenshot, capture lost to a page remount</td><td class="num">5</td><td class="num">10,976</td><td class="num">6,934</td><td class="num">$0.0046</td></tr>
   <tr><td>Trace screenshot, captured (the §4 figure)</td><td class="num">5</td><td class="num">11,021</td><td class="num">7,122</td><td class="num">$0.0047</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>324</strong></td><td class="num"><strong>669,838</strong></td><td class="num"><strong>302,972</strong></td><td class="num"><strong>$0.195</strong></td></tr>
+  <tr><td>Adrian entry, after the burden-shift fix (§8)</td><td class="num">5</td><td class="num">16,364</td><td class="num">7,184</td><td class="num">$0.0052</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>329</strong></td><td class="num"><strong>686,202</strong></td><td class="num"><strong>310,156</strong></td><td class="num"><strong>$0.200</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>, and the
 total is summed from the rows by a script that checks its answer against what is printed
 here — this is the one claim in the report a reader can verify in thirty seconds. Two of
-the fourteen runs lack a cost figure and are excluded rather than estimated, so the true
+the fifteen runs lack a cost figure and are excluded rather than estimated, so the true
 total is higher by roughly $0.016 plus the first A/B run's unrecorded cost.</p>
 
 <p><strong>A saving that cost nothing.</strong> The demo's analysis is generated once and
@@ -858,8 +859,8 @@ how much.</p>
 more pass". Simulated usage never reaches the usage table, so demo mode cannot exhaust a
 budget or mask one.</p>
 
-<p class="meta"><strong>Measured live spend across the entire project to date: $0.195</strong>
-across 324 calls — the table above.</p>
+<p class="meta"><strong>Measured live spend across the entire project to date: $0.200</strong>
+across 329 calls — the table above.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>
@@ -1141,9 +1142,39 @@ done unprompted — <em>"your November 12 entry says you took a job with more tr
 unpredictable hours"</em>, correctly dated and correctly recalled across entries, which is
 the move a stateless chatbot cannot make.</p>
 
+<p><strong>The same entry was then re-run against the fixed prompts</strong> — five calls,
+$0.0052, the fifteenth row in §5 — because a prompt change is the one kind of change the
+1,521 offline checks cannot verify:</p>
+
+<table>
+  <tr><th>On the same entry</th><th class="num">Before</th><th class="num">After</th></tr>
+  <tr><td>Mapping rows</td><td class="num">25</td><td class="num">2</td></tr>
+  <tr><td>Unsettled notes</td><td class="num">8</td><td class="num">2</td></tr>
+  <tr><td>Questions about whether she could accommodate him</td><td class="num">5</td><td class="num">0</td></tr>
+  <tr><td>Observations about the writer, of 21</td><td class="num">not represented</td><td class="num">15</td></tr>
+</table>
+
+<p>The reflection changed from the tension between his role and his relationship to
+<em>"Let's examine what you can realistically choose, rather than what you hope Catherine
+will understand."</em> And the agent arrived, unprompted, at almost exactly the question
+the critique said it should have asked: <em>"What would a realistic, sustainable level of
+communication from you look like, regardless of what Catherine expects?"</em></p>
+
+<p><strong>It also introduced two new faults, which is why the run was worth paying
+for.</strong> One question was built on a premise the entry does not contain — <em>"you've
+decided to tell Catherine what the new schedule actually looks like"</em>, which he never
+said. That is the same imputation failure as before, pointed at the writer instead of at
+her. And four <em>correct</em> mappings were lost: his description of her intelligence,
+her career, her humour and his attraction to her all arrived as one observation about his
+own feelings, marked <code>me</code>, and were therefore not mapped at all. The
+over-correction costs real evidence about the person actually being assessed. Both are
+recorded rather than tidied away, and both are open.</p>
+
 <p class="meta">Stated plainly: this was the author testing her own product, and it is
 <strong>not</strong> the independent user test the Impact section still needs. It is
-evidence that the fastest way to find what is wrong with this system is to use it.</p>
+evidence that the fastest way to find what is wrong with this system is to use it — and
+that fixing a judgment failure is not free, because the correction has its own failure
+mode.</p>
 
 <h3>Documented is not disclosed</h3>
 <p>The last finding came from the author opening her own hosted account. The free tier

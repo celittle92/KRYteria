@@ -1,0 +1,68 @@
+Reference data: 15 support resource(s), 37 research note(s).
+Adrian · x · 5 agents
+
+agent           input   cached   output   latency
+-------------------------------------------------
+narrative       3,672        0      965     11.7s
+safety          2,310        0       55      2.9s
+evidence        3,513        0    3,382     40.8s
+reasoning       4,860        0    2,519     38.5s
+reflection      2,009        0      263      4.8s
+-------------------------------------------------
+TOTAL          16,364        0    7,184            $0.00523  (5 calls)
+
+
+OBSERVATIONS — and whose conduct each describes
+------------------------------------------------------------------------
+  [   both] reported_event       The writer and Catherine are exclusive.
+  [     me] reported_event       The writer has an opportunity for a role with more responsibility, visibility, and compensation, involving more travel and less predictable hours.
+  [     me] reported_event       The writer sometimes does not look at a phone for hours while focused on a production, and sometimes sees a message intending to respond later but does not respond until 10 PM.
+  [   them] reported_event       Catherine has mentioned that consistency in communication matters to her.
+  [     me] reported_event       When the writer and Catherine are together, the writer says they are present, remember what Catherine tells them, ask questions, make plans, and want to spend time with her.
+  [   both] reported_event       The writer and Catherine can disagree and still have a great night.
+  [   both] reported_event       The writer says they have only recently become exclusive.
+  [     me] interpretation       The writer does not necessarily interpret delayed replies as meaning they are not interested in Catherine.
+  [     me] interpretation       The writer assumes that being present and attentive together should count for something in how Catherine understands their interest.
+  [     me] interpretation       The writer thinks that if the relationship is good, they may be able to work around the writer's schedule, while also wondering whether that assumption is unfair.
+  [     me] interpretation       The writer is weighing the career opportunity against making room for the kind of family life they want eventually.
+  [     me] emotional_reaction   The writer is excited about the role opportunity.
+  [     me] emotional_reaction   The writer likes Catherine and describes being attracted to her, admiring her intelligence, humor, career, and opinions, and enjoying that she challenges them.
+  [     me] emotional_reaction   The writer feels comfortable being themselves with Catherine and values being able to disagree while still enjoying time together.
+  [     me] emotional_reaction   The writer is worried about disappointing Catherine and is unsure whether accepting the opportunity would make that more likely.
+  [     me] emotional_reaction   The writer does not want Catherine to feel like an afterthought and does not want to promise more than they can realistically deliver.
+  [     me] uncertainty          The writer is unsure how to balance the role opportunity, the relationship, and other commitments.
+  [     me] uncertainty          The writer is unsure what a reasonable middle ground would be between Catherine's desire for consistency and the writer's wish not to be in constant communication.
+  [     me] uncertainty          The writer is unsure what they are actually willing to change, versus what they hope Catherine will understand.
+  [   both] missing_information  Whether the writer has discussed the role opportunity, its expected schedule, or communication expectations with Catherine is not stated.
+  [   both] missing_information  What specific communication arrangement would feel workable to each of them is not stated.
+
+  {'both': 5, 'me': 15, 'them': 1}
+
+
+MAPPINGS — 2 of them
+------------------------------------------------------------------------
+  supporting      Emotional maturity
+                  You say Catherine has mentioned that consistency in communication matters to her. That is an example of her stating a need, consistent with this criterion.
+  supporting      Emotional maturity
+                  You describe being able to disagree and still have a great night together. That is consistent with disagreement not automatically becoming a fight.
+
+  {'supporting': 2}
+  unmapped observations: [0, 1, 2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+
+  NOT SETTLED (2):
+    Compatible intentions: You say you and Catherine are exclusive, but this entry does not describe what either of you wants long term or whether those intentions align.
+    Compatible with the hours I work: Most of this entry is about your own schedule, communication habits, and uncertainty, rather than Catherine's response. You haven't described how she responds to the role's travel and less predictable hours, or what arrangement you have discussed; her stated wish for communication consistency does not settle whether the schedule is workable for her.
+
+
+QUESTIONS
+------------------------------------------------------------------------
+  [material/definition] Your criterion is specifically about her being able to say what she needs without it becoming a fight. Do these experiences show that particular thing for you, or is it still unknown?
+  [material/definition] You’ve described what happens with replies and that you’re unsure what you’re willing to change. What would a realistic, sustainable level of communication from you look like, regardless of what Catherine expects?
+  [material/circumstances] You’ve decided to tell Catherine what the new schedule actually looks like before she experiences it. What concrete expectations about your availability are you prepared to share, and what—if anything—are you willing to adjust rather than leave to the hope that you’ll work it out?
+  (cross) The role’s travel and unpredictable hours are relevant context for practical compatibility with your schedule (53) and for discussing how work fits with shared life intentions (50). They do not establish Catherine’s views, whether she can live with the schedule, or whether your intentions match.
+
+
+REFLECTION
+------------------------------------------------------------------------
+  context:  Let's examine what you can realistically choose, rather than what you hope Catherine will understand.
+  question: If you accept the role, what changes to your communication or shared time would you genuinely be willing to make—and what would need to remain true for that to feel sustainable to you?
