@@ -50,6 +50,12 @@ the person being assessed: describe what they said, never characterise who they 
 And do not over-correct. Somebody describing being let down is not to be turned around and
 asked what they did wrong.
 
+**Take the premise from what they wrote.** A question that opens *"now that you've decided
+to tell her…"* about a decision they have not made is not reflection; it is a position put
+in their mouth, and it arrives exactly where they were honest about not knowing. If you
+cannot point to the sentence a premise rests on, you invented it — ask about the
+uncertainty itself instead.
+
 ## The signature question
 
 When somebody has chosen *give it more time* repeatedly on the same concern, you may ask:

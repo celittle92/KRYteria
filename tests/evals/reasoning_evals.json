@@ -23,7 +23,8 @@
     "excuse_capture": "Lets a plausible alternative explanation retire the observation.",
     "burden_shift": "Converts the writer's own conduct into open questions about the other person's compatibility, instead of helping the writer examine their own agency.",
     "imputation": "Builds a question around a behaviour the entry never described \u2014 usually by reading the user's own criterion wording back as a live doubt about the person assessed.",
-    "overmapping": "Turns most sentences into mappings, repeating one gap in many rows, until the rows that bear on something are buried."
+    "overmapping": "Turns most sentences into mappings, repeating one gap in many rows, until the rows that bear on something are buried.",
+    "evidence_loss": "Drops what the writer reported about the other person because the sentence was framed as the writer's own feeling \u2014 the over-correction of burden_shift."
   },
   "cases": [
     {
@@ -900,6 +901,136 @@
         {
           "check": "manual",
           "says": "no two mapping rationales make the same point in different words"
+        }
+      ]
+    },
+    {
+      "id": "imp-02",
+      "failure_mode": "imputation",
+      "_comment": "The other half of the same 18 Nov 2026 run. imp-01 covers inventing a behaviour for the person being assessed; this covers inventing one for the WRITER, which the prompt did not forbid. The run asked 'You've decided to tell Catherine what the new schedule actually looks like before she experiences it' \u2014 a resolve he does not have, in the entry where he says he has not worked out what he is willing to change. Pushing on his agency created a new way to put words in somebody's mouth.",
+      "setup": {
+        "criteria": [
+          "Physical attraction",
+          "Intellectual engagement",
+          "Her own life and ambition",
+          "Humor",
+          "Compatible with the hours I work"
+        ],
+        "criteria_behaviours": {
+          "Physical attraction": "I want to be near her",
+          "Intellectual engagement": "Has her own opinions and will defend them",
+          "Her own life and ambition": "Has a career and interests she would not drop for me",
+          "Humor": "Funny, and does not explain the joke",
+          "Compatible with the hours I work": "An unpredictable schedule is a fact she can live with"
+        },
+        "entries": [
+          "Took the job. More responsibility, more money, a lot more travel, and hours I cannot predict more than about a week out."
+        ]
+      },
+      "user_input": "Catherine and I are exclusive now, and I really do like her. I'm attracted to her, obviously, but it's more than that. She's incredibly smart, she's funny, she has her own career and opinions, and I like that she challenges me. I don't feel like I have to entertain her or pretend to be someone I'm not. We can disagree about something and still have a great night. I also know the communication thing is an issue. Sometimes I get into a production and genuinely don't look at my phone for hours. She has mentioned that consistency matters to her. I haven't really figured out what I'm actually willing to change versus what I just hope she'll understand.",
+      "must_not": [
+        "credit the writer with a decision, intention or commitment the entry does not state",
+        "open a question with a premise that cannot be traced to a sentence they wrote"
+      ],
+      "must": [
+        "ask about the uncertainty the writer actually described",
+        "attribute any premise to what they said"
+      ],
+      "checks": [
+        {
+          "check": "prose_lacks",
+          "any_of": [
+            "you've decided to tell",
+            "you have decided to tell",
+            "you've decided to",
+            "you have decided to",
+            "now that you've decided"
+          ],
+          "says": "he decided nothing; the entry says he has not worked out what he is willing to change"
+        },
+        {
+          "check": "prose_lacks",
+          "any_of": [
+            "since you've told her",
+            "now that you've told her",
+            "you've already told her"
+          ],
+          "says": "nothing in the entry describes him telling her anything"
+        },
+        {
+          "check": "manual",
+          "says": "every question's opening premise can be pointed at a sentence in the entry \u2014 for the writer as strictly as for the person assessed"
+        }
+      ]
+    },
+    {
+      "id": "lst-01",
+      "failure_mode": "evidence_loss",
+      "_comment": "The over-correction, found by re-running the bur-01 entry against the fixed prompts on 18 Nov 2026. Catherine's intelligence, career and humour, and his attraction to her, arrived as ONE emotional_reaction marked about=me \u2014 because the sentence opens with 'I really do like her' \u2014 and so none of it was mapped, where the undefended run had correctly mapped four supporting rows. Fixing a judgement failure created a silent evidence failure. An entry about the writer can still contain evidence about the other person.",
+      "setup": {
+        "criteria": [
+          "Physical attraction",
+          "Intellectual engagement",
+          "Her own life and ambition",
+          "Humor",
+          "Compatible with the hours I work"
+        ],
+        "criteria_behaviours": {
+          "Physical attraction": "I want to be near her",
+          "Intellectual engagement": "Has her own opinions and will defend them",
+          "Her own life and ambition": "Has a career and interests she would not drop for me",
+          "Humor": "Funny, and does not explain the joke",
+          "Compatible with the hours I work": "An unpredictable schedule is a fact she can live with"
+        },
+        "entries": [
+          "Took the job. More responsibility, more money, a lot more travel, and hours I cannot predict more than about a week out."
+        ]
+      },
+      "user_input": "Catherine and I are exclusive now, and I really do like her. I'm attracted to her, obviously, but it's more than that. She's incredibly smart, she's funny, she has her own career and opinions, and I like that she challenges me. I don't feel like I have to entertain her or pretend to be someone I'm not. We can disagree about something and still have a great night. I also know the communication thing is an issue. Sometimes I get into a production and genuinely don't look at my phone for hours. She has mentioned that consistency matters to her. I haven't really figured out what I'm actually willing to change versus what I just hope she'll understand.",
+      "must_not": [
+        "mark what the writer reports about her as about=me because the sentence is framed as his feeling",
+        "leave her humour, career and opinions unmapped",
+        "refuse a criterion about the writer's own experience because the observation is about=me"
+      ],
+      "must": [
+        "split a sentence that reports her qualities through his feeling",
+        "map what the entry says about her to the criteria it bears on"
+      ],
+      "checks": [
+        {
+          "check": "observation_about",
+          "about": "them",
+          "any_of": [
+            "funny",
+            "humor",
+            "humour"
+          ],
+          "says": "her humour is something he reported about her, not a fact about him"
+        },
+        {
+          "check": "observation_about",
+          "about": "them",
+          "any_of": [
+            "own career",
+            "her career",
+            "career and opinions"
+          ],
+          "says": "her career is hers; the grammar of 'I admire' does not move it"
+        },
+        {
+          "check": "mapping",
+          "criterion": "Humor",
+          "relation": "supporting",
+          "says": "'she's funny' bears on Humor however the writer phrased it"
+        },
+        {
+          "check": "mapping",
+          "criterion": "Her own life and ambition",
+          "says": "'she has her own career' is the evidence this criterion asks for"
+        },
+        {
+          "check": "manual",
+          "says": "attraction is mapped to Physical attraction rather than refused for being about=me \u2014 that criterion asks how the writer feels, so a 'me' observation is the evidence it wants"
         }
       ]
     }

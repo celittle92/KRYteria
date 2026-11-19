@@ -354,12 +354,12 @@ disposable.*
 | Agents / runtime prompt files | 7 / 8 |
 | API routes | 57 |
 | Backend Python | 11,278 lines |
-| Tests | **1,521 checks** across 157 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
+| Tests | **1,543 checks** across 157 test functions, 5 suites, all free (verified by `tools/check_consistency.py --tests`) |
 | Front end | 4,812 lines, 8 screens, React + Vite + TS + Tailwind |
-| Eval cases | 31 (18 safety, 13 reasoning), 95 automatic + 33 manual checks |
+| Eval cases | 36 (18 safety, 18 reasoning), 108 automatic + 37 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
 | Research | 19 findings, 18 verified |
-| Live model spend to date | **$0.19478** measured (14 runs, 13 measured, 324 calls — `output/token_report.md`) |
+| Live model spend to date | **$0.20001** measured (15 runs, 14 measured, 329 calls — `output/token_report.md`) |
 
 ---
 
@@ -642,6 +642,9 @@ against a criterion absent from its profile, no cross-account anything. No agent
 Recovery codes handle the no-row case through the dummy-hash path. The frontend/backend
 contract resolves route by route. Eval figures (31 cases, 128 checks, 95 automatic + 33
 manual) and research figures (19/18/17) are consistent everywhere.
+
+*Figures as of that audit. The eval pack is **36 cases / 145 checks / 108 automatic + 37
+manual** since the five regression cases added on 17–18 November.*
 
 ---
 

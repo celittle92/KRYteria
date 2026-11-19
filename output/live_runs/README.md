@@ -302,7 +302,8 @@ work* says in as many words that most of the entry is about his own schedule rat
 her response — the prompt rule landing verbatim. The reflection moved to *"Let's examine
 what you can realistically choose, rather than what you hope Catherine will understand."*
 
-**Two NEW faults this run exposed. Neither is fixed; do not let them quietly disappear.**
+**Two NEW faults this run exposed. Both were fixed on 2026-11-18, after this run; the
+descriptions below are of the run as it stands, and the fixes follow them.**
 
 1. **A question built on a premise the entry does not contain.** *"You've decided to tell
    Catherine what the new schedule actually looks like before she experiences it."* He
@@ -316,6 +317,28 @@ what you can realistically choose, rather than what you hope Catherine will unde
    `me` when it describes the writer's state and `them` when it reports something she did
    — a sentence doing both needs splitting, or `about` needs a value for it. **The
    over-correction costs real evidence about the person being assessed.**
+
+**What was changed in response (2026-11-18, free; not yet re-verified live).**
+
+- **Fault 1.** `reasoning.md` gained *"And it runs in both directions"*: never open a
+  question with a decision, intention, commitment or conclusion the entry does not state,
+  for the writer as strictly as for the person assessed, and if you cannot point at the
+  sentence a premise rests on, you invented it. The same guard is in `reflection.md` and in
+  the writer-heavy NOTE `agents/reflection.py` assembles. Regression case `imp-02`.
+- **Fault 2**, chosen as **splitting** rather than a new `about` value — the field stays a
+  four-value enum and nothing persisted has to migrate. `narrative.md` now says a sentence
+  can do two jobs and must be split into the feeling (`me`) and what it reports about her
+  (`them`), that **qualities count and not only actions**, and that what `about` marks is
+  the direction of the claim rather than the subject of the sentence. `evidence.md` adds
+  that **some criteria are about the writer's own experience** (*Physical attraction*,
+  *chemistry*), which a `me` observation answers rather than fails, and that where
+  Narrative has not split a sentence, Evidence must not let a mark on the frame delete the
+  content. Regression case `lst-01`, new failure mode `evidence_loss`.
+- **The cause that was not in a prompt.** `agents/evidence._ABOUT["me"]` ended *"not
+  evidence about the other person"* — printed beside all twenty-one observations, closer to
+  the model than the nuance it contradicted. It now reads *"their own conduct or their own
+  state"*, and the NOTE names both failures together. **A label says what a thing is; what
+  to do with it belongs in the prompt, where the exceptions can live.**
 
 **One judgement call, left as it is.** The surviving `definition` question — *"your
 criterion is specifically about her being able to say what she needs without it becoming

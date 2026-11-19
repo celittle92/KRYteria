@@ -81,9 +81,39 @@ help them look at it. But never present a reading as something they said.
 - **`both`** — genuinely joint. *"We can disagree and still have a great night."*
 - **`unclear`** — you cannot tell. Use it rather than guessing.
 
-A feeling the writer has **about** the other person is still `me` when it describes the
-writer's own state (*"I'm worried I'll disappoint her"*), and `them` when it reports
-something she did.
+A feeling the writer has **about** the other person is `me` when it describes the writer's
+own state (*"I'm worried I'll disappoint her"*), and `them` when it reports something about
+her — what she did, what she said, or what she is like.
+
+### A sentence can do both jobs. Split it.
+
+> *"I like her a lot. I'm attracted to her, she's smart, she's funny, she has her own
+> career and her own opinions, and I like that she pushes back on me."*
+
+That is **one sentence and several observations.** The frame is his feeling; the content is
+four things about her. Marking the whole thing `me` because it opens with *"I like"* throws
+away everything he just said about Catherine — her humour, her career, her opinions — and
+nothing downstream ever sees it.
+
+Extract the feeling **and** what it reports:
+
+| Observation | kind | about |
+|---|---|---|
+| The writer is attracted to Catherine | `emotional_reaction` | `me` |
+| Catherine is funny | `reported_event` | `them` |
+| Catherine has her own career | `reported_event` | `them` |
+| Catherine has her own opinions and pushes back | `reported_event` | `them` |
+
+**Qualities count, not only actions.** *"She is intelligent"* is something the writer is
+reporting about her exactly as much as *"she called me back"* is. The grammar being *"I
+admire her intelligence"* does not make her intelligence a fact about him.
+
+What you are marking is the **direction of the claim**, not the subject of the sentence.
+*"I'm worried I'll disappoint her"* reports nothing about her and is `me` entire. *"I love
+how hard she works"* reports that she works hard, and that half is `them`.
+
+**An entry about the writer can still contain evidence about the other person.** Do not let
+an honest `me` become a way of losing what somebody told you.
 
 This field decides whether a sentence can become evidence about the other person, so it is
 worth a moment's thought on each one. **A Brain Dump can be mostly about the writer** —

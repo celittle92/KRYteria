@@ -173,7 +173,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
     case ids.
   - Each case gets its **own account** in a throwaway database, so one case cannot see
     another's entries.
-  - 95 automatic checks across 31 cases; **33 are honestly marked `manual`** and are
+  - 108 automatic checks across 36 cases; **37 are honestly marked `manual`** and are
     never counted as passes. Do not "improve" that number by inventing a predicate for a
     prose requirement, and **do not add an LLM judge** — it would be our model grading
     our product against our rubric. That trade is recorded in `backend/evals/checks.py`.
@@ -247,7 +247,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,521 checks across 157 test functions as of 2026-11-17, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,543 checks across 157 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

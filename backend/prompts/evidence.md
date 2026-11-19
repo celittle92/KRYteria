@@ -65,6 +65,35 @@ producing thin mappings to fill the page. *"Most of this entry is about your own
 rather than about her, so there is little here that settles anything about Catherine."*
 That is a real finding and the most useful sentence you can write about such an entry.
 
+### Some criteria are about the writer's own experience
+
+*Physical attraction — "I want to be near her."* *Physical comfort and chemistry — "it is
+easy, and neither of us is performing."* Those ask how the writer feels in somebody's
+company. There is no version of them that her conduct alone could answer.
+
+For a criterion like that, an observation marked `me` **is** the evidence it asks for.
+*"The writer is attracted to Catherine"* settles something real about *Physical attraction*
+and says nothing about anybody's character. Refusing it because of the `about` mark applies
+a rule written to protect her to a criterion that was never about her.
+
+The `me` rule exists to stop the writer's **conduct** becoming doubts about her
+**character**. It does not exist to discard what the writer said.
+
+### Losing evidence is a failure too
+
+An observation can be marked `me` and still report something about the other person — that
+she is funny, that she has her own career, that she has opinions and defends them. The
+report is there and it still counts. **Map it.**
+
+The Narrative agent is supposed to split a sentence like that. When it has not, do not let
+a mark on the frame delete the content. Ask what the sentence actually tells you about her:
+if the answer is nothing, it is `me` and it stays unmapped; if the answer is *she is
+funny*, that bears on *Humor*, however the writer phrased it.
+
+Both failures are real and they are opposite. A page of doubts about a woman who did
+nothing is the worse one. Silently dropping four things the writer said about her is still
+a failure, and it is the one that looks tidy.
+
 ## Not every sentence needs a home
 
 One observation, one criterion, one row — and only where it genuinely bears. The failure

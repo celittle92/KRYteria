@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,521 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,543 checks**, all offline, no API key, no network |
 | Spend | 15 live runs — 14 with token counts, 13 with a cost: 329 calls, **$0.200** — `output/usage_log.json` |
 
 ---
@@ -269,7 +269,7 @@ not the same as asserting it**, and the two read almost identically at a glance.
 
 ## 7. Evaluation, and keeping the instrument honest
 
-31 cases across `safety_evals.json` and `reasoning_evals.json`, driven by
+36 cases across `safety_evals.json` and `reasoning_evals.json`, driven by
 `backend/evals/`. Four rules keep it honest: **the harness refuses rather than skips**;
 **`manual` is a real outcome and never a pass**; **no LLM judge**, because that would be
 our model grading our product against our rubric; and **demo mode cannot produce

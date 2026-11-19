@@ -63,8 +63,15 @@ def format_criteria(profile_name: str, criteria: Sequence[dict]) -> str:
 #: How each `about` value is announced to the agents. Spelled out rather than passed as a
 #: bare enum: "me" in a list of observations is easy to skim past, and this field decides
 #: whether a sentence may become evidence about somebody else.
+#:
+#: The "me" mark used to end "…not evidence about the other person". That absolute, sitting
+#: beside every observation, beat the nuance in the prompt: a live run on 2026-11-18 filed
+#: the writer's own sentence about Catherine's intelligence, career and humour as one `me`
+#: reaction and mapped none of it, where the undefended run had correctly mapped four
+#: supporting rows. A label should say what a thing **is**; what to do with it belongs to
+#: the prompt, which can hold the exceptions. See `prompts/evidence.md`.
 _ABOUT = {
-    "me": "  (ABOUT THE WRITER — their own conduct, not evidence about the other person)",
+    "me": "  (ABOUT THE WRITER — their own conduct or their own state)",
     "them": "  (about the person being assessed)",
     "both": "  (about both of them)",
     "unclear": "  (whose conduct this describes is unclear)",
@@ -84,7 +91,9 @@ def format_observations(narrative: NarrativeOutput) -> str:
             f"\nNOTE: {mine} of {len(narrative.observations)} observations are about the "
             "WRITER'S own conduct. This entry is largely about them, not about the person "
             "being assessed. Do not convert it into a page of open questions about "
-            "somebody who barely appears in it."
+            "somebody who barely appears in it. Equally, do not over-correct: map what "
+            "the writer did report about her, and a criterion that asks how the writer "
+            "feels is answered by a 'me' observation."
         )
     if narrative.user_conclusions:
         lines.append(

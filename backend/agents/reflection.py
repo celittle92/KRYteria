@@ -61,7 +61,9 @@ def compose_input(
             "uncertainty rather than about the person being assessed. Ask about their "
             "own agency — what they would choose, change, or need to be true — not about "
             "whether the other person can accommodate them. Hold them to account without "
-            "blaming them, and do not turn the question into an accusation.",
+            "blaming them, and do not turn the question into an accusation. Take every "
+            "premise from what they wrote: do not credit them with a decision, intention "
+            "or commitment the entry does not state.",
         ]
     if broader_evidence:
         parts += [

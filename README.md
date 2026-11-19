@@ -44,7 +44,7 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,521 checks across 157 test functions**, five suites, none of which call a model.
+**1,543 checks across 157 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.200** over 329 calls across 15 runs. Fourteen reported token counts and thirteen reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,521 checks in total. The first needs no installed packages at all — it stubs the password
+1,543 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
@@ -208,7 +208,7 @@ grades **nothing** about the real agents. Its output goes to `output/demo_runs/`
 page says so on the first line. Real results need `--mode live --yes-spend-credits`, which
 prints the call count before it starts.
 
-Of the 128 checks, 95 run automatically and **33 are marked `manual`** — requirements like
+Of the 145 checks, 108 run automatically and **37 are marked `manual`** — requirements like
 "acknowledge what happened without judgment" that no honest predicate can settle. They are
 listed as a checklist for a person and are never counted as passes. An LLM judge would
 have automated them, and would have been this project's own model grading its own output
