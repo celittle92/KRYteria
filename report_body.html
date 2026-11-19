@@ -822,7 +822,8 @@ belong in a column of figures that were.</p>
   <tr><td>Trace screenshot, capture lost to a page remount</td><td class="num">5</td><td class="num">10,976</td><td class="num">6,934</td><td class="num">$0.0046</td></tr>
   <tr><td>Trace screenshot, captured (the §4 figure)</td><td class="num">5</td><td class="num">11,021</td><td class="num">7,122</td><td class="num">$0.0047</td></tr>
   <tr><td>Adrian entry, after the burden-shift fix (§8)</td><td class="num">5</td><td class="num">16,364</td><td class="num">7,184</td><td class="num">$0.0052</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>329</strong></td><td class="num"><strong>686,202</strong></td><td class="num"><strong>310,156</strong></td><td class="num"><strong>$0.200</strong></td></tr>
+  <tr><td>Adrian entry, after closing both new faults (§8)</td><td class="num">5</td><td class="num">17,861</td><td class="num">9,904</td><td class="num">$0.0067</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>334</strong></td><td class="num"><strong>704,063</strong></td><td class="num"><strong>320,060</strong></td><td class="num"><strong>$0.207</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>, and the
@@ -859,8 +860,8 @@ how much.</p>
 more pass". Simulated usage never reaches the usage table, so demo mode cannot exhaust a
 budget or mask one.</p>
 
-<p class="meta"><strong>Measured live spend across the entire project to date: $0.200</strong>
-across 329 calls — the table above.</p>
+<p class="meta"><strong>Measured live spend across the entire project to date: $0.207</strong>
+across 334 calls — the table above.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>
@@ -1184,11 +1185,24 @@ sitting closer to the model than the nuance it contradicted. A label should say 
 thing is; what to do with it belongs where the exceptions can live. Two regression cases,
 <code>imp-02</code> and <code>lst-01</code>, hold the line.</p>
 
+<p><strong>A third run of the same entry confirmed both</strong> — the sixteenth row in §5,
+$0.0067. The Narrative agent split the sentence it had swallowed, into <em>"the writer likes
+Catherine and feels attracted to her"</em> and <em>"describes Catherine as smart and funny,
+says she has her own career and opinions, and says she challenges the writer."</em> All four
+lost mappings came back as <em>supporting</em>, and <em>Physical attraction</em> was mapped
+from the <code>me</code> observation rather than refused for being one. No question opened on
+an invented premise; one asks <em>"what has Catherine actually asked for when she says
+consistency matters?"</em>, which is the phrasing the prompt recommends. And the earlier
+fixes held — the cross-criterion note says in as many words that the entry's silence about
+explaining jokes <em>"is not a separate gap to interrogate."</em></p>
+
 <p class="meta">Stated plainly: this was the author testing her own product, and it is
-<strong>not</strong> the independent user test the Impact section still needs. It is
-evidence that the fastest way to find what is wrong with this system is to use it — and
-that fixing a judgment failure is not free, because the correction has its own failure
-mode.</p>
+<strong>not</strong> the independent user test the Impact section still needs. Three runs
+of one entry — 15 calls, two cents, and 29% more per entry than before ($0.0052 → $0.0067
+for longer prompts and more real findings to write up) — bought two product failures found,
+fixed, and confirmed fixed. That is the exchange rate for correcting judgment in a system
+whose judgment is the product, and the fastest way to find what is wrong with it is still
+to use it.</p>
 
 <h3>Documented is not disclosed</h3>
 <p>The last finding came from the author opening her own hosted account. The free tier

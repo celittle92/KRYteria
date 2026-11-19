@@ -184,16 +184,28 @@
       "cost_usd": 0.00523,
       "note": "Mappings 25 -> 2, unsettled notes 8 -> 2, and the observations split me:15 / both:5 / them:1 \u2014 the entry measured as what it is. Every phrase Christine flagged about Catherine is gone except one, which is now attached to a real mapping rather than to a silence. It also exposed two NEW faults: a question built on a premise the entry does not contain, and four correct supporting mappings about Catherine's own qualities lost to the over-correction. Both recorded rather than tidied away.",
       "evidence": "output/live_runs/2026-11-18-adrian-after-fix.txt"
+    },
+    {
+      "date": "2026-11-18",
+      "run": "adrian-both-faults-after-fix",
+      "what": "The same Brain Dump a third time, after closing the two faults the second run exposed. 5 agents, Adrian's Long-Term Partner KRYteria.",
+      "calls": 5,
+      "input_tokens": 17861,
+      "cached_input_tokens": 0,
+      "output_tokens": 9904,
+      "cost_usd": 0.00674,
+      "note": "Both faults closed. The Narrative agent split the sentence it had swallowed: \"the writer likes Catherine and feels attracted to her\" (me) beside \"describes Catherine as smart and funny, says she has her own career and opinions, and says she challenges the writer\" (them). The four lost mappings came back \u2014 Physical attraction, Her own life and ambition, Intellectual engagement, Humor, all supporting \u2014 and Physical attraction is mapped FROM the me observation, which is the rule about criteria that ask how the writer feels. No question opens on an invented premise; every one is traceable to a sentence he wrote, and one asks \"what has Catherine actually asked for\", which is the phrasing the prompt recommends. The earlier fixes held: no tally, no fight, and the cross note says in as many words that the entry's silence about explaining jokes \"is not a separate gap to interrogate\". Costs 29% more than the run before it (longer prompts, and more real findings to write up).",
+      "evidence": "output/live_runs/2026-11-18-adrian-after-fix-2.txt"
     }
   ],
   "totals": {
-    "live_runs": 15,
-    "runs_with_token_counts": 14,
-    "runs_with_a_cost_figure": 13,
-    "model_calls": 329,
-    "input_tokens": 686202,
-    "output_tokens": 310156,
-    "cost_usd": 0.20001,
+    "live_runs": 16,
+    "runs_with_token_counts": 15,
+    "runs_with_a_cost_figure": 14,
+    "model_calls": 334,
+    "input_tokens": 704063,
+    "output_tokens": 320060,
+    "cost_usd": 0.20675,
     "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 \u2014 the figures from before two corrections. A note claiming verification is not verification; the check is."
   },
   "per_interaction": {

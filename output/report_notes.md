@@ -359,7 +359,7 @@ disposable.*
 | Eval cases | 36 (18 safety, 18 reasoning), 108 automatic + 37 manual checks |
 | A/B | 5 scenarios, 26 prose-only dimensions |
 | Research | 19 findings, 18 verified |
-| Live model spend to date | **$0.20001** measured (15 runs, 14 measured, 329 calls — `output/token_report.md`) |
+| Live model spend to date | **$0.20675** measured (16 runs, 15 measured, 334 calls — `output/token_report.md`) |
 
 ---
 

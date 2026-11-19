@@ -318,7 +318,22 @@ descriptions below are of the run as it stands, and the fixes follow them.**
    — a sentence doing both needs splitting, or `about` needs a value for it. **The
    over-correction costs real evidence about the person being assessed.**
 
-**What was changed in response (2026-11-18, free; not yet re-verified live).**
+**What was changed in response (2026-11-18), and the run that confirmed it.**
+
+> `2026-11-18-adrian-after-fix-2.txt` — **5 calls, 17,861 / 9,904 tokens, $0.00674.** The
+> same entry a third time. Narrative split the sentence it had swallowed: *"the writer
+> likes Catherine and feels attracted to her"* (`me`) beside *"describes Catherine as smart
+> and funny, says she has her own career and opinions, and says she challenges the writer"*
+> (`them`). All four lost mappings returned as `supporting` — *Physical attraction*, *Her
+> own life and ambition*, *Intellectual engagement*, *Humor* — and *Physical attraction* was
+> mapped **from** the `me` observation, which is the rule about criteria that ask how the
+> writer feels. Observations `me: 16 / both: 3 / them: 3`. No question opened on an invented
+> premise; one asked *"what has Catherine actually asked for when she says consistency
+> matters?"*, the phrasing `reasoning.md` recommends. Exactly three `material` questions,
+> the stated ceiling. The earlier fixes held: no tally, no fight, no *"can live with"*, and
+> the cross note states that the entry's silence about explaining jokes *"is not a separate
+> gap to interrogate."* **Cost: 29% more per entry than the run before it** ($0.00523 →
+> $0.00674), from the longer prompts and from having more real findings to write up.
 
 - **Fault 1.** `reasoning.md` gained *"And it runs in both directions"*: never open a
   question with a decision, intention, commitment or conclusion the entry does not state,

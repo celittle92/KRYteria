@@ -1,0 +1,77 @@
+Reference data: 15 support resource(s), 37 research note(s).
+Adrian · x · 5 agents
+
+agent           input   cached   output   latency
+-------------------------------------------------
+narrative       4,056        0    1,886     20.4s
+safety          2,310        0       55      0.8s
+evidence        4,004        0    3,199     37.8s
+reasoning       5,288        0    4,083     56.7s
+reflection      2,203        0      681      8.1s
+-------------------------------------------------
+TOTAL          17,861        0    9,904            $0.00674  (5 calls)
+
+
+OBSERVATIONS — and whose conduct each describes
+------------------------------------------------------------------------
+  [     me] reported_event       The writer is considering a new role with more responsibility, visibility, and compensation, and work the writer has wanted to do for a while.
+  [     me] emotional_reaction   The writer feels excited about the opportunity.
+  [     me] reported_event       The writer expects the role to involve more travel and less predictable hours.
+  [   both] reported_event       The writer and Catherine are now exclusive.
+  [     me] emotional_reaction   The writer likes Catherine and feels attracted to her.
+  [   them] reported_event       The writer describes Catherine as smart and funny, says she has her own career and opinions, and says she challenges the writer.
+  [     me] reported_event       The writer says there are times when the writer does not look at the phone for hours while working, and other times when the writer sees a message, plans to reply later, and does not reply until around 10 PM.
+  [     me] interpretation       The writer does not necessarily take delayed replies as meaning the writer is uninterested.
+  [     me] reported_event       The writer says that when the writer and Catherine are together, the writer is present, remembers what she tells the writer, asks questions, makes plans, and wants to spend time with her.
+  [     me] interpretation       The writer seems to believe that being present and engaged in person should count as evidence of interest, alongside the writer's communication habits. Is that right?
+  [   them] reported_event       Catherine has mentioned that consistency matters to her.
+  [     me] emotional_reaction   The writer does not want Catherine to wonder whether the writer is interested, and also does not want to feel obliged to communicate constantly to prove care.
+  [     me] uncertainty          The writer is unsure what a reasonable middle ground would be for communication.
+  [     me] reported_event       The writer wants a family eventually, including marriage and children, but is not ready to promise a timeline because the relationship has only recently become exclusive.
+  [     me] emotional_reaction   The writer is worried about disappointing Catherine while trying to balance the opportunity, the relationship, and other commitments.
+  [     me] uncertainty          The writer is unsure whether accepting the opportunity would make disappointing Catherine more likely.
+  [     me] interpretation       The writer does not want to give up something important professionally solely because the relationship is becoming serious, but also does not want to defer thinking about how to make room for the life the writer wants.
+  [   both] interpretation       The writer thinks part of the writer assumes that, if the relationship is good, the couple will work around the writer's schedule, and wonders whether that assumption is unfair.
+  [     me] uncertainty          The writer has not worked out what the writer is willing to change versus what the writer hopes Catherine will understand.
+  [     me] emotional_reaction   The writer does not want Catherine to feel like an afterthought and does not want to promise more than the writer can realistically deliver.
+  [   both] missing_information  The entry does not say whether the writer and Catherine have discussed the new role, the expected travel and hours, or a specific communication arrangement.
+  [   them] missing_information  The entry does not say what Catherine would consider a workable level of communication or how she feels about the possible schedule changes.
+
+  {'me': 16, 'both': 3, 'them': 3}
+
+
+MAPPINGS — 4 of them
+------------------------------------------------------------------------
+  supporting      Physical attraction
+                  You say you feel attracted to Catherine and want to be near her, which directly speaks to your physical attraction.
+  supporting      Her own life and ambition
+                  You describe Catherine as having her own career. That supports this part of your criterion; the entry doesn’t say whether she has interests she would keep for herself.
+  supporting      Intellectual engagement
+                  You say Catherine has her own opinions and challenges you, which speaks to the intellectual engagement you value.
+  supporting      Humor
+                  You describe Catherine as funny, which speaks to the humor you value.
+
+  {'supporting': 4}
+  unmapped observations: [0, 1, 3, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19]
+
+  NOT SETTLED (3):
+    Compatible intentions: You say you and Catherine are exclusive, but the entry doesn’t describe whether your broader relationship intentions align. Much of it describes your own position rather than Catherine’s.
+    Wants children eventually: You say you want children eventually, but the entry doesn’t say what Catherine wants. Your own wish doesn’t establish hers.
+    Compatible with the hours I work: You describe the possible travel and less predictable hours of your new role, but not Catherine’s response to them. The entry also says you haven’t discussed the role, hours, or a workable communication arrangement, and that her view of the schedule is unknown.
+
+
+QUESTIONS
+------------------------------------------------------------------------
+  [material/circumstances] You said the role will mean more travel and less predictable hours, and that you haven't worked out what you're willing to change. Which parts of that schedule are fixed, and what, if anything, are you actually willing to adjust to make room for the relationship?
+  [material/frequency] You described both being unreachable for hours while working and sometimes not replying until around 10 PM. How often does the late reply happen, and what has Catherine actually asked for when she says consistency matters? That would help clarify what communication you can realistically sustain without assuming what she expects.
+  [material/comparison] You’ve described your own hopes for marriage and children, but the entry doesn’t say what Catherine wants. What has she said about wanting children and about your longer-term intentions being compatible?
+  [optional/definition] You describe Catherine as having her own career. Your criterion is specifically about having a career and interests she would not drop for you. Do you have evidence about that part, or is it still unknown?
+  [optional/definition] You describe being attracted to Catherine. Your criterion is “I want to be near her”—does the attraction capture what you mean by that, or is wanting to be near her a distinct feeling for you?
+  (cross) This observation bears on three criteria in different ways: her own career is relevant to [47], her opinions and the fact that she challenges you are relevant to [46], and describing her as funny is relevant to [52]. The observation supports those specific points, but does not establish that she would not drop her career or interests for you. The mention of humor directly supports “funny”; the entry says nothing about explaining jokes, which is not a separate gap to interrogate.
+  (cross) Your stated wish for a family, marriage, and children bears on both compatible intentions [50] and wanting children eventually [51], but it establishes only your side of those intentions—not Catherine’s.
+
+
+REFLECTION
+------------------------------------------------------------------------
+  context:  Let's examine what you can realistically choose, rather than what you hope Catherine will understand.
+  question: As you weigh this opportunity, what—if anything—would you genuinely be willing and able to change about your communication or availability, while still pursuing the work and life you want?

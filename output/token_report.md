@@ -31,7 +31,8 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-17 | Trace screenshot, capture lost to a page remount | 5 | 10,976 | 6,934 | $0.00456 |
 | 11-17 | Trace screenshot, captured | 5 | 11,021 | 7,122 | $0.00466 |
 | 11-18 | Adrian entry, after the burden-shift fix | 5 | 16,364 | 7,184 | $0.00523 |
-| | **Total** | **329** | **686,202** | **310,156** | **$0.20001** |
+| 11-18 | Adrian entry, after closing both new faults | 5 | 17,861 | 9,904 | $0.00674 |
+| | **Total** | **334** | **704,063** | **320,060** | **$0.20675** |
 
 **Two of the fifteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artefact an hour later. So the real spend is **higher than $0.20001 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modelled*.
 
