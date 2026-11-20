@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { api, type Account } from "./api";
 import { Spinner } from "./components/ui";
@@ -78,10 +78,39 @@ function useTheme(account: Account | null) {
  */
 function useFirstScreen(account: Account | null) {
   const [redirectTo, setRedirectTo] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
+  // Which account this has already been decided for, and whether this page session has
+  // ever held one. Both are refs rather than state: changing them must not itself cause
+  // a render, or the effect below re-enters on its own bookkeeping.
+  const decidedFor = useRef<number | null>(null);
+  const hadSession = useRef(false);
 
   useEffect(() => {
-    if (!account || done) return;
+    if (!account) {
+      // Signed out. Forget the decision so the NEXT account gets its own, and drop any
+      // pending redirect, which belonged to somebody else.
+      decidedFor.current = null;
+      setRedirectTo(null);
+      return;
+    }
+    if (decidedFor.current === account.id) return;
+
+    // Christine, 19 November: open a demo, sign out, create an account — and it lands on
+    // Settings. Two bugs compounding, and both are about identity rather than routing.
+    //
+    //   1. The decision was made once per PAGE LOAD, not once per ACCOUNT, so a second
+    //      sign-in in the same tab never got a first screen at all.
+    //   2. Signing out leaves the router wherever the last session was standing. Sign out
+    //      from Settings and the new account inherits /settings — another person's
+    //      location, applied to somebody who has not chosen anything yet.
+    //
+    // So a redirect is allowed from ANY path when the account has just changed inside
+    // this tab, and only from "/" on a cold load — where a deep link or a bookmark is
+    // this person's own expressed intent and must be honoured.
+    const signedInJustNow = hadSession.current;
+    decidedFor.current = account.id;
+    hadSession.current = true;
+    const mayRedirect = signedInJustNow || window.location.pathname === "/";
+
     let live = true;
 
     // A demonstration account opens on something that DEMONSTRATES.
@@ -92,28 +121,22 @@ function useFirstScreen(account: Account | null) {
     // called the demo "a bit overwhelming", having arrived at each dense screen cold and
     // without a reason to be there. My Progress is the opposite end: criteria beside
     // observed experience, which is the one view a stateless chat cannot produce.
-    if (account.is_demo === 1 && window.location.pathname === "/") {
-      setRedirectTo("/progress");
-      setDone(true);
+    if (account.is_demo === 1) {
+      if (mayRedirect) setRedirectTo("/progress");
       return;
     }
 
     api.criteria()
       .then((rows) => {
         if (!live) return;
-        // Only from the home route. Somebody who opened a deep link asked for a
-        // particular screen and should get it.
-        if (rows.length < MIN_CRITERIA && window.location.pathname === "/") {
-          setRedirectTo("/criteria");
-        }
+        if (rows.length < MIN_CRITERIA && mayRedirect) setRedirectTo("/criteria");
       })
       .catch(() => {
         /* A failed lookup must not strand anybody on a redirect; leave them on Brain
            Dump, which is the behaviour this app had before. */
-      })
-      .finally(() => live && setDone(true));
+      });
     return () => { live = false; };
-  }, [account, done]);
+  }, [account]);
 
   return { redirectTo, clear: useCallback(() => setRedirectTo(null), []) };
 }
@@ -223,18 +246,16 @@ export default function App() {
       </header>
 
       <main className="flex-1 mx-auto max-w-5xl w-full px-5 py-10">
+        {/* Rendered OUTSIDE the "/" route on purpose. Hanging it off that route meant it
+            could only fire from the home path — which is useless for the case that found
+            this: signing out of a demo from /settings and creating an account, where the
+            new session inherits the old one's location and never passes through "/". */}
+        {redirectTo && location.pathname !== redirectTo && (
+          <Navigate to={redirectTo} replace />
+        )}
         <div key={location.pathname} className="rise">
           <Routes>
-            <Route
-              path="/"
-              element={
-                firstScreen.redirectTo ? (
-                  <Navigate to={firstScreen.redirectTo} replace />
-                ) : (
-                  <BrainDump account={account} />
-                )
-              }
-            />
+            <Route path="/" element={<BrainDump account={account} />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/criteria" element={<Criteria />} />
             <Route path="/checklist" element={<Checklist />} />

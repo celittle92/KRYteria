@@ -167,7 +167,12 @@ export default function Settings({ account, onChange }: {
           >
             Download everything
           </button>
-          <button className="btn-quiet" onClick={() => api.signOut().then(() => location.reload())}>
+          {/* `location.assign("/")`, not `location.reload()`. Reloading kept the URL of
+              the session being ended, so signing out of Settings left the sign-in screen
+              sitting at /settings — and the next account to sign in inherited that path
+              and landed on Settings instead of being shown where to start. A path belongs
+              to the session that chose it; ending the session ends the claim on it. */}
+          <button className="btn-quiet" onClick={() => api.signOut().then(() => location.assign("/"))}>
             Sign out
           </button>
         </div>

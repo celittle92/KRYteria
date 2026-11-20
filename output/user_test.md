@@ -224,8 +224,8 @@ of §3 rests on, and Alex demonstrated it by living on the other side of it.
 ## 7. The honest summary
 
 A twenty-seven-minute session with one friendly, AI-fluent, non-expert user found a defect
-that eighteen months of this project's own checks could not: **1,556 automated checks, two
-code audits and a consistency checker all pass on a build whose first-run experience cannot
+that two weeks of this project's own checks could not: **1,563 automated checks, two code
+audits and a consistency checker all passed on a build whose first-run experience could not
 demonstrate the product.** Every one of those instruments verifies an artifact. None of
 them asks whether a person can get started.
 

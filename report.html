@@ -124,9 +124,9 @@ they fail to act consistently with information they already hold.</p>
   it.</figcaption>
 </figure>
 
-<div class="todo">
-  <strong>TODO before submission</strong> — one real user's reaction (§7).
-</div>
+<p class="meta">It was also the first thing an outside tester met, and it is where this
+report's sharpest finding came from — not from the code, but from watching somebody fail
+to start. §7.</p>
 
 <!-- ───────────────────────────── 2. MOTIVATION ───────────────────────────── -->
 <h2>2. Motivation</h2>
@@ -255,6 +255,26 @@ standards the individual originally establishes.</p>
 <p>That is what KRYteria is measured against in §3: not a feature-by-feature comparison
 with a single competing product, but the existing behavior and collection of tools people
 use to solve this problem today.</p>
+
+<p><strong>That claim was confirmed from the inside, by accident.</strong> The outside
+tester in §7 mentioned afterwards, unprompted, that he builds applications of this kind
+for himself. Asked what was under his, he said:</p>
+
+<blockquote>"Not really. Claude just remembers my history of my convos i put into it."
+<footer class="meta">— Alex M., 34, New York, quoted with permission</footer></blockquote>
+
+<p>He works in marketing rather than engineering, which makes him <em>the person this
+category serves</em> rather than an exception to it: a motivated non-engineer who wanted a
+reflection tool and built one. What is underneath it is conversation memory and no
+structure — no extracted observations, no persistent records, nothing compared against
+anything he had said he wanted.</p>
+
+<p class="meta">Said carefully, because overclaiming would weaken the point: memory across
+conversations is an ordinary feature of consumer assistants, not a feat of engineering.
+The interesting thing is what it is <strong>not</strong>. A chat that remembers can recall
+what you said. It cannot tell you that what you said in October contradicts what you chose
+in November — because it never wrote either down as a record it could compare. That gap is
+the whole of §3.</p>
 
 
 
@@ -1019,11 +1039,57 @@ here.</p>
 <h2>7. Impact</h2>
 <p class="eyebrow">What it would change, and for whom</p>
 
-<div class="todo">
-  <strong>TODO — the required evidence.</strong> One real user, 15 minutes, with a quote
-  or a before/after. Recruit on a <em>work-boundary</em> scenario rather than anyone's
-  marriage: far easier to say yes to, same rubric credit.
-</div>
+<h3>One person, twenty-seven minutes, and the product could not run</h3>
+
+<p>Alex M., 34, New York — a friend, not a user of this app, quoted by name with his
+explicit permission — was sent the hosted link with no task beyond <em>"play around with
+it."</em> He clicked every screen, wrote two journal entries, and never once saw the thing
+that makes KRYteria different from a notes app.</p>
+
+<blockquote>"I've clicked through all of them. But I don't really know where to start."
+<br><br>
+"I wrote two journal entries. But I didn't really know what to do with them in the other
+tabs."</blockquote>
+
+<p><strong>The cause was not discoverability — he found everything.</strong> He had set no
+criteria, and with no criteria the Evidence agent never executes: there is nothing to map
+an observation against. Reproduced deterministically on an empty account, one entry in:</p>
+
+<table>
+  <tr><th>What came back</th><th class="num">Value</th></tr>
+  <tr><td><code>model_calls</code> — Narrative and Safety only</td><td class="num">2</td></tr>
+  <tr><td>Observations</td><td class="num">4</td></tr>
+  <tr><td>Evidence mappings</td><td class="num">absent entirely</td></tr>
+  <tr><td>Proposals, questions, patterns, reflection</td><td class="num">none</td></tr>
+</table>
+
+<p>So a person writes about being cancelled on three times in a month and receives four
+extracted observations and nothing else — <strong>less than a notes app would give
+them</strong> — and the app never says why. KRYteria degraded silently from a decision
+mirror into a text extractor. Alex drew the only reasonable conclusion and asked for the
+missing feature:</p>
+
+<blockquote>"Then overtime the journal entries can be analyzed"</blockquote>
+
+<p><strong>That is this product, requested as a future feature.</strong> You cannot ask
+for what you have been shown. Every distinguishing behaviour KRYteria has sits downstream
+of the user's criteria, and nothing in the app said criteria came first — one missing
+instruction, accounting for all five of his complaints.</p>
+
+<p>Fixed the same evening and verified against the live provider: a new account now opens
+on <em>My KRYteria</em> with an invitation rather than an explanation; an entry that
+cannot be weighed says so — <em>"KRYteria can't tell you what this means yet — it doesn't
+know what matters to you"</em>; and a demo character opens on My Progress rather than on an
+empty compose box. The full write-up, including what the test did <em>not</em> establish,
+is <code>output/user_test.md</code>.</p>
+
+<p class="meta">Stated plainly, because the method bounds the finding: he is a friend, the
+brief set no task — which shaped two of his answers — and one tester is one tester. What
+is <em>not</em> soft is the mechanism: two model calls where there should be four is a
+fact about the system, not an impression of it. <strong>1,563 automated checks, two code
+audits and a consistency checker all passed on a build whose first run could not
+demonstrate the product.</strong> Every one of those instruments verifies an artifact.
+None of them asks whether a person can get started.</p>
 
 <h3>The measurable claim</h3>
 <p>Not "users felt better". The claim is that <strong>KRYteria makes a person's own
@@ -1202,6 +1268,28 @@ about to type. <strong>Every check this project runs verifies an artifact; none 
 asks whether a claim ever reached a person.</strong> The consistency checker was green.
 Both audits read the deployment notes and found them accurate. A README is not where
 somebody learns their journal is disposable.</p>
+
+<h3>The same shape, found twice</h3>
+
+<p>The user test in §7 is the second instance of that sentence and the more expensive one.
+A new account could not demonstrate the product, because every distinguishing behaviour
+sits downstream of criteria the user had not been told to set — and the app returned a
+short analysis without saying why it was short. <strong>1,563 automated checks, two code
+audits and a consistency checker all passed on that build.</strong></p>
+
+<p>Both failures are the same failure. In each case the system was correct, documented,
+and silent: it knew something the person needed and had no mechanism for telling them.
+The durability note and the <code>not_yet</code> message are the same fix applied to
+different facts — <em>say the thing, at the moment it matters, to the person it matters
+to.</em></p>
+
+<p class="meta">The instruments were not wrong, and that is the uncomfortable part. Every
+one of them answered the question it was built to answer. The missing question — <em>can
+somebody who has never seen this get started?</em> — is not expressible as an assertion
+about an artifact, which is why twenty-seven minutes with one stranger found what two weeks
+of building and checking could not. The next test should measure time-to-first-mapped-entry rather than
+ask for impressions, because that number is the one this project now knows it cannot
+derive from its own source.</p>
 
 <h3>Known limits</h3>
 <ul>
