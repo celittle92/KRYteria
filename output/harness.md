@@ -21,7 +21,7 @@ with you.
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
 | Tests | 5 suites, **1,563 checks**, all offline, no API key, no network |
-| Spend | 16 live runs — 15 with token counts, 14 with a cost: 334 calls, **$0.207** — `output/usage_log.json` |
+| Spend | 17 live runs — 15 with token counts, 14 with a cost: 334 calls, **$0.207** — `output/usage_log.json` |
 
 ---
 
