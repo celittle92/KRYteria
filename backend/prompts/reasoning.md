@@ -171,6 +171,23 @@ He arrives 35 minutes late because he was closing a deal:
 
 Record which criteria an observation touches and how. Keep the assessments **separate**.
 
+### Name the criteria. Never number them.
+
+`criterion_ids` already carries the machine-readable link, so the explanation does not
+need to repeat it — and an id in a sentence somebody reads is the app showing its
+plumbing to the person it is meant to be talking to.
+
+> **No:** *"Booking the flight is engagement with an interest that matters to you (115),
+> and one chosen travel experience relevant to 114."*
+>
+> **Yes:** *"Booking the flight is engagement with an interest that matters to you —
+> shared interests — and one chosen travel experience, which bears on how you travel
+> together."*
+
+Use the user's own wording for the criterion, the way the Evidence agent's rationales do.
+A row id means nothing to the person whose standards these are, and this is the one field
+where they meet your reasoning directly.
+
 ### Competing priorities: name them, do not settle them
 
 When criteria pull against each other, set `competing` and ask:

@@ -11,6 +11,7 @@ import {
 import { PersonPicker } from "../components/people";
 import QuickLog from "./QuickLog";
 import { AddYourKryteria, GettingStarted, MIN_CRITERIA, WriteAnyway } from "../onboarding";
+import { criterionNameMap, withCriterionNames } from "../criteria-text";
 
 /**
  * The primary experience. Everything else is downstream of this box.
@@ -35,6 +36,9 @@ export default function BrainDump({ account }: { account: Account }) {
   // How many standards exist, and whether this person has asked to write regardless.
   // `null` means not yet known — the gate must not flash before the answer arrives.
   const [criteriaCount, setCriteriaCount] = useState<number | null>(null);
+  // The rows themselves, not just how many: an id that reaches the screen is resolved
+  // back into the user's own wording for that criterion. See src/criteria-text.ts.
+  const [criterionNames, setCriterionNames] = useState(() => new Map<number, string>());
   const [writeAnyway, setWriteAnyway] = useState(false);
 
   useEffect(() => {
@@ -44,7 +48,8 @@ export default function BrainDump({ account }: { account: Account }) {
     api.people().then((ps) => { setPeople(ps); setPersonId(soleOrNone(ps)); })
       .catch(() => {});
     // A failed lookup must never gate writing: treat "we don't know" as "let them write".
-    api.criteria().then((cs) => setCriteriaCount(cs.length))
+    api.criteria()
+      .then((cs) => { setCriteriaCount(cs.length); setCriterionNames(criterionNameMap(cs)); })
       .catch(() => setCriteriaCount(MIN_CRITERIA));
   }, []);
 
@@ -81,6 +86,7 @@ export default function BrainDump({ account }: { account: Account }) {
         <Result
           entry={result.entry}
           analysis={result.analysis}
+          criterionNames={criterionNames}
           defaultRetention={account.retention}
           onDone={() => setResult(null)}
         />
@@ -238,11 +244,12 @@ export default function BrainDump({ account }: { account: Account }) {
 
 /* ------------------------------------------------------------------ the result */
 
-function Result({ entry, analysis, defaultRetention, onDone }: {
+function Result({ entry, analysis, defaultRetention, onDone, criterionNames }: {
   entry: Entry;
   analysis: Analysis | null;
   defaultRetention: Retention;
   onDone: () => void;
+  criterionNames: Map<number, string>;
 }) {
   const safety = analysis?.safety;
   const concerned = Boolean(safety?.concern_detected);
@@ -264,7 +271,9 @@ function Result({ entry, analysis, defaultRetention, onDone }: {
         </Card>
       )}
 
-      {analysis && !analysis.halted && <Reading analysis={analysis} />}
+      {analysis && !analysis.halted && (
+        <Reading analysis={analysis} criterionNames={criterionNames} />
+      )}
 
       {analysis?.halted && (
         <Card className="p-6">
@@ -357,7 +366,11 @@ function SafetyNotice({ analysis }: { analysis: Analysis }) {
   );
 }
 
-function Reading({ analysis }: { analysis: Analysis }) {
+function Reading({ analysis, criterionNames }: {
+  analysis: Analysis;
+  criterionNames: Map<number, string>;
+}) {
+  const named = (t: string | null | undefined) => withCriterionNames(t, criterionNames);
   const obs = analysis.observations ?? [];
   const byKind = (kind: string) => obs.filter((o) => o.kind === kind);
   const stated = byKind("reported_event");
@@ -431,7 +444,7 @@ function Reading({ analysis }: { analysis: Analysis }) {
             <ul className="divide-y divide-[rgb(var(--line))]">
               {analysis.mappings!.map((m, i) => (
                 <li key={i} className="py-3 flex items-start justify-between gap-4">
-                  <span className="text-sm text-muted">{m.rationale ?? "—"}</span>
+                  <span className="text-sm text-muted">{named(m.rationale) || "—"}</span>
                   <RelationPill relation={m.relation} />
                 </li>
               ))}
@@ -444,7 +457,7 @@ function Reading({ analysis }: { analysis: Analysis }) {
             <Eyebrow>Not settled by this</Eyebrow>
             <ul className="space-y-2">
               {analysis.insufficient!.map((i, n) => (
-                <li key={n} className="text-sm text-muted">{i.why}</li>
+                <li key={n} className="text-sm text-muted">{named(i.why)}</li>
               ))}
             </ul>
           </div>
@@ -471,9 +484,9 @@ function Reading({ analysis }: { analysis: Analysis }) {
           <ul className="mt-4 space-y-4">
             {analysis.cross_criterion!.map((c, i) => (
               <li key={i}>
-                <p className="text-muted text-sm leading-relaxed">{c.explanation}</p>
+                <p className="text-muted text-sm leading-relaxed">{named(c.explanation)}</p>
                 {c.competing && c.competing_question && (
-                  <p className="voice text-lg mt-2">{c.competing_question}</p>
+                  <p className="voice text-lg mt-2">{named(c.competing_question)}</p>
                 )}
               </li>
             ))}
