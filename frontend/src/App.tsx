@@ -58,11 +58,65 @@ function useTheme(account: Account | null) {
   return { theme, toggle };
 }
 
+/** Where a signed-in account should start.
+ *
+ * Brain Dump is the primary interaction and the right home for anybody who has told
+ * KRYteria what they care about. For somebody who has not, it is the wrong first screen
+ * and quietly the worst one: an empty account writing its first entry has no criteria to
+ * map evidence to, so the single thing that distinguishes this product from a chatbot
+ * cannot happen, and the first impression is of a text box that thought about it a while
+ * and found nothing.
+ *
+ * So the first screen follows the state of the account rather than a constant. With no
+ * criteria, My KRYteria comes first — name what matters, then write about what happened.
+ *
+ * It fires **once per session** rather than whenever the library is empty. A permanent
+ * rule would bounce somebody straight back out of Brain Dump every time they clicked it,
+ * which is a trap, and deciding for them twice is a different thing from showing them
+ * where to start.
+ */
+function useFirstScreen(account: Account | null) {
+  const [redirectTo, setRedirectTo] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!account || done) return;
+    let live = true;
+    api.criteria()
+      .then((rows) => {
+        if (!live) return;
+        // Only from the home route. Somebody who opened a deep link, or a `?demo=`
+        // character, asked for a particular screen and should get it.
+        if (rows.length === 0 && window.location.pathname === "/") {
+          setRedirectTo("/criteria");
+        }
+      })
+      .catch(() => {
+        /* A failed lookup must not strand anybody on a redirect; leave them on Brain
+           Dump, which is the behaviour this app had before. */
+      })
+      .finally(() => live && setDone(true));
+    return () => { live = false; };
+  }, [account, done]);
+
+  return { redirectTo, clear: useCallback(() => setRedirectTo(null), []) };
+}
+
 export default function App() {
   const [account, setAccount] = useState<Account | null>(null);
   const [checking, setChecking] = useState(true);
   const { theme, toggle } = useTheme(account);
   const location = useLocation();
+  const firstScreen = useFirstScreen(account);
+
+  // Spend the redirect the moment it has been taken. Leaving it set would send somebody
+  // back to My KRYteria every single time they clicked Brain Dump — a nudge that cannot
+  // be declined is not a nudge, and "nudge, never block" is the rule this app already
+  // states for profile defaults in `choice.ts`.
+  const { redirectTo, clear } = firstScreen;
+  useEffect(() => {
+    if (redirectTo && location.pathname === redirectTo) clear();
+  }, [redirectTo, location.pathname, clear]);
 
   useEffect(() => {
     // `?demo=<handle>` opens that demo character directly — so a link can point at the
@@ -155,7 +209,16 @@ export default function App() {
       <main className="flex-1 mx-auto max-w-5xl w-full px-5 py-10">
         <div key={location.pathname} className="rise">
           <Routes>
-            <Route path="/" element={<BrainDump account={account} />} />
+            <Route
+              path="/"
+              element={
+                firstScreen.redirectTo ? (
+                  <Navigate to={firstScreen.redirectTo} replace />
+                ) : (
+                  <BrainDump account={account} />
+                )
+              }
+            />
             <Route path="/journal" element={<Journal />} />
             <Route path="/criteria" element={<Criteria />} />
             <Route path="/checklist" element={<Checklist />} />
