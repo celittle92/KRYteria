@@ -122,13 +122,15 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
 - **`tools/check_consistency.py --tests` now checks the per-suite breakdown too**, not
   only the project-wide total. It had to: the README and harness advertised
-  515/125/278/353 against an actual 574/215/309/384 while `1,556 checks` was re-derived
+  515/125/278/353 against an actual 574/215/309/384 while `1,563 checks` was re-derived
   every run and right every time. **A total that is right over parts that are wrong is the
   most persuasive kind of wrong.** Three rules: a three-figure count before "checks"/"cases"
   must be one the project can produce (membership, not equality — five suites plus three
   eval-pack figures are all in play); a count annotated on a command
-  (`tests/test_api.py  # 309`) is checked against that named suite; and `(?<!of )` plus
-  `(?<![\d,])` keep it from firing on "1,556 checks" or on *"3 of 13 adversarial cases"*,
+  (`tests/test_api.py  # <count>` — written with a placeholder here on purpose, because an
+  example that looks like a real annotation gets checked like one) is compared against that
+  named suite; and `(?<!of )` plus
+  `(?<![\d,])` keep it from firing on "1,563 checks" or on *"3 of 13 adversarial cases"*,
   which is true history. **Do not re-add a comment listing numbers it declines to check** —
   the old one named 515 and 273 as legitimate, which is exactly what they stopped being.
 - **Two throttles, and they are different shapes** (`backend/throttle.py`). The first is
@@ -271,7 +273,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,556 checks across 159 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,563 checks across 160 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

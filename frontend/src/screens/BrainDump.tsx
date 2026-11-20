@@ -10,6 +10,7 @@ import {
 } from "../components/ui";
 import { PersonPicker } from "../components/people";
 import QuickLog from "./QuickLog";
+import { AddYourKryteria, GettingStarted, MIN_CRITERIA, WriteAnyway } from "../onboarding";
 
 /**
  * The primary experience. Everything else is downstream of this box.
@@ -31,6 +32,10 @@ export default function BrainDump({ account }: { account: Account }) {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{ entry: Entry; analysis: Analysis | null } | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
+  // How many standards exist, and whether this person has asked to write regardless.
+  // `null` means not yet known — the gate must not flash before the answer arrives.
+  const [criteriaCount, setCriteriaCount] = useState<number | null>(null);
+  const [writeAnyway, setWriteAnyway] = useState(false);
 
   useEffect(() => {
     // Choose only where there is nothing to choose between — see src/choice.ts.
@@ -38,6 +43,9 @@ export default function BrainDump({ account }: { account: Account }) {
       .catch(() => {});
     api.people().then((ps) => { setPeople(ps); setPersonId(soleOrNone(ps)); })
       .catch(() => {});
+    // A failed lookup must never gate writing: treat "we don't know" as "let them write".
+    api.criteria().then((cs) => setCriteriaCount(cs.length))
+      .catch(() => setCriteriaCount(MIN_CRITERIA));
   }, []);
 
   useEffect(() => {
@@ -99,6 +107,33 @@ export default function BrainDump({ account }: { account: Account }) {
       ))}
     </div>
   );
+
+  // The gate. Shown instead of the box when there is not yet enough to judge anything
+  // against, and dismissible by anybody who says they just need to write.
+  //
+  // It covers Quick log as well as Write it out, because both reach the same pipeline
+  // and both are equally empty without criteria — gating one and not the other would
+  // only teach people which tab to use to avoid the message.
+  if (criteriaCount !== null && criteriaCount < MIN_CRITERIA && !writeAnyway) {
+    return (
+      <div className="max-w-3xl">
+        <GettingStarted action={<AddYourKryteria />} />
+        <Card className="p-5 mt-4">
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <Eyebrow>Brain dump</Eyebrow>
+              <p className="text-sm text-muted mt-1">
+                {criteriaCount === 0
+                  ? `Add ${MIN_CRITERIA} KRYteria and an entry can be weighed against them.`
+                  : `${criteriaCount} of ${MIN_CRITERIA} added. KRYteria can read an entry now, but it has little to compare it to yet.`}
+              </p>
+            </div>
+            <WriteAnyway onProceed={() => setWriteAnyway(true)} />
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   if (mode === "quick") {
     return (
@@ -217,6 +252,17 @@ function Result({ entry, analysis, defaultRetention, onDone }: {
       {/* When the safety layer has fired, this comes FIRST and the ordinary analysis
           does not pretend nothing was said. */}
       {concerned && <SafetyNotice analysis={analysis!} />}
+
+      {/* Said before the short reading rather than after it, so the four observations
+          below arrive explained instead of looking like all KRYteria could manage.
+          Never shown on a safety halt — SafetyNotice owns that screen. */}
+      {analysis?.not_yet && !concerned && (
+        <Card className="p-6">
+          <Eyebrow>Not yet</Eyebrow>
+          <p className="text-ink mt-2 leading-relaxed">{analysis.not_yet.message}</p>
+          <div className="mt-5"><AddYourKryteria /></div>
+        </Card>
+      )}
 
       {analysis && !analysis.halted && <Reading analysis={analysis} />}
 

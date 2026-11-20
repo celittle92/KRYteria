@@ -219,13 +219,16 @@ async def brain_dump(
 
     return {
         "entry": store.get_entry(account_id, entry_id) or entry,
-        "analysis": _present(result),
+        # Whether this account has anything to be judged against is the route's to know —
+        # `_present` shapes a result and has no database. Passed in rather than looked up
+        # there, which is what the first version of this got wrong.
+        "analysis": _present(result, has_criteria=bool(store.list_criteria(account_id))),
         "simulated": info.simulated,
         "retention": retention,
     }
 
 
-def _present(result) -> dict:
+def _present(result, has_criteria: bool | None = None) -> dict:
     """Shape the orchestrator's result for the browser.
 
     Resources and the safety acknowledgement come first when the safety layer fired —
@@ -298,6 +301,31 @@ def _present(result) -> dict:
         payload["proposals"] = [p.model_dump() for p in result.reasoning.proposals]
     if result.reflection is not None:
         payload["reflection"] = result.reflection.model_dump()
+
+    # Say so when the analysis could not run, instead of returning a short answer and
+    # letting the user infer what it means.
+    #
+    # Found by the 19 November user test (`output/user_test.md`). With no criteria the
+    # Evidence agent never executes — there is nothing to map an observation against —
+    # so Reasoning and Reflection have nothing to work from either, and an entry comes
+    # back as extracted observations and nothing else. That is less than a notes app
+    # gives somebody. The tester concluded, reasonably, that analysing entries over time
+    # was a feature that had not been built, and asked for it.
+    #
+    # **The silence was the defect, not the short answer.** KRYteria cannot weigh an
+    # experience against standards that do not exist yet, and saying that plainly is the
+    # product's own position — it is the same honesty as `analysis_withheld` on a safety
+    # halt, and the opposite of degrading quietly into a text extractor.
+    if has_criteria is False and result.evidence is None \
+            and not payload.get("analysis_withheld"):
+        payload["not_yet"] = {
+            "reason": "no_criteria",
+            "message": (
+                "KRYteria can't tell you what this means yet — it doesn't know what "
+                "matters to you. Your entry is saved. Add your KRYteria and the next "
+                "one can be weighed against them."
+            ),
+        }
     return payload
 
 
@@ -361,7 +389,7 @@ async def analyse_existing_entry(
 
     return {
         "entry": store.get_entry(account_id, entry_id) or entry,
-        "analysis": _present(result),
+        "analysis": _present(result, has_criteria=bool(store.list_criteria(account_id))),
         "simulated": info.simulated,
     }
 

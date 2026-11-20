@@ -131,6 +131,10 @@ export interface Analysis {
   cross_criterion?: { explanation: string; competing: boolean; competing_question: string | null }[];
   patterns?: unknown[];
   reflection?: Reflection;
+  /** Present when the pipeline could not weigh the entry against anything — currently
+   *  only when the account has no criteria. The entry is still saved; the analysis is
+   *  honestly short rather than quietly short. See backend/api/journal.py. */
+  not_yet?: { reason: string; message: string };
 }
 
 export interface Reflection {

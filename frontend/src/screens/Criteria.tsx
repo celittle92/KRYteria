@@ -7,6 +7,7 @@ import {
   Card, Empty, ErrorNote, Eyebrow, Pill, Section, Spinner, StatusPill, TierPill,
 } from "../components/ui";
 import { PersonPicker } from "../components/people";
+import { GettingStarted } from "../onboarding";
 
 /**
  * My KRYteria — the three-level model made visible.
@@ -117,6 +118,16 @@ export default function Criteria() {
   return (
     <div>
       {error && <div className="mb-6"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
+
+      {/* An empty library gets the invitation before it gets the machinery. The section
+          below opens by explaining how profiles relate to one another, which is mechanism
+          offered to somebody who does not yet have the point — and the point is what the
+          user test found missing. See src/onboarding.tsx. */}
+      {library.length === 0 && (
+        <div className="mb-8">
+          <GettingStarted />
+        </div>
+      )}
 
       <Section
         title="My KRYteria"

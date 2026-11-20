@@ -1515,6 +1515,53 @@ def test_account_creation_is_bounded_for_the_application_as_a_whole() -> None:
     throttle.reset()
 
 
+def test_an_entry_with_no_criteria_says_so_instead_of_going_quiet() -> None:
+    """The silence was the defect, not the short answer.
+
+    From the 19 November user test. With no criteria the Evidence agent never runs —
+    there is nothing to map an observation against — so an entry comes back as extracted
+    observations and nothing else. The tester read that as "the analysis feature has not
+    been built yet" and asked for it, which is the product he was already using.
+
+    What must hold: the entry is still saved, the short analysis still happens, and the
+    response *says why it is short*. The honest sentence is the same move as
+    `analysis_withheld` on a safety halt — this app states what it is not doing rather
+    than letting somebody infer it.
+    """
+    c = new_client("not-yet-user")
+
+    r = c.post("/api/brain-dump", json={
+        "text": "Sam cancelled again on Friday, the third time this month. He said work "
+                "ran over. I keep telling myself it is fine.",
+        "retention": "keep_all",
+    })
+    check("the entry is accepted", r.status_code == 201, f"got {r.status_code}: {r.text[:200]}")
+    body = r.json()
+    check("and it is saved", bool(body.get("entry", {}).get("id")))
+
+    analysis = body.get("analysis") or {}
+    check("no evidence was produced, because there is nothing to map to",
+          not analysis.get("mappings"), str(analysis.get("mappings"))[:120])
+    not_yet = analysis.get("not_yet")
+    check("the response says WHY it is short", bool(not_yet), str(analysis.keys()))
+    if not_yet:
+        check("it names the reason machine-readably",
+              not_yet.get("reason") == "no_criteria", str(not_yet.get("reason")))
+        check("and tells the person what to do about it",
+              "matters to you" in not_yet.get("message", ""), not_yet.get("message", ""))
+
+    # And it must disappear once there is something to judge against — a permanent
+    # "we can't help you yet" on an account that has set its standards would be worse
+    # than the silence it replaced.
+    c.post("/api/criteria", json={"value": "Reliability",
+                                  "desired_behavior": "Does what he says he will"})
+    r2 = c.post("/api/brain-dump", json={
+        "text": "He said he would call on Sunday and he did.", "retention": "keep_all"})
+    check("a second entry, now that a criterion exists, carries no not_yet",
+          r2.status_code == 201 and not (r2.json().get("analysis") or {}).get("not_yet"),
+          str((r2.json().get("analysis") or {}).get("not_yet")))
+
+
 def main() -> int:
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_")]
     for t in tests:

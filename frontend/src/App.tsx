@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { api, type Account } from "./api";
 import { Spinner } from "./components/ui";
+import { MIN_CRITERIA } from "./onboarding";
 import SignIn from "./screens/SignIn";
 import BrainDump from "./screens/BrainDump";
 import Criteria from "./screens/Criteria";
@@ -82,12 +83,27 @@ function useFirstScreen(account: Account | null) {
   useEffect(() => {
     if (!account || done) return;
     let live = true;
+
+    // A demonstration account opens on something that DEMONSTRATES.
+    //
+    // Opening a character used to land on Brain Dump: an empty compose box in somebody
+    // else's account — the least illustrative screen in the app, shown first, with the
+    // populated ones left to be found. The 19 November tester met exactly that and then
+    // called the demo "a bit overwhelming", having arrived at each dense screen cold and
+    // without a reason to be there. My Progress is the opposite end: criteria beside
+    // observed experience, which is the one view a stateless chat cannot produce.
+    if (account.is_demo === 1 && window.location.pathname === "/") {
+      setRedirectTo("/progress");
+      setDone(true);
+      return;
+    }
+
     api.criteria()
       .then((rows) => {
         if (!live) return;
-        // Only from the home route. Somebody who opened a deep link, or a `?demo=`
-        // character, asked for a particular screen and should get it.
-        if (rows.length === 0 && window.location.pathname === "/") {
+        // Only from the home route. Somebody who opened a deep link asked for a
+        // particular screen and should get it.
+        if (rows.length < MIN_CRITERIA && window.location.pathname === "/") {
           setRedirectTo("/criteria");
         }
       })
