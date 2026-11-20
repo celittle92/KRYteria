@@ -77,13 +77,13 @@ export default function Criteria() {
     // try/finally with no catch. That is the "+ Soft hands does nothing" bug.
     setRows([]);
     if (selected === null) return;
-    let cancelled = false;
+    let canceled = false;
     const load = personId === ""
       ? api.profileCriteria(selected)
       : api.assessments(selected, personId);
-    load.then((r) => { if (!cancelled) setRows(r); })
-      .catch((e) => { if (!cancelled) setError(String(e)); });
-    return () => { cancelled = true; };
+    load.then((r) => { if (!canceled) setRows(r); })
+      .catch((e) => { if (!canceled) setError(String(e)); });
+    return () => { canceled = true; };
   }, [selected, personId, rowsNonce]);
 
   async function setRelevance(criterionId: number, relevance: Relevance) {

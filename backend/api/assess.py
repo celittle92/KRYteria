@@ -262,7 +262,7 @@ def _theme_rows(trends: list[dict]) -> list[dict]:
 
     ``sensitive`` travels with the row so a client can decide not to put
     "Sexual consideration" in a notification preview or a shoulder-surfable summary.
-    It never governs whether the theme was recognised — only how it is shown.
+    It never governs whether the theme was recognized — only how it is shown.
     """
     from ..themes import is_sensitive, label
 

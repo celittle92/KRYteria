@@ -22,17 +22,17 @@ control**. The third category is the one most products get wrong by omission.
 3. **No sharing mechanisms.** No social, collaborative, or person-to-person sharing.
 4. **User-controlled retention.** Users decide whether their original Brain Dumps and
    associated conversations are retained.
-5. **Data minimisation.** Information not needed for the requested functionality is not
+5. **Data minimization.** Information not needed for the requested functionality is not
    collected or stored.
 6. **User-controlled deletion.** Users can delete retained information, with deletion
-   behaviour and backup expiration documented.
+   behavior and backup expiration documented.
 7. **No model training on private reflections.** Brain Dumps are not used to train models.
 8. **Transparency.** Users are told what is processed, what is stored, where it goes, and
    for how long.
 
 ---
 
-## 1. No sharing, no signalling, no discoverability
+## 1. No sharing, no signaling, no discoverability
 
 **Being mentioned in KRYteria is indistinguishable, to the person mentioned, from never
 having been mentioned at all.**
@@ -60,7 +60,7 @@ person record, nothing that could match one user's "Sam" to another user's accou
 
 ---
 
-## 2. Authorisation at the database layer, not only the API
+## 2. Authorization at the database layer, not only the API
 
 Every store method that takes a row id also takes the account id and scopes its SQL.
 `Store._assert_owns` raises `NotOwned`, and the HTTP layer turns that into **404, never
@@ -104,7 +104,7 @@ have something to point at.
 **Why `discard` also removes derived records.** An extracted observation can be a
 near-quotation — *"She stayed rather than have another argument"* — and an interrogation
 stores the user's claim verbatim by design. Keeping those after somebody asked for the
-narrative to be discarded would honour the letter and break the promise.
+narrative to be discarded would honor the letter and break the promise.
 
 Retention is applied **in the same request as processing**, so the window in which an
 unwanted original sits in the database is the length of one HTTP call, not until a nightly

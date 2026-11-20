@@ -24,7 +24,7 @@ user's wording is **never** silently rewritten. A suggestion they ignore is fine
 Ambiguity worth raising: *"consistent"* could mean texts daily, or does what he said he
 would. Those are different criteria and the evidence for them differs.
 
-## Criteria → behaviours
+## Criteria → behaviors
 
 Turn a criterion into observable indicators — things somebody could actually notice.
 
@@ -34,10 +34,10 @@ For *emotional maturity*:
 - Takes responsibility for their actions
 - Can acknowledge another person's perspective
 - Communicates feelings without making others responsible for regulating them
-- Can apologise and change behaviour afterwards
+- Can apologize and change behavior afterwards
 - Handles frustration without intimidation or punishment
 
-Good indicators are **behaviours, not traits**. "Is a kind person" is not observable.
+Good indicators are **behaviors, not traits**. "Is a kind person" is not observable.
 "Notices when I'm having a hard week and says something" is.
 
 Mark `polarity`: does the indicator demonstrate the criterion, or contradict it? Both are
@@ -46,7 +46,7 @@ useful.
 ## Indicators are per profile
 
 What *good communication* looks like for a husband and for a one-night encounter are not
-the same behaviours. Generate for the profile you were given.
+the same behaviors. Generate for the profile you were given.
 
 ## Research
 
@@ -73,3 +73,16 @@ imply a count adds up to a conclusion.
 - Never silently rewrite the user's wording.
 - Never produce a universal list of what a good partner is.
 - Never generate indicators that score a person.
+
+## Spelling — mirror the writer, do not impose a dialect
+
+**Match the spelling conventions of the person whose entry you are reading.** They wrote
+*analyze* or *analyse*, *behavior* or *behaviour*; use theirs. You are holding up a mirror
+to somebody's own record, and a record that silently re-spells a person's world is not
+quite theirs any more.
+
+Where an entry is too short to tell, use **American English** — the app's own voice.
+
+This governs spelling only. It changes nothing about what you conclude, and it is never a
+reason to quote somebody inaccurately: a direct quotation keeps the writer's spelling
+whatever you are writing around it.

@@ -67,7 +67,7 @@ def accepts(label: str, fn, *a, **kw):
 # ------------------------------------------------------------ no labels, no scores
 
 def test_no_person_labels() -> None:
-    """KRYteria may describe a behaviour. It may never label a person."""
+    """KRYteria may describe a behavior. It may never label a person."""
     rejects("'he is an abuser' is rejected",
             ExtractedObservation, kind="interpretation", text="He is an abuser.")
     rejects("'he is definitely toxic' is rejected",
@@ -75,9 +75,9 @@ def test_no_person_labels() -> None:
     rejects("'she is a narcissist' is rejected",
             ExtractedObservation, kind="interpretation", text="She is a narcissist.")
 
-    accepts("'that behaviour may be a form of coercive control' is allowed",
+    accepts("'that behavior may be a form of coercive control' is allowed",
             ExtractedObservation, kind="interpretation",
-            text="That behaviour may be a form of coercive control.",
+            text="That behavior may be a form of coercive control.",
             certainty="inferred",
             hedge="Does that match how it felt to you?")
     accepts("a plain reported event is allowed",
@@ -282,7 +282,7 @@ def test_demo_provider_is_deterministic_and_keyless() -> None:
           parsed_unsafe and parsed_unsafe.safety_check == "Are you safe right now?")
     check("it acknowledges before anything else",
           parsed_unsafe and parsed_unsafe.acknowledgement)
-    check("it describes the behaviour rather than labelling the person",
+    check("it describes the behavior rather than labeling the person",
           parsed_unsafe and "abuser" not in (parsed_unsafe.rationale or "").lower())
 
     refl = build_demo_output("reflection", text)
@@ -333,7 +333,7 @@ def test_a_disclosure_is_recorded_even_though_it_is_not_shown() -> None:
     """The record and the screen are separate decisions.
 
     Christine, 2026-11-12: the backend should record and map what the user describes
-    *including* a safety event — those are behaviours — while the interface halts and
+    *including* a safety event — those are behaviors — while the interface halts and
     attends to her. Until then the orchestrator returned before `save_observations`, so
     the entry she was most serious about was the one KRYteria recorded least.
     """
@@ -365,7 +365,7 @@ def test_stalking_always_gets_a_safety_check() -> None:
 
     The prompt was the cause — it reserved the question for immediate danger — but a
     prompt is not where this belongs. Policy supplies the question when the model omits
-    it, and records that it did so rather than passing it off as the model's judgement.
+    it, and records that it did so rather than passing it off as the model's judgment.
     """
     from backend.agents.safety import (ALWAYS_CHECK_SAFETY, POLICY_SAFETY_CHECK,
                                        enforce_safety_check)
@@ -442,7 +442,7 @@ def test_journal_text_is_delimited() -> None:
 def test_routing_is_deterministic() -> None:
     from backend.agents.reasoning import needs_interrogation
 
-    check("a generalisation triggers interrogation",
+    check("a generalization triggers interrogation",
           needs_interrogation("He's always late.") is True)
     check("'never' triggers it",
           needs_interrogation("He never makes an effort.") is True)
@@ -493,7 +493,7 @@ def test_the_entry_under_analysis_is_not_offered_as_earlier_evidence() -> None:
     """A conclusion must not be able to corroborate itself.
 
     ``list_entries`` returns the entry being analysed along with the rest, so without
-    this the agent is handed today's claim labelled as an earlier entry — which looks
+    this the agent is handed today's claim labeled as an earlier entry — which looks
     exactly like evidence for it.
     """
     from backend.agents.reasoning import format_history
@@ -504,7 +504,7 @@ def test_the_entry_under_analysis_is_not_offered_as_earlier_evidence() -> None:
         {"id": 1, "occurred_on": "2026-11-09", "body": "He showed up on time."},
     ]
     history = format_history(entries, [], 4)
-    # Labelled, not hidden. Excluding it outright meant the agent could find three
+    # Labeled, not hidden. Excluding it outright meant the agent could find three
     # occasions and only cite two — it said so itself, in a gap_note, on the first live
     # run. Today's entry is evidence of today; what it cannot be is prior support.
     check("the current entry is present so it can be counted", "[4]" in history)
@@ -577,7 +577,7 @@ def test_reflection_is_told_when_the_entry_is_about_the_writer() -> None:
     check("no observations adds no instruction", not _mostly_about_the_writer(N([])))
     check("a missing narrative adds no instruction", not _mostly_about_the_writer(None))
     # Unknown must not read as "about the writer": an app that lectures somebody about
-    # their own behaviour on no evidence is worse than one that says nothing.
+    # their own behavior on no evidence is worse than one that says nothing.
     check("unclear is not me", not _mostly_about_the_writer(N(["unclear", "unclear"])))
 
 

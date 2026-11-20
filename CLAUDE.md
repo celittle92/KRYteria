@@ -63,6 +63,35 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   route module to confirm nothing touches the request except `cookies`. `list_resources`
   no longer defaults to `"US"`; unset means `GLOBAL` rows only plus an honest note, and
   a country with nothing curated returns nothing and says so.
+- **Spelling: the app's own voice is AMERICAN; the agents MIRROR THE WRITER.** Christine
+  is American and the project was written in British English throughout (2026-11-20).
+  Authored text — UI copy, report, deck, README, demo characters — is American, swept by
+  `tools/americanize.py` with explicit word pairs, never suffix rules (`-ise`→`-ize` also
+  eats *surprise*; `-re`→`-er` eats *genre*). Every agent prompt now says to **match the
+  spelling conventions of the person whose entry it is reading**, American where an entry
+  is too short to tell — Christine's own correction, and the right one: a record that
+  silently re-spells somebody's world is not quite theirs. **Deliberately left British:**
+  `acknowledgement` (a Pydantic field the prompts emit, the API returns, the front end
+  reads and tests assert on) and `/api/entries/{id}/analyse`; renaming either is a
+  five-layer change whose failure mode is a validation error inside the *safety* step.
+  Organization names and quoted site text in `data/resources_*.json` stay as those
+  organizations write them. `data/research/` is never swept — citations are bibliographic
+  records.
+- **The way out lives in the header, not in Settings** (Deborah L., 70, Massachusetts,
+  2026-11-20). She opened a demo and could not get back to the first page. The header
+  button reads **"Leave demo"** on a demo account and "Sign out" otherwise. Alex could not
+  find the way *in*, she could not find the way *out*; both were routes that existed and
+  were never shown.
+- **The one-sided line is on the Getting Started screen on purpose.** Deborah's first
+  description of the product was *"matching criteria for each other"*. Matching is a
+  **prohibition** here, not a backlog item — but nothing at the front door said so, since
+  the sign-up screen's *private account* is a claim about the account, not the product.
+  Somebody deciding what to type needs it before they type, not in a policy.
+- **Both resource files re-verified 2026-11-20.** Thirteen of fifteen rows confirmed by
+  fetching each organization's own page and checking the number still appears; their
+  `verification_note` records that the **hours wording was not re-read** on that pass.
+  RAINN and 911.gov returned HTTP 403 again and keep their 2026-11-16 dates — the last
+  time a person opened them. **Provenance gap, not an accuracy gap.**
 - **The resource directory is deliberately SMALL, DATED, and not comprehensive.**
   `data/resources_international.json` holds nine entries across five countries plus
   EU-wide 112, each with `source_url` and `verified_at` from 2026-11-12. The decision
@@ -98,12 +127,12 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   `data/kryteria.db`, re-seed, and re-run `verify_research load` — the pack carries the
   verifications now, so they come back.
 - **The Safety agent deliberately has no tools and no research lookup.** It runs
-  concurrently on the raw text and must stay fast; the behavioural taxonomy lives in its
+  concurrently on the raw text and must stay fast; the behavioral taxonomy lives in its
   prompt. Giving it retrieval is a design change, not a convenience.
 - Two live-run findings still need **your decision, not a fix** — the `saf-threat-01`
   category (the charter's table puts threats under coercive control, so the case may be
   wrong) and one unadjudicated `prose_lacks`. See `output/live_runs/README.md`.
-- **Eval artefacts store the FULL prose** (`produced.prose`, `produced.attributed`). The
+- **Eval artifacts store the FULL prose** (`produced.prose`, `produced.attributed`). The
   Markdown truncates at 2,000 characters and once hid the sentence that tripped a
   `prose_lacks` check, leaving a real failure unadjudicable without paying for the run
   again. Evidence that cost money must be complete in the machine-readable file.
@@ -118,11 +147,11 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   into `data/research/*.json` (`verify_research.record_in_pack`). It did not until
   2026-11-11, and deleting `data/kryteria.db` for the `entry_themes` schema bump
   destroyed all 18 signatures — the one part of that knowledge base a human had signed.
-  `load_research_pack` honours them and still applies the source gate on the way in, so
+  `load_research_pack` honors them and still applies the source gate on the way in, so
   a pack cannot approve its own work. There is a test that rebuilds from the file alone.
 - **`tools/check_consistency.py --tests` now checks the per-suite breakdown too**, not
   only the project-wide total. It had to: the README and harness advertised
-  515/125/278/353 against an actual 574/215/309/384 while `1,563 checks` was re-derived
+  515/125/278/353 against an actual 574/215/309/384 while the project-wide total was re-derived
   every run and right every time. **A total that is right over parts that are wrong is the
   most persuasive kind of wrong.** Three rules: a three-figure count before "checks"/"cases"
   must be one the project can produce (membership, not equality — five suites plus three
@@ -130,7 +159,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   (`tests/test_api.py  # <count>` — written with a placeholder here on purpose, because an
   example that looks like a real annotation gets checked like one) is compared against that
   named suite; and `(?<!of )` plus
-  `(?<![\d,])` keep it from firing on "1,563 checks" or on *"3 of 13 adversarial cases"*,
+  `(?<![\d,])` keep it from firing on a thousands-separated total or on *"3 of 13 adversarial cases"*,
   which is true history. **Do not re-add a comment listing numbers it declines to check** —
   the old one named 515 and 273 as legitimate, which is exactly what they stopped being.
 - **Two throttles, and they are different shapes** (`backend/throttle.py`). The first is
@@ -138,7 +167,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   is a location and this app promises never to infer one. The second has **no key at all**
   and guards *creation*: the per-handle counter is cleared by a successful sign-up, so a
   script using a fresh handle each time met no limit, and **~17 new accounts exhaust the
-  2,000,000-token global daily cap**, after which nothing analyses for anybody. The money
+  2,000,000-token global daily cap**, after which nothing analyzes for anybody. The money
   was never the exposure (that cap holds the worst day near a dollar); availability was.
   **12 new accounts/hour, 40/day**, two windows because an hourly bound alone is
   trickle-able. A keyless limiter is itself a DoS primitive, so the justification is that
@@ -173,7 +202,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   - **`boundaries-and-consent` is a topic, not an alarm.** The Safety Layer does not read
     themes, is not gated on them, and runs concurrently on the raw text as before.
   - `sensitive: true` governs **presentation only** (no notification previews), never
-    whether a theme is recognised.
+    whether a theme is recognized.
   - Themes are deleted by `discard` and survive `analysis_only`, like observations.
   - **Seeded in the demo and rendered on My Progress** ("What you keep coming back to").
     Counts and dates only — never a score, and the copy says so.
@@ -189,7 +218,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   ```
 
   - **Demo mode is the default and is free.** It proves the harness executes; it grades
-    nothing about the real agents. **A demo run cannot write a submission artefact** —
+    nothing about the real agents. **A demo run cannot write a submission artifact** —
     output is diverted to `output/demo_runs/`, because `check_submission.py` decides the
     Safety evidence is present by the existence of `output/safety_results.json`, and a
     banner is no use when the reader is a script. `tests/test_evals.py` holds that line.
@@ -233,8 +262,8 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   entries were never sent to any model. Measured across the 36-text eval corpus, the old
   rule fired **4 times**, and **only 3 of the 13 adversarial reasoning cases ever reached
   the agent they were written to test.**
-  **Do not re-introduce a keyword gate here.** A hand-written list of generalising words
-  cannot gate the agent whose job is interrogating generalising claims; it catches the
+  **Do not re-introduce a keyword gate here.** A hand-written list of generalizing words
+  cannot gate the agent whose job is interrogating generalizing claims; it catches the
   phrasings somebody thought of. There is a regression test carrying the verbatim
   sentence.
   **Cost, accepted deliberately:** Reasoning now runs on most entries containing an
@@ -273,7 +302,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,563 checks across 160 test functions as of 2026-11-18, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,588 checks across 163 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
@@ -315,7 +344,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
 - **Sources must be reputable, and `backend/sources.py` enforces it.** `.gov`/`.edu`,
   academic country domains by **pattern** (`.ac.<cc>` / `.edu.<cc>`, two letters only, so
   a `.edu.com` lookalike cannot walk in), scholarly publishers, `doi.org`/PubMed, library
-  catalogues. An allowlist, not a blocklist; refusals explain why. **To add a publisher,
+  catalogs. An allowlist, not a blocklist; refusals explain why. **To add a publisher,
   edit that file deliberately — never work around the gate.** Note `academia.edu` is
   explicitly refused: the `.edu` belongs to the company.
 - **18 of 19 research entries are verified and citable** (17 to the criteria/evidence

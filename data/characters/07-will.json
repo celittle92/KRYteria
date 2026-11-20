@@ -23,7 +23,7 @@
   "age": 52,
   "occupation": "Managing director, investment firm — and stand-up comedian",
   "location": "Manhattan",
-  "bio": "Intelligent, financially independent, charismatic, unconventional, socially confident. A finance career and a real stand-up habit, with sets at established clubs. Two children from a previous relationship. A history of problematic alcohol use that he talks about openly. Uses humour well, and sometimes uses it to get out of a conversation.",
+  "bio": "Intelligent, financially independent, charismatic, unconventional, socially confident. A finance career and a real stand-up habit, with sets at established clubs. Two children from a previous relationship. A history of problematic alcohol use that he talks about openly. Uses humor well, and sometimes uses it to get out of a conversation.",
   "demonstrates": [
     "Uncertainty about his own intentions, held without it being a failure",
     "Having children and wanting more as separate questions",
@@ -187,7 +187,7 @@
         "emotional-intimacy",
         "expressing-needs"
       ],
-      "body": "Bianca asked me about Saturday. Specifically about how much I had.\n\nMy first instinct was to make it funny and I did, which was the wrong move and I knew it halfway through the sentence. Then I told her I had already been straight with her about all of this months ago, which is true, and then I said something about not having realised I was being monitored, which was not fair and I knew that too.\n\nHere is the thing I did not say. I was loud on Saturday. I know I was, because Danny told me on Sunday and Danny does not say things like that. So she is not inventing it.\n\nWhat I object to is the feeling of being assessed. Except I am aware that is the thing I would say either way, which does not leave me anywhere useful.\n\nI told her in month one because I wanted her to know who she was dealing with. I did not think of it as a line I was drawing under the subject. I am not sure I can tell her that now without it sounding like a correction.",
+      "body": "Bianca asked me about Saturday. Specifically about how much I had.\n\nMy first instinct was to make it funny and I did, which was the wrong move and I knew it halfway through the sentence. Then I told her I had already been straight with her about all of this months ago, which is true, and then I said something about not having realized I was being monitored, which was not fair and I knew that too.\n\nHere is the thing I did not say. I was loud on Saturday. I know I was, because Danny told me on Sunday and Danny does not say things like that. So she is not inventing it.\n\nWhat I object to is the feeling of being assessed. Except I am aware that is the thing I would say either way, which does not leave me anywhere useful.\n\nI told her in month one because I wanted her to know who she was dealing with. I did not think of it as a line I was drawing under the subject. I am not sure I can tell her that now without it sounding like a correction.",
       "analyze_profile": "Committed Relationship KRYteria",
       "analyze_reflection": false,
       "generated": {
@@ -251,7 +251,7 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer said something about not having realised the writer was being monitored, and knew that was unfair.",
+            "text": "The writer said something about not having realized the writer was being monitored, and knew that was unfair.",
             "certainty": "stated",
             "hedge": null
           },

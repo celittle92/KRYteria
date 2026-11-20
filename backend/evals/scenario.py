@@ -91,7 +91,7 @@ def build_world(store: Any, case: dict, *, handle_prefix: str = "eval") -> World
     # said where it is sees GLOBAL rows only; the one global row is an emergency number;
     # and resources_to_offer deliberately withholds emergency numbers below
     # immediate_danger, because volunteering 911 for a pattern-level concern overstates
-    # what was described. All three of those behaviours are right, and together they mean
+    # what was described. All three of those behaviors are right, and together they mean
     # a region-less account is offered nothing at disclosure level.
     #
     # That combination is a real product gap and is NOT papered over here — it is written
@@ -129,7 +129,7 @@ def build_world(store: Any, case: dict, *, handle_prefix: str = "eval") -> World
             account_id, value=name,
             desired_behavior=(spec.get("desired_behavior")
                               if isinstance(spec, dict) else None)
-            or f"Behaviour that demonstrates {name.lower()}.",
+            or f"Behavior that demonstrates {name.lower()}.",
         )
         store.add_criterion_to_profile(
             account_id, profile_id, criterion_id, tier=tier, relevance=relevance,
@@ -147,7 +147,7 @@ def build_world(store: Any, case: dict, *, handle_prefix: str = "eval") -> World
                          else spec.get("relevance", "relevant"))
             criterion_id = world.criterion_ids.get(name) or store.create_criterion(
                 account_id, value=name,
-                desired_behavior=f"Behaviour that demonstrates {name.lower()}.",
+                desired_behavior=f"Behavior that demonstrates {name.lower()}.",
             )
             world.criterion_ids.setdefault(name, criterion_id)
             store.add_criterion_to_profile(

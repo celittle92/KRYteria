@@ -46,7 +46,7 @@ TRUSTED_SUFFIXES = (
 ACADEMIC_CC = re.compile(r"\.(ac|edu)\.[a-z]{2}$")
 
 #: Specific hosts that are neither .gov nor .edu but are the publisher of record, a
-#: permanent identifier, or a library catalogue. Each one is here because a human put it
+#: permanent identifier, or a library catalog. Each one is here because a human put it
 #: here.
 TRUSTED_HOSTS = {
     # Permanent identifiers and indexes
@@ -62,7 +62,7 @@ TRUSTED_HOSTS = {
     "journals.plos.org", "annualreviews.org", "www.annualreviews.org",
     "guilford.com", "www.guilford.com", "press.princeton.edu", "yalebooks.yale.edu",
     "hup.harvard.edu", "mitpress.mit.edu", "us.macmillan.com",
-    # Library catalogues — the right source for a book's bibliographic record
+    # Library catalogs — the right source for a book's bibliographic record
     "search.worldcat.org", "worldcat.org", "catalog.loc.gov", "lccn.loc.gov",
     "openlibrary.org",
 }
@@ -84,8 +84,8 @@ KNOWN_UNACCEPTABLE = {
     "www.academia.edu": "an upload site — note the .edu is the company's, not a university's",
     "medium.com": "a blogging platform",
     "gwern.net": "a personal site, however carefully maintained",
-    "goodreads.com": "a bookseller's catalogue, which this project has already seen be wrong",
-    "www.goodreads.com": "a bookseller's catalogue, which this project has already seen be wrong",
+    "goodreads.com": "a bookseller's catalog, which this project has already seen be wrong",
+    "www.goodreads.com": "a bookseller's catalog, which this project has already seen be wrong",
     "amazon.com": "a retailer",
     "www.amazon.com": "a retailer",
 }
@@ -118,7 +118,7 @@ def check_source(url: str) -> str:
         if host == bad or host.endswith("." + bad):
             raise UnacceptableSource(
                 f"{host} is {why}. KRYteria cites primary sources: a journal, a "
-                "publisher, a university, a government body, or a library catalogue."
+                "publisher, a university, a government body, or a library catalog."
             )
 
     if host in TRUSTED_HOSTS:
@@ -129,9 +129,9 @@ def check_source(url: str) -> str:
         return host
 
     raise UnacceptableSource(
-        f"{host} is not a recognised scholarly source. KRYteria accepts .gov and .edu "
+        f"{host} is not a recognized scholarly source. KRYteria accepts .gov and .edu "
         "domains, scholarly publishers, permanent identifiers such as doi.org, and "
-        "library catalogues. If this is a legitimate publisher the list has missed, add "
+        "library catalogs. If this is a legitimate publisher the list has missed, add "
         "it to backend/sources.py deliberately rather than working around this."
     )
 

@@ -1,6 +1,6 @@
 # Tokenomics
 
-Every figure here was paid for. Nothing is modelled.
+Every figure here was paid for. Nothing is modeled.
 
 The machine-readable record is [`usage_log.json`](usage_log.json); this file explains it.
 Where a run's own report was later overwritten, the numbers were recovered from git
@@ -34,10 +34,10 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-18 | Adrian entry, after closing both new faults | 5 | 17,861 | 9,904 | $0.00674 |
 | | **Total** | **334** | **704,063** | **320,060** | **$0.20675** |
 
-**Two of the fifteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artefact an hour later. So the real spend is **higher than $0.20001 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modelled*.
+**Two of the fifteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. So the real spend is **higher than $0.20001 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
 
 **A note on how that total was produced.** The first version of this table was
-hand-totalled and came out $0.0064 too high. It is now summed from the rows by a script
+hand-totaled and came out $0.0064 too high. It is now summed from the rows by a script
 that compares its answer against what is written. A tokenomics section whose own
 arithmetic is wrong is worse than no tokenomics section, because it is the one part of a
 report a reader can check in thirty seconds.
@@ -49,9 +49,9 @@ rows summing to $0.16545 under a total of $0.20199. They are restored above.
 Second, `usage_log.json` held **two byte-identical rows** for the reasoning evals: 44
 calls, 84,267 input, 16,011 output, $0.01643, twice. Two live runs agreeing to the digit
 is not a thing that happens — but the explanation was not the obvious one. Git has the
-eval artefact committed **twice that night**, at 00:07:47Z (196.01s, 37 checks passed, 6
+eval artifact committed **twice that night**, at 00:07:47Z (196.01s, 37 checks passed, 6
 failed) and at 01:09:27Z (12.11s, 38 passed, 5 failed). **Both were real billed runs.**
-What happened was that the second run overwrote the first's artefact, and the log was
+What happened was that the second run overwrote the first's artifact, and the log was
 filled in by copying the surviving figures onto both rows — which turned a guess into
 something that read as a measurement.
 
@@ -129,7 +129,7 @@ Enforced in `backend/agents/orchestrator.py`, in code, not asked for in a prompt
 
 ## Stated limits
 
-**Cache writes are not modelled.** The course publishes a $0.125/1M cache-write
+**Cache writes are not modeled.** The course publishes a $0.125/1M cache-write
 surcharge; `estimate_cost` does not apply it, because the provider does not report cache
 writes separately. Every figure here is therefore slightly **low on a cold cache** and
 correct once warm. Saying so is cheaper than being caught by it.

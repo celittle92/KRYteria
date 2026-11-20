@@ -8,7 +8,7 @@ punctuality."*
 Themes sit deliberately beside the existing axes rather than inside any of them:
 
   * **Not criteria.** A criterion is the user's own standard, created by them and assessed
-    against evidence. A theme is a topic label on an entry. The agent may recognise
+    against evidence. A theme is a topic label on an entry. The agent may recognize
     *reciprocity and initiative* in an entry from somebody who has never created a
     reciprocity criterion — which is the point, because it is how the app notices what a
     person keeps writing about before they have named it.
@@ -57,7 +57,7 @@ def label(theme_id: str) -> str:
 
 
 def is_sensitive(theme_id: str) -> bool:
-    """Drives presentation only — never whether the theme is recognised.
+    """Drives presentation only — never whether the theme is recognized.
 
     A sensitive theme must not appear in a notification preview or any surface the user
     did not open deliberately. *"Your reflection about Adrian's sexual boundaries is

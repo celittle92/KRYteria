@@ -244,7 +244,7 @@ def build_character(store: Store, char: dict[str, Any], *,
 
     # A character may prefer the warm palette. Both themes come from one token set and
     # both have to be shown, and carrying it on the account rather than the browser is
-    # also the real behaviour: the choice follows the person to another device.
+    # also the real behavior: the choice follows the person to another device.
     if char.get("theme"):
         store.set_preferences(account_id, theme=char["theme"])
 
@@ -429,17 +429,17 @@ def load_shared_reference_data(store: Store) -> dict[str, int]:
 
     These were loaded by ``seed_demo``, and retiring it took them with it — which went
     unnoticed because nothing fails loudly without them. The hosted app came up with
-    ``/api/resources`` returning an empty list, so the safety layer could recognise a
+    ``/api/resources`` returning an empty list, so the safety layer could recognize a
     concern perfectly and then have nothing to offer; and with no research notes,
     ``citable_refs()`` was empty, which silently disables the entire research layer,
     since a ``research_ref`` must resolve to a verified row or the write is refused.
 
     Both failures are quiet by design elsewhere in this codebase — refusing to invent a
-    hotline and refusing to cite an unverified source are correct behaviours — which is
+    hotline and refusing to cite an unverified source are correct behaviors — which is
     exactly why their absence has to be loaded on purpose rather than assumed.
 
     Idempotent, and never overwrites: resources load only when that region has none, and
-    ``load_research_pack`` honours the verification already recorded in the pack.
+    ``load_research_pack`` honors the verification already recorded in the pack.
     """
     import logging
 
@@ -638,7 +638,7 @@ def main() -> int:  # pragma: no cover - convenience entry point
     if check_only:
         return 0
 
-    # Honour KRYTERIA_DB_PATH, exactly as the running app does. A bare Store()
+    # Honor KRYTERIA_DB_PATH, exactly as the running app does. A bare Store()
     # silently opens the default database, so a host that puts its data on a
     # mounted disk would seed one file and serve another.
     store = Store(os.getenv("KRYTERIA_DB_PATH") or None)

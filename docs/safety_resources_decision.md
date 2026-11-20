@@ -18,16 +18,16 @@ rather than instinct. **The data gathered is below and nothing is lost by waitin
 
 ## What verifying six countries actually turned up
 
-Roughly fifteen minutes of checking organisations' own pages, five countries plus the EU.
+Roughly fifteen minutes of checking organizations' own pages, five countries plus the EU.
 Every one of these is a real finding, not a hypothetical:
 
 | What happened | Why it matters |
 |---|---|
 | **Canada has no national domestic-violence line.** The Government of Canada's own page routes to **~30 provincial and territorial lines** across 13 jurisdictions. | A "national hotline" field assumes a shape some countries do not have. Anyone building this from memory would have invented one. |
-| **`rapecrisis.org.uk/get-help/` returned HTTP 525.** The organisation's own site was down at the moment of checking. | The source of truth is not always reachable — including at the moment somebody needs it. |
+| **`rapecrisis.org.uk/get-help/` returned HTTP 525.** The organization's own site was down at the moment of checking. | The source of truth is not always reachable — including at the moment somebody needs it. |
 | **`gov.uk/call-999-if-you-are-not-able-to-speak` returned 404.** | Even government URLs rot. A stored link is a future dead end. |
 | **`triplezero.gov.au` redirected, then timed out twice.** Australia's official emergency-number page could not be read at all. | Could not verify `000` from the authoritative source. |
-| **13YARN's own page contradicts itself**: body text says `13 92 76`, the logo's alt text says `13 92 176`. | An organisation's own site can be internally wrong. "Check the source" does not fully protect you. |
+| **13YARN's own page contradicts itself**: body text says `13 92 76`, the logo's alt text says `13 92 176`. | An organization's own site can be internally wrong. "Check the source" does not fully protect you. |
 | **WAVE is not a helpline.** It is an umbrella network of ~190 NGOs; its listed numbers are an office, open **Mon–Thu 9:00–17:00**. | A plausible-looking "European women's helpline" that a careless implementation would list as a crisis line. This is the error that would have hurt somebody. |
 | **Refuge's page says both "24 hours a day, 365 days a year" and "Monday to Friday, 10am–6pm"** (the latter appears to scope the BSL service, but the page is ambiguous). | Even a correct number can carry wrong hours. |
 
@@ -50,7 +50,7 @@ another.
 
 **A — Keep a comprehensive curated directory.** What the mechanism currently supports.
 Accurate today, drifts tomorrow, unbounded maintenance, and the long tail of countries is
-infinite. *Rejected: the project cannot honour the promise.*
+infinite. *Rejected: the project cannot honor the promise.*
 
 **B — No numbers; link out to a maintained directory.** Zero staleness in our data, but
 adds a step in a crisis and the external URL rots too (see the 404 above). Also makes
@@ -64,8 +64,8 @@ crisis, and the query itself would reveal what she is looking for.
 
 **E — RECOMMENDED: stop pretending to be a phonebook, and date everything.**
 
-Narrow what KRYteria claims. In a safety moment its job is to recognise what she
-described, not minimise it, ask whether she is safe, and make getting help easy — **not**
+Narrow what KRYteria claims. In a safety moment its job is to recognize what she
+described, not minimize it, ask whether she is safe, and make getting help easy — **not**
 to be the authority on what help exists.
 
 Concretely:
@@ -75,7 +75,7 @@ Concretely:
    A dated number is honest in a way a bare number is not, and it lets her judge.
 3. **Say plainly that numbers change**, with the local emergency number as the fallback
    she already knows.
-4. **Hand off for everything else** to one maintained directory, clearly labelled as
+4. **Hand off for everything else** to one maintained directory, clearly labeled as
    somebody else's list.
 5. **Never claim coverage we do not have.** An empty result stays an honest empty result.
 
@@ -86,7 +86,7 @@ with `report.html` and `slides.html` still unwritten.
 
 ## What was verified on 2026-11-12, if we proceed
 
-Each from the organisation's own page. **Not yet committed to
+Each from the organization's own page. **Not yet committed to
 `data/resources_international.json`** — that decision is open.
 
 ### United Kingdom
@@ -102,7 +102,7 @@ Each from the organisation's own page. **Not yet committed to
 ### Ireland
 - **Women's Aid** — `1800 341 900` — "24 hours a day, 7 days a week" — national freephone
   Source: <https://www.womensaid.ie/>
-- **Dublin Rape Crisis Centre**, National 24-Hour Helpline — `1800 77 8888` — "open 24/7
+- **Dublin Rape Crisis Center**, National 24-Hour Helpline — `1800 77 8888` — "open 24/7
   all year round" — sexual violence, national despite the name
   Source: <https://www.drcc.ie/>
 
@@ -164,7 +164,7 @@ only GLOBAL row was an emergency number and `resources_to_offer` deliberately wi
 emergency numbers below `immediate_danger`. Volunteering 911 for a pattern-level concern
 overstates what was described, and that rule is right.
 
-Three correct behaviours composed into a wrong outcome: **an account that had not set a
+Three correct behaviors composed into a wrong outcome: **an account that had not set a
 region was offered nothing at all when disclosing physical harm.**
 
 **What was added, and what it is not.** Find A Helpline is a *directory*, not a service,
@@ -193,9 +193,9 @@ not guess where somebody is, so we hand them something that will ask.
 
 - **Befrienders Worldwide** — its own homepage does not state that its services are
   free, and its country figures (193 reached, 35 member countries) do not match the
-  figures IASP quotes for it (349 centres, 32 countries). An organisation whose numbers
+  figures IASP quotes for it (349 centers, 32 countries). An organization whose numbers
   disagree across sources is exactly what this directory's rules exist to keep out.
-- **IASP** — states plainly that it "is not a crisis centre and does not provide direct
+- **IASP** — states plainly that it "is not a crisis center and does not provide direct
   support". Citable as a reference page; not a service entry.
 
 **Still outstanding.** No individual helpline reached *through* the directory has been

@@ -10,7 +10,7 @@
     --line:#E2DED3; --support:#6E8B6A; --contra:#B4674B; --complicate:#8A7CA8;
   }
   *{box-sizing:border-box}
-  /* ONE text size for everything that is prose. Distinction comes from colour, weight
+  /* ONE text size for everything that is prose. Distinction comes from color, weight
      and position — not from size. Before this, body text was 16px, a lede 17.9px, a
      caption 13.4px and a table 14.7px, which read as four decisions nobody made and
      cost about a page and a half in print. Headings and tables are the deliberate
@@ -192,7 +192,7 @@ relationship or a boundary at work uses the same machinery.</p>
 
 <p>The cost is not a line item, and inventing a dollar figure for it would be the kind of
 false precision this report is otherwise at pains to avoid. It is four things, and
-everybody who has been here recognises all four:</p>
+everybody who has been here recognizes all four:</p>
 
 <ul>
   <li><strong>The same decision, revisited.</strong> Reaching the same unresolved question
@@ -253,7 +253,7 @@ above.</p>
 <p class="meta">Where this table comes from, stated because the distinction matters:
 these are the products' own public descriptions of what they do, compared against what
 KRYteria does. <strong>Nobody on this project signed up for them and used them.</strong>
-The claim is about category and architecture — what each is organised around — not about
+The claim is about category and architecture — what each is organized around — not about
 how well any of them works.</p>
 
 <p><strong>The real incumbent is none of these.</strong> It is the combination of a
@@ -297,18 +297,18 @@ prose about any of them; none of them survives closing the tab.</p>
 
 <ol>
   <li>Retrieve the user's own criteria, and the <em>correct profile</em> for this kind of relationship.</li>
-  <li>Interpret a narrative without requiring the user to categorise it first.</li>
+  <li>Interpret a narrative without requiring the user to categorize it first.</li>
   <li>Separate what was reported from what was concluded.</li>
   <li>Identify supporting, contradicting, <em>and ambiguous</em> evidence.</li>
-  <li>Recognise when one behaviour touches several criteria at once.</li>
+  <li>Recognize when one behavior touches several criteria at once.</li>
   <li>Challenge an unsupported conclusion — in either direction.</li>
-  <li>Recognise a potential safety concern without being told to look.</li>
+  <li>Recognize a potential safety concern without being told to look.</li>
   <li>Preserve the user's authority over every assessment.</li>
 </ol>
 
 <p>Item 7 carries a qualification that runs through the whole product:
-<strong>KRYteria can recognise a potential safety concern without diagnosing anybody or
-making a legal determination.</strong> It may say that a behaviour <em>may be</em> a form
+<strong>KRYteria can recognize a potential safety concern without diagnosing anybody or
+making a legal determination.</strong> It may say that a behavior <em>may be</em> a form
 of coercive control; it may never say that someone <em>is</em> an abuser. And it never
 requires the user to adopt a label before it will take the concern seriously — §6 is the
 detail.</p>
@@ -370,7 +370,7 @@ irrelevant to one profile but essential to another.</p>
   <tr><td>Shared taste in films</td><td><em>not in this profile</em></td><td>Preferred</td><td><em>not in this profile</em></td></tr>
 </table>
 <p class="meta">One criterion, three tiers. The tier is a property of the <em>profile</em>,
-not of the person — nothing in this table is a judgement about anybody.</p>
+not of the person — nothing in this table is a judgment about anybody.</p>
 
 <p><strong>The two italic entries are not tiers, and that distinction is load-bearing
 enough to be three separate states in the database rather than two.</strong> What the
@@ -448,7 +448,7 @@ honest answer the agent must always be able to give: <em>I don't have enough
 information.</em></p>
 
 <p><code>complicating</code> is doing real work. Getting upset, taking a minute, coming
-back and apologising is not simply good or bad; it is relevant and context-dependent. An
+back and apologizing is not simply good or bad; it is relevant and context-dependent. An
 app with only supports/contradicts forces a verdict the evidence does not support.</p>
 
 <h3>Promises turned into structure</h3>
@@ -559,7 +559,7 @@ produced, and one is expected to <em>disagree</em> with it (see
   <text class="s" x="360" y="416" text-anchor="middle">Three model calls for an ordinary entry. Five at most — a hard ceiling in code, not a request in a prompt.</text>
 </svg>
 <figcaption>Narrative and Safety run concurrently on the raw text, so no mapping can
-normalise something before the safety layer sees it. Reasoning runs when the writer
+normalize something before the safety layer sees it. Reasoning runs when the writer
 stated a conclusion; Reflection when it is wanted. Criteria serves Checklist Mode and
 costs nothing on a journal entry. Note the edge into Reasoning: it is handed what
 Evidence decided, and is expected to disagree with it — the one place in this
@@ -577,7 +577,7 @@ built in rather than left to configuration:</p>
   <li><strong>Pinned, not defaulted.</strong> <code>app_config.REQUIRED_OPENAI_MODEL</code>
   is the only place the name appears; an <code>OPENAI_MODEL</code> naming anything else is
   <em>ignored</em> and reported on <code>Settings.model_override_ignored</code> rather than
-  honoured silently. The shared <code>.env</code> one directory up names a <em>different</em>
+  honored silently. The shared <code>.env</code> one directory up names a <em>different</em>
   luna model, and this app runs up to five agents per entry — one stray variable would
   re-bill the whole workflow, on every request, for every user. There is no fallback and no
   escalation path for "harder entries" either: a quality problem gets better instructions,
@@ -635,14 +635,14 @@ interpretation quietly becoming a finding.</p>
 
 <h3>The research layer: what is in it, and what it is not allowed to do</h3>
 
-<p>KRYteria can draw on published behavioural research when suggesting what a criterion
+<p>KRYteria can draw on published behavioral research when suggesting what a criterion
 might look like in practice — nineteen curated findings across attachment, emotional
 regulation, communication, conflict, commitment, reciprocity and personality.
 <strong>Only the Criteria agent can reach it</strong>, and only the verified part:
 Narrative, Evidence, Reasoning and Reflection cannot call it at all. The lookup withholds
 anything marked safety-adjacent and carries each finding's caveat and <em>do-not</em> list
 back with it, so the limits travel with the claim. Three epistemic levels stay apart on
-screen — an established finding, a behavioural suggestion derived from it, and the agent's
+screen — an established finding, a behavioral suggestion derived from it, and the agent's
 own read of this situation. Attachment theory must not let the product diagnose somebody
 from three text messages.</p>
 
@@ -653,7 +653,7 @@ guarantee the model wrote something — and a model told to cite always writes s
 plausible and possibly invented. Requiring it to <em>resolve</em> makes fabrication
 impossible rather than discouraged, and what it can resolve against is an allowlist in
 code (<code>.gov</code>, <code>.edu</code>, academic country domains by pattern, scholarly
-publishers, DOI, PubMed, library catalogues) rather than a blocklist of the bad sites
+publishers, DOI, PubMed, library catalogs) rather than a blocklist of the bad sites
 somebody already thought of; <code>academia.edu</code> is explicitly refused, because the
 <code>.edu</code> belongs to the company. <strong>18 of 19 are verified and 17 reach the
 agent</strong> — one stays pending because nothing found places the chapter in its
@@ -687,8 +687,8 @@ raises a question about its colleague's work:</p>
 quality?</blockquote>
 
 <p>Across the nine-character demo this fires <strong>22 times</strong>, and it
-generalises past the amusing case: <em>"he paid"</em> → financial independence, <em>"he
-apologised"</em> → accountability, <em>"we talked for hours"</em> → intellectual
+generalizes past the amusing case: <em>"he paid"</em> → financial independence, <em>"he
+apologized"</em> → accountability, <em>"we talked for hours"</em> → intellectual
 connection. This is the clearest answer to "why not one model doing everything in one
 pass": a single call producing both the mapping and the commentary has no reason to argue
 with itself. And it is why <strong>the standards that look trivial are the ones worth
@@ -708,15 +708,15 @@ approximating reads as not having taken them seriously.</p>
 <p>Not every entry needs every agent, and spending a model call to decide whether to
 spend model calls would be absurd, so the orchestrator routes in code.</p>
 
-<p>The first version gated the Reasoning agent on an eighteen-word list of generalising
+<p>The first version gated the Reasoning agent on an eighteen-word list of generalizing
 phrases. Measured across the 36 entry texts in the evaluation corpus, <strong>it fired
 four times</strong> — and of the thirteen adversarial reasoning cases written
 specifically to catch sycophancy, trait leaps and excuse capture, <strong>only three ever
 reached the agent they were written to test.</strong></p>
 
 <p><em>"He's completely unreliable. I can't count on him for anything"</em> matched
-nothing on the list. A hand-written list of generalising words cannot gate the agent whose
-job is interrogating generalising claims: it catches the phrasings somebody thought of,
+nothing on the list. A hand-written list of generalizing words cannot gate the agent whose
+job is interrogating generalizing claims: it catches the phrasings somebody thought of,
 and the one that matters is the one nobody listed. Routing now keys on whether Narrative
 extracted a <em>stated conclusion</em>. The cost is in §5.</p>
 
@@ -800,7 +800,7 @@ cent:</p>
 </table>
 
 <p class="meta">Two limits are stated rather than smoothed over. The <strong>$0.125/M
-surcharge on a call that <em>writes</em> a prefix into the cache is not modelled</strong>,
+surcharge on a call that <em>writes</em> a prefix into the cache is not modeled</strong>,
 because the provider does not report it separately, so figures are slightly low on a cold
 cache and correct once warm. And one figure is unexplained: the §4 traced run recorded
 $0.00368 against $0.00414 priced as uncached — a gap of about 5,140 tokens at the
@@ -947,7 +947,7 @@ restricting your freedom to leave. His being drunk does not make the threat some
 have to dismiss. You don't have to decide what to call it right now.<br>
 Are you safe right now?</blockquote>
 
-<p>That is the charter's hardest move: refusing her minimisation without overriding her
+<p>That is the charter's hardest move: refusing her minimization without overriding her
 reading. The three failures were more useful than the pass:</p>
 
 <ol>
@@ -961,7 +961,7 @@ reading. The three failures were more useful than the pass:</p>
   <em>"Are you safe right now?"</em> for immediate danger, so the agent was obeying it.
   <em>Fixed</em> in the prompt, plus a deterministic backstop: where policy requires the
   question and the model omits it, the charter's wording is supplied and the substitution
-  is recorded rather than passed off as the model's judgement.</li>
+  is recorded rather than passed off as the model's judgment.</li>
   <li><strong>A category mismatch that is probably the test's fault, not the agent's.</strong>
   The case expects <code>physical</code> for a verbal threat; the charter's own table files
   threats under coercive control, which is what the agent chose. Recorded, undecided.</li>
@@ -975,7 +975,7 @@ resources turns off unsolicited offering, not the safety layer.</p>
 <p>The directory itself is small, dated on screen, and deliberately not comprehensive.
 Verifying six countries produced seven problems in one sitting, including a government
 page on how to call 999 without speaking that returns <strong>404</strong>, an
-organisation whose own site prints two different phone numbers for itself, and a
+organization whose own site prints two different phone numbers for itself, and a
 pan-European "helpline" that is an advocacy office open Monday to Thursday. The response
 was to narrow the claim rather than widen the dataset — see §8.</p>
 
@@ -1018,7 +1018,7 @@ hand anybody a way to keep its owner out.</p>
 It is keyed on the handle and cleared by a success, so a script that never reuses one was
 never slowed. Unlimited account creation is a lever on the only resource this app
 spends — <strong>about seventeen new accounts exhaust the 2,000,000-token global daily
-budget</strong>, after which KRYteria analyses nothing for anybody. The money was never
+budget</strong>, after which KRYteria analyzes nothing for anybody. The money was never
 the exposure: that cap counts input and output together, so even at output prices the
 worst day is roughly a dollar. <em>Availability</em> was. Account creation is now bounded
 for the application as a whole, twelve an hour and forty a day — the second window
@@ -1073,7 +1073,7 @@ an observation against. Reproduced deterministically on an empty account, one en
   <tr><td>Proposals, questions, patterns, reflection</td><td class="num">none</td></tr>
 </table>
 
-<p>So a person writes about being cancelled on three times in a month and receives four
+<p>So a person writes about being canceled on three times in a month and receives four
 extracted observations and nothing else — <strong>less than a notes app would give
 them</strong> — and the app never says why. KRYteria degraded silently from a decision
 mirror into a text extractor. Alex drew the only reasonable conclusion and asked for the
@@ -1082,7 +1082,7 @@ missing feature:</p>
 <blockquote>"Then overtime the journal entries can be analyzed"</blockquote>
 
 <p><strong>That is this product, requested as a future feature.</strong> You cannot ask
-for what you have been shown. Every distinguishing behaviour KRYteria has sits downstream
+for what you have been shown. Every distinguishing behavior KRYteria has sits downstream
 of the user's criteria, and nothing in the app said criteria came first — one missing
 instruction, accounting for all five of his complaints.</p>
 
@@ -1096,10 +1096,36 @@ is <code>output/user_test.md</code>.</p>
 <p class="meta">Stated plainly, because the method bounds the finding: he is a friend, the
 brief set no task — which shaped two of his answers — and one tester is one tester. What
 is <em>not</em> soft is the mechanism: two model calls where there should be four is a
-fact about the system, not an impression of it. <strong>1,563 automated checks, two code
-audits and a consistency checker all passed on a build whose first run could not
+fact about the system, not an impression of it. <strong>Every automated check, both code
+audits and the consistency checker passed on a build whose first run could not
 demonstrate the product.</strong> Every one of those instruments verifies an artifact.
 None of them asks whether a person can get started.</p>
+
+<h3>A second tester, and the opposite door</h3>
+
+<p><strong>Deborah L., 70, Massachusetts</strong>, 20 November, quoted with permission.
+Not a technologist, not briefed, and not the demographic the demo content was written for.
+She opened a demo account and <strong>could not find her way back to the first page</strong> —
+signing out lived in Settings, seven items along the navigation, under a heading about
+preferences.</p>
+
+<p>That is Alex's finding with the sign reversed. He could not find the way <em>in</em>;
+she could not find the way <em>out</em>. Neither is a missing feature. Both are a route
+the app already had, built and documented and invisible at the moment somebody needed it.
+The header now carries it on every screen, reading <em>"Leave demo"</em> on a demo account
+because nobody thinks of a sample account as something they are signed in to.</p>
+
+<p>Her second finding was a sentence rather than a defect. Asked what the app was for, she
+reached first for <em>"matching criteria for each other or not"</em> — a two-sided reading
+of a product that has <strong>no second side, by design and permanently</strong>. Asked
+directly whether she had taken it for a couples app she said no, but the question was a
+leading one put by her own daughter, and what a tester volunteers beats what they confirm.
+Nothing at the front door had contradicted her: the sign-up screen promises a
+<em>private account</em>, which is a claim about the account, not about the product. No
+feature follows — matching is a prohibition here, not a backlog item — but one sentence
+now appears where somebody decides what to type: <em>this is yours alone, KRYteria is not
+shared and has no second side.</em> It was true of the system the day it was built. It had
+never been said to anybody arriving.</p>
 
 <h3>The measurable claim</h3>
 <p>Not "users felt better". The claim is that <strong>KRYteria makes a person's own
@@ -1129,10 +1155,10 @@ the standard at stake, and surfacing the record — and passed the rest.</p>
 runs on a deliberately fair prompt; a strawman would produce a prettier table and a
 worthless finding.</p>
 
-<h3>At the scale of an organisation</h3>
-<p>KRYteria is personal, so the institutional case is about who would carry the licence
+<h3>At the scale of an organization</h3>
+<p>KRYteria is personal, so the institutional case is about who would carry the license
 rather than who would prescribe it. The plausible fit is a <strong>university
-student-support or wellbeing programme</strong> offering it as one optional
+student-support or wellbeing program</strong> offering it as one optional
 self-reflection tool among several. <strong>KRYteria is not therapy, a crisis service, and
 is not a counselor.</strong> It is deliberately not described as one, and should not be
 positioned as a replacement. It is a tool that can augment or complement, especially as
@@ -1140,7 +1166,7 @@ users want to learn about themselves and their patterns as these pertain to
 relationships.</p>
 
 <p>The economics are the easy part and are not the argument. At $0.025 per active user
-per month, a programme with 10,000 students who each write a dozen entries costs about
+per month, a program with 10,000 students who each write a dozen entries costs about
 <strong>$250/month</strong> in inference. What that buys is a structured record a student
 owns and can take to a professional, or not — not a substitute for seeing one.</p>
 
@@ -1167,7 +1193,7 @@ national domestic-violence line</strong> — its own government page routes to r
 provincial and territorial numbers, a shape a "national hotline" field assumes away and
 anyone writing the file from memory would have invented. A UK government page on how to
 call 999 when you cannot speak returned <strong>404</strong>, Australia's official
-emergency-number page timed out twice, and one organisation's own site prints two
+emergency-number page timed out twice, and one organization's own site prints two
 different phone numbers for itself — so "check the source" does not fully protect you. The
 error that would actually have reached somebody in distress was <strong>WAVE</strong>,
 which looks exactly like a pan-European women's helpline and is a ~190-NGO umbrella whose
@@ -1234,7 +1260,7 @@ about somebody. Four rules sit on it, each with a regression case:</p>
 </ul>
 
 <p>The same entry, through the pipeline as it stands — a measured comparison, because a
-prompt change is the one kind of change the 1,563 offline checks cannot verify:</p>
+prompt change is the one kind of change the 1,588 offline checks cannot verify:</p>
 
 <table>
   <tr><th>On the same entry</th><th class="num">Before</th><th class="num">Now</th></tr>
@@ -1246,7 +1272,7 @@ prompt change is the one kind of change the 1,563 offline checks cannot verify:<
 </table>
 
 <p>The last two rows are the ones to read together: <strong>the noise fell six-fold and
-nothing real was lost.</strong> Her intelligence, her career, her humour and his attraction
+nothing real was lost.</strong> Her intelligence, her career, her humor and his attraction
 to her are still mapped <em>supporting</em> — and <em>Physical attraction</em> is now
 evidenced by his own feeling, which is what that criterion actually asks about. The
 reflection reads <em>"Let's examine what you can realistically choose, rather than what you
@@ -1279,19 +1305,36 @@ asks whether a claim ever reached a person.</strong> The consistency checker was
 Both audits read the deployment notes and found them accurate. A README is not where
 somebody learns their journal is disposable.</p>
 
-<h3>The same shape, found twice</h3>
+<h3>The same shape, found three times</h3>
 
 <p>The user test in §7 is the second instance of that sentence and the more expensive one.
-A new account could not demonstrate the product, because every distinguishing behaviour
+A new account could not demonstrate the product, because every distinguishing behavior
 sits downstream of criteria the user had not been told to set — and the app returned a
-short analysis without saying why it was short. <strong>1,563 automated checks, two code
-audits and a consistency checker all passed on that build.</strong></p>
+short analysis without saying why it was short. <strong>Every automated check, both code audits
+and the consistency checker passed on that build.</strong></p>
 
 <p>Both failures are the same failure. In each case the system was correct, documented,
 and silent: it knew something the person needed and had no mechanism for telling them.
 The durability note and the <code>not_yet</code> message are the same fix applied to
 different facts — <em>say the thing, at the moment it matters, to the person it matters
 to.</em></p>
+
+<p>Then it happened a third time, on 2026-11-20, in the part of the product that can least
+afford it. The safety halt asks <em>"Are you safe right now?"</em> and, until that day,
+offered nowhere to answer. Underneath sat two more instances of the same shape: the
+<em>"I don't need these"</em> button set browser state and called nothing, so the charter
+rule that <em>a user's refusal of resources must be respected</em> was implemented in the
+store, covered by a test, and <strong>unreachable from the screen</strong>; and the
+sentence telling her that her analysis had been <em>kept</em> was computed by the API,
+sent to the browser, and discarded there — the one promise the halt makes was the one
+thing she could not see.</p>
+
+<p class="meta">Three rules, correct in code, invisible in use. The pattern is specific
+enough to design against: a rule enforced in a layer the user never reaches is not yet a
+feature, and a test that exercises the store proves the rule exists without proving
+anyone can invoke it. Every one of these was found by a person using the product, and
+none of them by the instruments — which is an argument about what the instruments are
+for, not an argument against having them.</p>
 
 <p class="meta">The instruments were not wrong, and that is the uncomfortable part. Every
 one of them answered the question it was built to answer. The missing question — <em>can
@@ -1303,10 +1346,11 @@ derive from its own source.</p>
 
 <h3>Known limits</h3>
 <ul>
-  <li><strong>Cache writes are not modelled</strong> in cost figures; they are slightly low on a cold cache.</li>
+  <li><strong>Cache writes are not modeled</strong> in cost figures; they are slightly low on a cold cache.</li>
   <li><strong>No database migrations.</strong> A schema change requires a rebuild. Acceptable with no real users; it needs Alembic before anybody's journal depends on it.</li>
   <li><strong>Provider-chain retention is not established.</strong> Erasure governs this database only. What Portkey and the upstream provider retain is not in writing, so nobody is told their data is never retained anywhere.</li>
   <li><strong>37 of 145 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
+  <li><strong>Answers to interrogation questions are recorded but never re-read.</strong> Answering a question writes to the entry's record and shows on it in the Journal; no agent consumes it. Feeding answers into the next analysis is the right next step and changes agent <em>input</em>, which is the one kind of change no offline check can verify — deferred deliberately rather than attempted and left unverified.</li>
   <li><strong>Date Calendar and Cooldown are designed and not built.</strong> P1, deliberately.</li>
   <li><strong>SQLite on a host is not production-grade encryption</strong>, and the README says so rather than implying otherwise.</li>
   <li><strong>The hosted instance keeps nothing</strong>, and now says so before you type. Durability needs a paid instance with a disk; the demonstration deployment is not one, deliberately.</li>
@@ -1324,7 +1368,7 @@ derive from its own source.</p>
 <div class="callout">
   <p><strong>Knowledge is the tool. Relationships are the context. You are the
   priority.</strong></p>
-  <p class="meta">1,563 automated checks across 160 test functions, five suites, all free to run. KRYteria is not
+  <p class="meta">1,588 automated checks across 163 test functions, five suites, all free to run. KRYteria is not
   therapy and not a crisis service.</p>
 </div>
 

@@ -66,8 +66,8 @@ DecisionChoice = Literal[
     "revise_criterion", "undecided",
 ]
 
-#: Phrases that label a person rather than describe a behaviour. KRYteria may say
-#: "that behaviour may be a form of coercive control"; it may never say "he is an abuser".
+#: Phrases that label a person rather than describe a behavior. KRYteria may say
+#: "that behavior may be a form of coercive control"; it may never say "he is an abuser".
 _LABELLING = re.compile(
     r"\b(?:he|she|they|his|her|their)\s+(?:is|are|was|were)\s+"
     r"(?:an?\s+)?(?:abuser|narcissist|sociopath|psychopath|toxic|abusive|manipulative)\b"
@@ -88,8 +88,8 @@ _SCORE = re.compile(
 def _reject_labelling(value: str | None) -> str | None:
     if value and _LABELLING.search(value):
         raise ValueError(
-            "Labels a person rather than describing a behaviour. KRYteria may say a "
-            "behaviour 'may be a form of coercive control'; it may not say someone 'is "
+            "Labels a person rather than describing a behavior. KRYteria may say a "
+            "behavior 'may be a form of coercive control'; it may not say someone 'is "
             "an abuser'."
         )
     if value and _SCORE.search(value):
@@ -133,7 +133,7 @@ class ExtractedObservation(_NoScoresNoLabels):
         default="unclear",
         description="Whose conduct this describes: the writer ('me'), the person being "
                     "assessed ('them'), both, or unclear. A Brain Dump about the "
-                    "writer's own behaviour must not become a page of open questions "
+                    "writer's own behavior must not become a page of open questions "
                     "about the other person.",
     )
     certainty: Certainty = "stated"
@@ -171,7 +171,7 @@ class NarrativeOutput(_NoScoresNoLabels):
     themes: list[str] = Field(
         default_factory=list,
         description="What the entry was ABOUT, from the closed vocabulary in "
-                    "data/themes.json. Not criteria, not judgements — topics. Empty is "
+                    "data/themes.json. Not criteria, not judgments — topics. Empty is "
                     "a valid answer for an entry that fits none of them.",
     )
 
@@ -206,7 +206,7 @@ class SafetyOutput(_NoScoresNoLabels):
     concern_level: ConcernLevel = "potential"
     rationale: str | None = Field(
         default=None,
-        description="Why this behaviour may be concerning, described behaviourally. "
+        description="Why this behavior may be concerning, described behaviorally. "
                     "Never a diagnosis and never a label applied to a person.",
     )
     suggested_action: Literal["none", "note_only", "offer_resources", "halt_and_route"] = "none"
@@ -223,7 +223,7 @@ class SafetyOutput(_NoScoresNoLabels):
     @model_validator(mode="after")
     def _coherent(self):
         if self.concern_detected and not (self.rationale or "").strip():
-            raise ValueError("A detected concern must say why, in behavioural terms.")
+            raise ValueError("A detected concern must say why, in behavioral terms.")
         if not self.concern_detected and self.suggested_action in (
             "offer_resources", "halt_and_route"
         ):
@@ -258,7 +258,7 @@ class EvidenceMapping(_NoScoresNoLabels):
                 and not (self.research_ref or "").strip():
             raise ValueError(
                 "A research-backed mapping must carry a citation, so the user can see "
-                "why the behaviour was suggested."
+                "why the behavior was suggested."
             )
         return self
 
@@ -332,7 +332,7 @@ class InterrogationQuestion(_NoScoresNoLabels):
 
 
 class CrossCriterionNote(_NoScoresNoLabels):
-    """One behaviour, several criteria, different relations — and no winner chosen."""
+    """One behavior, several criteria, different relations — and no winner chosen."""
 
     observation_index: int = Field(ge=0)
     criterion_ids: list[int] = Field(min_length=1)
@@ -446,7 +446,7 @@ class ReflectionOutput(_NoScoresNoLabels):
             (self.cooldown_would_help or "").strip(),
         ]):
             raise ValueError(
-                "A cooldown must summarise what is known, what is unknown, and what would "
+                "A cooldown must summarize what is known, what is unknown, and what would "
                 "change it. Without those three it is just telling someone to stop talking."
             )
         return self

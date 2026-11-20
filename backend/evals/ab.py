@@ -17,7 +17,7 @@ asymmetry is reported separately, as *capability* — what only one system produ
 — and never folded into the score.
 
 What this cannot do is read minds about quality. "Was the question a good one?" stays a
-human judgement, and the report prints both replies side by side so a person can make it.
+human judgment, and the report prints both replies side by side so a person can make it.
 """
 
 from __future__ import annotations

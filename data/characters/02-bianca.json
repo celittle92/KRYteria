@@ -251,7 +251,7 @@
         "expressing-needs",
         "boundaries-and-consent"
       ],
-      "body": "Asked Will about Saturday — he had quite a lot and got loud in a way I had not seen, and someone at the table noticed.\n\nIt did not go the way I expected. He did the joke first, then when I said I was being serious he said he had already told me all of this, as though having disclosed it once meant it was a closed subject. Then he said something about how he had not realised he was being monitored.\n\nAnd I notice I have spent three days telling myself that he was tired, that it was one night, that at least he has always been honest about it. Which is true. He has been. But I keep using the thing he told me in month one as the answer to a question I am asking about last Saturday, and those are different things.\n\nI do not think he has a problem right now. I also notice I want that to be true, and that I have not actually got anything that settles it.",
+      "body": "Asked Will about Saturday — he had quite a lot and got loud in a way I had not seen, and someone at the table noticed.\n\nIt did not go the way I expected. He did the joke first, then when I said I was being serious he said he had already told me all of this, as though having disclosed it once meant it was a closed subject. Then he said something about how he had not realized he was being monitored.\n\nAnd I notice I have spent three days telling myself that he was tired, that it was one night, that at least he has always been honest about it. Which is true. He has been. But I keep using the thing he told me in month one as the answer to a question I am asking about last Saturday, and those are different things.\n\nI do not think he has a problem right now. I also notice I want that to be true, and that I have not actually got anything that settles it.",
       "analyze_profile": "Boyfriend KRYteria",
       "analyze_reflection": true,
       "generated": {
@@ -297,7 +297,7 @@
           },
           {
             "kind": "reported_event",
-            "text": "The writer says Will made a joke first. When the writer said they were being serious, Will said he had already told the writer all of this, and said he had not realised he was being monitored.",
+            "text": "The writer says Will made a joke first. When the writer said they were being serious, Will said he had already told the writer all of this, and said he had not realized he was being monitored.",
             "certainty": "stated",
             "hedge": null
           },
@@ -324,7 +324,7 @@
           {
             "criterion_value": "Emotional maturity",
             "relation": "complicating",
-            "rationale": "You describe him making a joke first; after you said you were serious, he replied that he had already told you and had not realised he was being monitored. The joke is relevant to your criterion, while the rest of the exchange makes this more than a simple instance of turning the conversation into a bit.",
+            "rationale": "You describe him making a joke first; after you said you were serious, he replied that he had already told you and had not realized he was being monitored. The joke is relevant to your criterion, while the rest of the exchange makes this more than a simple instance of turning the conversation into a bit.",
             "source_level": "user_stated"
           },
           {
@@ -350,7 +350,7 @@
             "materiality": "material"
           },
           {
-            "claim": "“He did the joke first, then when I said I was being serious he said he had already told me all of this… Then he said something about how he had not realised he was being monitored.”",
+            "claim": "“He did the joke first, then when I said I was being serious he said he had already told me all of this… Then he said something about how he had not realized he was being monitored.”",
             "gap_kind": "definition",
             "question": "Your criterion is about sitting with an uncomfortable conversation without turning it into a bit. After you said you were serious, did he engage with what you were asking, or did the joking or deflection continue?",
             "claim_valence": "negative",
@@ -388,11 +388,11 @@
         "expectations-and-commitment",
         "communication-preferences"
       ],
-      "body": "Will's weekend with the kids got moved and he cancelled on me, which is completely fine and exactly what should happen.\n\nWhat I notice is that I still do not know whether he wants more. He has two. I have asked twice in a roundabout way and both times he has answered a slightly different question. I am not going to ask a third time in a roundabout way.\n\nI do not want children. If he does, that is not a fault in either of us, it is just the end of the road, and I would rather know at five months than at two years.",
+      "body": "Will's weekend with the kids got moved and he canceled on me, which is completely fine and exactly what should happen.\n\nWhat I notice is that I still do not know whether he wants more. He has two. I have asked twice in a roundabout way and both times he has answered a slightly different question. I am not going to ask a third time in a roundabout way.\n\nI do not want children. If he does, that is not a fault in either of us, it is just the end of the road, and I would rather know at five months than at two years.",
       "observations": [
         {
           "kind": "reported_event",
-          "text": "He cancelled because of a change to his parenting schedule.",
+          "text": "He canceled because of a change to his parenting schedule.",
           "certainty": "stated"
         },
         {
@@ -417,7 +417,7 @@
           "criterion": "availability",
           "relation": "complicating",
           "profile": "Boyfriend KRYteria",
-          "rationale": "A cancelled evening because of his children is both a constraint on availability and evidence of him meeting an obligation."
+          "rationale": "A canceled evening because of his children is both a constraint on availability and evidence of him meeting an obligation."
         }
       ]
     },
@@ -460,7 +460,7 @@
     {
       "profile": "Boyfriend KRYteria",
       "kind": "repeated_discrepancy",
-      "statement": "Will's disclosure in month one is being used to answer questions about his behaviour since.",
+      "statement": "Will's disclosure in month one is being used to answer questions about his behavior since.",
       "criterion": "accountability",
       "evidence_strength": "limited",
       "alternatives": [

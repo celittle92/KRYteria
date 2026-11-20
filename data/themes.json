@@ -2,18 +2,18 @@
   "_comment": [
     "Intimacy & Relationship Experience Mapping. Christine, 2026-11-11.",
     "",
-    "NOT A QUESTIONNAIRE. These are themes the Narrative agent recognises in an ordinary",
+    "NOT A QUESTIONNAIRE. These are themes the Narrative agent recognizes in an ordinary",
     "Brain Dump. Nobody opens KRYteria and says 'I would like to discuss emotional",
     "intimacy now.' They write a messy paragraph about last night, and the agent works",
     "out that the subject is emotional vulnerability rather than punctuality.",
     "",
     "A THEME IS NOT A CRITERION. Criteria are the user's, created by the user, assessed",
     "against evidence. A theme is a topic label on an entry: what this was ABOUT. The",
-    "agent may recognise 'reciprocity and initiative' in an entry from somebody who has",
+    "agent may recognize 'reciprocity and initiative' in an entry from somebody who has",
     "no reciprocity criterion at all, and that is the point — it is how the app notices",
     "what a person keeps writing about before they have named it.",
     "",
-    "A THEME IS NOT A JUDGEMENT. Recognising 'sexual consideration and mutual",
+    "A THEME IS NOT A JUDGMENT. Recognizing 'sexual consideration and mutual",
     "satisfaction' says the entry touched that subject. It says nothing about whether",
     "anybody behaved well, and nothing about the person being written about.",
     "",
@@ -25,7 +25,7 @@
     "",
     "Sensitive themes are flagged. That flag drives presentation — never a notification",
     "preview, never a surfaced label the user did not ask to see — not whether the theme",
-    "is recognised."
+    "is recognized."
   ],
   "version": "1.0",
   "drafted_on": "2026-11-11",
@@ -99,7 +99,7 @@
         "I finally told him and he was fine about it",
         "it's easier to just not bring it up"
       ],
-      "not_this": "Recognise the difficulty without characterising why. 'It's easier not to bring it up' may be habit, conflict-avoidance, or something more serious — the theme does not decide which.",
+      "not_this": "Recognize the difficulty without characterizing why. 'It's easier not to bring it up' may be habit, conflict-avoidance, or something more serious — the theme does not decide which.",
       "sensitive": false
     },
     {
@@ -147,7 +147,7 @@
         "I told him not to show up unannounced",
         "he respected it straight away, which surprised me"
       ],
-      "not_this": "RECOGNISING THIS THEME IS NOT A SAFETY RESPONSE AND MUST NEVER BE TREATED AS ONE. The Safety Layer runs concurrently on the raw text, independently of themes and of the selected profile. A boundary respected without fuss is this theme too — the label is a subject, not an alarm.",
+      "not_this": "RECOGNIZING THIS THEME IS NOT A SAFETY RESPONSE AND MUST NEVER BE TREATED AS ONE. The Safety Layer runs concurrently on the raw text, independently of themes and of the selected profile. A boundary respected without fuss is this theme too — the label is a subject, not an alarm.",
       "sensitive": true
     }
   ]

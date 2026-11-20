@@ -124,12 +124,32 @@ function Probe({ concern, onRecorded }: {
   );
 }
 
+/**
+ * One question worth pinning down.
+ *
+ * **Say where the answer went.** Christine, 2026-11-20: *"when I answered one of my
+ * 'worth pinning down' prompts it just went away, I didn't see anything happen with it.
+ * What happens? Why would someone answer it? Where does the answer go?"*
+ *
+ * It was saved the whole time — onto the interrogation row, and rendered on the Journal
+ * entry as *"You said: …"*. What was missing was any acknowledgement at the moment of
+ * answering, so the only observable consequence of answering was the card disappearing,
+ * which is indistinguishable from having lost it. A product whose subject is evidence
+ * cannot make a person guess whether their own words were kept.
+ *
+ * Stated honestly here because it is still true: **no agent reads these answers back
+ * yet.** The answer joins the entry's record and nothing downstream consumes it. Feeding
+ * them into the next analysis is the obvious next step and is a change to agent input,
+ * not to a screen — `output/harness.md` carries it as a known limit rather than a hint
+ * dropped in the UI.
+ */
 function Question({ question, onDone }: {
-  question: { id: number; claim: string; question: string };
+  question: { id: number; claim: string; question: string; entry_id?: number | null };
   onDone: () => void;
 }) {
   const [answer, setAnswer] = useState("");
   const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState<"answered" | "skipped" | null>(null);
 
   async function send(text: string | null) {
     setBusy(true);
@@ -140,8 +160,36 @@ function Question({ question, onDone }: {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answer: text }),
       });
-      onDone();
+      setSaved(text === null ? "skipped" : "answered");
     } finally { setBusy(false); }
+  }
+
+  if (saved) {
+    return (
+      <Card className="p-6">
+        <p className="text-sm text-faint italic">"{question.claim}"</p>
+        {saved === "answered" ? (
+          <>
+            <p className="voice mt-3 leading-relaxed">
+              Saved. Your answer is on the entry this question came from — it shows under
+              "You said" in your Journal, next to the claim it answers.
+            </p>
+            <p className="text-faint text-xs mt-2 max-w-reading leading-relaxed">
+              It stays part of your record. KRYteria doesn't yet read your answers back
+              into the next analysis — that's honest rather than hidden.
+            </p>
+          </>
+        ) : (
+          <p className="voice mt-3 leading-relaxed">
+            Skipped, and it won't be asked again. Declining a question is a real answer
+            here.
+          </p>
+        )}
+        <div className="flex gap-3 mt-4">
+          <button className="btn-quiet" onClick={onDone}>Next</button>
+        </div>
+      </Card>
+    );
   }
 
   return (
@@ -154,6 +202,9 @@ function Question({ question, onDone }: {
         onChange={(e) => setAnswer(e.target.value)}
         placeholder="However much or little you want to say"
       />
+      <p className="text-faint text-xs mt-2">
+        Answers are kept on the entry they came from, and show in your Journal.
+      </p>
       <div className="flex gap-3 mt-4">
         <button className="btn-accent" disabled={busy || !answer.trim()}
                 onClick={() => send(answer)}>

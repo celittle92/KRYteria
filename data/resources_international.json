@@ -48,7 +48,9 @@
       "hours": "Always",
       "note": "The European Commission states 112 is \"available everywhere in the EU, free of charge\", is \"also used in some countries outside the EU - such as Switzerland and South Africa\", and is \"available worldwide on GSM mobile networks\". It works alongside national emergency numbers rather than replacing them — if you know your local emergency number, use that.",
       "source_url": "https://digital-strategy.ec.europa.eu/en/policies/112",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "National Domestic Abuse Helpline (Refuge)",
@@ -65,7 +67,9 @@
       "hours": "24 hours a day, 365 days a year",
       "note": "Free and confidential. The service describes itself as being for women and children; its page does not state whether it supports other callers. Webchat and a BSL service are also offered, on shorter hours. Corroborated on GOV.UK at https://www.gov.uk/report-domestic-abuse",
       "source_url": "https://www.nationaldahelpline.org.uk/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "Women's Aid National Freephone Helpline",
@@ -82,7 +86,9 @@
       "hours": "24 hours a day, 7 days a week",
       "note": "Free. Instant-message support is also offered mornings and evenings, seven days a week; exact hours are not stated on the page.",
       "source_url": "https://www.womensaid.ie/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "Dublin Rape Crisis Centre — National 24-Hour Helpline",
@@ -96,7 +102,9 @@
       "hours": "24/7, all year round",
       "note": "National despite the name. Webchat is also offered on limited hours; check the site for its live status.",
       "source_url": "https://www.drcc.ie/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "1800RESPECT",
@@ -109,7 +117,9 @@
       "hours": "Free, 24 hours a day, 7 days a week",
       "note": "The national domestic, family and sexual violence counselling service. Online chat and video call are also offered; chat was showing as temporarily unavailable when checked. Interpreter service 13 14 50; National Relay Service 1800 555 677.",
       "source_url": "https://www.1800respect.org.au/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "Are You OK — family violence helpline",
@@ -125,7 +135,9 @@
       "hours": "24/7",
       "note": "Free. For people worried about safety in a relationship and for people worried about someone else. Live chat is also offered, 24/7.",
       "source_url": "https://www.areyouok.org.nz/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "Safe to talk — Sexual Harm Helpline",
@@ -140,7 +152,9 @@
       "hours": "24/7",
       "note": "Free and confidential. For people who have experienced sexual harm, and for friends and family supporting them. The site states 111 for emergencies in New Zealand.",
       "source_url": "https://safetotalk.nz/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "ShelterSafe",
@@ -150,7 +164,9 @@
       "url": "https://sheltersafe.ca/get-help/",
       "note": "A clickable map to find the nearest women's shelter, from Women's Shelters Canada. Not a phone line. IMPORTANT: Canada has no single national domestic-violence helpline — the Government of Canada directs people to provincial and territorial services, listed at https://www.canada.ca/en/public-health/services/health-promotion/stop-family-violence/services.html",
       "source_url": "https://www.sheltersafe.ca/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "9-8-8 Suicide Crisis Helpline",
@@ -165,7 +181,9 @@
       "hours": "24/7/365",
       "note": "A suicide crisis line, NOT a domestic violence service. Listed only for self-harm concerns. ShelterSafe is the domestic-violence entry for Canada.",
       "source_url": "https://988.ca/",
-      "verified_at": "2026-11-12"
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": " Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     },
     {
       "name": "Find A Helpline — a directory of helplines, worldwide",
@@ -176,9 +194,9 @@
       "hours": "Varies by service",
       "note": "A finder, not a helpline — it points you to a service where you are, which is the only honest thing to offer somebody whose country KRYteria does not know. Its own site says it partners with \"verified helplines in 175+ countries\" who \"verify their information with us directly\", and describes what it finds as \"free, anonymous and confidential\". On hours it says helplines are \"often available 24/7\" — often, not always.",
       "source_url": "https://findahelpline.com/",
-      "verified_at": "2026-11-17",
-      "verified_by": "claude, by reading the site",
-      "verification_note": "Added because a user who has not set a region was being offered NOTHING at disclosure level: the only GLOBAL row was an emergency number, and resources_to_offer rightly withholds emergency numbers below immediate_danger.\n\nThree things recorded rather than smoothed over. (1) It is operated by ThroughLine Limited, a company, not a charity — its site solicits commercial partnerships. (2) Its page title claims 24/7 without qualification while the body says \"often\"; the hedged wording is the one used above. (3) Its country count contradicts IASP, whose page describes the same directory as covering \"over 150 countries\" against findahelpline's own \"175+\". The figure above is the site's own claim about itself, attributed as such.\n\nConsidered and rejected: Befrienders Worldwide, whose own homepage does not state that its services are free and whose country figures (193 reached, 35 member) do not match the figures IASP quotes for it (349 centres, 32 countries); and IASP itself, which states it \"is not a crisis centre and does not provide direct support\"."
+      "verified_at": "2026-11-20",
+      "verified_by": "claude, by fetching the organization's own page",
+      "verification_note": "Added because a user who has not set a region was being offered NOTHING at disclosure level: the only GLOBAL row was an emergency number, and resources_to_offer rightly withholds emergency numbers below immediate_danger.\n\nThree things recorded rather than smoothed over. (1) It is operated by ThroughLine Limited, a company, not a charity — its site solicits commercial partnerships. (2) Its page title claims 24/7 without qualification while the body says \"often\"; the hedged wording is the one used above. (3) Its country count contradicts IASP, whose page describes the same directory as covering \"over 150 countries\" against findahelpline's own \"175+\". The figure above is the site's own claim about itself, attributed as such.\n\nConsidered and rejected: Befrienders Worldwide, whose own homepage does not state that its services are free and whose country figures (193 reached, 35 member) do not match the figures IASP quotes for it (349 centres, 32 countries); and IASP itself, which states it \"is not a crisis centre and does not provide direct support\". Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass."
     }
   ]
 }

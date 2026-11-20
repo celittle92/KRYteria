@@ -1,6 +1,6 @@
-"""Criteria Agent — clarification and behavioural indicators.
+"""Criteria Agent — clarification and behavioral indicators.
 
-Direction A of the behavioural intelligence layer: criteria → behaviours. Off the
+Direction A of the behavioral intelligence layer: criteria → behaviors. Off the
 brain-dump path entirely, so it costs nothing on a journal entry; it serves the Criteria
 screen and Checklist Mode.
 """
@@ -41,7 +41,7 @@ def register_research_tool(agent: Agent, store) -> None:
       * returns **only verified** entries, so a citation the agent writes afterwards
         resolves to something a human actually checked;
       * withholds **safety-adjacent** entries, which may inform how the safety layer
-        describes a behaviour and must never become a checklist item;
+        describes a behavior and must never become a checklist item;
       * carries each entry's ``caveat`` and ``do_not`` back with it, so the limits travel
         with the finding instead of being left in a file nobody reads.
     """
@@ -86,7 +86,7 @@ def compose_input(*, value: str, desired_behavior: str, why_it_matters: str | No
     if profile_name:
         parts.append(f"  Profile: {profile_name}" + (f" ({tier})" if tier else ""))
         parts.append(
-            "  Generate indicators for THIS profile. What a behaviour looks like for a "
+            "  Generate indicators for THIS profile. What a behavior looks like for a "
             "long-term partner and for a casual encounter are not the same things."
         )
     parts += [
@@ -98,7 +98,7 @@ def compose_input(*, value: str, desired_behavior: str, why_it_matters: str | No
     if want_indicators:
         parts += [
             "",
-            "Suggest observable behavioural indicators — things somebody could actually "
+            "Suggest observable behavioral indicators — things somebody could actually "
             "notice, not traits. Mark whether each demonstrates or contradicts the "
             "criterion. Observing an indicator records an observation; it never "
             "establishes that the criterion passes.",

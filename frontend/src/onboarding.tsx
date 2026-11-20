@@ -17,7 +17,7 @@ import { Card, Eyebrow } from "./components/ui";
  * from one place, rather than letting two screens drift into two different explanations.
  */
 
-/** How many criteria before an entry can be analysed against anything.
+/** How many criteria before an entry can be analyzed against anything.
  *
  * Three rather than one: a single criterion produces an analysis almost as thin as none,
  * and `MIN_SUPPORT` in the store already uses three as the floor below which this product
@@ -45,12 +45,12 @@ export function GettingStarted({ action }: { action?: ReactNode }) {
         </p>
         <p>
           KRYteria starts with <strong className="text-ink">your</strong> criteria: the
-          qualities, behaviours, values and preferences that matter to you in a
+          qualities, behaviors, values, and preferences that matter to you in a
           relationship.
         </p>
         <p>
           They can be big or small, practical or personal. Maybe you value emotional
-          maturity, a compatible sense of humour, shared interests, a great smile, or
+          maturity, a compatible sense of humor, shared interests, a great smile, or
           someone who remembers how you take your coffee.
         </p>
         <p>
@@ -66,7 +66,28 @@ export function GettingStarted({ action }: { action?: ReactNode }) {
         </p>
       </div>
 
+      {/* **One-sided, said out loud.**
+        *
+        * Deborah L., 70, Massachusetts, 2026-11-20, describing what the app is for:
+        * *"The website will be good for matching criteria for each other or not."* Asked
+        * directly whether she had taken it for a couples app she said no — but the
+        * question was a leading one, and what she reached for unprompted was a two-sided
+        * reading.
+        *
+        * Nothing at the front door contradicted it. The sign-up screen promises a
+        * *private account* — no email, no name — which is a claim about the account, not
+        * about the product. That there is no other side at all, by design and
+        * permanently, was written in `docs/privacy.md` and said to nobody arriving.
+        *
+        * It belongs here rather than in a privacy notice: somebody deciding what to type
+        * needs to know who can see it before they type it, not in a policy they would
+        * have to go looking for. */}
       <p className="mt-5 pt-4 border-t border-line text-sm text-faint">
+        This is yours alone. KRYteria is not shared and has no second side — the people
+        you write about are never told, and there is no version of this they can see.
+      </p>
+
+      <p className="mt-2 text-sm text-faint">
         Your standards are yours. Your decisions are yours. KRYteria helps you see the
         evidence.
       </p>
@@ -86,11 +107,11 @@ export function GettingStarted({ action }: { action?: ReactNode }) {
  * which is the charter's one documented exception turned inside out:
  *
  *   "A user must never have to mark physical safety, consent, or freedom from coercion
- *    as a Mandatory criterion before KRYteria recognises a serious concern."
+ *    as a Mandatory criterion before KRYteria recognizes a serious concern."
  *
  * It is also what `choice.ts` already says about defaults — **nudge, never block** — and
  * what this screen's own copy promises: no forms, no required categories, no need to
- * organise your thoughts first.
+ * organize your thoughts first.
  *
  * So the prominent path is criteria, and the way through is quiet rather than absent.
  * Most people take the button. The person who takes the small link is usually the person

@@ -1,7 +1,7 @@
 """Verify knowledge-base entries, one at a time, by hand.
 
 A research note is invisible to the agents until somebody opens the source and confirms
-the finding is characterised fairly. This is the tool for doing that, and it refuses to
+the finding is characterized fairly. This is the tool for doing that, and it refuses to
 record a verification without the URL of whatever was actually opened.
 
     .venv/bin/python -m backend.verify_research list
@@ -111,7 +111,7 @@ def cmd_show(store: Store, args) -> None:
         print("PENDING — invisible to the agents.\n")
         print("What to check before promoting it:")
         print("  1. The work exists and the attribution is right.")
-        print("  2. The finding as drafted is a fair characterisation, not an")
+        print("  2. The finding as drafted is a fair characterization, not an")
         print("     overstatement of what the research actually showed.")
         print("  3. The caveat is true and sufficient.")
         print(f"\n  ok {note['ref']} --url <what you opened> --by <your name>")
@@ -125,10 +125,10 @@ def record_in_pack(ref: str, *, source_url: str, verified_by: str,
     ``CLAUDE.md`` instructs you to delete that database whenever the schema changes.
     Adding the ``entry_themes`` table did exactly that, and eighteen verifications — the
     only part of this knowledge base a human actually signed — vanished with it. The
-    curated pack is the committed artefact; the database is disposable. Verification
-    belongs in the artefact.
+    curated pack is the committed artifact; the database is disposable. Verification
+    belongs in the artifact.
 
-    ``load_research_pack`` already honours ``verification_status: verified`` and applies
+    ``load_research_pack`` already honors ``verification_status: verified`` and applies
     the same source gate on the way in, so nothing is weakened by storing it here: a pack
     still cannot mark its own work verified against a source KRYteria would not cite.
     """

@@ -62,7 +62,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
     # Deliberately mixed. "Soft hands" sits beside "Compatible relationship intentions"
     # because the product does not rank what matters to somebody.
     lib = {}
-    for key, value, behaviour, why in [
+    for key, value, behavior, why in [
         ("intentions", "Compatible relationship intentions",
          "Wants the same kind of relationship I do, and says so plainly",
          "I've spent too long guessing and calling it patience."),
@@ -85,7 +85,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
         ("softhands", "Soft hands", "His hands are soft", None),
     ]:
         lib[key] = store.create_criterion(
-            account_id, value=value, desired_behavior=behaviour, why_it_matters=why,
+            account_id, value=value, desired_behavior=behavior, why_it_matters=why,
         )
 
     # A revision, so My Progress has a changed priority to show. The old version survives.
@@ -192,7 +192,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
          "Asked Sam straight out what he's looking for. He said he doesn't really think "
          "about it like that. I don't know what to do with that answer."),
         ("sam4", sam, 13,
-         "Sam cancelled an hour before. Said work. He's between jobs so I'm not sure what "
+         "Sam canceled an hour before. Said work. He's between jobs so I'm not sure what "
          "work that is, but I didn't ask."),
         ("sam5", sam, 6,
          "My car wouldn't start at 11pm and Sam drove across town without being asked. "
@@ -202,7 +202,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
          "without making it a thing. His hands were SO soft lol."),
         ("jordan2", jordan, 25,
          "Jordan got upset when I disagreed with him about something. He didn't raise his "
-         "voice — said he needed a few minutes, came back and apologised."),
+         "voice — said he needed a few minutes, came back and apologized."),
         ("jordan3", jordan, 11,
          "Jordan said he wants kids in the next few years and asked what I wanted. First "
          "time anyone has just asked."),
@@ -226,7 +226,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
          "text": "She noted it as a repeat.", "certainty": "stated"},
     ])
     store.save_observations(account_id, entries["sam4"], [
-        {"kind": "reported_event", "text": "Sam cancelled an hour beforehand.",
+        {"kind": "reported_event", "text": "Sam canceled an hour beforehand.",
          "certainty": "stated"},
         {"kind": "missing_information",
          "text": "What the work commitment was.", "certainty": "stated"},
@@ -243,7 +243,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
         {"kind": "reported_event", "text": "Jordan became upset during a disagreement.",
          "certainty": "stated"},
         {"kind": "reported_event",
-         "text": "Jordan asked for a few minutes, returned, and apologised.",
+         "text": "Jordan asked for a few minutes, returned, and apologized.",
          "certainty": "stated"},
     ])
 
@@ -353,7 +353,7 @@ def seed(store: Store, *, reset: bool = False) -> int:
 
 
 def main() -> None:  # pragma: no cover
-    # Honour KRYTERIA_DB_PATH, exactly as the running app does. A bare Store()
+    # Honor KRYTERIA_DB_PATH, exactly as the running app does. A bare Store()
     # silently opens the default database, so a host that puts its data on a
     # mounted disk would seed one file and serve another.
     store = Store(os.getenv("KRYTERIA_DB_PATH") or None)

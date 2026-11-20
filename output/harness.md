@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,563 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,588 checks**, all offline, no API key, no network |
 | Spend | 17 live runs — 15 with token counts, 14 with a cost: 334 calls, **$0.207** — `output/usage_log.json` |
 
 ---
@@ -49,7 +49,7 @@ supersedes the old one. This is what lets the product notice that a standard qui
 easier — destroy the history and that insight is gone.
 
 ```bash
-python3 tests/test_offline.py        # 574 checks, needs no packages at all
+python3 tests/test_offline.py        # 582 checks, needs no packages at all
 ```
 
 ---
@@ -75,7 +75,7 @@ brain dump text
 ```
 
 **Safety is a peer, not a filter.** It runs alongside Narrative on the raw text, never
-downstream of a mapping that might have normalised something. `safety_events` has no
+downstream of a mapping that might have normalized something. `safety_events` has no
 `profile_id` column and `log_safety_event` takes no profile argument — asserted by a test
 that inspects the function signature, so nobody can add one.
 
@@ -137,16 +137,16 @@ invented: *"instead of keeping a tally"* and *"without it becoming a fight"* are
 conduct a sentence describes*, so every sentence about him was matched against criteria
 that describe her, and his own standards were read back as open questions about a woman who
 had done nothing in the entry. `ExtractedObservation.about` is the fix at the contract
-level; the behavioural rules live in `narrative.md`, `evidence.md`, `reasoning.md` and
+level; the behavioral rules live in `narrative.md`, `evidence.md`, `reasoning.md` and
 `reflection.md`, with regression cases `bur-01`, `imp-01` and `ovm-01`.
 
 **The correction had its own failure mode, which is the part worth keeping.** Verified by
 re-running the same entry live — the only way to check a prompt change — the fix worked
 and introduced two faults. One question was built on a premise the entry did not contain
 (*"you've decided to tell Catherine…"*), the same imputation failure pointed at the
-**writer**, because the rule forbade inventing a behaviour for the person being assessed
+**writer**, because the rule forbade inventing a behavior for the person being assessed
 and said nothing about the person writing. And four *correct* mappings were lost: his
-description of her intelligence, career and humour arrived as one `emotional_reaction`
+description of her intelligence, career and humor arrived as one `emotional_reaction`
 marked `me` and were not mapped at all. Both are closed and confirmed by a third run.
 `narrative.md` now **splits a sentence that does two jobs** — his feeling (`me`) and what
 it reports about her (`them`), because qualities count and not only actions — and
@@ -197,15 +197,104 @@ the AST of every route module to confirm nothing touches the request except `coo
 checked by *mechanism*, not by header name.
 
 **A gap found by evaluation, not by a crash.** A region-less account disclosing physical
-harm was offered nothing. No single behaviour was wrong: GLOBAL-only for an unset region
+harm was offered nothing. No single behavior was wrong: GLOBAL-only for an unset region
 is right, withholding emergency numbers below `immediate_danger` is right, and the only
 GLOBAL row was an emergency number. Three correct rules composing into a wrong outcome.
 Fixed by adding a global *directory* — see
 [`../docs/safety_resources_decision.md`](../docs/safety_resources_decision.md).
 
+**A question needs an answer, and a rule needs a wire** (2026-11-20). Christine ran a
+Brain Dump of her own about a pushy date the previous summer and hit a dead end: the halt
+screen asked *"Are you safe right now?"* and offered nowhere to say anything back. Her
+words: *"I don't get to interact with the app in any way to tell it that I am safe, or to
+keep working with the app. It feels like a blocker."*
+
+The halt was right; the silence after it was not. The charter's own over-response rule
+says a person should be able to tell KRYteria something terrible happened *"without
+feeling like they've triggered a machine that no longer knows how to talk to them"* — and
+a screen that asks whether you are safe and then stops is that machine.
+
+Four answers now, recorded on `safety_events.user_response`: **I am safe · This is a past
+experience · I need support · I'd rather not say.** The fourth matters as much as the
+first, because the charter forbids pressing for disclosure and a screen only honors that
+by making "I'd rather not say" a thing you can press rather than the absence of one. The
+buttons appear only where the model actually asked a safety question — four of them under
+a `potential` concern that raised none would be the over-response failure.
+
+**Answering never disarms the safety layer.** *"I was safe in August"* is not a statement
+about December, and a layer a past answer can switch off fails open on exactly the cases
+it exists for. It closes the loop on one entry and nothing more. There is a test.
+
+**Two further defects surfaced by following the first one.**
+
+- The *"I don't need these"* button set React state and called nothing. `respond_to_offer`
+  existed, the route existed, and `should_offer_resources` implemented the charter's *"a
+  user's refusal of resources must be respected"* — **the rule was unreachable from the
+  screen.** The orchestrator was also discarding the offer id that `record_resource_offer`
+  returned, so the browser had no identifier to answer with. Now wired. Verified by
+  declining on one entry and watching the next halt fire, ask, and volunteer nothing.
+- The API had always computed the sentence telling her the analysis was *kept* — plus the
+  counts and where to find it — and the browser threw all of it away. The one promise the
+  halt makes was the one thing she could not see.
+
+**The copy carries no fact that can go stale**, and this is the design rather than an
+accident of wording. Christine drafted a support reply and then objected to her own draft:
+*"I actually don't like that reply because we clearly cannot keep it up to date."* She is
+right — verifying six countries on 2026-11-12 found two dead government pages, a site
+down, and an organization contradicting itself about its own number. So the acknowledgment
+opens a door and holds no knowledge: *"KRYteria is not a crisis service and won't pretend
+to be one, so here is what it actually has."* The knowledge lives where it can be dated —
+the curated directory, every row showing when it was last checked, and an empty one saying
+plainly that nothing is verified rather than inventing something. Underneath is
+`EMERGENCY_NOTE`, which names no digits because she knows her own emergency number better
+than this app does. A test asserts the acknowledgments contain no digit, no named
+service, and no availability claim.
+
+**Both resource files re-verified 2026-11-20**, the standing rule before a demo and before
+submission. Thirteen of fifteen rows confirmed by fetching each organization's own page and
+checking that the number we print still appears on it; their `verified_at` moved to that
+date and their `verification_note` says exactly what was checked and that the **hours
+wording was not re-read** on this pass. The two that refuse automated fetching — RAINN and
+911.gov, HTTP 403 again — keep their 2026-11-16 dates, the last time a person opened them,
+with the attempt and its failure recorded on the row. **The gap there is provenance, not
+accuracy**, and back-dating it would be the lie the dated field exists to prevent.
+
 ```bash
 .venv/bin/python -m backend.run_evals safety        # estimate; live costs money
 ```
+
+
+### Spelling: the app's voice is American, the agents mirror the writer
+
+Christine, 2026-11-20: *"everything was crafted using British English but I am an
+American."* True since the first file, and fixed in two different ways because there are
+two different things here.
+
+**Authored text is American** — the UI copy, the report, the deck, the README, the demo
+characters' entries. That is Christine's voice, and it should be hers.
+`tools/americanize.py` did the sweep with explicit word pairs rather than suffix rules: a
+rule that turns `-ise` into `-ize` also eats *surprise* and *premise*, and one that turns
+`-re` into `-er` eats *genre* and *acre*. It protects four things — identifiers and routes,
+archived model output, quotations, and the research pack — and the dry run earned two of
+those protections by catching `onClick={analyse}` and the `GENERALISING` constant that a
+test imports by name.
+
+**Generated text mirrors the writer**, which was Christine's correction to my first
+attempt: *"i mean it should use the same spelling as the user...i'd think."* Right, and
+better. Every prompt now says to match the spelling conventions of the person whose entry
+it is reading, falling back to American where an entry is too short to tell. A British or
+Australian user gets their own spelling back, because the product's whole position is that
+the record belongs to the person who wrote it — and a record that silently re-spells
+somebody's world is not quite theirs. A register instruction, not a judgment one, so it
+does not break the freeze on agent reasoning.
+
+**What was deliberately left British:** `acknowledgement` (a Pydantic field the prompts
+instruct the model to emit, the API returns, the front end reads and the tests assert on)
+and `/api/entries/{id}/analyse`. Renaming either is a coordinated change across five layers
+whose failure mode is a validation error inside the **safety** step — a layer that fails
+open on the cases it exists for. The cost is an internal key nobody reads. Organization
+names and quoted text in the resource files stay exactly as those organizations write them,
+because a service's name is not a spelling choice.
 
 ---
 
@@ -214,7 +303,7 @@ Fixed by adding a global *directory* — see
 > KRYteria is a private space between the user and their AI agent. No other person can
 > know whether they have been discussed, assessed, or entered into KRYteria.
 
-Authorisation lives at the **database layer**, redundantly with the API's own guards:
+Authorization lives at the **database layer**, redundantly with the API's own guards:
 that one is the first line, this one holds when somebody adds a route and forgets. The
 mechanism is scoping rather than checking — a query carrying somebody else's
 `account_id` returns nothing, so there is no moment at which the code holds another
@@ -287,7 +376,7 @@ not the same as asserting it**, and the two read almost identically at a glance.
 key, so a script posting a new handle every time was never slowed. Unlimited account
 creation is a lever on the only resource this app spends — the per-account cap is 120,000
 tokens a day and the global cap is 2,000,000, so **about seventeen new accounts exhaust
-the global budget** and then nothing analyses for anybody until midnight UTC. The money
+the global budget** and then nothing analyzes for anybody until midnight UTC. The money
 was never the exposure; that cap holds the worst day near a dollar. Availability was.
 `throttle.check_new_account` now bounds creation for the application as a whole — 12 an
 hour, 40 a day, two windows because an hourly bound alone can be trickled under at six an
@@ -298,7 +387,7 @@ and needs no account, and it refuses *creation* while leaving every existing use
 sign-in, journal and analysis untouched.
 
 ```bash
-.venv/bin/python tests/test_api.py        # 316 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 333 checks, including all of the above
 ```
 
 ---
@@ -322,7 +411,7 @@ being measured.** Of five failures in the live reasoning run, four were the harn
   characters, so the same attribution was caught in a short sentence and missed in a long
   one.
 
-And one failure that could not be adjudicated at all, because the artefact stored
+And one failure that could not be adjudicated at all, because the artifact stored
 observations as a *count*. Evidence that cost money has to be complete — the same lesson
 an earlier prose truncation had already taught.
 
@@ -387,10 +476,10 @@ from a new browser is the one most likely to lose the race with the boot.
 ## 10. Verifying all of it
 
 ```bash
-python3      tests/test_offline.py      # 574 — store layer, needs no packages
+python3      tests/test_offline.py      # 582 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 215 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 316 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_api.py          # 333 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 384 — the harness, mostly that it REFUSES
 ```
 
@@ -399,13 +488,26 @@ start without `--yes-spend-credits`, after printing the call count.**
 
 ### Known limits, stated rather than discovered
 
-- **Cache accounting is incomplete in both directions.** Cache *writes* are not modelled
+- **Cache accounting is incomplete in both directions.** Cache *writes* are not modeled
   because the provider does not report them separately, so figures are slightly low on a
-  cold cache. And no artefact preserved a cached-*input* count, because `trace_one.py`
+  cold cache. And no artifact preserved a cached-*input* count, because `trace_one.py`
   and the usage log printed input, output, latency and cost but not that column — the
   §4 traced run's recorded cost implies about 5,140 cached tokens that nothing wrote
   down. The column is recorded as unknown, never as zero, and `trace_one.py` now prints
   it.
+- **Answers to interrogation questions are recorded but never re-read.** Answering a
+  *worth pinning down* question writes to `interrogations.answer`, and the answer shows on
+  its entry in the Journal under *"You said"*. **No agent consumes it.** Christine found
+  this by answering one and watching it disappear — *"I didn't see anything happen with
+  it. What happens? Why would someone answer it? Where does the answer go?"* Half of that
+  was a UI defect and is fixed: the screen now confirms the save and says where the answer
+  lives, because a product whose subject is evidence cannot make somebody guess whether
+  their own words were kept. The other half is real and is this limit. Feeding answers
+  into the next analysis is the obvious next step and the right shape — the user supplying
+  the missing detail is exactly what Evidence Interrogation asks for — but it changes
+  agent *input*, which is the one kind of change no offline check can verify and which
+  costs a paid run to fix and a second to confirm. Deferred deliberately, four days from
+  submission, rather than attempted and left unverified.
 - **Sessions are bounded, not revocable.** They are signed cookies, so signing out
   deletes the browser's copy and a stolen one stays valid until its fourteen days are up.
   Revoking on demand needs a server-side session table.

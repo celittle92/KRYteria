@@ -78,7 +78,7 @@ export default function ProgressScreen() {
       {data.repeatedly_postponed.length > 0 && (
         <Section
           title="Decisions you've put off"
-          subtitle="Recorded without judgement. Giving something more time is a decision, and sometimes the right one."
+          subtitle="Recorded without judgment. Giving something more time is a decision, and sometimes the right one."
         >
           <Card>
             <ul className="divide-y divide-[rgb(var(--line))]">
@@ -130,7 +130,7 @@ export default function ProgressScreen() {
       {((themes ?? []).length > 0 || themePerson !== "") && (
         <Section
           title="What you keep coming back to"
-          subtitle="The subjects your entries have been about. Recognised as you wrote — you never had to label anything."
+          subtitle="The subjects your entries have been about. Recognized as you wrote — you never had to label anything."
           action={
             people.length > 1 ? (
               <div className="w-56">

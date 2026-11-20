@@ -177,7 +177,7 @@ async def brain_dump(
         # destroying the only thing the user just created, which cannot be what "save
         # without analysing" means. So the default collapses to keeping it.
         #
-        # An explicit `discard` is still honoured: somebody may genuinely want to write
+        # An explicit `discard` is still honored: somebody may genuinely want to write
         # something down and have it gone.
         retention = (
             store.apply_retention(account_id, entry_id, "discard")
@@ -259,6 +259,11 @@ def _present(result, has_criteria: bool | None = None) -> dict:
             "rationale": safety.rationale,
         }
         payload["resources"] = result.resources
+        # The two ids the screen needs in order to let her say anything back. Without
+        # them the safety check is a question with no affordance, and the decline button
+        # is a piece of local React state that no rule in the store ever sees.
+        payload["safety_event_id"] = result.safety_event_id
+        payload["resource_offer_id"] = result.resource_offer_id
     if result.halted:
         # **Withheld from this screen, not withheld from her record.**
         #

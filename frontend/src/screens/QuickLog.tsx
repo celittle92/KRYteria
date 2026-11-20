@@ -401,7 +401,7 @@ export default function QuickLog({ onLogged }: { onLogged?: () => void }) {
           </div>
           <p className="text-xs text-faint mt-3 max-w-reading leading-relaxed">
             "It's complicated" is a real answer, not a cop-out. Getting upset and then
-            taking a minute and coming back to apologise is not simply good or bad.
+            taking a minute and coming back to apologize is not simply good or bad.
           </p>
         </div>
       )}

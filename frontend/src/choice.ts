@@ -7,7 +7,7 @@
  *    should be default. But if there are more than one profiles created (i.e. Boyfriend,
  *    Marriage, Casual), not one should be default, as that kind of goes against the
  *    brand philosophies of no relationship type is better than another, and no
- *    judgement."
+ *    judgment."
  *
  * This is the "no profile ranks above another" rule reaching the interface. A default
  * is a soft recommendation — whichever profile is pre-selected is the one the product

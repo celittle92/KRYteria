@@ -119,7 +119,7 @@ def test_a_theme_is_not_an_assessment() -> None:
     """Structural, not a style note: there is nowhere to put a verdict.
 
     A theme says a subject came up. The moment it carries a status it becomes a
-    judgement about a person that the user never confirmed.
+    judgment about a person that the user never confirmed.
     """
     s, _, _ = fresh()
     with s.read() as conn:
@@ -290,7 +290,7 @@ def test_every_resource_is_dated_and_sourced() -> None:
     """A number you can see was checked — and when — is one you can judge.
 
     Verifying six countries on 2026-11-12 found two dead government pages, one
-    organisation's site down, and one organisation contradicting itself about its own
+    organization's site down, and one organization contradicting itself about its own
     phone number. Against that, a bare undated number asks for a trust nobody can earn.
     """
     import datetime as _dt
@@ -316,7 +316,7 @@ def test_every_resource_is_dated_and_sourced() -> None:
     # resolving that reason is the failure this guards.
     for excluded, why in (
         ("13YARN", "its own page prints two different numbers for itself"),
-        # Narrow on purpose: Dublin Rape Crisis Centre IS verified and belongs. The
+        # Narrow on purpose: Dublin Rape Crisis Center IS verified and belongs. The
         # one excluded is Rape Crisis England & Wales, whose site would not load.
         ("Rape Crisis England", "its site returned HTTP 525 and was never read"),
         ("WAVE", "an umbrella network's office, not a crisis line"),
@@ -338,7 +338,7 @@ def test_the_international_file_invents_nothing() -> None:
     for row in blob["resources"]:
         check(f"{row.get('name')!r} records the source that was opened",
               bool(row.get("source_url")),
-              "every international entry must name the organisation's own page")
+              "every international entry must name the organization's own page")
         check(f"{row.get('name')!r} declares a region", bool(row.get("region")))
         check(f"{row.get('name')!r} is verified", bool(row.get("verified_at")))
 
@@ -446,7 +446,7 @@ def test_pattern_requires_evidence() -> None:
 def test_thin_evidence_is_downgraded() -> None:
     s, acct, dom = fresh()
     e1 = s.create_entry(acct, dom, body="Said he'd call, didn't.")
-    e2 = s.create_entry(acct, dom, body="Cancelled again.")
+    e2 = s.create_entry(acct, dom, body="Canceled again.")
 
     result = s.save_pattern(
         acct, domain_id=dom, kind="recurring_unmet_need",
@@ -637,7 +637,7 @@ def test_entry_modes() -> None:
     free_id = s.create_entry(acct, dom, entry_mode="free",
                              body="Post-date debrief: nice evening, but the same thing again.")
     struct_id = s.create_entry(acct, dom, entry_mode="structured",
-                               what_happened="Cancelled an hour before",
+                               what_happened="Canceled an hour before",
                                what_expected="To be told earlier",
                                how_it_affected="Felt like an afterthought")
     check("both entry modes are accepted", free_id and struct_id)
@@ -799,7 +799,7 @@ def test_agent_cannot_silently_change_an_assessment() -> None:
     check("assessment starts unknown", s.get_assessment(acct, prof, c, p) == "unknown")
 
     pid = s.propose_assessment(acct, prof, c, p, "pass",
-                               rationale="Took time to regulate, came back, apologised")
+                               rationale="Took time to regulate, came back, apologized")
     check("the proposal does not move the status",
           s.get_assessment(acct, prof, c, p) == "unknown")
     check("the proposal is pending", len(s.list_pending_proposals(acct)) == 1)
@@ -867,7 +867,7 @@ def test_evidence_has_four_relations() -> None:
     c = s.create_criterion(acct, value="Emotional maturity",
                            desired_behavior="Handles disagreement well")
     e = s.create_entry(acct, dom, body="He got upset, took a few minutes, came back "
-                                       "and apologised.")
+                                       "and apologized.")
     for rel in ("supporting", "contradicting", "complicating", "unrelated"):
         lid = s.link_evidence(acct, entry_id=e, criterion_id=c, relation=rel)
         check(f"{rel} is a valid relation", bool(lid))
@@ -913,7 +913,7 @@ def test_retention_erases_what_was_not_asked_for() -> None:
 
     # analysis_only erases the narrative, keeps what was learned from it.
     e2 = s.create_entry(acct, dom, body="Another private account, 2000 words of it.")
-    s.save_observations(acct, e2, [{"kind": "reported_event", "text": "He cancelled."}])
+    s.save_observations(acct, e2, [{"kind": "reported_event", "text": "He canceled."}])
     r2 = s.apply_retention(acct, e2, "analysis_only")
     check("analysis_only erases the original", r2["original_erased"] is True)
     check("the body is NULL, not blanked",
@@ -1136,7 +1136,7 @@ def test_stale_database_fails_with_an_answer() -> None:
 
 
 def test_unverified_research_is_invisible_and_uncitable() -> None:
-    """The defence against a fabricated citation.
+    """The defense against a fabricated citation.
 
     Requiring a non-empty citation string only guarantees the model wrote something, and
     a model told to cite always writes something. Requiring the ref to resolve to a
@@ -1293,7 +1293,7 @@ def test_academic_country_domains_are_a_pattern_not_a_list() -> None:
     """Universities outside the US sit under ``.ac.<cc>`` and ``.edu.<cc>``.
 
     This started as an enumerated list — ``.ac.uk``, ``.edu.au``, ``.ac.nz`` and a few
-    more — and was generalised on 2026-11-11 when a Kenyan university's catalogue record
+    more — and was generalised on 2026-11-11 when a Kenyan university's catalog record
     (``.ac.ke``) turned out to be the only qualifying source for one entry. Adding one
     country at a time is how an allowlist decays into something people route around, so
     the shape is the rule.
@@ -1346,7 +1346,7 @@ def test_verification_requires_a_reputable_source() -> None:
     s.verify_research_note("gottman-bids",
                            source_url="https://catalog.lib.msu.edu/Record/x",
                            verified_by="christine")
-    check("a library catalogue works", "gottman-bids" in s.citable_refs())
+    check("a library catalog works", "gottman-bids" in s.citable_refs())
 
     # A pack cannot mark its own work verified against a source we would not cite.
     expect_raises("a pack cannot smuggle in a bad source", StoreError,
@@ -1506,6 +1506,69 @@ def test_declining_resources_is_respected() -> None:
                   s.should_offer_resources, acct, "a bit worrying")
 
 
+def test_the_safety_check_can_be_answered() -> None:
+    """The app asks "are you safe right now?" — there has to be a way to say.
+
+    Christine, 2026-11-20, after running a Brain Dump of her own about a pushy date the
+    previous summer: *"I don't get to interact with the app in any way to tell it that I
+    am safe, or to keep working with the app."* The question was asked, recorded, and
+    given no affordance.
+
+    `declined_to_say` is in the vocabulary deliberately. The charter forbids pressing for
+    disclosure, and a screen only honors that if "I'd rather not say" is a thing you can
+    press rather than the absence of one.
+    """
+    from backend.store import NotOwned
+
+    s, acct, _ = fresh()
+    event = s.log_safety_event(account_id=acct, trigger="narrative_screen",
+                               action="halt_and_route", concern_level="disclosure")
+
+    for answer in ("safe", "past", "support", "declined_to_say"):
+        s.record_safety_response(acct, event, answer)
+    with s.read() as conn:
+        row = dict(conn.execute("SELECT * FROM safety_events WHERE id = ?",
+                                (event,)).fetchone())
+    check("the answer is stored", row["user_response"] == "declined_to_say")
+    check("and dated", bool(row["responded_at"]))
+    check("the agent's own rationale is untouched", row["concern_level"] == "disclosure")
+
+    expect_raises("an invented answer is refused", StoreError,
+                  s.record_safety_response, acct, event, "probably fine")
+
+    # 404 at the API, never 403: confirming a row exists but belongs to somebody else is
+    # itself a disclosure here, and on this table most of all.
+    other = s.create_account("someone-else", "x" * 12)
+    expect_raises("another account cannot answer it", NotOwned,
+                  s.record_safety_response, other, event, "safe")
+
+
+def test_answering_the_safety_check_never_disarms_the_safety_layer() -> None:
+    """A layer a past answer can switch off fails open on the cases it exists for.
+
+    "I was safe in August" is not a statement about December. Recording the answer closes
+    the loop on one entry; it must not become a suppression mechanism, and it must not be
+    confused with the separate, charter-governed refusal of *resources*.
+    """
+    s, acct, _ = fresh()
+    _seed_resources(s)
+    event = s.log_safety_event(account_id=acct, trigger="narrative_screen",
+                               action="halt_and_route", concern_level="disclosure")
+    s.record_safety_response(acct, event, "safe")
+
+    check("resources may still be offered after she says she is safe",
+          s.should_offer_resources(acct, "disclosure") is True)
+    check("and at immediate danger, always",
+          s.should_offer_resources(acct, "immediate_danger") is True)
+
+    # Only an explicit refusal of resources suppresses offering — a different answer to a
+    # different question, and the distinction is the point.
+    offer = s.record_resource_offer(acct, [1], "disclosure", safety_event_id=event)
+    s.respond_to_offer(acct, offer, "declined")
+    check("a resource decline still works and is what suppresses",
+          s.should_offer_resources(acct, "disclosure") is False)
+
+
 def test_resource_preference_is_honoured() -> None:
     s, acct, _ = fresh()
     _seed_resources(s)
@@ -1565,7 +1628,7 @@ def test_safety_layer_is_profile_independent() -> None:
 def test_inference_must_be_hedged() -> None:
     """Infer, but don't presume.
 
-    The agent may read between the lines — a user should not have to name a behaviour
+    The agent may read between the lines — a user should not have to name a behavior
     before the app can help them look at it — but a reading is marked as a reading.
     """
     s, acct, dom = fresh()
@@ -1719,7 +1782,7 @@ def test_simulated_steps_are_excluded_from_cost() -> None:
     check("simulated tokens are excluded", trace["input_tokens"] == 1000)
     check("simulated cost is excluded", abs(trace["cost_usd"] - 0.002) < 1e-9)
     check("simulated steps are still visible in the trace", len(trace["steps"]) == 2)
-    check("simulated steps are counted and labelled", trace["simulated_steps"] == 1)
+    check("simulated steps are counted and labeled", trace["simulated_steps"] == 1)
 
 
 def test_usage_accumulates() -> None:
@@ -1811,7 +1874,7 @@ def test_paste_parses_the_shapes_people_actually_write() -> None:
     check("a colon splits", r.ready[1].desired_behavior.startswith("can say how he feels"))
     check("numbering is stripped", values[2] == "Follow-through", values[2])
     check("a name alone is a criterion", values[3] == "Makes me laugh", values[3])
-    check("and it carries no invented behaviour", r.ready[3].desired_behavior == "")
+    check("and it carries no invented behavior", r.ready[3].desired_behavior == "")
     # The one that matters: an unspaced hyphen inside a word is NOT a separator.
     check("a hyphenated word survives whole", values[4] == "Non-negotiable honesty", values[4])
 
@@ -1858,7 +1921,7 @@ def test_bulk_create_is_all_or_nothing() -> None:
     ])
     check("both landed", len(ids) == 2)
     rows = {c["value"]: c for c in s.list_criteria(acct)}
-    check("a pasted name with no behaviour is allowed",
+    check("a pasted name with no behavior is allowed",
           rows["Makes me laugh"]["desired_behavior"] == "")
     expect_raises("a blank value is refused", StoreError, s.create_criteria, acct,
                   [{"value": "Fine"}, {"value": "  "}])
@@ -1868,7 +1931,7 @@ def test_bulk_create_is_all_or_nothing() -> None:
 def test_add_all_assigns_no_importance_of_its_own() -> None:
     """Mandatory is a statement about what is disqualifying. A button must not make it."""
     s, acct, dom, prof = fresh_profile()
-    ids = s.create_criteria(acct, [{"value": v} for v in ("Kindness", "Ambition", "Humour")])
+    ids = s.create_criteria(acct, [{"value": v} for v in ("Kindness", "Ambition", "Humor")])
     s.add_criterion_to_profile(acct, prof, ids[0], tier="mandatory")
 
     result = s.add_criteria_to_profile(acct, prof, None)

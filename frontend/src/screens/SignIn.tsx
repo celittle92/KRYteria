@@ -136,7 +136,7 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
           </p>
 
           <p className="text-muted mt-6 max-w-reading leading-relaxed">
-            Know what you want. Recognise what you have. Decide what you do next.
+            Know what you want. Recognize what you have. Decide what you do next.
             KRYteria compares what you say matters to you against what you are actually
             experiencing — and leaves every decision to you.
           </p>

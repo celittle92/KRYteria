@@ -69,7 +69,7 @@ def test_the_emergency_fallback_never_depends_on_our_data() -> None:
     """The one safety line that cannot go stale, because it is not a number we store.
 
     She knows her own emergency number better than this app does. Verifying six
-    countries found two dead government pages and an organisation contradicting itself
+    countries found two dead government pages and an organization contradicting itself
     about its own number — against that, the fallback has to be something no file of
     ours can get wrong.
     """
@@ -618,7 +618,7 @@ def test_retention_over_http() -> None:
     check("and says why", "kept as written" in r.json()["note"])
     r = c.post("/api/brain-dump", json={
         "text": "Write it down and let it go.", "analyze": False, "retention": "discard"})
-    check("but an explicit discard is still honoured",
+    check("but an explicit discard is still honored",
           r.json()["entry"]["body"] is None)
 
     other = new_client("retention-other")
@@ -785,6 +785,65 @@ def test_usage_reports_unavailable_rather_than_zero() -> None:
     check("and says why", "excluded from cost figures" in proj["reason"])
 
 
+def test_the_safety_check_has_an_answer_and_the_copy_cannot_go_stale() -> None:
+    """A question with no affordance is worse than no question.
+
+    Christine found the dead end on 2026-11-20 and named the real objection to fixing it
+    with words: *"I actually don't like that reply because we clearly cannot keep it up
+    to date."* She is right, and the answer is that the copy carries no knowledge. It
+    opens a door; the dated directory and the local-emergency-number fallback carry
+    whatever is actually known.
+
+    So this asserts the copy stays empty of facts that rot: no digits, no opening hours,
+    no named service, no availability claim.
+    """
+    from backend.api.account import (
+        EMERGENCY_NOTE, SAFETY_ACKNOWLEDGEMENTS, SAFETY_ACKNOWLEDGEMENT_TAIL,
+    )
+
+    prose = " ".join(SAFETY_ACKNOWLEDGEMENTS.values()) + " " + SAFETY_ACKNOWLEDGEMENT_TAIL
+    check("no digits anywhere in the acknowledgements",
+          not any(ch.isdigit() for ch in prose))
+    for claim in ("24/7", "hotline", "always available", "any time of day",
+                  "RAINN", "988", "Find A Helpline"):
+        check(f"no standing claim: {claim!r}", claim.lower() not in prose.lower())
+    check("it says plainly what KRYteria is not",
+          "not a crisis service" in SAFETY_ACKNOWLEDGEMENTS["support"])
+    check("every answer is covered",
+          set(SAFETY_ACKNOWLEDGEMENTS) == {"safe", "past", "support", "declined_to_say"})
+
+    from backend.store import Store
+
+    c = new_client("safety-answer")
+    store = Store(Path(os.environ["KRYTERIA_DB_PATH"]))
+    with store.read() as conn:
+        acct = conn.execute("SELECT id FROM accounts WHERE handle = ?",
+                            ("safety-answer",)).fetchone()["id"]
+    event = store.log_safety_event(account_id=acct, trigger="narrative_screen",
+                                   action="halt_and_route", concern_level="disclosure")
+
+    r = c.post(f"/api/safety-events/{event}/respond", json={"response": "safe"})
+    check("she can say she is safe", r.status_code == 200, r.text)
+    body = r.json()
+    check("the reply says where her record went",
+          "Journal" in body["acknowledgement"])
+    check("and does not push resources at her", body["show_resources"] is False)
+    check("the never-stale fallback rides along",
+          body["emergency_note"] == EMERGENCY_NOTE)
+
+    r = c.post(f"/api/safety-events/{event}/respond", json={"response": "support"})
+    check("asking for support opens the directory",
+          r.json()["show_resources"] is True)
+
+    r = c.post(f"/api/safety-events/{event}/respond", json={"response": "doing great"})
+    check("an invented answer is refused", r.status_code == 422, r.text)
+
+    # 404, never 403 — on this table above all others.
+    other = new_client("safety-stranger")
+    r = other.post(f"/api/safety-events/{event}/respond", json={"response": "safe"})
+    check("another account gets 404, not 403", r.status_code == 404, r.text)
+
+
 def test_resources_are_always_readable() -> None:
     """Declining an offer stops the app volunteering. It never stops the user asking."""
     c = new_client("resources-user")
@@ -875,7 +934,7 @@ def test_someone_who_has_not_said_where_they_are_is_still_offered_something() ->
     pattern-level concern overstates what was described. And the only GLOBAL row was an
     emergency number.
 
-    Three correct behaviours composing into a wrong outcome: disclose physical harm with
+    Three correct behaviors composing into a wrong outcome: disclose physical harm with
     no region set, and KRYteria offered nothing at all. The fix was a global entry that
     is not an emergency service — a directory, which is the only honest thing to hand
     somebody whose country you do not know.
@@ -919,14 +978,14 @@ def test_a_fresh_deployment_has_resources_and_research() -> None:
     """The two things whose absence fails silently.
 
     Both were loaded by seed_demo, and retiring it took them with it. Nothing broke
-    loudly, because the correct behaviour when they are missing is quiet:
+    loudly, because the correct behavior when they are missing is quiet:
 
-      * With no resources, the safety layer can recognise a concern perfectly and then
+      * With no resources, the safety layer can recognize a concern perfectly and then
         have nothing to offer — and refusing to invent a hotline is right, so the empty
         result looks like the product working. It was live on the hosted app in exactly
         that state.
       * With no research notes, ``citable_refs()`` is empty, so every ``research_ref``
-        fails to resolve and the write is refused. That is also correct behaviour, and
+        fails to resolve and the write is refused. That is also correct behavior, and
         it disables the entire research layer without a single error.
 
     Correct-when-missing is precisely why these need a test rather than a convention.
@@ -1336,7 +1395,7 @@ def test_the_hosted_configuration_signs_in_over_https_and_only_https() -> None:
 
     With ``KRYTERIA_SECURE_COOKIES=true`` the session cookie carries the Secure flag, so
     a browser will not send it back over plain http. That is the point of the flag — a
-    session cookie for a relationship journal has no business travelling in clear text.
+    session cookie for a relationship journal has no business traveling in clear text.
     But it also means a deployment that terminates as http would let somebody sign in
     successfully and then 401 on the very next request, which looks like a broken login
     rather than a misconfigured scheme.
@@ -1414,7 +1473,7 @@ def test_pasting_a_list_shows_it_back_before_it_saves_anything() -> None:
     library = c.get("/api/criteria").json()
     check("all three are in the library", len(library) == 3, str(len(library)))
     laugh = next(x for x in library if x["value"] == "Makes me laugh")
-    check("a name with no behaviour went in as a name with no behaviour",
+    check("a name with no behavior went in as a name with no behavior",
           laugh["desired_behavior"] == "")
 
     # A second paste of the same list is reported, not silently doubled.
@@ -1430,7 +1489,7 @@ def test_pasting_a_list_shows_it_back_before_it_saves_anything() -> None:
 def test_add_all_fills_a_profile_without_deciding_what_matters() -> None:
     c = new_client("adder")
     c.post("/api/criteria/bulk", json={"items": [
-        {"value": "Kindness"}, {"value": "Ambition"}, {"value": "Humour"}]})
+        {"value": "Kindness"}, {"value": "Ambition"}, {"value": "Humor"}]})
     prof = c.post("/api/profiles", json={"name": "Partner KRYteria"}).json()
     library = c.get("/api/criteria").json()
     c.post(f"/api/profiles/{prof['id']}/criteria",
@@ -1531,7 +1590,7 @@ def test_an_entry_with_no_criteria_says_so_instead_of_going_quiet() -> None:
     c = new_client("not-yet-user")
 
     r = c.post("/api/brain-dump", json={
-        "text": "Sam cancelled again on Friday, the third time this month. He said work "
+        "text": "Sam canceled again on Friday, the third time this month. He said work "
                 "ran over. I keep telling myself it is fine.",
         "retention": "keep_all",
     })

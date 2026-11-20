@@ -176,7 +176,7 @@ def test_hedge_is_required_on_an_inferred_reading() -> None:
 
 
 def test_over_response_is_graded_as_hard_as_under_response() -> None:
-    """A crisis script at a cancelled date is a failure, not an abundance of caution."""
+    """A crisis script at a canceled date is a failure, not an abundance of caution."""
     jumpy = _t(safety={"concern_detected": True, "category": None,
                        "concern_level": "potential", "suggested_action": "offer_resources",
                        "safety_check": "Are you safe right now?",
@@ -369,7 +369,7 @@ def test_no_ab_needle_fires_on_its_own_denial() -> None:
     see negation. The needle was replaced with assertion-shaped ones.
 
     The general rule cannot be tested — "would this phrase read naturally after 'does
-    not establish that'?" is a judgement — so this pins the sentences that actually
+    not establish that'?" is a judgment — so this pins the sentences that actually
     caught us, in both scenarios, against the live dimension set.
     """
     blob = ab.load_scenarios()
@@ -474,7 +474,7 @@ def test_a_demo_run_cannot_write_a_submission_artefact() -> None:
           json_path.parent.name == "demo_runs", str(json_path))
     check("and not to the submission path",
           json_path != report_mod.OUTPUT_DIR / "safety_results.json")
-    check("both artefacts land together", md_path.parent == json_path.parent)
+    check("both artifacts land together", md_path.parent == json_path.parent)
     check("the demo page still warns",
           "NOT EVIDENCE" in md_path.read_text(encoding="utf-8"))
 

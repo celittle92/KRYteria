@@ -1,4 +1,4 @@
-"""Turn a run into the two artefacts: machine-readable JSON and a readable Markdown page.
+"""Turn a run into the two artifacts: machine-readable JSON and a readable Markdown page.
 
 The Markdown is what gets screenshotted into the report, so the mode banner is the first
 thing on it and is deliberately hard to crop out of a screenshot accidentally. A demo-mode
@@ -19,7 +19,7 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output"
 
 #: Demo runs go here, NOT into output/. The submission checker treats a file in output/
-#: as a required artefact being present, and a demo-mode page landing on
+#: as a required artifact being present, and a demo-mode page landing on
 #: output/safety_results.json would turn that check green over a run that graded nothing.
 #: A banner on the page is not enough when the thing reading it is a script.
 DEMO_DIR = OUTPUT_DIR / "demo_runs"
@@ -174,7 +174,7 @@ def _serialisable(report: dict) -> dict:
                 # hid the sentence which tripped a `prose_lacks` check — leaving a
                 # real failure unadjudicable without paying for the run again.
                 # Evidence that cost money must be complete in the machine-readable
-                # artefact, whatever the page does for the eye.
+                # artifact, whatever the page does for the eye.
                 "prose": c.transcript.prose,
                 "attributed": c.transcript.attributed,
             },

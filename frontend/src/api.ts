@@ -119,8 +119,15 @@ export interface Analysis {
     rationale: string | null;
   };
   resources?: Resource[];
+  /** The rows an answer attaches to. Present whenever the safety layer fired; the offer
+   *  id only when the directory actually had something to offer. */
+  safety_event_id?: number | null;
+  resource_offer_id?: number | null;
   emergency_note?: string;
   halt_reason?: string;
+  /** Set on a halt: what was kept, how much of it, and where. */
+  analysis_recorded?: { observations: number; mappings: number; where: string | null };
+  note?: string;
   observations?: Observation[];
   missing_information?: string[];
   uncertainties?: string[];
@@ -153,7 +160,7 @@ export interface Reflection {
 export interface Resource {
   id: number; name: string; kind: string; phone: string | null;
   text_line: string | null; url: string | null; hours: string | null; note: string | null;
-  /** When KRYteria last checked this against the organisation's own page. Shown to the
+  /** When KRYteria last checked this against the organization's own page. Shown to the
    *  user: a dated number can be judged, a bare one asks to be trusted. */
   verified_at: string;
   region: string;
@@ -400,6 +407,25 @@ export const api = {
       emergency_note: string;
       staleness_note: string | null;
     }>("/api/resources"),
+  /** Answer "are you safe right now?". Records one answer about one entry; it never
+   *  switches the safety layer off for a later one. */
+  respondToSafetyCheck: (eventId: number,
+                         response: "safe" | "past" | "support" | "declined_to_say") =>
+    post<{
+      event_id: number;
+      response: string;
+      acknowledgement: string;
+      show_resources: boolean;
+      emergency_note: string;
+    }>(`/api/safety-events/${eventId}/respond`, { response }),
+
+  /** Honor the charter's *"a user's refusal of resources must be respected"*. Until
+   *  2026-11-20 the decline button set React state and nothing else, so the rule in
+   *  `should_offer_resources` was implemented and unreachable. */
+  respondToOffer: (offerId: number, response: "accepted" | "declined" | "ignored") =>
+    post<{ offer_id: number; response: string; note: string | null }>(
+      `/api/resource-offers/${offerId}/respond`, { response }),
+
   export: () => get<unknown>("/api/export"),
   deleteAccount: (passphrase: string) =>
     post<{ deleted: boolean }>("/api/account/delete", { passphrase, confirm: "DELETE EVERYTHING" }),

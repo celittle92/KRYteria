@@ -382,7 +382,7 @@ async def generate_checklist(
     account_id: int = Depends(current_account_id),
     store: Store = Depends(get_store),
 ):
-    """Direction A: turn a criterion into observable behavioural indicators.
+    """Direction A: turn a criterion into observable behavioral indicators.
 
     One model call. Off the brain-dump path, so it costs nothing on a journal entry.
     """
@@ -437,7 +437,7 @@ def observe_indicator(
         )
     except NotOwned as e:
         # Reaching another account's row is a 404, never a 403 and never a 422:
-        # `store.NotOwned` says so and every sibling route honours it. This one did
+        # `store.NotOwned` says so and every sibling route honors it. This one did
         # not, because until the ownership assert was added the only StoreError it
         # could raise was a bad `state`. A new exception took the old exit.
         raise HTTPException(status.HTTP_404_NOT_FOUND, str(e))

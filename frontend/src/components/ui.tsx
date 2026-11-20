@@ -116,7 +116,7 @@ export function Section({ title, subtitle, action, children }: {
  * An empty state that says what *would* fill it.
  *
  * Deliberately never scolds and never nudges: a person who writes nothing this week has
- * not failed at anything, and this product does not optimise for engagement.
+ * not failed at anything, and this product does not optimize for engagement.
  */
 export function Empty({ children }: { children: ReactNode }) {
   return (

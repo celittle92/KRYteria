@@ -48,10 +48,10 @@ def format_criteria(profile_name: str, criteria: Sequence[dict]) -> str:
             # meeting it looks like, and the app does not write that half for the user.
             # Send the name alone rather than a trailing dash and an empty description,
             # which reads as a field the model should fill in.
-            behaviour = (c.get("desired_behavior") or "").strip()
+            behavior = (c.get("desired_behavior") or "").strip()
             lines.append(
                 f"  [{c['criterion_id']}] {c['value']} ({c['tier']})"
-                + (f" — {behaviour}" if behaviour else "")
+                + (f" — {behavior}" if behavior else "")
             )
     lines.append(
         "\nThese are the only criteria in scope. The user may hold others under different "
@@ -66,7 +66,7 @@ def format_criteria(profile_name: str, criteria: Sequence[dict]) -> str:
 #:
 #: The "me" mark used to end "…not evidence about the other person". That absolute, sitting
 #: beside every observation, beat the nuance in the prompt: a live run on 2026-11-18 filed
-#: the writer's own sentence about Catherine's intelligence, career and humour as one `me`
+#: the writer's own sentence about Catherine's intelligence, career and humor as one `me`
 #: reaction and mapped none of it, where the undefended run had correctly mapped four
 #: supporting rows. A label should say what a thing **is**; what to do with it belongs to
 #: the prompt, which can hold the exceptions. See `prompts/evidence.md`.

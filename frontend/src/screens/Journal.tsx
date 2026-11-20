@@ -19,7 +19,7 @@ import {
  * What it must not do:
  *
  *   - **Never blend what was reported with what was concluded.** Observations are grouped
- *     by kind and labelled, because that distinction is the product, not a detail of it.
+ *     by kind and labeled, because that distinction is the product, not a detail of it.
  *   - **Never present an inference as a fact.** An inferred observation carries the hedge
  *     the agent wrote with it, which is an invitation to correct it.
  *   - **Never hide the ambiguous mapping.** `complicating` is shown at the same weight as
@@ -149,7 +149,7 @@ export default function Journal() {
 
                       {detail && detail.observations.length === 0 && (
                         <Empty>
-                          This entry has not been analysed. Saving without analysis keeps
+                          This entry has not been analyzed. Saving without analysis keeps
                           what you wrote and asks nothing of a model.
                         </Empty>
                       )}

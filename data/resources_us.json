@@ -44,7 +44,7 @@
       "phone": "911",
       "note": "For immediate danger. Call if you are in danger right now.",
       "verified_at": "2026-11-16",
-      "verification_note": "Verified by opening 911.gov. The automated fetch had returned 403; a browser did not.",
+      "verification_note": "Verified by opening 911.gov. The automated fetch had returned 403; a browser did not. Re-check attempted 2026-11-20: the site still refuses automated fetching (HTTP 403), so the date above stands on the last time a person opened it. The gap is provenance, not accuracy.",
       "source_url": "https://www.911.gov/",
       "verified_by": "christine, in a browser"
     },
@@ -64,9 +64,10 @@
       "url": "https://www.thehotline.org/",
       "hours": "24/7",
       "note": "Free and confidential. You do not have to call what you are experiencing abuse to talk to them. The service notes that high demand can mean longer waits to reach a live advocate.",
-      "verified_at": "2026-11-12",
-      "verification_note": "Confirmed on the organisation's own page: phone, 'Text START to 88788', and 'Free. Confidential. 24/7.' all match. The site prints the number as 1.800.799.SAFE (7233).",
-      "source_url": "https://www.thehotline.org/"
+      "verified_at": "2026-11-20",
+      "verification_note": "Confirmed on the organization's own page: phone, 'Text START to 88788', and 'Free. Confidential. 24/7.' all match. The site prints the number as 1.800.799.SAFE (7233). Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass.",
+      "source_url": "https://www.thehotline.org/",
+      "verified_by": "claude, by fetching the organization's own page"
     },
     {
       "name": "Deaf Hotline (video phone)",
@@ -82,9 +83,10 @@
       "phone": "855-812-1001",
       "url": "https://www.thehotline.org/",
       "note": "A video phone service for Deaf and hard-of-hearing callers, listed by the National Domestic Violence Hotline.",
-      "verified_at": "2026-11-12",
-      "verification_note": "Added 2026-11-12 after re-verification surfaced it on thehotline.org. Without it the US set had no accessible route for Deaf callers.",
-      "source_url": "https://www.thehotline.org/"
+      "verified_at": "2026-11-20",
+      "verification_note": "Added 2026-11-12 after re-verification surfaced it on thehotline.org. Without it the US set had no accessible route for Deaf callers. Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass.",
+      "source_url": "https://www.thehotline.org/",
+      "verified_by": "claude, by fetching the organization's own page"
     },
     {
       "name": "RAINN National Sexual Assault Hotline",
@@ -98,7 +100,7 @@
       "hours": "24/7",
       "note": "Confidential support for sexual assault, coercion, and unwanted contact. Phone, online chat, text, Signal, WhatsApp, and Spanish.",
       "verified_at": "2026-11-16",
-      "verification_note": "Verified by opening the page. The automated fetch had returned 403 on every RAINN URL, which was a provenance gap and not an accuracy doubt — a person settled in two minutes what a script could not do at all. The page confirms 800.656.HOPE, 'Free, Confidential, 24/7 Support', and a text route (HOPE to 64673) that this entry had been missing.",
+      "verification_note": "Verified by opening the page. The automated fetch had returned 403 on every RAINN URL, which was a provenance gap and not an accuracy doubt — a person settled in two minutes what a script could not do at all. The page confirms 800.656.HOPE, 'Free, Confidential, 24/7 Support', and a text route (HOPE to 64673) that this entry had been missing. Re-check attempted 2026-11-20: the site still refuses automated fetching (HTTP 403), so the date above stands on the last time a person opened it. The gap is provenance, not accuracy.",
       "source_url": "https://rainn.org/help-and-healing/hotline/",
       "text": "Text HOPE to 64673",
       "verified_by": "christine, in a browser"
@@ -115,9 +117,10 @@
       "url": "https://chat.988lifeline.org/",
       "hours": "24/7/365",
       "note": "For emotional crisis or suicidal distress — offered only when that is what someone is describing, never as a reaction to any difficult feeling. Free and confidential. Call, text or chat. Text and chat are also available in Spanish.",
-      "verified_at": "2026-11-12",
-      "verification_note": "Confirmed on 988lifeline.org, with two corrections: hours are stated as '24/7/365', not '24/7'; and the page does not print the wording 'Text 988' anywhere — it exposes an sms:988 link only, so the previous text_line wording was ours, not theirs. Chat URL added.",
-      "source_url": "https://988lifeline.org/"
+      "verified_at": "2026-11-20",
+      "verification_note": "Confirmed on 988lifeline.org, with two corrections: hours are stated as '24/7/365', not '24/7'; and the page does not print the wording 'Text 988' anywhere — it exposes an sms:988 link only, so the previous text_line wording was ours, not theirs. Chat URL added. Re-checked 2026-11-20: the page was reachable and the number above still appears on it. The hours wording was not re-read on this pass.",
+      "source_url": "https://988lifeline.org/",
+      "verified_by": "claude, by fetching the organization's own page"
     }
   ]
 }

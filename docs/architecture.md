@@ -31,7 +31,7 @@ as **one deployable application**.
 | Zod | Pydantic | Same role, and PydanticAI validates agent output against it natively. |
 | Vitest / Playwright | `tests/test_offline.py` now; pytest + Playwright later | The offline suite runs with zero dependencies installed, which matters while the venv doesn't exist yet. |
 
-Everything else in the brief is honoured: modular monolith, separated frontend / backend /
+Everything else in the brief is honored: modular monolith, separated frontend / backend /
 agent / data layers, no microservices, no paid infrastructure, one deployable app.
 
 **Serving**: FastAPI serves the built Vite assets, so there is one process, one port, one
@@ -81,7 +81,7 @@ column type makes the PRD's prohibition unenforceable to violate by accident.
 
 Verified by `tests/test_offline.py` (95 checks):
 
-| Guard | Behaviour |
+| Guard | Behavior |
 |---|---|
 | No evidence, no pattern | `save_pattern` raises on an empty evidence list |
 | Counts are counted | `support_count` from distinct entry ids supplied, not the model's claim — five claimed, two named, gets two |
@@ -132,7 +132,7 @@ quietly becomes a mapping.
 
 **Safety is a peer, not a filter.** It runs alongside Narrative on the raw text —
 concurrently, so it costs no extra wall-clock — never downstream of a mapping that might
-have normalised something, and never gated on the selected profile. A user must never have
+have normalized something, and never gated on the selected profile. A user must never have
 to list safety as a criterion before the app notices.
 
 **Validation and User Review are code and UI, not model calls.** Pydantic validation, then
@@ -143,7 +143,7 @@ the user accepts, rejects or edits. Nothing reaches an assessment before that.
 | Situation | Agents | Model calls |
 |---|---|---|
 | Ordinary entry | Narrative ∥ Safety → Evidence | 3 |
-| Generalising language or competing criteria | + Reasoning | 4 |
+| Generalizing language or competing criteria | + Reasoning | 4 |
 | Reflection requested, or postponement probe due | + Reflection | 5 |
 | Criteria screen / Checklist Mode | Criteria only | 1 |
 
@@ -160,7 +160,7 @@ or contacts anybody.
 Runs *before* the orchestrator routes, and again on output.
 
 - **Journal text is data, never instructions.** Entries reach the model inside a delimited,
-  labelled block. An entry saying "ignore your rules" is quoted content to reflect on.
+  labeled block. An entry saying "ignore your rules" is quoted content to reflect on.
 - **Risk screening.** Language indicating danger, coercion or abuse halts the reflection
   workflow and routes to real human resources. KRYteria does not counsel, does not assess
   severity, and is never presented as a crisis service.
@@ -177,7 +177,7 @@ actually working" becomes a screenshot instead of a paragraph.
 1. **Hosting target** not chosen. One FastAPI process, so Render/Fly/Railway all fit.
 2. **Demo mode without an API key** — the brief's Definition of Done requires the demo to
    work with no live key. Design: a deterministic provider returning fixed, clearly
-   labelled responses, with `is_simulated` set so nothing it produces can reach a cost
+   labeled responses, with `is_simulated` set so nothing it produces can reach a cost
    figure. Not yet built.
 3. **venv does not exist.** `pip install` must run from the Terminal panel; sandboxed Bash
    can't write the certificate pip needs. Today's 95 tests deliberately need no packages.

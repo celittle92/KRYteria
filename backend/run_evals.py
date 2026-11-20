@@ -6,7 +6,7 @@
     .venv/bin/python -m backend.run_evals ab --mode live --yes-spend-credits
 
 Demo mode is the default and is free. It proves the harness runs; it grades nothing about
-the real agents, and every artefact it writes says so on its first line.
+the real agents, and every artifact it writes says so on its first line.
 
 Live mode costs money and refuses to start without ``--yes-spend-credits``, after
 printing the call count. Christine's Portkey budget is tight and an accidental live run

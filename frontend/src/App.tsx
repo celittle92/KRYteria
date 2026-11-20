@@ -105,7 +105,7 @@ function useFirstScreen(account: Account | null) {
     //
     // So a redirect is allowed from ANY path when the account has just changed inside
     // this tab, and only from "/" on a cold load — where a deep link or a bookmark is
-    // this person's own expressed intent and must be honoured.
+    // this person's own expressed intent and must be honored.
     const signedInJustNow = hadSession.current;
     decidedFor.current = account.id;
     hadSession.current = true;
@@ -133,7 +133,7 @@ function useFirstScreen(account: Account | null) {
       })
       .catch(() => {
         /* A failed lookup must not strand anybody on a redirect; leave them on Brain
-           Dump, which is the behaviour this app had before. */
+           Dump, which is the behavior this app had before. */
       });
     return () => { live = false; };
   }, [account]);
@@ -220,6 +220,28 @@ export default function App() {
                 title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
               >
                 {theme === "dark" ? "☾" : "☀"}
+              </button>
+              {/* **The way out, where you can see it.**
+                *
+                * Deborah L., 70, Massachusetts, 2026-11-20: she opened a demo and could
+                * not find her way back to the first page. Signing out lived in Settings
+                * — seven nav items along, under a heading about preferences — which is
+                * findable if you already know the convention that accounts live behind a
+                * settings gear, and invisible if you do not.
+                *
+                * Two testers, two versions of one problem: Alex could not find the way
+                * *in* (no criteria step), Deborah could not find the way *out*. Neither
+                * is a missing feature; both are a route that existed and was never shown.
+                *
+                * It says "Leave demo" rather than "Sign out" on a demo account because
+                * that is the sentence she was looking for — nobody thinks of a sample
+                * account as something they are signed in to. */}
+              <button
+                onClick={() => api.signOut().then(() => window.location.assign("/"))}
+                className="text-muted hover:text-ink text-sm transition-colors
+                           border border-line rounded px-2 py-0.5"
+              >
+                {account.is_demo === 1 ? "Leave demo" : "Sign out"}
               </button>
             </div>
           </div>

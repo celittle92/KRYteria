@@ -45,7 +45,7 @@ DEFAULT_DB_PATH = PROJECT_DIR / "data" / "kryteria.db"
 #: Bump whenever schema.sql changes shape. An existing database with a different version
 #: is refused at open time with the command to rebuild it, rather than failing later with
 #: "no such column" somewhere unrelated.
-SCHEMA_VERSION = "2026-11-13.1"
+SCHEMA_VERSION = "2026-11-20.1"
 
 #: Distinct journal entries needed before a finding may be called a pattern.
 #: Two points make a line and not a trend; the mockups' own example rests on three.
@@ -88,11 +88,11 @@ TONE_MODES = ("clarity", "tough_love")
 #: the most sensitive thing in the product the thing that requires an opt-out.
 RETENTION_MODES = ("discard", "analysis_only", "keep_all")
 
-#: What was seen against one behavioural indicator. Four states, not a checkbox —
+#: What was seen against one behavioral indicator. Four states, not a checkbox —
 #: "no opportunity to observe" is not the same as "looked and it wasn't there".
 CHECKLIST_STATES = ("observed", "not_observed", "contradicted", "no_opportunity")
 
-#: Abuse categories the safety layer recognises. They overlap, and abuse can be a pattern,
+#: Abuse categories the safety layer recognizes. They overlap, and abuse can be a pattern,
 #: a single serious incident, or both.
 SAFETY_CATEGORIES = ("physical", "emotional_psychological", "sexual", "coercive_control",
                      "stalking_harassment", "self_harm", "not_applicable")
@@ -254,7 +254,7 @@ class Store:
     # Privacy is enforced HERE as well as in the API layer, deliberately. The API's
     # ownership guards are the first line; these are the one that holds when somebody
     # adds a route and forgets. For an application where a leak would tell one person
-    # that another is journalling about them, one line of defence is not enough.
+    # that another is journalling about them, one line of defense is not enough.
 
     @staticmethod
     def _owns(conn: sqlite3.Connection, table: str, row_id: int, account_id: int,
@@ -1269,7 +1269,7 @@ class Store:
             if not research_ref:
                 raise StoreError(
                     "A research-backed link must cite a knowledge-base entry, so the "
-                    "user can see why the behaviour was suggested."
+                    "user can see why the behavior was suggested."
                 )
             citable = self.citable_refs()
             if research_ref not in citable:
@@ -1331,7 +1331,7 @@ class Store:
         self, account_id: int, criterion_id: int, items: Sequence[dict[str, Any]],
         *, profile_id: int | None = None, run_id: int | None = None,
     ) -> list[int]:
-        """Direction A: a criterion turned into observable behavioural indicators."""
+        """Direction A: a criterion turned into observable behavioral indicators."""
         ids: list[int] = []
         with self.write() as conn:
             for i, item in enumerate(items):
@@ -1547,7 +1547,7 @@ class Store:
         for the verification UI and for tests, never for an agent.
 
         Safety-adjacent notes are also withheld unless asked for: they may inform how the
-        safety layer describes a behaviour and nothing else, so the Criteria and Evidence
+        safety layer describes a behavior and nothing else, so the Criteria and Evidence
         agents must not see them at all.
         """
         sql = "SELECT * FROM research_notes"
@@ -1583,7 +1583,7 @@ class Store:
         """Promote a pending note. Only a human does this, and it records what they opened.
 
         The URL must pass ``sources.check_source``: a .gov or .edu domain, a scholarly
-        publisher, a permanent identifier, or a library catalogue. A well-meaning
+        publisher, a permanent identifier, or a library catalog. A well-meaning
         verification against a wellness blog is refused rather than quietly admitted.
         """
         from .sources import UnacceptableSource, check_source
@@ -1620,7 +1620,7 @@ class Store:
                 kept += 1
                 continue
             if ref in pending:
-                # Safe to refresh: nobody has approved this yet, so there is no judgement
+                # Safe to refresh: nobody has approved this yet, so there is no judgment
                 # to preserve. This is how a corrected citation reaches the database.
                 with self.write() as conn:
                     conn.execute("DELETE FROM research_notes WHERE ref = ?", (ref,))
@@ -1791,7 +1791,7 @@ class Store:
 
         ``discard`` deliberately removes the derived records too. An observation reading
         "She stayed rather than have another argument" is a near-quotation; keeping it
-        after someone asked for the narrative to be discarded would honour the letter and
+        after someone asked for the narrative to be discarded would honor the letter and
         break the promise.
         """
         if retention is None:
@@ -1932,7 +1932,7 @@ class Store:
                      limit_entries: int = 200) -> list[dict[str, Any]]:
         """How often each theme has come up, and when it last did.
 
-        This is the whole reason themes are stored rather than merely recognised. A
+        This is the whole reason themes are stored rather than merely recognized. A
         person who writes about *comfort expressing needs* in nine entries out of twelve
         is being shown something about themselves that no single entry contains — and
         crucially, something they may never have created a criterion for.
@@ -1985,7 +1985,7 @@ class Store:
                     raise StoreError(f"Unknown certainty: {certainty!r}")
                 hedge = obs.get("hedge")
                 # "Infer, but don't presume." A reading of the narrative is allowed —
-                # the user should not have to name a behaviour before the app can help
+                # the user should not have to name a behavior before the app can help
                 # them look at it — but it must be marked as a reading and offered back
                 # for confirmation, never stated as something they said.
                 if certainty == "inferred" and not (hedge or "").strip():
@@ -2377,6 +2377,38 @@ class Store:
             )
             return int(cur.lastrowid)
 
+    #: What the user may say when asked whether she is safe. ``declined_to_say`` is a
+    #: real answer, not a missing one: the charter forbids pressing for disclosure, so
+    #: "I'd rather not say" has to be a button rather than the absence of one.
+    SAFETY_RESPONSES = ("safe", "past", "support", "declined_to_say")
+
+    def record_safety_response(
+        self, account_id: int, safety_event_id: int, response: str,
+    ) -> None:
+        """Record what the user answered when KRYteria asked whether she was safe.
+
+        **This does not suppress the safety layer, and must not be made to.** It records
+        one answer about one entry. A later Brain Dump describing danger is read on its
+        own terms, because "I was safe in August" is not a statement about December —
+        and because a layer that can be switched off by a past answer fails open on
+        exactly the cases it exists for.
+
+        What it is for: closing the loop. The app asked a question, so the answer belongs
+        on the record beside it, and the screen can stop asking about *this* entry.
+        """
+        if response not in self.SAFETY_RESPONSES:
+            raise StoreError(f"Unknown safety response: {response!r}")
+        with self.write() as conn:
+            cur = conn.execute(
+                "UPDATE safety_events SET user_response = ?, responded_at = ?"
+                " WHERE id = ? AND account_id = ?",
+                (response, _now(), safety_event_id, account_id),
+            )
+            if cur.rowcount == 0:
+                # 404 at the API, never 403: confirming the row exists but belongs to
+                # somebody else is itself a disclosure here.
+                raise NotOwned(f"safety event {safety_event_id}")
+
     # ------------------------------------------------- support without coercion
 
     def list_resources(self, *, region: str | None = None, category: str | None = None,
@@ -2430,7 +2462,7 @@ class Store:
            below, the agent does not keep raising it. Being told "support is available"
            for the fourth time is its own harm — it teaches somebody that telling the app
            something hard makes it stop being able to talk to them.
-        3. **The user's stated preference is honoured** for everything below immediate
+        3. **The user's stated preference is honored** for everything below immediate
            danger.
 
         Returns False freely. The agent can still *answer* — this governs only whether it
@@ -2477,7 +2509,7 @@ class Store:
             return int(cur.lastrowid)
 
     def respond_to_offer(self, account_id: int, offer_id: int, response: str) -> None:
-        """The user accepts, declines, or ignores. A decline is honoured, not argued with."""
+        """The user accepts, declines, or ignores. A decline is honored, not argued with."""
         if response not in ("accepted", "declined", "ignored"):
             raise StoreError(f"Unknown response: {response!r}")
         with self.write() as conn:

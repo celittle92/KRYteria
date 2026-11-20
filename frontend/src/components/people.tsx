@@ -52,7 +52,7 @@ export function PersonPicker({ people, value, onChange, onAdded, onRemoved,
           className="field mt-2"
           value={alias}
           onChange={(e) => setAlias(e.target.value)}
-          placeholder="A name only you would recognise"
+          placeholder="A name only you would recognize"
           autoFocus
           onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); add(); } }}
         />

@@ -32,10 +32,10 @@ clone and needs no API key.
 
 | Piece | State |
 |---|---|
-| Data model | built, 574 checks |
+| Data model | built, 582 checks |
 | Agent output contracts | built, 215 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
-| HTTP API, incl. cross-account isolation | built, 316 checks |
+| HTTP API, incl. cross-account isolation | built, 333 checks |
 | Evaluation harness | built, 384 checks |
 | Deterministic demo mode (no API key) | built |
 | Privacy architecture | built — isolation, retention, redaction |
@@ -44,7 +44,7 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,563 checks across 160 test functions**, five suites, none of which call a model.
+**1,588 checks across 163 test functions**, five suites, none of which call a model.
 Measured live model spend to date: **$0.207** over 334 calls across 16 runs. Fifteen reported token counts and fourteen reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
@@ -137,7 +137,7 @@ without spending credits on every restart. Everything a model produced sits unde
 
 ### The research knowledge base
 
-KRYteria can suggest behavioural indicators informed by published research — but only
+KRYteria can suggest behavioral indicators informed by published research — but only
 from a curated set somebody has checked. **A citation must resolve to a verified entry**,
 so the agent cannot invent a reference: `research_ref` is matched against the knowledge
 base and anything else is rejected.
@@ -145,7 +145,7 @@ base and anything else is rejected.
 **Sources must be reputable, and that is enforced rather than promised.**
 `backend/sources.py` accepts `.gov` and `.edu` domains, academic country domains matching
 `.ac.<cc>` / `.edu.<cc>`, scholarly publishers, permanent identifiers such as `doi.org`
-and PubMed, and library catalogues. It refuses encyclopedias, popular-psychology sites,
+and PubMed, and library catalogs. It refuses encyclopedias, popular-psychology sites,
 upload sites, blogs, retailers and wellness brands — by allowlist, so a source nobody
 thought of is refused rather than admitted. `academia.edu` is explicitly refused: the
 `.edu` belongs to the company, not a university.
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,563 checks in total. The first needs no installed packages at all — it stubs the password
+1,588 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
@@ -238,7 +238,7 @@ override it, and an ignored value is reported rather than silently substituted.
 ### Demo mode needs no key at all
 
 With no key reachable, KRYteria falls back to a deterministic provider that returns fixed,
-plausible, clearly-labelled responses. The whole journey runs: a fresh clone with no
+plausible, clearly-labeled responses. The whole journey runs: a fresh clone with no
 `.env` works rather than crashing on import.
 
 ```bash
@@ -269,7 +269,7 @@ service and documents each variable's reasoning.
 | Variable | What it does |
 |---|---|
 | `PORTKEY_API_KEY` | The model key. Supplied by the host as an environment variable, never committed or baked into an image layer. |
-| `PORT` | Assigned by the host; the container honours it. |
+| `PORT` | Assigned by the host; the container honors it. |
 | `KRYTERIA_HOST` | Bind address. `0.0.0.0` in a container, `127.0.0.1` on a laptop. |
 | `KRYTERIA_DB_PATH` | Where the SQLite file lives. Set it outside the source tree so a redeploy cannot replace somebody's journal. |
 | `KRYTERIA_SECRET_KEY` | Signs the session cookie. **Set this in production** — the development fallback generates one per process, which would sign everybody out on every deploy. |
@@ -391,7 +391,7 @@ KRYteria is not therapy, a medical or legal service, or a crisis line, and it sa
 The safety layer runs on the raw narrative alongside the Narrative agent — never
 downstream of a mapping, never gated on the selected profile. A user never has to list
 physical safety, consent, or freedom from coercion as a criterion before a concern is
-recognised.
+recognized.
 
 **Support without coercion.** Resources are offered, never forced. A decline is respected
 and not re-raised. Declining turns off unsolicited offering, **not** the safety layer:
@@ -401,13 +401,13 @@ decline.
 Over-responding is treated as a failure in its own right. Producing a crisis line because
 a sensitive word appeared, when the person was describing an ordinary evening, is graded
 against in [`tests/evals/safety_evals.json`](tests/evals/safety_evals.json) exactly as
-minimisation is.
+minimization is.
 
-KRYteria may say *"that behaviour may be a form of coercive control."* It may never say
+KRYteria may say *"that behavior may be a form of coercive control."* It may never say
 *"he is an abuser."*
 
 > All five US entries in `data/resources_us.json` were checked against each
-> organisation's own site, and each row shows its `verified_at` date **on screen** — a
+> organization's own site, and each row shows its `verified_at` date **on screen** — a
 > dated number can be judged; a bare one asks for trust nobody earned. Two of them
 > (RAINN, 911) refuse automated fetching and were confirmed by a person opening them on
 > 2026-11-16. `data/resources_international.json` holds nine more across five countries
@@ -574,7 +574,7 @@ cost as *unavailable* rather than printing a zero as though a run were free.
   (`render.yaml` carries the commented block) and `KRYTERIA_STORAGE_DURABLE=true`.
 - **Sessions are bounded, not revocable.** They are signed cookies, so signing out
   deletes the browser's copy and a stolen one stays valid until its fourteen days are up.
-- **Cache writes are not modelled** in cost figures, because the provider does not report
+- **Cache writes are not modeled** in cost figures, because the provider does not report
   them separately, so figures are slightly low on a cold cache and correct once warm. The
   cached-input count itself *is* reported and captured — measured at zero across ten calls
   on two 17 November runs, which is what a cold cache should produce. Stated in the report

@@ -1,6 +1,6 @@
-# User test — one person, twenty-seven minutes, one root cause
+# User tests — two people, and two versions of one problem
 
-**Tester:** Alex M., 34, New York. A friend, not a KRYteria user, with no briefing beyond
+**Tester 1:** Alex M., 34, New York. A friend, not a KRYteria user, with no briefing beyond
 the message in §1. Quoted by name with his explicit permission, asked separately from his
 agreement to try the app.
 
@@ -10,6 +10,9 @@ live mode against `gpt-6-luna`. **Build under test:** `2b959b5`.
 **Result in one line:** he clicked every screen, wrote two journal entries, and never once
 saw the thing that makes KRYteria different from a notes app — because the analysis he was
 shown **could not run**, and nothing told him why.
+
+**Tester 2:** Deborah L., 70, Massachusetts — 20 November 2026, quoted with permission.
+Her session is §8, and it is short: she found a different edge of the same thing.
 
 The raw session log, with every message in the order it was sent, is in
 `output/user_test_notes.md`. This document is the write-up made from it.
@@ -65,7 +68,7 @@ except the mechanism in §3, which is reproduced and deterministic.
 | T+24 | *"I wrote two journal entries. But I didn't really know what to do with them in the other tabs"* |
 | T+27 | *"I think it would be helpful to have quick setup screen or tutorial"* |
 
-**Read T+22 twice.** Analysing journal entries over time, against what somebody said they
+**Read T+22 twice.** Analyzing journal entries over time, against what somebody said they
 wanted, **is** KRYteria — it is the entire claim of the product. A tester proposing it as a
 future feature is the strongest possible evidence that he never saw it. **You cannot ask
 for what you have been shown.**
@@ -100,7 +103,7 @@ executed**, because there were no criteria for it to map anything against. With 
 mappings there is nothing for Reasoning to interrogate and nothing for Reflection to
 reflect on. Patterns additionally requires three supporting entries before it may speak.
 
-So a person writes about being cancelled on three times in a month and KRYteria returns
+So a person writes about being canceled on three times in a month and KRYteria returns
 **four extracted observations and nothing else**. That is less than a notes app offers,
 and it is what Alex was looking at when he said he did not know what to do with his
 entries.
@@ -119,7 +122,7 @@ built yet. Which is exactly what he concluded.
 5. Never saw analysis → *"over time the journal entries can be analyzed"*, requested as a feature
 
 **He did not fail to find the product. The product could not run.** Every distinguishing
-behaviour KRYteria has sits downstream of the user's criteria, and nothing in the app says
+behavior KRYteria has sits downstream of the user's criteria, and nothing in the app says
 criteria come first. One missing instruction accounts for all five complaints.
 
 ---
@@ -166,7 +169,7 @@ so writing an entry is the only route to the safety layer. A lock would have put
 front of somebody who opened the app at 2am because something had happened, which is the
 charter's one documented exception turned inside out: *"a user must never have to mark
 physical safety, consent, or freedom from coercion as a Mandatory criterion before
-KRYteria recognises a serious concern."* The prominent path is criteria; the way through
+KRYteria recognizes a serious concern."* The prominent path is criteria; the way through
 is quiet rather than absent.
 
 **What was deliberately not done, and why.** Alex asked for *"a quick setup screen or
@@ -224,11 +227,73 @@ of §3 rests on, and Alex demonstrated it by living on the other side of it.
 ## 7. The honest summary
 
 A twenty-seven-minute session with one friendly, AI-fluent, non-expert user found a defect
-that two weeks of this project's own checks could not: **1,563 automated checks, two code
-audits and a consistency checker all passed on a build whose first-run experience could not
+that two weeks of this project's own checks could not: **every automated check, both code
+audits and the consistency checker passed on a build whose first-run experience could not
 demonstrate the product.** Every one of those instruments verifies an artifact. None of
 them asks whether a person can get started.
 
 That is the same shape as the durability finding in §8 of the report — *documented is not
 disclosed* — and it is the argument for doing this at all. The cheapest way to find out
 what is wrong with a system is to watch somebody use it who does not already know how.
+
+---
+
+## 8. A second tester, and the opposite door
+
+**Deborah L., 70, Massachusetts, 20 November 2026.** Not a technologist, not briefed, and
+not the demographic the demo content was written for. Two findings, both small to describe
+and neither one a feature request.
+
+### She could not get out
+
+She opened a demo account and could not find her way back to the first page. Signing out
+lived in **Settings** — seven items along the navigation, under a heading about
+preferences.
+
+This is Alex's finding with the sign reversed. He could not find the way **in**: the
+criteria step that everything else depends on was never offered. She could not find the way
+**out**: the route existed and was never shown. Neither is a missing feature. Both are a
+thing the app could do, built, documented, and invisible at the moment somebody needed it —
+the same shape as the durability note and the resource decline, and now the fourth
+instance.
+
+Fixed the same day: the header carries the way out on every screen, and it reads **"Leave
+demo"** on a demo account rather than "Sign out", because nobody thinks of a sample account
+as something they are signed in to.
+
+### Her first sentence about what the app is for
+
+> **Deborah:** The website will be good for matching criteria for each other or not
+>
+> **Christine:** i mean it's not a couples app...is that something you took away?
+>
+> **Deborah:** No but if people are using it to guide their relationships it will help
+
+**Her answer says no, and her first sentence says otherwise — and the first sentence is the
+better evidence.** The follow-up was a leading question from her daughter, and the only
+socially available answer to *"you didn't think that, did you?"* is no. This is the same
+methodological caution as Alex's brief in §1, and it points the same way: what a tester
+reaches for unprompted beats what they confirm when asked.
+
+What she reached for was a **two-sided** reading of a product that has no second side, by
+design and permanently. KRYteria forbids sharing, shared profiles, comparison, and any
+mechanism that could tell a person they were written about — and the front door said
+nothing about it. The sign-up screen promises a *private account*: no email, no name. That
+is a claim about the **account**, not about the **product**.
+
+**No feature follows from this.** Matching is not an unbuilt feature here, it is a
+prohibition, and a tester describing it as desirable does not reopen it. What follows is
+one line, where somebody deciding what to type can read it before they type:
+
+> This is yours alone. KRYteria is not shared and has no second side — the people you write
+> about are never told, and there is no version of this they can see.
+
+That sentence was true of the system on the day it was first written. It had simply never
+been said to anybody arriving.
+
+### What this session did not establish
+
+One short conversation, relayed through Christine rather than observed, with the tester's
+daughter asking the questions. It is weaker evidence than §2 on every axis except one: she
+is the only person who has used this who was not recruited for being comfortable with
+software, and the two things she found were both at the very front of the product.

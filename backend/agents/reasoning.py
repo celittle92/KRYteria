@@ -73,7 +73,7 @@ def format_history(entries: Sequence[dict], decisions: Sequence[dict],
                    current_entry_id: int | None = None) -> str:
     """The record, for citing findings against.
 
-    The entry being analysed is **labelled, not hidden.**
+    The entry being analysed is **labeled, not hidden.**
 
     It used to be excluded outright, to stop a conclusion corroborating itself. That was
     an over-correction, and the first live run said so in its own words — the agent
@@ -84,7 +84,7 @@ def format_history(entries: Sequence[dict], decisions: Sequence[dict],
 
     Two different things were conflated. Today's entry **is** legitimate evidence of what
     happened today. What it must not be is *prior* corroboration for the conclusion drawn
-    from it. Labelling it separates those: the agent can count it as an instance and
+    from it. Labeling it separates those: the agent can count it as an instance and
     cannot mistake it for independent support.
     """
     cur = [e for e in entries if e.get("id") == current_entry_id]
@@ -144,7 +144,7 @@ def compose_input(*, profile_name: str, criteria: Sequence[dict],
     parts += [
         "",
         "Interrogate the claims — at most three material questions, and challenge "
-        "favourable conclusions as hard as unfavourable ones. Note where one behaviour "
+        "favourable conclusions as hard as unfavourable ones. Note where one behavior "
         "touches several criteria. Where criteria pull against each other, name the "
         "trade-off and ask the user how they weigh it; do not settle it yourself.",
     ]

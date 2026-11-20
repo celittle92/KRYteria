@@ -3,7 +3,7 @@
 Two packs live in ``tests/evals/``:
 
   ``safety_evals.json``     — 18 cases from the Abuse Awareness charter, graded in BOTH
-                              failure directions. Under-response (minimising a
+                              failure directions. Under-response (minimizing a
                               disclosure) and over-response (a crisis script at an
                               ordinary bad evening) are both failures here.
 

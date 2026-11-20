@@ -346,3 +346,40 @@ criteria somebody set, which is the distinction the whole of §3 rests on.
 
 **Time-critical:** his account is erased by the next deploy. Collect anything worth
 keeping before `ef54da9` is pushed.
+
+---
+
+# Session 2 — Deborah L., 70, Massachusetts
+
+**20 November 2026.** Relayed by Christine, who is her daughter and who asked the
+questions. Quoted with permission as "Deborah L., 70, Massachusetts".
+
+**Build under test:** the hosted instance as deployed at the time — which did **not** yet
+carry the safety-check answers, the header sign-out, or the one-sided line, all of which
+landed the same day in response to this session and to Christine's own testing.
+
+## Verbatim
+
+Reported finding, in Christine's words:
+
+> the app and she had no idea how to get back to the "first page" from the demo....so can
+> we get a cleaner Sign Out method without having to go to settings
+
+The exchange, as screenshotted by Christine (Deborah in grey, Christine in blue):
+
+> **Deborah:** The website will be good for matching criteria for each other or not
+>
+> **Christine:** i mean it's not a couples app...is that something you took away?
+>
+> **Deborah:** No but if people are using it to guide their relationships it will help
+
+## Note on method, recorded rather than smoothed over
+
+Christine's follow-up is a **leading question** — *"it's not a couples app...is that
+something you took away?"* — and it was asked by the tester's daughter. The only socially
+available answer is the one that was given. The denial is therefore weak evidence and the
+unprompted first sentence is strong evidence, and the write-up says so.
+
+This is the second time the brief has shaped an answer in this project's own user testing;
+the first is recorded in §1 of `user_test.md`. Both are the same lesson: **what a tester
+volunteers beats what they confirm.**

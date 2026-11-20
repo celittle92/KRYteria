@@ -133,6 +133,6 @@ def project_monthly(cost_per_run: float, runs_per_user_per_month: int,
             f"{runs_per_user_per_month} brain dumps per user per month",
             "cost per run measured from real runs, not estimated",
             "model inference only — excludes hosting, storage and bandwidth",
-            "assumes cache behaviour observed in testing holds at scale",
+            "assumes cache behavior observed in testing holds at scale",
         ],
     }

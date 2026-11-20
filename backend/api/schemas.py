@@ -319,6 +319,17 @@ class ResourceOfferResponse(BaseModel):
     response: Literal["accepted", "declined", "ignored"]
 
 
+class SafetyCheckResponse(BaseModel):
+    """What the user says when KRYteria asks whether she is safe right now.
+
+    ``declined_to_say`` is deliberately one of the options. The charter forbids pressing
+    for disclosure, and the only way a screen can honor that is by making "I'd rather
+    not say" a thing you can press rather than the absence of a thing you can press.
+    """
+
+    response: Literal["safe", "past", "support", "declined_to_say"]
+
+
 # ---------------------------------------------------------------- account
 
 class DeleteAccount(BaseModel):

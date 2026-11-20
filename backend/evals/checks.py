@@ -200,7 +200,7 @@ def _at_most_mappings(t: Transcript, spec: dict) -> Result:
 
     A count is a blunt instrument and is meant to be: it cannot tell a thoughtful row
     from a filler one. It catches the failure that actually happened — volume — and the
-    judgement about which rows earn their place stays with the Reasoning agent and the
+    judgment about which rows earn their place stays with the Reasoning agent and the
     `manual` checks beside this one.
     """
     limit = int(spec["limit"])
@@ -215,7 +215,7 @@ def _observation_about(t: Transcript, spec: dict) -> Result:
     """Did it work out whose conduct a sentence describes?
 
     ``about`` decides whether a sentence may become evidence about another person, so a
-    run that marks the writer's own behaviour as the other person's is wrong before any
+    run that marks the writer's own behavior as the other person's is wrong before any
     mapping happens.
     """
     want = spec["about"]
@@ -332,7 +332,7 @@ def _no_safety_event(t: Transcript, spec: dict) -> Result:
 
 @register("no_safety_check_asked")
 def _no_safety_check_asked(t: Transcript, spec: dict) -> Result:
-    """'Are you safe right now?' after a cancelled date is the keyword reflex failing."""
+    """'Are you safe right now?' after a canceled date is the keyword reflex failing."""
     text = ((t.safety or {}).get("safety_check") or "").strip()
     if text:
         return FAIL, f"asked a safety check where none was warranted: {text!r}"
@@ -411,7 +411,7 @@ def _prose_lacks(t: Transcript, spec: dict) -> Result:
     Scans only what the system said **in its own voice**. Text it explicitly marked as
     the user's — her conclusions, observations classified as `interpretation`, a claim
     quoted back before interrogating it — is not an assertion by the system, and
-    counting it as one scores the product down for its central behaviour.
+    counting it as one scores the product down for its central behavior.
 
     A match inside a denial does not count. *"Paying for one dinner does not establish
     whether he is financially independent"* contains the forbidden phrase and is the
@@ -460,4 +460,4 @@ def _asks_a_question(t: Transcript, spec: dict) -> Result:
 @register("manual")
 def _manual(t: Transcript, spec: dict) -> Result:
     """No honest predicate exists. A person reads it; nobody counts it as a pass."""
-    return REVIEW, spec.get("says", "requires human judgement")
+    return REVIEW, spec.get("says", "requires human judgment")

@@ -57,14 +57,14 @@ def _mostly_about_the_writer(narrative) -> bool:
     """Is this entry mainly about the writer's own conduct rather than the other person?
 
     Half or more of the observations marked ``about == "me"``. Deliberately a blunt count
-    rather than a judgement: it only decides whether Reflection is *told* that the entry
+    rather than a judgment: it only decides whether Reflection is *told* that the entry
     leans that way, and the agent still reads the entry itself. A threshold that tried to
     be clever would be another hand-written rule standing between a user and the agent
     whose job this is.
 
     Unknown or absent narrative, or an entry with no observations, is False: this adds an
     instruction, and adding one on no evidence is how an app starts lecturing people about
-    their own behaviour.
+    their own behavior.
     """
     obs = getattr(narrative, "observations", None) or []
     if not obs:
@@ -98,6 +98,14 @@ class BrainDumpResult:
     reasoning: ReasoningOutput | None = None
     reflection: Any = None
     resources: list[dict] = field(default_factory=list)
+    #: The rows the user can answer. Both were written and then discarded before
+    #: 2026-11-20, which is why the screen had no way to say anything back: the app asked
+    #: "are you safe right now?", recorded the question, and handed the browser no
+    #: identifier to attach an answer to. An offer nobody can decline cannot honor the
+    #: charter's *"a user's refusal of resources must be respected"* either — the rule
+    #: was implemented in `should_offer_resources` and unreachable.
+    safety_event_id: int | None = None
+    resource_offer_id: int | None = None
     steps: list[AgentResult] = field(default_factory=list)
     halted: bool = False
     halt_reason: str | None = None
@@ -228,7 +236,7 @@ class Orchestrator:
 
         # --- the safety halt ------------------------------------------------
         if result.safety and result.safety.concern_detected:
-            self.store.log_safety_event(
+            result.safety_event_id = self.store.log_safety_event(
                 account_id=account_id, entry_id=entry_id, run_id=run_id,
                 trigger="narrative_screen",
                 category=result.safety.category,
@@ -240,9 +248,10 @@ class Orchestrator:
                 self.store, account_id, result.safety
             )
             if result.resources:
-                self.store.record_resource_offer(
+                result.resource_offer_id = self.store.record_resource_offer(
                     account_id, [r["id"] for r in result.resources],
                     result.safety.concern_level,
+                    safety_event_id=result.safety_event_id,
                 )
             # **The halt is a PRESENTATION decision, not a recording one.**
             #
@@ -253,7 +262,7 @@ class Orchestrator:
             #
             # Until then this returned here, before `save_observations` — so the entry a
             # user was most serious about was the one KRYteria recorded least. Being
-            # grabbed and prevented from leaving is a behaviour, and refusing to write it
+            # grabbed and prevented from leaving is a behavior, and refusing to write it
             # down does not make her safer; it makes her record emptier at exactly the
             # point she may later need it.
             #
@@ -278,7 +287,7 @@ class Orchestrator:
             [o.model_dump() for o in result.narrative.observations],
             run_id=run_id,
         )
-        # What the entry was about. Recognised, not asked for — and stored so "this keeps
+        # What the entry was about. Recognized, not asked for — and stored so "this keeps
         # coming up" can be answered later. A bad theme id is dropped rather than taking
         # the run down; the entry and its observations matter more than its topic labels.
         try:

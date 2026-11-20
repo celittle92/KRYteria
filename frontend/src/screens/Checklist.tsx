@@ -10,7 +10,7 @@ import { awaitingChoice, placeholderFor, soleOrNone } from "../choice";
 /**
  * Checklist Mode — the other direction through the same intelligence layer.
  *
- * The Brain Dump goes experiences → criteria. This goes criteria → behaviours: *"I care
+ * The Brain Dump goes experiences → criteria. This goes criteria → behaviors: *"I care
  * about emotional maturity"* becomes a list of things you might actually observe. For
  * people who do not want to write paragraphs after every date, and for anyone who does
  * not yet know what to look for.
@@ -199,7 +199,7 @@ export default function Checklist() {
             <Card>
               <div className="px-5 py-6">
                 <p className="text-muted text-sm max-w-reading leading-relaxed">
-                  Nothing here yet. KRYteria can suggest behaviours that might show this
+                  Nothing here yet. KRYteria can suggest behaviors that might show this
                   standard — or contradict it — based on what you wrote about why it
                   matters.
                 </p>

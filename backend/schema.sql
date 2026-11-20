@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     -- (VPN, travel, a phone on a foreign SIM) that acting on it during a crisis is worse
     -- than admitting we do not know.
     region          TEXT,
-    -- How the user wants support resources handled. Theirs to set, and it is honoured.
+    -- How the user wants support resources handled. Theirs to set, and it is honored.
     -- `on_request` and `suppressed` still leave the safety layer fully active; they
     -- govern unsolicited offering, nothing else.
     resource_offering TEXT  NOT NULL DEFAULT 'proactive'
@@ -310,7 +310,7 @@ CREATE TABLE IF NOT EXISTS observations (
     attributed_to TEXT   NOT NULL DEFAULT 'user'   -- 'user' = they wrote it; 'agent' = extracted
                          CHECK (attributed_to IN ('user', 'agent')),
     -- "Infer, but don't presume." The agent may read between the lines — a user should not
-    -- have to name a behaviour correctly before the app can help them look at it — but a
+    -- have to name a behavior correctly before the app can help them look at it — but a
     -- reading is marked as one. `inferred` renders hedged ("it sounds like…", "I may be
     -- reading between the lines"); `stated` is the user's own words and never hedged.
     certainty    TEXT    NOT NULL DEFAULT 'stated'
@@ -334,13 +334,13 @@ CREATE INDEX IF NOT EXISTS idx_observations_entry
 --
 -- `complicating` is load-bearing and must never be collapsed into supporting or
 -- contradicting: "he got upset, then took time to regulate, then came back and
--- apologised" is relevant and context-dependent, not simply good or bad. An app with only
+-- apologized" is relevant and context-dependent, not simply good or bad. An app with only
 -- two options forces a verdict the evidence does not support.
 -- One observation can legitimately relate to SEVERAL criteria at once, supporting one
 -- while complicating another — arriving late for a work reason touches communication,
 -- ambition, and respect for time differently. Cross-Criterion Intelligence lives in the
 -- fact that these are separate rows with separate relations, never one verdict about a
--- person. Do not collapse them, and do not let one behaviour become evidence about
+-- person. Do not collapse them, and do not let one behavior become evidence about
 -- somebody's entire personality.
 CREATE TABLE IF NOT EXISTS evidence_links (
     id             INTEGER PRIMARY KEY,
@@ -381,15 +381,15 @@ CREATE INDEX IF NOT EXISTS idx_evidence_links_pending
 
 -- ---------------------------------------------------------------- checklist mode
 
--- Direction A, "criteria → behaviours": the agent turns a criterion into observable
--- behavioural indicators, for users who would rather tick boxes than write paragraphs.
--- Same behavioural intelligence as the brain dump, run the other way round.
+-- Direction A, "criteria → behaviors": the agent turns a criterion into observable
+-- behavioral indicators, for users who would rather tick boxes than write paragraphs.
+-- Same behavioral intelligence as the brain dump, run the other way round.
 CREATE TABLE IF NOT EXISTS checklist_items (
     id           INTEGER PRIMARY KEY,
     account_id   INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
     criterion_id INTEGER NOT NULL REFERENCES criteria(id) ON DELETE CASCADE,
     -- Indicators are per profile: what "good communication" looks like for a husband and
-    -- for a one-night stand are not the same observable behaviours.
+    -- for a one-night stand are not the same observable behaviors.
     profile_id   INTEGER REFERENCES profiles(id) ON DELETE CASCADE,
     text         TEXT    NOT NULL,               -- "Can disagree without becoming hostile"
     polarity     TEXT    NOT NULL DEFAULT 'demonstrates'
@@ -559,16 +559,16 @@ CREATE INDEX IF NOT EXISTS idx_interrogations_entry
 -- ---------------------------------------------------------------- research layer
 
 -- A curated knowledge base, seeded from data/research/. Findings INFORM possible
--- behavioural indicators; they never become deterministic rules. Nothing in this table
+-- behavioral indicators; they never become deterministic rules. Nothing in this table
 -- may be used to diagnose a person, assign them a type, or decide an assessment.
 --
 -- `verified_at` IS THE LOAD-BEARING COLUMN. A row is invisible to the agents until a
--- human has opened the source, confirmed the finding is characterised fairly, and
+-- human has opened the source, confirmed the finding is characterized fairly, and
 -- recorded the URL. `list_research_notes` filters unverified rows out by default and
 -- `link_evidence` refuses a research_ref that does not resolve to a verified row — so a
 -- citation the agent produces must correspond to something somebody actually checked.
 --
--- That is the whole defence against a fabricated citation, which for this product would
+-- That is the whole defense against a fabricated citation, which for this product would
 -- be worse than having no research layer at all.
 CREATE TABLE IF NOT EXISTS research_notes (
     id          INTEGER PRIMARY KEY,
@@ -587,7 +587,7 @@ CREATE TABLE IF NOT EXISTS research_notes (
     caveat      TEXT    NOT NULL,                -- the limits of applying it to one person
     do_not_json TEXT    NOT NULL DEFAULT '[]',   -- the misuse this finding invites
     indicator_hints_json TEXT NOT NULL DEFAULT '[]',
-    -- True for findings that may only inform how the safety layer DESCRIBES a behaviour.
+    -- True for findings that may only inform how the safety layer DESCRIBES a behavior.
     -- Never a checklist item, never an assessment, never a label for a person.
     safety_adjacent INTEGER NOT NULL DEFAULT 0,
     verified_at TEXT,                            -- NULL = pending = invisible to agents
@@ -603,7 +603,7 @@ CREATE TABLE IF NOT EXISTS patterns (
     id             INTEGER PRIMARY KEY,
     account_id     INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
     -- A finding is interpreted within one profile, for the same reason an evidence link
-    -- is: the same behaviour reads differently depending on what the user is looking for.
+    -- is: the same behavior reads differently depending on what the user is looking for.
     -- Nullable because a finding can be about the user's own decisions rather than about
     -- one objective.
     profile_id     INTEGER REFERENCES profiles(id) ON DELETE CASCADE,
@@ -743,7 +743,7 @@ CREATE TABLE IF NOT EXISTS agent_steps (
 --
 -- Note there is no profile_id column, and that is deliberate. A user must never have to
 -- mark physical safety, consent, or freedom from coercion as a Mandatory criterion before
--- the app recognises a serious concern. This is the one documented exception to the
+-- the app recognizes a serious concern. This is the one documented exception to the
 -- user-defined criteria framework, and it applies in every context — marriage, casual
 -- dating, friends-with-benefits, a one-night encounter.
 CREATE TABLE IF NOT EXISTS safety_events (
@@ -766,6 +766,19 @@ CREATE TABLE IF NOT EXISTS safety_events (
                                                 'immediate_danger')),
     action     TEXT    NOT NULL,                -- halt_and_route | offer_resources | refuse | note_only
     detail     TEXT,
+    -- What the user said back when KRYteria asked "are you safe right now?".
+    --
+    -- Added 2026-11-20 after Christine tested a halt herself and found a dead end: the
+    -- app asked the charter's question and built no way to answer it. A question with no
+    -- affordance is worse than no question -- it reads as the app having stopped being
+    -- able to talk to you, which is the exact failure the over-response rule names.
+    --
+    -- NULL is the normal state and always permitted. She never has to answer, and
+    -- 'declined_to_say' is a real answer rather than an absence.
+    user_response TEXT
+                       CHECK (user_response IN ('safe', 'past', 'support',
+                                                'declined_to_say')),
+    responded_at  TEXT,
     created_at TEXT    NOT NULL
 );
 
@@ -797,7 +810,7 @@ CREATE TABLE IF NOT EXISTS resources (
 --
 -- SUPPORT WITHOUT COERCION. A decline is recorded and respected: the agent does not keep
 -- raising resources the user has already turned down. It does NOT turn the safety layer
--- off — a new disclosure of danger is still recognised and still answered.
+-- off — a new disclosure of danger is still recognized and still answered.
 CREATE TABLE IF NOT EXISTS resource_offers (
     id              INTEGER PRIMARY KEY,
     account_id      INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
@@ -830,7 +843,7 @@ CREATE TABLE IF NOT EXISTS usage_daily (
 --
 -- What an entry was ABOUT, from the closed vocabulary in data/themes.json.
 --
--- Deliberately NOT a criterion and not an assessment. A theme is recognised whether or
+-- Deliberately NOT a criterion and not an assessment. A theme is recognized whether or
 -- not the user has a matching criterion — that is how the app notices what somebody
 -- keeps writing about before they have named it. There is no status column here and
 -- never should be: a theme says a subject came up, not that anybody did well at it.
@@ -847,7 +860,7 @@ CREATE TABLE IF NOT EXISTS entry_themes (
     account_id INTEGER NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
     entry_id   INTEGER NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
     theme_id   TEXT    NOT NULL,            -- validated against data/themes.json
-    run_id     INTEGER,                     -- which agent run recognised it
+    run_id     INTEGER,                     -- which agent run recognized it
     created_at TEXT    NOT NULL,
     UNIQUE (entry_id, theme_id)
 );

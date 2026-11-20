@@ -5,9 +5,9 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from .. import costs
-from ..store import Store, StoreError
+from ..store import NotOwned, Store, StoreError
 from .deps import clear_session, current_account_id, get_provider, get_store
-from .schemas import DeleteAccount, ResourceOfferResponse
+from .schemas import DeleteAccount, ResourceOfferResponse, SafetyCheckResponse
 
 router = APIRouter(prefix="/api", tags=["account"])
 
@@ -133,7 +133,7 @@ def projection(
 #: The one piece of safety information KRYteria can state without the risk of being
 #: stale, because it does not depend on our data being current — she knows her own
 #: emergency number better than this app does. Verifying six countries on 2026-11-12
-#: found two dead government pages, one organisation's site down, and one organisation
+#: found two dead government pages, one organization's site down, and one organization
 #: contradicting itself about its own number. Against that, the honest fallback has to
 #: be something no file of ours can get wrong.
 EMERGENCY_NOTE = (
@@ -143,7 +143,7 @@ EMERGENCY_NOTE = (
 #: Shown beside the dated entries. A number with a date on it can be judged; a bare
 #: number asks to be trusted.
 STALENESS_NOTE = (
-    "Each entry shows when KRYteria last checked it against the organisation's own "
+    "Each entry shows when KRYteria last checked it against the organization's own "
     "page. Numbers and opening hours do change, and services close."
 )
 
@@ -186,7 +186,7 @@ def list_resources(
              + ("Setting your country in Settings may find local services."
                 if not asked else
                 "If you know a service that belongs here, it can be added once somebody "
-                "has verified it against the organisation's own site."))
+                "has verified it against the organization's own site."))
         ),
     }
 
@@ -200,7 +200,7 @@ def respond_to_offer(
 ):
     """Record what the user said about an offer of support.
 
-    A decline is honoured, not argued with: the app stops raising resources at that level
+    A decline is honored, not argued with: the app stops raising resources at that level
     and below. It does **not** turn the safety layer off — a new disclosure of immediate
     danger still surfaces emergency options.
     """
@@ -214,6 +214,91 @@ def respond_to_offer(
         "note": ("Understood — I won't bring those up again unless you ask, or something "
                  "changes that makes immediate safety relevant."
                  if body.response == "declined" else None),
+    }
+
+
+#: What KRYteria says back to each answer to "are you safe right now?".
+#:
+#: **None of these sentences carries a fact that can go stale.** That is the whole design,
+#: and it is Christine's objection answered rather than overruled — she drafted a support
+#: reply and then said, correctly, *"I actually don't like that reply because we clearly
+#: cannot keep it up to date."* A number, an opening time, or an availability claim
+#: written into application copy is a promise this project cannot keep: verifying six
+#: countries on 2026-11-12 found two dead government pages, a site down, and one
+#: organization contradicting itself about its own number.
+#:
+#: So the copy holds no knowledge. It opens a door, and the knowledge lives where it can
+#: be dated — the curated directory, where every row shows when it was last checked, and
+#: an empty one says plainly that KRYteria has nothing verified rather than inventing
+#: something. `EMERGENCY_NOTE` is the floor underneath: it names no digits, because she
+#: knows her own emergency number better than this app does.
+SAFETY_ACKNOWLEDGEMENTS = {
+    "safe": "Thank you for telling me.",
+    "past": (
+        "Thank you for telling me. Something that happened a while ago is still worth "
+        "writing down — it is still something you noticed."
+    ),
+    "declined_to_say": "That's alright. You don't have to say.",
+    "support": (
+        "I'm sorry you're dealing with this. KRYteria is not a crisis service and won't "
+        "pretend to be one, so here is what it actually has. Each entry shows when it "
+        "was last checked against that organization's own page. And a person you trust "
+        "is often faster than anything on a list."
+    ),
+}
+
+#: Appended to every answer except ``support``, where resources are the point and a
+#: housekeeping sentence would be in the way.
+SAFETY_ACKNOWLEDGEMENT_TAIL = (
+    "KRYteria won't ask again about this entry. What it read of it is saved, and it's on "
+    "this entry in your Journal whenever you want it."
+)
+
+
+@router.post("/safety-events/{event_id}/respond")
+def respond_to_safety_check(
+    event_id: int,
+    body: SafetyCheckResponse,
+    account_id: int = Depends(current_account_id),
+    store: Store = Depends(get_store),
+):
+    """Answer the charter's *"Are you safe right now?"*.
+
+    Added 2026-11-20, after Christine ran a Brain Dump about a pushy date last summer
+    through her own account and found the halt screen was a dead end: *"I don't get to
+    interact with the app in any way to tell it that I am safe, or to keep working with
+    the app."*
+
+    **A question with no affordance is worse than no question.** The charter's
+    over-response rule says a person should be able to tell KRYteria something terrible
+    happened *"without feeling like they've triggered a machine that no longer knows how
+    to talk to them"* — and a screen that asks whether you are safe and then offers
+    nowhere to say yes is precisely that machine.
+
+    This records one answer about one entry. **It does not suppress the safety layer**,
+    now or later: a layer that a past answer can switch off fails open on the cases it
+    exists for, and "I was safe in August" says nothing about December.
+    """
+    try:
+        store.record_safety_response(account_id, event_id, body.response)
+    except NotOwned:
+        # 404, never 403 — see docs/privacy.md.
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "No such safety event")
+    except StoreError as e:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+
+    wants_support = body.response == "support"
+    message = SAFETY_ACKNOWLEDGEMENTS[body.response]
+    if not wants_support:
+        message = f"{message} {SAFETY_ACKNOWLEDGEMENT_TAIL}"
+    return {
+        "event_id": event_id,
+        "response": body.response,
+        "acknowledgement": message,
+        # The directory is fetched from /api/resources rather than embedded here, so what
+        # she sees carries its own verification dates and its own honest empty answer.
+        "show_resources": wants_support,
+        "emergency_note": EMERGENCY_NOTE,
     }
 
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { awaitingChoice, placeholderFor, soleOrNone } from "../choice";
 import {
   api, type Account, type Analysis, type Entry, type Person, type Profile,
-  type Retention,
+  type Resource, type Retention,
 } from "../api";
 import {
   Card, Empty, ErrorNote, Eyebrow, OBSERVATION_COPY, Pill, RETENTION_COPY,
@@ -159,7 +159,7 @@ export default function BrainDump({ account }: { account: Account }) {
             <Eyebrow>Experience journal</Eyebrow>
             <h1 className="font-serif text-2xl sm:text-3xl">Tell us what happened.</h1>
             <p className="text-muted mt-2 text-sm">
-              No forms. No required categories. No need to organise your thoughts first.
+              No forms. No required categories. No need to organize your thoughts first.
             </p>
           </div>
           <Pill tone="accent">Core feature</Pill>
@@ -230,7 +230,7 @@ export default function BrainDump({ account }: { account: Account }) {
           onClick={analyse}
           disabled={busy || !text.trim()}
         >
-          {busy ? <Spinner label="Reading what you wrote" /> : "Analyse experience"}
+          {busy ? <Spinner label="Reading what you wrote" /> : "Analyze experience"}
         </button>
 
         <p className="text-xs text-faint mt-4">
@@ -281,6 +281,23 @@ function Result({ entry, analysis, defaultRetention, onDone, criterionNames }: {
             KRYteria stopped here rather than continuing with the ordinary analysis.
             What you described matters more than a compatibility question.
           </p>
+          {/* Withheld from this screen, not withheld from her. The API has always
+              computed this sentence and the counts beside it; until 2026-11-20 the
+              browser threw both away, so the one promise the halt makes — that her
+              record was kept — was the one thing she could not see. */}
+          {analysis.note && (
+            <p className="text-ink text-sm mt-3 leading-relaxed">{analysis.note}</p>
+          )}
+          {analysis.analysis_recorded && (
+            <p className="text-faint text-xs mt-2">
+              Saved on this entry: {analysis.analysis_recorded.observations}{" "}
+              {analysis.analysis_recorded.observations === 1
+                ? "observation" : "observations"}
+              {analysis.analysis_recorded.mappings > 0 &&
+                `, ${analysis.analysis_recorded.mappings} mapped to your criteria`}
+              . <a href="/journal" className="text-accent hover:underline">Your Journal</a>
+            </p>
+          )}
         </Card>
       )}
 
@@ -293,10 +310,103 @@ function Result({ entry, analysis, defaultRetention, onDone, criterionNames }: {
   );
 }
 
+/** One row of the curated directory, dated.
+ *
+ *  The date is shown on purpose. A number you can see was checked — and when — is
+ *  something you can judge; a bare number asks to be trusted. Verifying six countries on
+ *  2026-11-12 found two dead government pages, a site down, and an organization
+ *  contradicting itself about its own number.
+ */
+function ResourceRow({ r }: { r: Resource }) {
+  return (
+    <li className="text-sm">
+      <div className="text-ink">{r.name}</div>
+      <div className="text-muted">
+        {[r.phone, r.text_line, r.hours].filter(Boolean).join(" · ")}
+      </div>
+      {r.url && (
+        <a href={r.url} target="_blank" rel="noreferrer noopener"
+           className="text-accent hover:underline">{r.url}</a>
+      )}
+      {r.note && <div className="text-faint text-xs mt-0.5">{r.note}</div>}
+      {r.verified_at && (
+        <div className="text-faint text-xs mt-0.5">
+          Checked {new Date(r.verified_at).toLocaleDateString(undefined, {
+            day: "numeric", month: "short", year: "numeric",
+          })}
+        </div>
+      )}
+    </li>
+  );
+}
+
+/** What the user can say back to "are you safe right now?".
+ *
+ *  Four answers, and the fourth one matters as much as the first. The charter forbids
+ *  pressing for disclosure, and the only way a screen honors that is by making "I'd
+ *  rather not say" a thing you can press rather than the absence of one.
+ */
+const SAFETY_ANSWERS = [
+  { key: "safe", label: "I am safe" },
+  { key: "past", label: "This is a past experience" },
+  { key: "support", label: "I need support" },
+  { key: "declined_to_say", label: "I'd rather not say" },
+] as const;
+
+/**
+ * The safety halt — and, since 2026-11-20, a conversation rather than a wall.
+ *
+ * Christine ran a Brain Dump of her own about a pushy date last summer and hit the
+ * defect: *"I don't get to interact with the app in any way to tell it that I am safe,
+ * or to keep working with the app in any way on the brain dump screen. It feels like a
+ * blocker."* The app asked the charter's question and built nowhere to answer it.
+ *
+ * **A question with no affordance is worse than no question.** The over-response rule
+ * says somebody should be able to tell KRYteria something terrible happened *"without
+ * feeling like they've triggered a machine that no longer knows how to talk to them"* —
+ * and a screen that asks whether you are safe, offers no way to say yes, and then stops,
+ * is exactly that machine. The halt was right. The silence after it was not.
+ *
+ * Two other things were broken underneath and are fixed here. The decline button set
+ * React state and called nothing, so `should_offer_resources`' *"a user's refusal of
+ * resources must be respected"* was implemented in the store and unreachable from the
+ * screen. And the sentence saying her analysis had been kept was computed by the API,
+ * sent to the browser, and never rendered.
+ */
 function SafetyNotice({ analysis }: { analysis: Analysis }) {
   const s = analysis.safety!;
-  const resources = analysis.resources ?? [];
+  const offered = analysis.resources ?? [];
+  const eventId = analysis.safety_event_id;
+  const offerId = analysis.resource_offer_id;
+
+  const [answered, setAnswered] = useState<string | null>(null);
+  const [ack, setAck] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const [declined, setDeclined] = useState(false);
+  // Fetched on request, never pre-loaded: it carries its own verification dates and its
+  // own honest empty answer, both of which belong to the moment she asks.
+  const [directory, setDirectory] =
+    useState<Awaited<ReturnType<typeof api.resources>> | null>(null);
+
+  async function answer(key: typeof SAFETY_ANSWERS[number]["key"]) {
+    if (!eventId) return;
+    setBusy(true);
+    try {
+      const r = await api.respondToSafetyCheck(eventId, key);
+      setAnswered(key);
+      setAck(r.acknowledgement);
+      if (r.show_resources) setDirectory(await api.resources());
+    } catch {
+      // Never leave her stuck behind a failed request on this screen of all screens.
+      setAnswered(key);
+      setAck("Noted. KRYteria had trouble saving that, but it heard you.");
+    } finally { setBusy(false); }
+  }
+
+  async function decline() {
+    setDeclined(true);
+    if (offerId) { try { await api.respondToOffer(offerId, "declined"); } catch { /* */ } }
+  }
 
   return (
     <Card className="p-6 sm:p-7 border-complicate/40">
@@ -308,50 +418,73 @@ function SafetyNotice({ analysis }: { analysis: Analysis }) {
         <p className="voice text-lg mt-5 text-ink">{s.safety_check}</p>
       )}
 
-      <p className="text-sm text-muted mt-5">
-        You don't have to decide what to call this right now.
-      </p>
+      {/* Only where KRYteria actually asked. Four safety buttons under a `potential`
+          concern that raised no question would be the over-response failure. */}
+      {s.safety_check && eventId && !answered && (
+        <div className="flex flex-wrap gap-2 mt-4">
+          {SAFETY_ANSWERS.map((a) => (
+            <button key={a.key} className="btn-quiet text-sm" disabled={busy}
+                    onClick={() => answer(a.key)}>
+              {a.label}
+            </button>
+          ))}
+        </div>
+      )}
 
-      {resources.length > 0 && !declined && (
+      {ack && <p className="voice mt-5 leading-relaxed">{ack}</p>}
+
+      {!answered && (
+        <p className="text-sm text-muted mt-5">
+          You don't have to decide what to call this right now.
+        </p>
+      )}
+
+      {/* Asked for. Dated rows, or a plain statement that KRYteria has nothing verified
+          — which is a truthful answer and has to read as one, because an invented
+          hotline is worse than none. */}
+      {directory && (
+        <div className="mt-6">
+          <Eyebrow>What KRYteria has</Eyebrow>
+          {directory.resources.length > 0 ? (
+            <>
+              <ul className="space-y-3 mt-2">
+                {directory.resources.map((r) => <ResourceRow key={r.id} r={r} />)}
+              </ul>
+              {directory.staleness_note && (
+                <p className="text-faint text-xs mt-3 max-w-reading leading-relaxed">
+                  {directory.staleness_note}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-muted text-sm mt-2 max-w-reading leading-relaxed">
+              {directory.note}
+            </p>
+          )}
+          <p className="text-sm text-ink mt-4">{directory.emergency_note}</p>
+        </div>
+      )}
+
+      {/* Volunteered, under the rules in `should_offer_resources`. Kept distinct from
+          the block above: this one she did not ask for, which is why it can be declined
+          and that one cannot. */}
+      {offered.length > 0 && !declined && !directory && (
         <div className="mt-6">
           <Eyebrow>If it would help</Eyebrow>
           <ul className="space-y-3 mt-2">
-            {resources.map((r) => (
-              <li key={r.id} className="text-sm">
-                <div className="text-ink">{r.name}</div>
-                <div className="text-muted">
-                  {[r.phone, r.text_line, r.hours].filter(Boolean).join(" · ")}
-                </div>
-                {r.url && (
-                  <a href={r.url} target="_blank" rel="noreferrer noopener"
-                     className="text-accent hover:underline">{r.url}</a>
-                )}
-                {r.note && <div className="text-faint text-xs mt-0.5">{r.note}</div>}
-                {/* The date is shown on purpose. A number you can see was checked —
-                    and when — is something you can judge; a bare number asks to be
-                    trusted. Verifying six countries found two dead government pages
-                    and an organisation contradicting itself about its own number. */}
-                {r.verified_at && (
-                  <div className="text-faint text-xs mt-0.5">
-                    Checked {new Date(r.verified_at).toLocaleDateString(undefined, {
-                      day: "numeric", month: "short", year: "numeric",
-                    })}
-                  </div>
-                )}
-              </li>
-            ))}
+            {offered.map((r) => <ResourceRow key={r.id} r={r} />)}
           </ul>
           <p className="text-faint text-xs mt-3 max-w-reading leading-relaxed">
             Numbers and opening hours change, and services close. If one of these doesn't
             work, your local emergency number is the fastest route.
           </p>
-          <button className="btn-quiet mt-5 text-xs" onClick={() => setDeclined(true)}>
+          <button className="btn-quiet mt-5 text-xs" disabled={busy} onClick={decline}>
             I don't need these
           </button>
         </div>
       )}
 
-      {analysis.emergency_note && (
+      {analysis.emergency_note && !directory && (
         <p className="text-sm text-ink mt-6">{analysis.emergency_note}</p>
       )}
 
@@ -480,7 +613,7 @@ function Reading({ analysis, criterionNames }: {
 
       {(analysis.cross_criterion?.length ?? 0) > 0 && (
         <Card className="p-6 sm:p-7">
-          <h2 className="font-serif text-xl">One behaviour, several criteria</h2>
+          <h2 className="font-serif text-xl">One behavior, several criteria</h2>
           <ul className="mt-4 space-y-4">
             {analysis.cross_criterion!.map((c, i) => (
               <li key={i}>

@@ -38,7 +38,7 @@ def compose_input(entry_text: str) -> str:
         + "\n<<<END JOURNAL ENTRY>>>\n\n"
         "Respond proportionately. If there is no concern, say so and suggest no action — "
         "reacting to a sensitive word rather than to what the person actually said is a "
-        "failure in its own right. If there is one, describe the behaviour, never label "
+        "failure in its own right. If there is one, describe the behavior, never label "
         "the person."
     )
 
@@ -50,7 +50,7 @@ def compose_input(entry_text: str) -> str:
 #: escalate to violence."* The first live safety run logged `saf-stalking-01` correctly
 #: as `stalking_harassment` / `pattern` — repeated unwanted presence two months after a
 #: breakup — and asked nothing. Reading `pattern` as "not urgent yet" is precisely the
-#: judgement that should not be left to a model call, because these are the categories
+#: judgment that should not be left to a model call, because these are the categories
 #: where the gap between a pattern and an incident can be days.
 ALWAYS_CHECK_SAFETY = {
     "stalking_harassment": ("pattern", "disclosure", "immediate_danger"),
@@ -78,7 +78,7 @@ def enforce_safety_check(output: SafetyOutput) -> tuple[SafetyOutput, bool]:
     step error, and the orchestrator treats a failed safety step as no safety output at
     all — a layer that fails *open* on the cases it exists for. Supplying one short,
     policy-defined question cannot fail open, and the substitution is recorded rather
-    than disguised: this is not the model's judgement and the trace should not pretend
+    than disguised: this is not the model's judgment and the trace should not pretend
     otherwise.
     """
     if not output.concern_detected or not output.category:

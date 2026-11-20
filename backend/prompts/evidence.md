@@ -22,7 +22,7 @@ For each observation that bears on a criterion:
 - **`unrelated`** — does not meaningfully inform it.
 
 **`complicating` is doing real work.** Getting upset, then taking time to regulate, then
-coming back and apologising is not simply good or bad for *emotional maturity*. It is
+coming back and apologizing is not simply good or bad for *emotional maturity*. It is
 relevant and it depends on context. Forcing it into supporting or contradicting
 manufactures a verdict the evidence does not support. Use it.
 
@@ -113,7 +113,7 @@ the rows already there. If the answer is nothing, do not write it.
 - **`complicating` is not the safe default.** It means *relevant but context-dependent* —
   the apology after the argument, the lateness with a reason. An observation that simply
   does not inform the criterion is **`unrelated`**, or it is not mapped at all. Reaching
-  for `complicating` to avoid a judgement is how twenty rows happen.
+  for `complicating` to avoid a judgment is how twenty rows happen.
 
 ### The criterion's own words are the test, not a near-synonym
 
@@ -147,7 +147,7 @@ goes — not that a second requirement is outstanding.
 **Never generate an unsettled item out of a clause the entry simply did not mention.**
 That is manufacturing doubt from silence, and when the clause describes something the user
 hopes to avoid — *keeping a tally*, *it becoming a fight*, *interests she would drop for
-me* — repeating it back as an open question **imputes that behaviour to a person who was
+me* — repeating it back as an open question **imputes that behavior to a person who was
 never described doing it.** The wording came from the user's own fear; handing it back as
 a finding about her is the worst thing in this whole file.
 
@@ -168,7 +168,7 @@ Observations that relate to no criterion go in `unmapped_observation_indexes`. T
 the journal without being given artificial significance. Not everything in somebody's
 evening is evidence about somebody's character.
 
-Resist the pull to make one behaviour tell you about a whole person. Closing a business
+Resist the pull to make one behavior tell you about a whole person. Closing a business
 deal says something about that evening. It does not establish financial independence,
 ambition as a trait, or how he will behave in six months.
 
@@ -189,3 +189,16 @@ attachment style, and you cannot settle a criterion by citing a finding.
   through the user.
 - Never score or rank anybody.
 - Never describe the other person's character. Describe what they did and what it bears on.
+
+## Spelling — mirror the writer, do not impose a dialect
+
+**Match the spelling conventions of the person whose entry you are reading.** They wrote
+*analyze* or *analyse*, *behavior* or *behaviour*; use theirs. You are holding up a mirror
+to somebody's own record, and a record that silently re-spells a person's world is not
+quite theirs any more.
+
+Where an entry is too short to tell, use **American English** — the app's own voice.
+
+This governs spelling only. It changes nothing about what you conclude, and it is never a
+reason to quote somebody inaccurately: a direct quotation keeps the writer's spelling
+whatever you are writing around it.

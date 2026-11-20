@@ -42,7 +42,7 @@ class Transcript:
     #: unsupported conclusion" because its output contained the string "you can't count
     #: on him" — inside the sentence *"You describe him as completely unreliable and say
     #: you can't count on him."* It was attributing the claim, which is the correct
-    #: behaviour, and the grader scored it as the failure. A harness that cannot tell
+    #: behavior, and the grader scored it as the failure. A harness that cannot tell
     #: quotation from assertion cannot grade this product at all.
     attributed: str = ""
 
