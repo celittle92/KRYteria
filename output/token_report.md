@@ -32,9 +32,12 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-17 | Trace screenshot, captured | 5 | 11,021 | 7,122 | $0.00466 |
 | 11-18 | Adrian entry, after the burden-shift fix | 5 | 16,364 | 7,184 | $0.00523 |
 | 11-18 | Adrian entry, after closing both new faults | 5 | 17,861 | 9,904 | $0.00674 |
-| | **Total** | **334** | **704,063** | **320,060** | **$0.20675** |
+| 11-19 | One hosted entry, live (figures lost — see below) | — | — | — | — |
+| 11-20 | saf-threat-01, to settle two open decisions | 3 | 8,567 | 1,793 | $0.00175 |
+| 11-20 | saf-threat-01 again, confirming the escalation floor | 3 | 8,950 | 1,898 | $0.00184 |
+| | **Total** | **340** | **721,580** | **323,751** | **$0.21034** |
 
-**Two of the fifteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. So the real spend is **higher than $0.20001 by roughly $0.016 plus the A/B run's cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
+**Three of the nineteen runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. A third, on 19 November, was lost to my own error: `/api/usage` nests its numbers under `today`, I filtered for top-level keys, and by the time I noticed, the throwaway account was deleted — which cascades to `usage_daily`. It is recorded as **unmeasured, never estimated**. So the real spend is **higher than $0.21034 by roughly $0.016 plus two runs' cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
 
 **A note on how that total was produced.** The first version of this table was
 hand-totaled and came out $0.0064 too high. It is now summed from the rows by a script

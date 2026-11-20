@@ -57,6 +57,25 @@ SafetyCategory = Literal[
     "stalking_harassment", "self_harm",
 ]
 ConcernLevel = Literal["potential", "pattern", "disclosure", "immediate_danger"]
+
+#: Behaviors the charter names as dangerous in themselves, whatever else is in the entry.
+#:
+#: A **closed vocabulary**, the same shape as `data/themes.json` and for the same reason:
+#: the model is good at recognizing these and bad at being consistent about free text, and
+#: a floor applied to an unstable label means nothing. The prompt has described all five in
+#: prose since 2026-11-12; this makes them structured so code can act on them.
+#:
+#: **Why this is not a keyword list.** Detecting "a threat tied to leaving" from the words
+#: is exactly the mistake this project has made three times — a hand-written list catches
+#: the phrasings somebody thought of. The model does the recognizing; the code does the
+#: flooring.
+EscalationMarker = Literal[
+    "threat_tied_to_leaving",
+    "post_breakup_pursuit",
+    "strangulation_or_breathing",
+    "escalating",
+    "monitoring_with_behavior_change",
+]
 GapKind = Literal[
     "frequency", "pattern", "magnitude", "communication", "circumstances",
     "accountability", "impact", "definition", "comparison",
@@ -204,6 +223,12 @@ class SafetyOutput(_NoScoresNoLabels):
     concern_detected: bool = False
     category: SafetyCategory | None = None
     concern_level: ConcernLevel = "potential"
+    escalation: list[EscalationMarker] = Field(
+        default_factory=list,
+        description="Which of the charter's escalating behaviors the entry describes, if "
+                    "any. These set a floor under concern_level in code — report what is "
+                    "there and let the floor apply itself.",
+    )
     rationale: str | None = Field(
         default=None,
         description="Why this behavior may be concerning, described behaviorally. "

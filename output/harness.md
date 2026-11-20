@@ -20,8 +20,8 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,588 checks**, all offline, no API key, no network |
-| Spend | 17 live runs — 15 with token counts, 14 with a cost: 334 calls, **$0.207** — `output/usage_log.json` |
+| Tests | 5 suites, **1,597 checks**, all offline, no API key, no network |
+| Spend | 19 live runs — 17 with token counts, 16 with a cost: 340 calls, **$0.210** — `output/usage_log.json` |
 
 ---
 
@@ -250,6 +250,25 @@ plainly that nothing is verified rather than inventing something. Underneath is
 than this app does. A test asserts the acknowledgments contain no digit, no named
 service, and no availability claim.
 
+**The level is floored in code, not only asked for in the prompt** (2026-11-20). Settling
+two open eval decisions with one live case exposed a third thing: a threat tied to leaving
+came back at `pattern`, which is below `WITHHOLD_ANALYSIS_AT`, so the orchestrator did not
+halt and carried on into ordinary compatibility analysis — the charter's flattest
+prohibition. `pattern` means *repeated*; one incident was described.
+
+The prompt was the cause, one bullet from where it was the cause last time: the
+strangulation bullet ends *"Record these at `disclosure` at minimum"* and the threats
+bullet named no level at all. Both halves are fixed. `SafetyOutput.escalation` is now a
+**closed vocabulary** of the five escalating behaviors the charter already described in
+prose, and `CONCERN_FLOOR` raises the level to the floor each requires, tagged
+`policy:level_floored` in the trace. It only ever raises, and it supplies rather than
+rejects, like `ALWAYS_CHECK_SAFETY` and for the same reason.
+
+**It is deliberately not a keyword gate.** Recognizing *"a threat tied to leaving"* from
+the words is the mistake this project has made three times; the model recognizes and the
+code floors. Confirmed live: `coercive_control` / `disclosure`, `halted: True`, three
+calls rather than five because Reasoning and Reflection are skipped on a halt.
+
 **Both resource files re-verified 2026-11-20**, the standing rule before a demo and before
 submission. Thirteen of fifteen rows confirmed by fetching each organization's own page and
 checking that the number we print still appears on it; their `verified_at` moved to that
@@ -477,7 +496,7 @@ from a new browser is the one most likely to lose the race with the boot.
 
 ```bash
 python3      tests/test_offline.py      # 582 — store layer, needs no packages
-.venv/bin/python tests/test_contracts.py    # 215 — output contracts, demo provider
+.venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
 .venv/bin/python tests/test_api.py          # 333 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 384 — the harness, mostly that it REFUSES

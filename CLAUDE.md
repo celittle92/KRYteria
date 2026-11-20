@@ -41,7 +41,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   says about itself before diagnosing what it produced.**
 - **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
   / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total live spend to date:
-  **$0.20675** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
+  **$0.21034** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
 - **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
   call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
   checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
@@ -50,6 +50,26 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   this the orchestrator returned before `save_observations`, so her most serious entry
   was her least recorded one. **Never restore an early return there**; a test asserts
   the halt is set before the save.
+- **The concern LEVEL is floored in code too, not only asked for in the prompt**
+  (2026-11-20). `SafetyOutput.escalation` is a **closed vocabulary** — `threat_tied_to_leaving`,
+  `post_breakup_pursuit`, `strangulation_or_breathing`, `escalating`,
+  `monitoring_with_behavior_change` — and `agents/safety.CONCERN_FLOOR` raises
+  `concern_level` to the floor each one requires, tagged `policy:level_floored:<from>-><to>`.
+  **Found live:** a threat tied to leaving came back at `pattern`, below
+  `WITHHOLD_ANALYSIS_AT`, so the orchestrator never halted and mapped the threat to
+  *Communication*. That is Finding 1 reaching the same outcome through a door the Finding 1
+  fix did not cover — making the halt depend on `concern_level` is no help when the model
+  under-rates the level. The prompt was the cause again, one bullet from last time: the
+  strangulation bullet said *"Record these at `disclosure` at minimum"* and the threats
+  bullet named no level. **It only ever raises**, and it supplies rather than rejects.
+  **Never turn this into a keyword gate** — the model recognizes, the code floors; that is
+  the whole design, and a hand-written phrase list is the mistake this project has made
+  three times. Confirmed live: `coercive_control`/`disclosure`, `halted: True`.
+- **`saf-threat-01` expects `coercive_control`, not `physical`** — changed 2026-11-20 on
+  Christine's call, with `category_decision` recorded in the case file. The agent was right
+  and the case was wrong; the charter's table puts threats under coercive control. The
+  case's old `prose_lacks` failure is **resolved and was a grader artifact**, fixed by the
+  attribution and negation work; it could not be proved until the prose was stored in full.
 - **Stalking and other escalating patterns always get a safety check.**
   `agents/safety.ALWAYS_CHECK_SAFETY` supplies the charter's question when the model
   omits it, tagged `policy:safety_check_supplied` in the trace. It **supplies rather
@@ -302,7 +322,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,588 checks across 163 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,597 checks across 164 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

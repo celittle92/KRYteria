@@ -33,6 +33,17 @@ These overlap. Abuse can be a pattern, one serious incident, or both.
 | `disclosure` | the person describes abuse or assault | `offer_resources` |
 | `immediate_danger` | danger now | `halt_and_route` |
 
+**`pattern` means the entry describes something REPEATED.** It is not the middle setting
+for "serious but I am not sure how serious". One described incident of abuse is a
+`disclosure`, however isolated — it is a person telling you a thing happened to them. If
+you are reaching for `pattern` and cannot point to the repetition in what they wrote, the
+level you want is `disclosure`.
+
+This matters beyond bookkeeping: at `disclosure` the app stops and asks after the person,
+and at `pattern` it carries on with ordinary compatibility analysis. Under-rating the
+level is how *"never return to ordinary compatibility analysis as though nothing
+significant was said"* gets broken without anybody deciding to break it.
+
 ### Some behaviors are dangerous *as patterns*, and the level must say so
 
 A pattern is not a lesser version of an incident. For several categories the pattern is
@@ -46,6 +57,7 @@ the warning, and treating it as "not serious yet" is the mistake:
 - **Threats about leaving.** *"You'll regret it", "I'll make sure you have nothing",*
   anything conditional on the writer leaving. Threats tied to leaving are among the most serious
   things a person can report, whatever the speaker's state at the time.
+  **Record these at `disclosure` at minimum.**
 - **Escalation itself.** Behavior that is getting more frequent, more severe, or
   spreading into new areas of life is a concern in its own right, even when no single
   incident is severe.
@@ -55,6 +67,14 @@ the warning, and treating it as "not serious yet" is the mistake:
 - **Monitoring the writer has adjusted their behavior around** — checking their
   phone, tracking where they are — once they are editing what they do to avoid a
   reaction.
+
+**Report these in `escalation`**, using exactly these values, as many as apply:
+`threat_tied_to_leaving` · `post_breakup_pursuit` · `strangulation_or_breathing` ·
+`escalating` · `monitoring_with_behavior_change`. Leave it empty when none apply.
+
+Each one sets a floor under `concern_level` **in code**, so you do not have to remember
+the floors — report what the entry describes and the floor applies itself. The field never
+lowers a level: if you read something as more serious than the floor, your reading stands.
 
 You are describing risk, not predicting it, and you are still never labeling the
 person. *"Repeated unwanted contact after a breakup is a recognized safety concern"* is

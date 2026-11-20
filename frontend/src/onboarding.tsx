@@ -39,7 +39,40 @@ export function GettingStarted({ action }: { action?: ReactNode }) {
       <Eyebrow>Getting started</Eyebrow>
       <h2 className="font-serif text-2xl sm:text-3xl mt-1">Start with what matters to you.</h2>
 
-      <div className="mt-4 space-y-3 text-muted leading-relaxed">
+      {/* **What this is, in three questions, before anything else.**
+        *
+        * Three testers asked for this in three different ways. Alex M.: *"it needs to be
+        * more straightforward with what it does in the setup process."* Deborah L. went
+        * round the same idea three times — *"matching criteria for each other"*, then
+        * *"if a boyfriend and girlfriend use the app won't they be able to tell if they
+        * 'belong' together or not?"* By the third time it was not loose phrasing, it was
+        * her model of the product.
+        *
+        * Nothing here had ever answered it plainly. *"Relationships are complicated.
+        * Standards are not"* is a brand line, not an explanation, and the screen went
+        * straight from that to asking somebody to start typing standards.
+        *
+        * These three questions are Christine's own, written in a text message to her
+        * mother on 2026-11-20 — the clearest statement of this product that exists, and
+        * it took being asked by somebody who had misread it. Used verbatim. */}
+      <div className="mt-5 pl-4 border-l-2 border-accent/50 space-y-1">
+        <p className="voice text-ink leading-relaxed">
+          Are you compromising on what's important?
+        </p>
+        <p className="voice text-ink leading-relaxed">
+          Letting your standards slip?
+        </p>
+        <p className="voice text-ink leading-relaxed">
+          Seeing behaviors you want from people you are dating?
+        </p>
+      </div>
+      <p className="mt-3 text-sm text-muted leading-relaxed">
+        KRYteria is a self-reflection tool. It does not score a relationship, rank anybody,
+        or tell you to stay or go — it helps you examine your relationships against what
+        you value.
+      </p>
+
+      <div className="mt-5 space-y-3 text-muted leading-relaxed">
         <p>
           Before you can evaluate your experiences, you need to decide what is important.
         </p>

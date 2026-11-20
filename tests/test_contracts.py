@@ -400,6 +400,52 @@ def test_stalking_always_gets_a_safety_check() -> None:
           ALWAYS_CHECK_SAFETY["self_harm"][0] == "potential")
 
 
+def test_a_threat_tied_to_leaving_cannot_be_recorded_below_disclosure() -> None:
+    """The live finding of 2026-11-20, kept as a regression case.
+
+    `saf-threat-01` — *"He said if I ever tried to leave he'd make sure I regretted it.
+    He was drunk so I don't think he meant it."* — came back `coercive_control` /
+    **`pattern`**, so the halt never fired and KRYteria carried on into ordinary
+    compatibility analysis. `pattern` means *repeated*, and one incident was described.
+
+    The prompt was the cause and now states both the definition and the floor. This is
+    the deterministic backstop under it, because a prompt is the mechanism that failed.
+    """
+    from backend.agents.safety import CONCERN_FLOOR, enforce_concern_floor
+    from backend.models import SafetyOutput
+
+    out = SafetyOutput(
+        concern_detected=True, category="coercive_control", concern_level="pattern",
+        rationale="A threat tied to leaving.", escalation=["threat_tied_to_leaving"],
+    )
+    raised, was = enforce_concern_floor(out)
+    check("the level is raised to disclosure", raised.concern_level == "disclosure")
+    check("and the old level is reported for the trace", was == "pattern")
+
+    # It only ever raises. A model reading something as worse is not overruled downward.
+    worse = out.model_copy(update={"concern_level": "immediate_danger"})
+    kept, was2 = enforce_concern_floor(worse)
+    check("immediate danger is left alone", kept.concern_level == "immediate_danger")
+    check("and nothing is reported as floored", was2 is None)
+
+    # No concern, no floor — the field cannot manufacture a concern that was not found.
+    none = SafetyOutput(concern_detected=False, escalation=["threat_tied_to_leaving"])
+    quiet, was3 = enforce_concern_floor(none)
+    check("no concern detected means no floor", quiet.concern_level == "potential")
+    check("and nothing floored", was3 is None)
+
+    check("every marker in the vocabulary has a floor",
+          set(CONCERN_FLOOR) == set(SafetyOutput.model_fields["escalation"]
+                                    .annotation.__args__[0].__args__))
+
+    text = __import__("backend.agents.base", fromlist=["load_prompt"]).load_prompt(
+        "safety.md")
+    check("the prompt states the floor for threats about leaving",
+          "Record these at `disclosure` at minimum" in text)
+    check("and says pattern means repeated",
+          "describes something REPEATED" in text or "means the entry describes" in text)
+
+
 def test_the_safety_prompt_does_not_reserve_the_question_for_emergencies() -> None:
     """The regression: the prompt used to say "for possible immediate danger"."""
     from backend.agents.base import load_prompt
