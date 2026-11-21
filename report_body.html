@@ -754,15 +754,15 @@ to disagree with one.</p>
 <figure>
   <img alt="The execution trace in the app: a table headed How this was produced, listing narrative, safety, evidence, reasoning and reflection with each agent's input tokens, output tokens and latency in milliseconds." src="{{TRACE_DARK}}">
   <figcaption><strong>What each agent did, in the app rather than in a log — and this is
-  a different run from the table above.</strong> The table is the 12 November trace;
-  re-running it to match the screenshot would have meant paying for the same evidence
-  twice, so the figure is a second live run instead, and says so. A run on 17
-  November, opened with <em>"See what each part of KRYteria did"</em>:
-  five agents, their tokens and their latency. Reasoning is again the expensive one —
-  3,210 in, 3,303 out, 51 seconds, more than all four others together — because it is the
-  only agent whose job is to disagree. The line underneath is the privacy rule holding at
-  the point it would be easiest to break: <em>"Tool names and counts only. Nothing you
-  wrote is recorded here."</em> This run cost <strong>$0.00466</strong> and is row 14 of
+  a different run from the table above.</strong> The table is the 12 November trace. A
+  live run on <strong>21 November</strong> in Jane's account, opened with <em>"See what
+  each part of KRYteria did"</em>: five agents, their tokens and their latency. Evidence
+  and Reasoning are the expensive pair — 3,430 in / 2,226 out and 4,542 in / 2,647 out,
+  28 and 27 seconds — against roughly four seconds each for Safety and Reflection,
+  because they are the two agents that have to hold the whole record in view. The line
+  underneath is the privacy rule holding at the point it would be easiest to break:
+  <em>"Tool names and counts only. Nothing you wrote is recorded here."</em> This run cost
+  <strong>$0.00437</strong> and is the last row of
   <code>output/usage_log.json</code>.</figcaption>
 </figure>
 
@@ -849,7 +849,8 @@ belong in a column of figures that were.</p>
   <tr><td>saf-threat-01, settling two open eval decisions (§6)</td><td class="num">3</td><td class="num">8,567</td><td class="num">1,793</td><td class="num">$0.0018</td></tr>
   <tr><td>saf-threat-01 again, confirming the escalation floor (§6)</td><td class="num">3</td><td class="num">8,950</td><td class="num">1,898</td><td class="num">$0.0018</td></tr>
   <tr><td>Full safety pack, live, after the escalation floor (§6)</td><td class="num">56</td><td class="num">169,152</td><td class="num">26,713</td><td class="num">$0.0303</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>396</strong></td><td class="num"><strong>890,732</strong></td><td class="num"><strong>350,464</strong></td><td class="num"><strong>$0.241</strong></td></tr>
+  <tr><td>One dump in Jane's account, to re-take the trace figure (§4)</td><td class="num">5</td><td class="num">15,980</td><td class="num">5,539</td><td class="num">$0.0044</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>401</strong></td><td class="num"><strong>906,712</strong></td><td class="num"><strong>356,003</strong></td><td class="num"><strong>$0.245</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>, and the
@@ -886,8 +887,8 @@ how much.</p>
 more pass". Simulated usage never reaches the usage table, so demo mode cannot exhaust a
 budget or mask one.</p>
 
-<p class="meta"><strong>Measured live spend across the entire project to date: $0.241</strong>
-across 396 calls — the table above.</p>
+<p class="meta"><strong>Measured live spend across the entire project to date: $0.245</strong>
+across 401 calls — the table above.</p>
 
 <!-- ───────────────────────────── 6. SAFETY ───────────────────────────── -->
 <h2>6. Safety</h2>

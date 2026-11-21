@@ -55,8 +55,9 @@ shot() {                       # shot <name> <path-and-query> [width] [height]
 
 echo "Writing to $OUT"
 
-# The sign-in screen: nine characters, openable without typing anything. This is the
-# first thing a grader sees, so it belongs in the report.
+# The landing page: one decision — start an account, or open a finished journal. The
+# nine demonstration people moved inside the demo on 2026-11-20, so this no longer shows
+# a list of strangers. First thing a grader sees, so it belongs in the report.
 shot front-door "/" 1440 1180
 
 # Catherine's two profiles. The same criterion carries a different tier in each, and
@@ -67,10 +68,12 @@ shot profiles-dark "/criteria?demo=thelonggame" 1440 1300
 # recorded decision has been "give it more time" three times.
 shot patterns-dark "/patterns?demo=theintentionalist" 1440 1180
 
-# Her progress view — counts and dates, never a score.
-shot progress-dark "/progress?demo=theintentionalist" 1440 1300
+# Her progress view — counts and dates, never a score, and since 2026-11-20 the
+# questions and suggestions waiting on her sit directly under the counts rather than on
+# a separate Reflection tab. Taller than the others so the interactive part is in frame.
+shot progress-dark "/progress?demo=theintentionalist" 1440 1500
 
-# The Journal, which is where the agents' own reasoning is readable.
+# Journal History, which is where the agents' own reasoning is readable.
 shot journal-dark "/journal?demo=thelonggame" 1440 1300
 
 # Warm theme. Bianca's account is set to warm in the seed, so this needs no toggling —

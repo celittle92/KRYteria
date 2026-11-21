@@ -23,7 +23,7 @@ Last updated 2026-11-21.
 | The idea — novelty + real value | 21 | — (judged) | **Strong** |
 | The app works | 15 | real tools, real data, no crashes | **Strong** — hosted and current at kryteria.onrender.com |
 | Staff can run it | 5 | fresh clone, ≤10 min, all-or-nothing | **Have it — verified 2026-11-20.** `tools/fresh_clone_check.sh`: clone, `.env` one level up, venv, pip, both seeds, server up, nine characters signing in — every check PASS in **10 seconds** against the 10-minute limit, re-run 2026-11-21 against the current commit. Log: `output/fresh_clone_check.log`. It went red once on the way — the app would not say which `.env` it had read when the key in it was blank, which is the staff's own scenario — and had been passing before only because a stale shell export was supplying a real key |
-| Look + feel | 10 | — (judged) | **Screenshots are STALE.** The seven in `output/screenshots/` are dated 16–17 Nov and predate the rebuilt front door, the six-item navigation, Journal History and the merged My Progress. `front-door.png` and `progress-dark.png` show an app that no longer exists. Retake with `tools/screenshots.sh` from a real terminal before submitting |
+| Look + feel | 10 | — (judged) | **Have it — retaken 2026-11-21.** Six figures from `tools/screenshots.sh` against the current build (new landing page, six-item navigation, Journal History, My Progress with the questions on it), plus the execution trace re-captured from a fresh live run because the old one showed the eight-tab navigation. Both themes. `output/screenshots/` |
 | Motivation + what's new | 8 | named existing products compared against | **Have it** — report §2, four categories with named products |
 | Agent design | 10 | one real run traced step by step + screenshots | **Have it** — report §4 (Jane, 12 Nov), `tools/trace_one.py`, SVG diagram |
 | Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 20 runs, 18 measured / 396 calls / $0.24061 |
@@ -708,7 +708,7 @@ and the clean-up is verified by re-running.
 
 The Agent-design row (10 pts) names its evidence as *"one real run traced step by step
 with screenshots of what each agent did"*, and the report had the trace as a **table of
-numbers** with no screenshot. `output/screenshots/trace-dark.png` closes that, and the
+numbers** with no screenshot. `output/screenshots/trace-dark.jpg` closes that, and the
 same image also satisfies Tokenomics' *"real token counts … in logs or app screenshots
 (the app can display its own token usage)"*.
 
@@ -856,11 +856,9 @@ across five files the moment they moved.
 
 **As of 2026-11-21, before submission, this is the whole list.**
 
-1. **Retake the screenshots.** The seven in `output/screenshots/` are dated 16–17 Nov and
-   show the old eight-tab app, the old front door and a My Progress without the questions
-   on it. `bash tools/screenshots.sh` from a real terminal with the app running — Chrome
-   will not start inside the sandbox. This is the Look + Feel row, 10 points, judged on
-   exactly those images.
+1. ~~Retake the screenshots~~ **done 2026-11-21.** Six from `tools/screenshots.sh`, plus
+   the execution trace re-captured from a fresh live run ($0.00437) because the old one
+   showed the eight-tab navigation that no longer exists.
 2. **Submit on Canvas** — the repo link, `report.html`, `slides.html`.
 3. **Optional: the 2–3 minute demo video.** The assignment's stated backup if the app will
    not run for the teaching staff. A free instance sleeps, so this is cheap insurance.

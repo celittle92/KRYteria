@@ -36,9 +36,10 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-20 | saf-threat-01, to settle two open decisions | 3 | 8,567 | 1,793 | $0.00175 |
 | 11-20 | saf-threat-01 again, confirming the escalation floor | 3 | 8,950 | 1,898 | $0.00184 |
 | 11-20 | Full safety pack, live, after the escalation floor | 56 | 169,152 | 26,713 | $0.03027 |
-| | **Total** | **396** | **890,732** | **350,464** | **$0.24061** |
+| 11-21 | One dump in Jane's account, to re-take the trace figure | 5 | 15,980 | 5,539 | $0.00437 |
+| | **Total** | **401** | **906,712** | **356,003** | **$0.24498** |
 
-**Three of the twenty runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. A third, on 19 November, was lost to my own error: `/api/usage` nests its numbers under `today`, I filtered for top-level keys, and by the time I noticed, the throwaway account was deleted — which cascades to `usage_daily`. It is recorded as **unmeasured, never estimated**. So the real spend is **higher than $0.21034 by roughly $0.016 plus two runs' cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
+**Three of the twenty-one runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. A third, on 19 November, was lost to my own error: `/api/usage` nests its numbers under `today`, I filtered for top-level keys, and by the time I noticed, the throwaway account was deleted — which cascades to `usage_daily`. It is recorded as **unmeasured, never estimated**. So the real spend is **higher than $0.21034 by roughly $0.016 plus two runs' cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
 
 **A note on how that total was produced.** The first version of this table was
 hand-totaled and came out $0.0064 too high. It is now summed from the rows by a script
