@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,629 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,631 checks**, all offline, no API key, no network |
 | Spend | 20 live runs — 18 with token counts, 17 with a cost: 396 calls, **$0.241** — `output/usage_log.json` |
 
 ---
@@ -416,7 +416,7 @@ and needs no account, and it refuses *creation* while leaving every existing use
 sign-in, journal and analysis untouched.
 
 ```bash
-.venv/bin/python tests/test_api.py        # 343 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 345 checks, including all of the above
 ```
 
 ---
@@ -508,7 +508,7 @@ from a new browser is the one most likely to lose the race with the boot.
 python3      tests/test_offline.py      # 601 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 343 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_api.py          # 345 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 387 — the harness, mostly that it REFUSES
 ```
 

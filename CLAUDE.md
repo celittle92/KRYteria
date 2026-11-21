@@ -420,7 +420,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,629 checks across 168 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,631 checks across 169 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

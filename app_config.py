@@ -85,6 +85,28 @@ def _load_dotenv_files() -> str | None:
     return found
 
 
+def env_file_in_use() -> str | None:
+    """Which ``.env`` the app reads, whether or not it holds a usable key.
+
+    **The failure path needs this more than the success path does.** `load_settings`
+    works out the same answer and then raises before returning it when the key is
+    missing, so `/api/health` reported `env_source: null` in precisely the situation the
+    field exists for — somebody whose key is not being picked up, trying to find out
+    which file the app is actually reading.
+
+    Found on 2026-11-21 by `tools/fresh_clone_check.sh`, which writes an empty
+    `PORTKEY_API_KEY` one level above the clone and asserts the app finds that file. It
+    had been passing for the wrong reason: a stale `export` in the shell was supplying a
+    real key, so `load_settings` returned normally. With the export gone the check went
+    red and the reporting gap it had been masking showed up — which is the staff's own
+    scenario, since their `.env` sits one level above the repo.
+
+    Safe to call repeatedly: `load_dotenv` does not overwrite a variable that is already
+    set.
+    """
+    return _load_dotenv_files()
+
+
 def load_settings(model_override: str | None = None) -> Settings:
     env_source = _load_dotenv_files()
     api_key = os.getenv(PORTKEY_KEY_NAME)

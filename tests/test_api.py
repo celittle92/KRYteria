@@ -974,6 +974,34 @@ def test_someone_who_has_not_said_where_they_are_is_still_offered_something() ->
           str([r["name"] for r in urgent]))
 
 
+def test_health_says_which_env_file_it_read_even_when_the_key_is_unusable() -> None:
+    """The field exists for the failure case, so it has to survive the failure case.
+
+    `load_settings` works out `env_source` and then raises before returning it when
+    `PORTKEY_API_KEY` is missing or blank, so `/api/health` reported `env_source: null`
+    in exactly the situation somebody needs it: their key is not being picked up and they
+    want to know which file the app is reading.
+
+    **That is the teaching staff's own scenario** — their `.env` sits one level above the
+    clone. `tools/fresh_clone_check.sh` caught it on 2026-11-21, and only then: it had
+    been passing because a stale `export` in the shell was supplying a real key, so the
+    success path ran and the gap stayed hidden.
+    """
+    import app_config
+
+    searched = app_config.env_file_in_use()
+    check("the app can say which .env it reads, independently of the key",
+          searched is None or isinstance(searched, str))
+
+    # The health route must report it on both paths. Checked at the source rather than by
+    # unsetting a real key mid-suite, which would race every other test in this file.
+    source = (PROJECT_DIR / "backend" / "main.py").read_text(encoding="utf-8")
+    after_except = source.split("except RuntimeError", 1)[1][:600]
+    check("the failure branch fills in env_source",
+          "env_file_in_use()" in after_except,
+          "health leaves env_source None when the key is missing")
+
+
 def test_a_fresh_deployment_can_open_the_walkthrough() -> None:
     """*See it working* is the demo path on the landing page. It must exist on the host.
 

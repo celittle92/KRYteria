@@ -12,7 +12,7 @@ That makes evidence collection the work, and the writing the easy part.
 figure names the file it came from. If something is an intention rather than a fact, it
 lives under *Still missing*.
 
-Last updated 2026-11-20.
+Last updated 2026-11-21.
 
 ---
 
@@ -23,13 +23,13 @@ Last updated 2026-11-20.
 | The idea — novelty + real value | 21 | — (judged) | **Strong** |
 | The app works | 15 | real tools, real data, no crashes | **Strong** — hosted and current at kryteria.onrender.com |
 | Staff can run it | 5 | fresh clone, ≤10 min, all-or-nothing | **Have it — verified 2026-11-20.** `tools/fresh_clone_check.sh`: clone, `.env` one level up, venv, pip, both seeds, server up, nine characters signing in — every check PASS in **13 seconds** against the 10-minute limit. Log: `output/fresh_clone_check.log` |
-| Look + feel | 10 | — (judged) | **Have it** — six screenshots, both themes, in `output/screenshots/` |
+| Look + feel | 10 | — (judged) | **Screenshots are STALE.** The seven in `output/screenshots/` are dated 16–17 Nov and predate the rebuilt front door, the six-item navigation, Journal History and the merged My Progress. `front-door.png` and `progress-dark.png` show an app that no longer exists. Retake with `tools/screenshots.sh` from a real terminal before submitting |
 | Motivation + what's new | 8 | named existing products compared against | **Have it** — report §2, four categories with named products |
 | Agent design | 10 | one real run traced step by step + screenshots | **Have it** — report §4 (Jane, 12 Nov), `tools/trace_one.py`, SVG diagram |
-| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 17 runs, 15 measured / 334 calls / $0.20675 |
-| Safety | 8 | a defense shown *stopping* something | **Have it** — `output/safety_results.*` plus the demo entry in report §6 |
-| Impact + metrics | 5 | a real user tried it | **Have it — 2026-11-19.** Alex M., 34, New York, 27 minutes, quoted with permission — `output/user_test.md`, report §7, slide 9. The A/B against a chatbot on the same model is done too |
-| Report design | 2 | — | **Have it** — `report.html`, self-contained, 6 images inlined |
+| Tokenomics | 8 | real token counts from real runs | **Have it** — `output/token_report.md`, 20 runs, 18 measured / 396 calls / $0.24061 |
+| Safety | 8 | a defense shown *stopping* something | **Have it, and current as of 2026-11-20.** The full pack re-run live after the escalation floor: 2 pass / 1 fail / 15 manual as recorded, **2 / 0 / 16 re-graded** on the same stored prose. `output/safety_results.*`, archived in `output/live_runs/` |
+| Impact + metrics | 5 | a real user tried it | **Have it — two testers.** Alex M., 34, New York (27 minutes) and Deborah L., 70, Massachusetts, both quoted with permission — `output/user_test.md`, report §7, slide 9. The A/B against a chatbot on the same model is done too |
+| Report design | 2 | — | **Have it** — `report.html`, self-contained, 7 images inlined |
 | Slides content + design | 8 | — | **Have it** — `slides.html`, 10 slides, diagram + 3 screenshots inlined |
 
 ---
@@ -853,6 +853,20 @@ across five files the moment they moved.
 ---
 
 ## Still missing — the actual to-do list
+
+**As of 2026-11-21, before submission, this is the whole list.**
+
+1. **Retake the screenshots.** The seven in `output/screenshots/` are dated 16–17 Nov and
+   show the old eight-tab app, the old front door and a My Progress without the questions
+   on it. `bash tools/screenshots.sh` from a real terminal with the app running — Chrome
+   will not start inside the sandbox. This is the Look + Feel row, 10 points, judged on
+   exactly those images.
+2. **Submit on Canvas** — the repo link, `report.html`, `slides.html`.
+3. **Optional: the 2–3 minute demo video.** The assignment's stated backup if the app will
+   not run for the teaching staff. A free instance sleeps, so this is cheap insurance.
+
+Everything else below is history, kept because the reasoning is the record.
+
 
 1. ~~`report.html`~~ **drafted 2026-11-12, revised through 2026-11-16.**
    Self-contained, 6 screenshots + an SVG diagram inlined. Edit `report_body.html`,

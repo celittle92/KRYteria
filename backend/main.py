@@ -174,6 +174,10 @@ def health():
     except RuntimeError as e:
         key_found, model_override_ignored = False, None
         key_error = str(e).splitlines()[0]
+        # Say which file was read even though the key in it is unusable. Without this,
+        # the one moment somebody needs to know where the app is looking is the one
+        # moment it will not tell them.
+        env_source = app_config.env_file_in_use()
 
     return {
         "ok": True,
