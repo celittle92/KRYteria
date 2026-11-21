@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,619 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,624 checks**, all offline, no API key, no network |
 | Spend | 20 live runs — 18 with token counts, 17 with a cost: 396 calls, **$0.241** — `output/usage_log.json` |
 
 ---
@@ -416,7 +416,7 @@ and needs no account, and it refuses *creation* while leaving every existing use
 sign-in, journal and analysis untouched.
 
 ```bash
-.venv/bin/python tests/test_api.py        # 333 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 338 checks, including all of the above
 ```
 
 ---
@@ -508,7 +508,7 @@ from a new browser is the one most likely to lose the race with the boot.
 python3      tests/test_offline.py      # 601 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 333 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_api.py          # 338 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 387 — the harness, mostly that it REFUSES
 ```
 
@@ -516,6 +516,23 @@ All five are free, offline, and need no API key. **Live runs cost money and refu
 start without `--yes-spend-credits`, after printing the call count.**
 
 ### The front door, rebuilt for the phone it is actually read on (2026-11-20)
+
+**And it shipped with the primary demo path broken, for about ten minutes.** *See it
+working* opens the `demo` account, and `_seed_on_boot` had only ever built the
+nine-character ecosystem — so the button returned 404 on the host while passing locally,
+where that account had been seeded by hand months of runs earlier. Christine found it
+immediately: *"I can't get into the demo."*
+
+The signal was there and I walked past it. The API-level test written the same hour could
+not find `demo` in its throwaway database either, and I moved the test offline rather than
+asking why the account was missing. **A test that cannot find the thing it is testing is
+evidence about the thing, not about the test.**
+
+Fixed by seeding both on boot, and the regression test now drives `_seed_on_boot` itself
+rather than calling the two seeders by hand — which would have passed against the broken
+build. A mutation check (remove the line, run the suite, restore) confirms it fails when
+the defect is reintroduced. It also caught the test *crashing* rather than failing on a
+missing account, which would have taken the rest of the suite down with it.
 
 **Every tester used a phone. The app was built on a laptop**, where the landing page's two
 columns sit side by side and nothing is below the fold. Christine spotted it: *"Everyone

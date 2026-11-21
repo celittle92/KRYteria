@@ -60,7 +60,19 @@ def _announce_mode() -> None:
 
 
 def _seed_on_boot() -> None:
-    """Rebuild the synthetic demo account at startup when ``KRYTERIA_SEED_ON_BOOT=true``.
+    """Rebuild the synthetic demo data at startup when ``KRYTERIA_SEED_ON_BOOT=true``.
+
+    **Both halves, and the walkthrough first.** This seeded only the nine-character
+    ecosystem until 2026-11-20, which was survivable while the landing page offered nine
+    characters and nothing else. The rebuilt front door makes *See it working* open the
+    ``demo`` account — the hand-built exhibit — and that account had never been seeded on
+    the host at all, so the primary path into the product returned 404 in production while
+    passing locally, where it had been seeded by hand.
+
+    Christine found it in about a minute: *"I can't get into the demo."* The signal was
+    there and I walked past it — the API-level test I wrote for this could not find
+    ``demo`` in its throwaway database either, and I moved the test offline instead of
+    asking why the account was missing.
 
     Free hosting tiers mostly give you an ephemeral disk: the database is gone after a
     restart or a redeploy, and a grader who opens the link gets an empty application with
@@ -82,6 +94,18 @@ def _seed_on_boot() -> None:
         return
     try:
         from .seed_characters import PartialSeed, seed
+        from .seed_demo import DEMO_HANDLE
+        from .seed_demo import seed as seed_walkthrough
+
+        # The walkthrough account is what "See it working" opens, so it is seeded first
+        # and its failure is reported on its own. Idempotent: returns early if it exists.
+        try:
+            seed_walkthrough(get_store())
+            log.warning("Walkthrough account ready: %s.", DEMO_HANDLE)
+        except Exception:
+            log.exception(
+                "Seeding the walkthrough account FAILED — 'See it working' will 404."
+            )
 
         try:
             built = seed(get_store())

@@ -214,6 +214,15 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   per-profile delete route** — nine tables reference a profile, most cascading, and it
   holds the assessments made under it. A test asserts the route does not exist. Account
   deletion remains the way to erase.
+- **`_seed_on_boot` seeds BOTH the walkthrough and the nine characters.** It seeded only
+  the characters until 2026-11-20, which was harmless while the landing page offered the
+  nine and nothing else — and became *"See it working"* returning **404 in production**
+  the moment the front door was rebuilt around the `demo` account. It passed locally
+  because `demo` had been seeded there by hand long before. **Never point a UI path at a
+  demo account without checking the boot seeder builds it.**
+  `tests/test_api.py::test_a_fresh_deployment_can_open_the_walkthrough` drives
+  `_seed_on_boot` itself — not the two seeders by hand, which would pass against the
+  broken build — and a mutation check confirmed it fails when the line is removed.
 - **The demo characters live INSIDE the demo, not on the landing page** (2026-11-20).
   `components/scenarios.tsx` is an "Other scenarios" drawer, **gated on
   `account.is_demo === 1`** — never render it for a real account, because an affordance
@@ -356,7 +365,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,619 checks across 166 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,624 checks across 167 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

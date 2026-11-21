@@ -974,6 +974,75 @@ def test_someone_who_has_not_said_where_they_are_is_still_offered_something() ->
           str([r["name"] for r in urgent]))
 
 
+def test_a_fresh_deployment_can_open_the_walkthrough() -> None:
+    """*See it working* is the demo path on the landing page. It must exist on the host.
+
+    **This shipped broken on 2026-11-20 and Christine found it in a minute:** *"I can't
+    get into the demo."* `_seed_on_boot` built the nine-character ecosystem and never the
+    `demo` account, which was survivable while the landing page offered only the nine —
+    and became the primary demo path returning 404 in production the moment the front
+    door was rebuilt around it. It passed locally because `demo` had been seeded there by
+    hand, months of runs ago.
+
+    So this seeds a database **the way the host seeds it** and asks whether the button
+    works. A test against an empty database cannot answer that, which is the mistake that
+    let it through: the API-level check written the same hour could not find `demo` in its
+    throwaway database either, and that was treated as the test being in the wrong place
+    rather than as the account being missing.
+    """
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    from backend.seed_demo import DEMO_HANDLE
+    from backend.seed_demo import seed as seed_walkthrough
+    from backend.store import Store as _Store
+
+    import os as _os
+
+    from backend import main as _main
+
+    fresh = _Store(_P(_tf.mkdtemp()) / "boot.db")
+
+    # Drive `_seed_on_boot` itself rather than calling the two seeders by hand — the bug
+    # was that the boot path called only one of them, so a test that seeds both would
+    # have passed against the broken build.
+    before_env = _os.environ.get("KRYTERIA_SEED_ON_BOOT")
+    before_store = _main.get_store
+    _os.environ["KRYTERIA_SEED_ON_BOOT"] = "true"
+    _main.get_store = lambda: fresh  # type: ignore[assignment]
+    try:
+        _main._seed_on_boot()
+    finally:
+        _main.get_store = before_store  # type: ignore[assignment]
+        if before_env is None:
+            _os.environ.pop("KRYTERIA_SEED_ON_BOOT", None)
+        else:
+            _os.environ["KRYTERIA_SEED_ON_BOOT"] = before_env
+
+    check("boot seeding builds the nine characters",
+          fresh.get_account_by_handle("theintentionalist") is not None)
+
+    account = fresh.get_account_by_handle(DEMO_HANDLE)
+    check("the walkthrough account exists after a boot seed", account is not None)
+    if account:
+        check("and it is flagged as a demo, so /api/demo/signin will open it",
+              account["is_demo"] == 1)
+        n = len(fresh.list_entries(account["id"]))
+        check("and it is populated rather than an empty shell", n >= 5, f"{n} entries")
+
+    # Seeding twice must not duplicate or wipe: the host restarts constantly.
+    #
+    # Guarded on `account` deliberately. Written unguarded, this raised a TypeError when
+    # the account was missing — so the mutation check that proved the test works found it
+    # *crashing* rather than failing, which aborts every test after it. A regression test
+    # that takes the suite down with it reports the wrong thing about the wrong file.
+    if account:
+        seed_walkthrough(fresh)
+        again = fresh.get_account_by_handle(DEMO_HANDLE)
+        check("seeding again is idempotent",
+              bool(again) and again["id"] == account["id"])
+
+
 def test_a_fresh_deployment_has_resources_and_research() -> None:
     """The two things whose absence fails silently.
 
