@@ -267,6 +267,28 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   means the UI must not imply one is the normal case. Used by BrainDump, QuickLog and
   Checklist. **The person is never inferred from the text** — names collide, and a
   misattribution files evidence against the wrong record silently.
+- **Checklist is NOT in the navigation** (2026-11-20, Christine's call). The route
+  `/checklist` still works and the feature is built and tested — it is simply not one of
+  the things a first-time visitor has to work out. Her reason is a real gap, not a
+  preference: *"it's not clear what KRYteria agents do with it once you select whether
+  something is clear or not."* Ticking an indicator records an observation and
+  deliberately does **not** move an assessment, which is the correct rule and leaves the
+  screen with no visible consequence. **Do not re-add it to `NAV`** without first giving
+  it a visible result.
+- **"Journal" is "Journal History" on screen.** The Brain Dump is where you write; the
+  other screen is the record. Component and route names stay `Journal` / `/journal`.
+- **My Progress does not re-list the findings.** It used to render every open pattern
+  under "What recurs" — the same content the Patterns screen shows, minus the
+  alternatives, the unknowns and the entries. Three screens showing the same findings at
+  three depths is what made Christine ask *"I'm not sure what the difference between the
+  Patterns and Reflection pages are."* Progress is the **longitudinal** view (standards
+  history, themes, postponements, decisions) and now carries a count and a link instead.
+  **Patterns is where KRYteria's conclusions live; Reflection is where its questions
+  live**, and both subtitles now say so and point at each other.
+- **The mobile nav WRAPS, it does not scroll sideways.** At 375px the strip was 697px in
+  a 335px viewport, so half the destinations were hidden behind a scroll with no
+  affordance. Two rows of seven is not elegant; it is visible, which beats elegant. A
+  hidden nav item is the same failure as a rule enforced in a layer nobody reaches.
 - **Checklist Mode has a UI**: `frontend/src/screens/Checklist.tsx`, route `/checklist`.
   Generate indicators from a criterion (one model call, off the brain-dump path), then
   record observations in four states. **Ticking never moves a status**, and

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api, type Person, type Progress } from "../api";
 import { PersonPicker } from "../components/people";
-import { Card, DECISION_COPY, Empty, Eyebrow, Section, Spinner, StrengthPill } from "../components/ui";
+import { Card, DECISION_COPY, Empty, Eyebrow, Section, Spinner } from "../components/ui";
 
 /**
  * My Progress — the longitudinal view, and the screen most at risk of becoming a
@@ -182,19 +182,35 @@ export default function ProgressScreen() {
         </Section>
       )}
 
+      {/* **A pointer, not a second copy.**
+        *
+        * This section used to re-list every open finding under "What recurs" — the same
+        * content the Patterns screen already shows, minus the alternative explanations,
+        * the still-unknowns and the entries each one rests on. Christine, 2026-11-20:
+        * *"I think there are too many tabs, and to be honest I'm not sure what the
+        * difference between the Patterns and Reflection pages are."*
+        *
+        * Part of that was a naming problem and part of it was this: three screens
+        * rendering the same findings at three depths teaches somebody that the tabs are
+        * interchangeable. My Progress is the longitudinal view — how your standards
+        * moved, what you keep writing about, what you put off. The findings themselves
+        * live in one place. */}
       {data.open_patterns.length > 0 && (
-        <Section title="What recurs" subtitle="Findings still open, each resting on entries you can inspect.">
-          <Card>
-            <ul className="divide-y divide-[rgb(var(--line))]">
-              {data.open_patterns.map((p) => (
-                <li key={p.id}
-                    className="px-5 py-4 flex flex-col sm:flex-row sm:items-start
-                               sm:justify-between gap-2 sm:gap-4">
-                  <span className="text-muted text-sm flex-1">{p.statement}</span>
-                  <StrengthPill strength={p.evidence_strength} />
-                </li>
-              ))}
-            </ul>
+        <Section title="What recurs">
+          <Card className="p-6">
+            <p className="text-muted text-sm leading-relaxed">
+              KRYteria has{" "}
+              <strong className="text-ink">
+                {data.open_patterns.length}{" "}
+                {data.open_patterns.length === 1 ? "open finding" : "open findings"}
+              </strong>{" "}
+              across what you have written — each one naming the entries it rests on, the
+              other explanations it could have, and what it still does not know.
+            </p>
+            <a href="/patterns"
+               className="inline-block mt-4 text-accent hover:underline text-sm">
+              See them in Patterns →
+            </a>
           </Card>
         </Section>
       )}

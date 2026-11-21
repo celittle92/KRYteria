@@ -298,7 +298,7 @@ function Result({ entry, analysis, defaultRetention, onDone, criterionNames }: {
                 ? "observation" : "observations"}
               {analysis.analysis_recorded.mappings > 0 &&
                 `, ${analysis.analysis_recorded.mappings} mapped to your criteria`}
-              . <a href="/journal" className="text-accent hover:underline">Your Journal</a>
+              . <a href="/journal" className="text-accent hover:underline">Your Journal History</a>
             </p>
           )}
         </Card>

@@ -18,13 +18,29 @@ import Settings from "./screens/Settings";
  * Brain Dump is first in the navigation and first in the tab order, because it is the
  * primary interaction — not an optional chatbot buried in the interface.
  */
+/**
+ * The navigation, in the order somebody actually moves through the product.
+ *
+ * **Checklist is deliberately absent, and its route still works.** Christine, 2026-11-20:
+ * *"It's much easier than the brain dump to use BUT it doesn't feel as helpful and it's
+ * not clear what KRYteria agents do with it once you select whether something is clear
+ * or not. It feels redundant."* She is describing a real gap rather than a preference —
+ * ticking an indicator records an observation and deliberately does **not** move an
+ * assessment, which is the correct rule and leaves the screen with no visible
+ * consequence. It is P1 in the spec, it is built and tested, and `/checklist` still
+ * loads for anyone who has the link. It is simply not one of the things a first-time
+ * visitor should have to work out.
+ *
+ * **"Journal History" rather than "Journal"**, also hers: the Brain Dump is where you
+ * write, so the other screen needs a name that says it is the record rather than a
+ * second place to start.
+ */
 const NAV = [
   { to: "/", label: "Brain Dump", end: true },
   // Second, right after writing: rereading what you wrote and what KRYteria made of it
   // is the other half of the primary interaction, and it had no screen at all.
-  { to: "/journal", label: "Journal" },
+  { to: "/journal", label: "Journal History" },
   { to: "/criteria", label: "My KRYteria" },
-  { to: "/checklist", label: "Checklist" },
   { to: "/patterns", label: "Patterns" },
   { to: "/reflection", label: "Reflection" },
   { to: "/progress", label: "My Progress" },
@@ -262,14 +278,25 @@ export default function App() {
             </div>
           </div>
 
-          <nav className="flex gap-1 overflow-x-auto -mb-px" aria-label="Main">
+          {/* **Wraps on a phone instead of scrolling sideways.**
+            *
+            * Measured at 375px: the strip is 697px wide in a 335px viewport, so roughly
+            * half the app's destinations sat off-screen behind a horizontal scroll with
+            * no affordance saying so. Four testers could not find things; one of them
+            * could not find the way out. A hidden navigation item is the same failure as
+            * a rule enforced in a layer nobody reaches.
+            *
+            * Two rows of seven is not elegant. It is visible, which beats elegant. */}
+          <nav className="flex flex-wrap gap-1 -mb-px sm:flex-nowrap sm:overflow-x-auto"
+               aria-label="Main">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `px-3 py-2.5 text-sm whitespace-nowrap border-b-2 transition-colors ${
+                  `px-2.5 py-2 text-[13px] sm:px-3 sm:py-2.5 sm:text-sm
+                   whitespace-nowrap border-b-2 transition-colors ${
                     isActive
                       ? "border-accent text-ink"
                       : "border-transparent text-muted hover:text-ink"

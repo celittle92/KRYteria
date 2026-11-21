@@ -28,7 +28,7 @@ export default function Patterns() {
     <div>
       <Section
         title="Patterns"
-        subtitle="What recurs across what you've written. Every finding names the entries it rests on, so you can check it yourself."
+        subtitle="What KRYteria has concluded, and why. Every finding names the entries it rests on, so you can check it yourself. Nothing here asks anything of you — questions live in Reflection."
       >
         {settled.length === 0 ? (
           <Empty>

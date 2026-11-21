@@ -88,7 +88,7 @@ export default function Journal() {
 
   return (
     <Section
-      title="Journal"
+      title="Journal History"
       subtitle="Everything you have written, and what KRYteria made of it."
     >
       {error && <ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote>}

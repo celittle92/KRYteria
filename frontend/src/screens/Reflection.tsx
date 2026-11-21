@@ -34,7 +34,7 @@ export default function Reflection() {
       {error && <div className="mb-6"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
 
       {nothing && (
-        <Section title="Reflection" subtitle="Questions, suggestions, and decisions waiting on you.">
+        <Section title="Reflection" subtitle="What KRYteria is asking you, and what you decide to do. Nothing here changes until you say so — the findings behind these questions are in Patterns.">
           <Empty>
             Nothing is waiting. There's no backlog here and nothing is overdue — this page
             fills up only when KRYteria has something real to ask.
@@ -172,7 +172,7 @@ function Question({ question, onDone }: {
           <>
             <p className="voice mt-3 leading-relaxed">
               Saved. Your answer is on the entry this question came from — it shows under
-              "You said" in your Journal, next to the claim it answers.
+              "You said" in your Journal History, next to the claim it answers.
             </p>
             <p className="text-faint text-xs mt-2 max-w-reading leading-relaxed">
               It stays part of your record. KRYteria doesn't yet read your answers back
@@ -203,7 +203,7 @@ function Question({ question, onDone }: {
         placeholder="However much or little you want to say"
       />
       <p className="text-faint text-xs mt-2">
-        Answers are kept on the entry they came from, and show in your Journal.
+        Answers are kept on the entry they came from, and show in your Journal History.
       </p>
       <div className="flex gap-3 mt-4">
         <button className="btn-accent" disabled={busy || !answer.trim()}

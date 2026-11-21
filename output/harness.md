@@ -602,6 +602,35 @@ after the durability note, the resource decline and the kept-analysis sentence.
 minimum. The inner screens run 5–7 phone screens deep. Both real; neither is where the
 testers failed.
 
+### Seven destinations, not eight, and none of them hidden (2026-11-20)
+
+Christine, after showing it to her mother: *"I think there are too many tabs, and to be
+honest I'm not sure what the difference between the Patterns and Reflection pages are."*
+Her mother's version was *"maybe the info should be in steps."*
+
+Measuring it found that the confusion was earned. **My Progress re-rendered every open
+finding under "What recurs"** — the same content as the Patterns screen, minus the
+alternative explanations, the still-unknowns and the entries each rests on — and
+overlapped Reflection twice more on postponements and proposals. Three screens showing
+the same things at three depths teaches somebody that the tabs are interchangeable.
+
+- **Patterns** is where KRYteria's *conclusions* live. **Reflection** is where its
+  *questions* live. Both subtitles now say which, and point at the other.
+- **My Progress** keeps only what is genuinely longitudinal — how standards moved, what
+  you keep writing about, what you put off — and links to the findings rather than
+  copying them.
+- **Checklist is out of the navigation**, route intact. Ticking an indicator records an
+  observation and deliberately does not move an assessment, so the screen has no visible
+  consequence; a P1 feature that cannot show a user what it did for them should not be
+  one of seven things a stranger must understand.
+- **Journal → Journal History**, because the Brain Dump is where you write.
+
+**And the navigation itself was hiding things.** At 375px the strip measured 697px in a
+335px viewport: roughly half the app's destinations sat off-screen behind a horizontal
+scroll with nothing indicating it. It now wraps to two rows, 82px, every item on screen.
+Two rows of seven is not elegant. It is visible, which beats elegant — and a hidden nav
+item is the same failure as a rule enforced in a layer nobody reaches.
+
 ### Known limits, stated rather than discovered
 
 - **Cache accounting is incomplete in both directions.** Cache *writes* are not modeled
