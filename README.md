@@ -515,7 +515,8 @@ backend/
   evals/              the harness that runs the adversarial packs
   prompts/            eight runtime prompts (seven agents + the A/B baseline)
 frontend/
-  src/                React + Vite + TypeScript; eight screens
+  src/                React + Vite + TypeScript; six in the navigation,
+                      plus /checklist and /reflection by route
   dist/               built, and committed on purpose — a grader needs no Node
 data/
   characters/         nine demo accounts, analysis frozen from live runs

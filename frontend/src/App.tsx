@@ -10,7 +10,6 @@ import Criteria from "./screens/Criteria";
 import Journal from "./screens/Journal";
 import Checklist from "./screens/Checklist";
 import Patterns from "./screens/Patterns";
-import Reflection from "./screens/Reflection";
 import ProgressScreen from "./screens/Progress";
 import Settings from "./screens/Settings";
 
@@ -42,7 +41,6 @@ const NAV = [
   { to: "/journal", label: "Journal History" },
   { to: "/criteria", label: "My KRYteria" },
   { to: "/patterns", label: "Patterns" },
-  { to: "/reflection", label: "Reflection" },
   { to: "/progress", label: "My Progress" },
   { to: "/settings", label: "Settings" },
 ];
@@ -325,7 +323,9 @@ export default function App() {
             <Route path="/criteria" element={<Criteria />} />
             <Route path="/checklist" element={<Checklist />} />
             <Route path="/patterns" element={<Patterns />} />
-            <Route path="/reflection" element={<Reflection />} />
+            {/* Reflection is now a section of My Progress. The route stays so
+                older links and bookmarks land somewhere sensible. */}
+            <Route path="/reflection" element={<Navigate to="/progress" replace />} />
             <Route path="/progress" element={<ProgressScreen />} />
             <Route
               path="/settings"

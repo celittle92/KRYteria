@@ -9,11 +9,28 @@ import { Card, DECISION_COPY, Empty, ErrorNote, Eyebrow, Section, Spinner } from
  * countdown and no recommendation after it — and choosing to wait again is recorded
  * exactly like any other decision.
  */
-export default function Reflection() {
+/**
+ * **What is waiting on you** — questions, suggested changes, and the postponement probe.
+ *
+ * This used to be its own tab. Christine, 2026-11-20: *"I was kind of hoping we could
+ * have fewer tabs. Maybe Reflection could be part of My Progress...it would make that
+ * page feel more interactive anyway."*
+ *
+ * Right on both counts, and it closes the last of the overlap. My Progress was the
+ * read-only mirror of this content — it counted the open questions on a stat card,
+ * listed the postponed decisions this screen probes, and showed the same proposals. One
+ * page that tells you where you are **and** lets you act is a better page than two that
+ * each do half.
+ *
+ * Exported as a component rather than a route so it can be hosted at the top of My
+ * Progress, above the longitudinal view: what is waiting first, history underneath.
+ */
+export function WaitingOnYou({ onChanged }: { onChanged?: () => void }) {
   const [questions, setQuestions] = useState<{ id: number; claim: string; question: string }[]>([]);
   const [proposals, setProposals] = useState<Awaited<ReturnType<typeof api.proposals>>>([]);
   const [postponed, setPostponed] = useState<{ criterion_id: number; value: string; count: number }[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function refresh() {
@@ -21,6 +38,7 @@ export default function Reflection() {
     setQuestions(p.unanswered_questions);
     setPostponed(p.repeatedly_postponed.filter((r) => r.count >= 3));
     setProposals(pr);
+    onChanged?.();
   }
 
   useEffect(() => { refresh().catch((e) => setError(String(e))).finally(() => setLoading(false)); }, []);
@@ -34,10 +52,10 @@ export default function Reflection() {
       {error && <div className="mb-6"><ErrorNote onDismiss={() => setError(null)}>{error}</ErrorNote></div>}
 
       {nothing && (
-        <Section title="Reflection" subtitle="What KRYteria is asking you, and what you decide to do. Nothing here changes until you say so — the findings behind these questions are in Patterns.">
+        <Section title="Waiting on you" subtitle="What KRYteria is asking, and what you decide to do. Nothing changes until you say so.">
           <Empty>
-            Nothing is waiting. There's no backlog here and nothing is overdue — this page
-            fills up only when KRYteria has something real to ask.
+            Nothing is waiting. There's no backlog and nothing is overdue — this fills up
+            only when KRYteria has something real to ask.
           </Empty>
         </Section>
       )}
@@ -52,16 +70,35 @@ export default function Reflection() {
         </Section>
       )}
 
+      {/* **Three at a time, not all of them.**
+        *
+        * These accumulate: one entry may raise three, and a month of writing leaves a
+        * dozen. Rendering every one meant eight open textareas stacked down a twelve-screen
+        * page — which is the deposition the charter forbids, arriving by accumulation
+        * rather than by any single agent asking too much. *"We don't want a woman trying
+        * to decompress after a date and getting subjected to a 47-question
+        * deposition."*
+        *
+        * Three is the same ceiling `reasoning.md` puts on material questions per entry.
+        * The rest are counted, not hidden — and one tap away. */}
       {questions.length > 0 && (
         <Section
           title="Worth pinning down"
           subtitle="Things KRYteria couldn't settle from what you wrote. Answer if it helps; skip if it doesn't."
         >
           <div className="space-y-4">
-            {questions.map((q) => (
+            {(showAllQuestions ? questions : questions.slice(0, 3)).map((q) => (
               <Question key={q.id} question={q} onDone={refresh} />
             ))}
           </div>
+          {questions.length > 3 && !showAllQuestions && (
+            <button
+              className="btn-quiet w-full mt-4 text-sm"
+              onClick={() => setShowAllQuestions(true)}
+            >
+              {questions.length - 3} more, whenever you want them
+            </button>
+          )}
         </Section>
       )}
 

@@ -602,7 +602,7 @@ after the durability note, the resource decline and the kept-analysis sentence.
 minimum. The inner screens run 5–7 phone screens deep. Both real; neither is where the
 testers failed.
 
-### Seven destinations, not eight, and none of them hidden (2026-11-20)
+### Six destinations, not eight, and none of them hidden (2026-11-20)
 
 Christine, after showing it to her mother: *"I think there are too many tabs, and to be
 honest I'm not sure what the difference between the Patterns and Reflection pages are."*
@@ -624,6 +624,21 @@ the same things at three depths teaches somebody that the tabs are interchangeab
   consequence; a P1 feature that cannot show a user what it did for them should not be
   one of seven things a stranger must understand.
 - **Journal → Journal History**, because the Brain Dump is where you write.
+- **Reflection is now a section of My Progress**, not a tab of its own — Christine's call:
+  *"Maybe Reflection could be part of My Progress...it would make that page feel more
+  interactive anyway."* It closes the last of the overlap. My Progress had been the
+  read-only mirror of that screen: it counted the open questions on a card, listed the
+  postponed decisions Reflection probes, and showed the same proposals. One page that
+  tells you where you are **and** lets you act beats two that each do half. `/reflection`
+  redirects so older links land somewhere sensible.
+- **Three questions at a time, not all of them.** These accumulate — one entry can raise
+  three, and a month of writing leaves a dozen. Merging the two screens put **eight open
+  textareas on a twelve-screen page**, which is the deposition the charter forbids,
+  arriving by accumulation rather than by any one agent asking too much. Three is the same
+  ceiling `reasoning.md` sets per entry; the rest are counted and one tap away. The page is
+  8.3 screens now and the first thing you can act on sits **within the first screen**.
+- **The three stat cards are a row on a phone, not a stack**, which was 570px of screen
+  for three numbers, pushing everything actionable below the fold. 119px now.
 
 **And the navigation itself was hiding things.** At 375px the strip measured 697px in a
 335px viewport: roughly half the app's destinations sat off-screen behind a horizontal

@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, type Person, type Progress } from "../api";
 import { PersonPicker } from "../components/people";
 import { Card, DECISION_COPY, Empty, Eyebrow, Section, Spinner } from "../components/ui";
+import { WaitingOnYou } from "./Reflection";
 
 /**
  * My Progress — the longitudinal view, and the screen most at risk of becoming a
@@ -20,6 +21,12 @@ export default function ProgressScreen() {
   const [people, setPeople] = useState<Person[]>([]);
   const [themePerson, setThemePerson] = useState<number | "">("");
   const [themes, setThemes] = useState<Progress["themes"]>([]);
+
+  // Answering a question or accepting a suggestion below changes the counts above, so
+  // the page reloads itself rather than going stale under the person using it.
+  const reload = useCallback(() => {
+    api.progress().then((d) => { setData(d); setThemes(d.themes ?? []); }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     api.progress().then((d) => { setData(d); setThemes(d.themes ?? []); })
@@ -61,7 +68,9 @@ export default function ProgressScreen() {
   return (
     <div>
       <Section title="My Progress" subtitle="Your criteria set against what you've actually recorded, and what you chose to do about it.">
-        <div className="grid sm:grid-cols-3 gap-4">
+        {/* Three across even on a phone. Stacked, three numbers ate ~570px and
+            pushed everything you can actually act on below the fold. */}
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
           <Count label="Standards you've written" value={data.active_criteria} />
           <Count label="Experiences recorded" value={data.entries} />
           <Count
@@ -75,27 +84,17 @@ export default function ProgressScreen() {
         </p>
       </Section>
 
-      {data.repeatedly_postponed.length > 0 && (
-        <Section
-          title="Decisions you've put off"
-          subtitle="Recorded without judgment. Giving something more time is a decision, and sometimes the right one."
-        >
-          <Card>
-            <ul className="divide-y divide-[rgb(var(--line))]">
-              {data.repeatedly_postponed.map((r) => (
-                <li key={r.criterion_id}
-                    className="px-5 py-4 flex flex-col sm:flex-row sm:items-baseline
-                               sm:justify-between gap-1 sm:gap-4">
-                  <span className="text-ink">{r.value}</span>
-                  <span className="text-sm text-muted shrink-0">
-                    {r.count} {r.count === 1 ? "time" : "times"}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        </Section>
-      )}
+      {/* **What is waiting on you, before the history.**
+        *
+        * This was its own Reflection tab until 2026-11-20, and My Progress was its
+        * read-only mirror: it counted the open questions on a card above, listed the
+        * postponed decisions that screen probes, and showed the same proposals. Two
+        * screens each doing half the job is what made the tabs feel interchangeable.
+        *
+        * The separate "Decisions you've put off" list that stood here is gone with it —
+        * the probe below asks about the ones that have been put off three times or more,
+        * and "What you chose" further down holds the full decision history. */}
+      <WaitingOnYou onChanged={reload} />
 
       {data.changed_priorities.length > 0 && (
         <Section
@@ -267,9 +266,9 @@ export default function ProgressScreen() {
 
 function Count({ label, value, note }: { label: string; value: number; note?: string }) {
   return (
-    <Card className="p-5">
+    <Card className="p-3 sm:p-5">
       <Eyebrow>{label}</Eyebrow>
-      <p className="font-serif text-3xl tabular-nums">{value}</p>
+      <p className="font-serif text-2xl sm:text-3xl tabular-nums mt-0.5">{value}</p>
       {note && <p className="text-xs text-faint mt-1">{note}</p>}
     </Card>
   );

@@ -267,6 +267,21 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   means the UI must not imply one is the normal case. Used by BrainDump, QuickLog and
   Checklist. **The person is never inferred from the text** — names collide, and a
   misattribution files evidence against the wrong record silently.
+- **Reflection is a SECTION of My Progress, not a tab** (2026-11-20, Christine's call:
+  *"Maybe Reflection could be part of My Progress...it would make that page feel more
+  interactive anyway."*). `screens/Reflection.tsx` exports **`WaitingOnYou`**, which
+  `Progress.tsx` renders directly under the counts and passes a `reload` callback so
+  answering a question updates the numbers above it. `/reflection` redirects to
+  `/progress`. **Do not split them again** — My Progress was the read-only mirror of that
+  screen (it counted the open questions, listed the postponed decisions Reflection probes,
+  and showed the same proposals), and that duplication is what made the tabs feel
+  interchangeable.
+- **The questions list shows THREE at a time.** They accumulate across entries, and
+  rendering all of them put eight open textareas on a twelve-screen page — the deposition
+  the charter forbids, arriving by accumulation rather than from any one agent. Three is
+  the same ceiling `reasoning.md` sets per entry. **Do not remove the cap.**
+- **Six nav items**: Brain Dump · Journal History · My KRYteria · Patterns · My Progress ·
+  Settings. `/checklist` and `/reflection` still resolve.
 - **Checklist is NOT in the navigation** (2026-11-20, Christine's call). The route
   `/checklist` still works and the feature is built and tested — it is simply not one of
   the things a first-time visitor has to work out. Her reason is a real gap, not a
