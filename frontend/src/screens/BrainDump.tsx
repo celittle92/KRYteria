@@ -154,7 +154,10 @@ export default function BrainDump({ account }: { account: Account }) {
     <div className="max-w-3xl">
       {toggle}
       <Card className="p-6 sm:p-8">
-        <div className="flex items-start justify-between gap-4 mb-6">
+        {/* Stacks on a phone: the "Core feature" pill does not wrap, so side by side it
+            left this line four lines deep in a 182px column on the app's primary screen. */}
+        <div className="flex flex-col-reverse sm:flex-row sm:items-start
+                        sm:justify-between gap-3 sm:gap-4 mb-6">
           <div>
             <Eyebrow>Experience journal</Eyebrow>
             <h1 className="font-serif text-2xl sm:text-3xl">Tell us what happened.</h1>
@@ -162,7 +165,7 @@ export default function BrainDump({ account }: { account: Account }) {
               No forms. No required categories. No need to organize your thoughts first.
             </p>
           </div>
-          <Pill tone="accent">Core feature</Pill>
+          <div className="shrink-0"><Pill tone="accent">Core feature</Pill></div>
         </div>
 
         <label htmlFor="dump" className="eyebrow block">Your brain dump</label>

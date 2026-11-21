@@ -1043,6 +1043,59 @@ def test_a_fresh_deployment_can_open_the_walkthrough() -> None:
               bool(again) and again["id"] == account["id"])
 
 
+def test_the_featured_demo_actually_contains_analysis() -> None:
+    """Whatever "See it working" opens must show the agents having reasoned.
+
+    **This is the test for the mistake, not for the code.** The button pointed at the
+    hand-built `demo` account for about an hour. Christine opened it and said: *"The
+    primary walkthrough is fucking terrible. Barely any analysis from the agents."*
+
+    She was right, and the number was already in a query I had run: `demo` is the **only**
+    demo account with zero `evidence_links` and zero `interrogations` — nine observations
+    that map to nothing — where every one of the nine characters carries between ten and
+    twenty-nine mappings. I chose it on entry count and assessment count, which are the
+    two measures that do *not* render as reasoning.
+
+    So this reads the handle out of the front door itself and checks the account behind it
+    has the tables that make the product look like a product. A floor, not a target: the
+    weakest of the nine has 9 mappings and 4 questions.
+    """
+    import re
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    from backend.seed_characters import seed as seed_characters
+    from backend.seed_demo import seed as seed_walkthrough
+    from backend.store import Store as _Store
+
+    source = (_P(__file__).resolve().parent.parent
+              / "frontend" / "src" / "screens" / "SignIn.tsx").read_text(encoding="utf-8")
+    m = re.search(r'enterDemo\(\{\s*handle:\s*"([^"]+)"', source)
+    check("the front door names the account it features", m is not None)
+    if not m:
+        return
+    featured = m.group(1)
+
+    fresh = _Store(_P(_tf.mkdtemp()) / "featured.db")
+    seed_walkthrough(fresh)
+    seed_characters(fresh)
+    account = fresh.get_account_by_handle(featured)
+    check(f"the featured account {featured!r} exists after seeding", account is not None)
+    if not account:
+        return
+
+    i = account["id"]
+    with fresh.read() as conn:
+        count = lambda t: conn.execute(  # noqa: E731
+            f"SELECT COUNT(*) FROM {t} WHERE account_id = ?", (i,)).fetchone()[0]
+        links, asked, obs = count("evidence_links"), count("interrogations"), \
+            count("observations")
+
+    check(f"{featured} maps evidence to criteria", links >= 8, f"{links} links")
+    check(f"{featured} asks the user something", asked >= 4, f"{asked} interrogations")
+    check(f"{featured} has observations to map", obs >= 10, f"{obs} observations")
+
+
 def test_a_fresh_deployment_has_resources_and_research() -> None:
     """The two things whose absence fails silently.
 

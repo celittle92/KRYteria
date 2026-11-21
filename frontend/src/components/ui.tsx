@@ -100,12 +100,16 @@ export function Section({ title, subtitle, action, children }: {
 }) {
   return (
     <section className="mb-12">
-      <div className="flex items-end justify-between gap-4 mb-5">
+      {/* Stacks on a phone. Side by side, an `action` button leaves the subtitle a
+          column barely wider than a word — measured at 131px for 208 characters on My
+          KRYteria at 375px. Shared by every screen, so this is the one place to fix it. */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between
+                      gap-3 sm:gap-4 mb-5">
         <div>
           <h2 className="font-serif text-2xl">{title}</h2>
           {subtitle && <p className="text-sm text-muted mt-1 max-w-reading">{subtitle}</p>}
         </div>
-        {action}
+        {action && <div className="shrink-0">{action}</div>}
       </div>
       {children}
     </section>

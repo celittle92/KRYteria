@@ -86,35 +86,6 @@ export function ScenarioDrawer({ account, onSwitched, onClose }: {
         )}
 
         <ul className="mt-5 space-y-2">
-          {/* The demonstration account itself, which is a different thing from the nine:
-              it is a hand-built exhibit of the rules — the same person passing under one
-              profile and failing under another, Not Applicable as a real answer, a
-              finding with evidence on both sides. The nine are a realistic population. */}
-          <li>
-            <button
-              onClick={() => open("demo")}
-              disabled={opening !== null || account.handle === "demo"}
-              className={`w-full text-left rounded-lg px-3.5 py-3 border transition-colors
-                          disabled:cursor-default
-                          ${account.handle === "demo"
-                            ? "border-accent/40 bg-accent/5"
-                            : "border-hair hover:border-accent hover:bg-accent/5"}`}
-            >
-              <span className="flex items-baseline justify-between gap-3">
-                <span className="font-medium">The walkthrough</span>
-                {account.handle === "demo"
-                  ? <span className="text-xs text-accent">you are here</span>
-                  : <span className="text-xs text-faint">two people, five weeks</span>}
-              </span>
-              <span className="block text-sm text-muted mt-0.5">
-                A finding with evidence on both sides, and the same person judged
-                differently under two profiles.
-              </span>
-              {opening === "demo" && (
-                <span className="block mt-2"><Spinner label="Opening…" /></span>
-              )}
-            </button>
-          </li>
 
           {(characters ?? []).map((c) => {
             const here = account.handle === c.handle;
@@ -148,6 +119,44 @@ export function ScenarioDrawer({ account, onSwitched, onClose }: {
               </li>
             );
           })}
+
+          {/* **Last, and described for what it is.**
+            *
+            * `demo` is the hand-built exhibit of the *rules* — one person assessed under
+            * four profiles, Not Applicable as a real answer distinct from Unknown. It is
+            * genuinely the only account that shows that.
+            *
+            * It led this list for about an hour, billed as the walkthrough, and
+            * Christine's verdict was blunt and correct: barely any analysis. It has
+            * **zero evidence links and zero interrogations** — the two tables that read
+            * as the agents having reasoned — where every one of the nine above has
+            * between ten and twenty-nine. So it keeps its place for the thing it alone
+            * demonstrates, and stops being the first thing anybody sees. */}
+          <li>
+            <button
+              onClick={() => open("demo")}
+              disabled={opening !== null || account.handle === "demo"}
+              className={`w-full text-left rounded-lg px-3.5 py-3 border transition-colors
+                          disabled:cursor-default
+                          ${account.handle === "demo"
+                            ? "border-accent/40 bg-accent/5"
+                            : "border-hair hover:border-accent hover:bg-accent/5"}`}
+            >
+              <span className="flex items-baseline justify-between gap-3">
+                <span className="font-medium">One person, four profiles</span>
+                {account.handle === "demo"
+                  ? <span className="text-xs text-accent">you are here</span>
+                  : <span className="text-xs text-faint">the profile model</span>}
+              </span>
+              <span className="block text-sm text-muted mt-0.5">
+                Sam fails under Husband and passes under One Night Stand. Neither is the
+                real verdict.
+              </span>
+              {opening === "demo" && (
+                <span className="block mt-2"><Spinner label="Opening…" /></span>
+              )}
+            </button>
+          </li>
         </ul>
 
         <p className="text-xs text-faint mt-5 leading-relaxed">

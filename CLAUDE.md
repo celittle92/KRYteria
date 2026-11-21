@@ -214,6 +214,24 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   per-profile delete route** — nine tables reference a profile, most cascading, and it
   holds the assessments made under it. A test asserts the route does not exist. Account
   deletion remains the way to erase.
+- **"See it working" opens `theintentionalist`, NOT `demo`.** It pointed at `demo` for
+  about an hour and Christine's verdict was exact: *"The primary walkthrough is fucking
+  terrible. Barely any analysis from the agents."* She was right, and the number was in a
+  query I had already run: **`demo` is the only demo account with zero `evidence_links`
+  and zero `interrogations`** — 9 observations mapping to nothing — where the nine
+  characters carry 9–29 mappings and 4–11 questions each. Entry count and assessment
+  count are the two measures that do *not* render as reasoning. Jane has 25 observations,
+  24 mappings across all three relations, 9 interrogations and the two patterns that are
+  the product's thesis. `tests/test_api.py::test_the_featured_demo_actually_contains_analysis`
+  reads the handle out of `SignIn.tsx` and checks the account behind it clears a floor.
+- **`demo` keeps its place in the drawer, last, for the one thing it alone shows** — Sam
+  failing under Husband and passing under One Night Stand, across four profiles. It is
+  **not** the thing to lead with.
+- **Mobile layout: a `justify-between` row with a no-wrap pill squeezes prose into a
+  ribbon.** Measured at 375px: a 784-character journal entry in 181px, a pattern statement
+  two words per line. Twelve such blocks across the app, now zero — `Section`,
+  `Patterns`, `Progress` (three places) and `BrainDump` stack on a phone and go side by
+  side from `sm:` up. **Check new layouts at 375px, not on the laptop.**
 - **`_seed_on_boot` seeds BOTH the walkthrough and the nine characters.** It seeded only
   the characters until 2026-11-20, which was harmless while the landing page offered the
   nine and nothing else — and became *"See it working"* returning **404 in production**
@@ -234,7 +252,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
 - **The landing page is designed for a phone.** Every tester used one; the app was built
   on a laptop where the two columns sit side by side. At 375px it went from 2,692px to
   1,906px, and the order is **Start my own** (primary — starting an account is the goal),
-  **See it working** (opens `demo`), then a sign-in link. The hero carries *"It never
+  **See it working** (opens `theintentionalist`), then a sign-in link. The hero carries *"It never
   scores you, ranks you, or tells you to stay or go"*, which two testers needed and
   nobody had written.
 - **`demonstrates[0]` is what the drawer prints under each name.** Authored in
@@ -365,7 +383,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,624 checks across 167 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,629 checks across 168 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with

@@ -61,7 +61,12 @@ function PatternCard({ pattern }: { pattern: Pattern }) {
 
   return (
     <Card className="p-6">
-      <div className="flex items-start justify-between gap-4">
+      {/* Stacks on a phone. Side by side, the no-wrap strength pill takes ~150px of a
+          375px screen and the finding renders two words per line — a tall thin column
+          that is the first thing somebody sees after "See it working". Found by looking
+          at the real screen at 375px rather than at the laptop it was written on. */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between
+                      gap-2 sm:gap-4">
         <p className="voice text-lg leading-relaxed flex-1">{pattern.statement}</p>
         <StrengthPill strength={pattern.evidence_strength} />
       </div>

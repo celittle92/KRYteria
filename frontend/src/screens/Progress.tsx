@@ -83,9 +83,11 @@ export default function ProgressScreen() {
           <Card>
             <ul className="divide-y divide-[rgb(var(--line))]">
               {data.repeatedly_postponed.map((r) => (
-                <li key={r.criterion_id} className="px-5 py-4 flex items-baseline justify-between gap-4">
+                <li key={r.criterion_id}
+                    className="px-5 py-4 flex flex-col sm:flex-row sm:items-baseline
+                               sm:justify-between gap-1 sm:gap-4">
                   <span className="text-ink">{r.value}</span>
-                  <span className="text-sm text-muted">
+                  <span className="text-sm text-muted shrink-0">
                     {r.count} {r.count === 1 ? "time" : "times"}
                   </span>
                 </li>
@@ -106,8 +108,8 @@ export default function ProgressScreen() {
                 <h3 className="text-ink">{c.value}</h3>
                 <ol className="mt-4 space-y-4">
                   {c.versions.map((v) => (
-                    <li key={v.id} className="flex gap-4">
-                      <span className="text-xs text-faint tabular-nums shrink-0 w-24">
+                    <li key={v.id} className="flex flex-col sm:flex-row gap-1 sm:gap-4">
+                      <span className="text-xs text-faint tabular-nums shrink-0 sm:w-24">
                         {v.created_at.slice(0, 10)}
                       </span>
                       <div>
@@ -185,7 +187,9 @@ export default function ProgressScreen() {
           <Card>
             <ul className="divide-y divide-[rgb(var(--line))]">
               {data.open_patterns.map((p) => (
-                <li key={p.id} className="px-5 py-4 flex items-start justify-between gap-4">
+                <li key={p.id}
+                    className="px-5 py-4 flex flex-col sm:flex-row sm:items-start
+                               sm:justify-between gap-2 sm:gap-4">
                   <span className="text-muted text-sm flex-1">{p.statement}</span>
                   <StrengthPill strength={p.evidence_strength} />
                 </li>
@@ -220,8 +224,11 @@ export default function ProgressScreen() {
             <ul className="divide-y divide-[rgb(var(--line))]">
               {data.recent_entries.map((e) => (
                 <li key={e.id} className="px-5 py-4">
-                  <div className="flex items-baseline gap-4">
-                    <span className="text-xs text-faint tabular-nums shrink-0 w-24">
+                  {/* The date was a fixed 96px column beside the entry, which on a
+                      375px screen left about 180px for the writing — a 784-character
+                      entry rendered as a thin ribbon. On a phone the date goes above. */}
+                  <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4">
+                    <span className="text-xs text-faint tabular-nums shrink-0 sm:w-24">
                       {e.occurred_on}
                     </span>
                     <p className="text-sm text-muted flex-1">

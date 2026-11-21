@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,624 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,629 checks**, all offline, no API key, no network |
 | Spend | 20 live runs — 18 with token counts, 17 with a cost: 396 calls, **$0.241** — `output/usage_log.json` |
 
 ---
@@ -416,7 +416,7 @@ and needs no account, and it refuses *creation* while leaving every existing use
 sign-in, journal and analysis untouched.
 
 ```bash
-.venv/bin/python tests/test_api.py        # 338 checks, including all of the above
+.venv/bin/python tests/test_api.py        # 343 checks, including all of the above
 ```
 
 ---
@@ -508,7 +508,7 @@ from a new browser is the one most likely to lose the race with the boot.
 python3      tests/test_offline.py      # 601 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
-.venv/bin/python tests/test_api.py          # 338 — HTTP, isolation, security, retention
+.venv/bin/python tests/test_api.py          # 343 — HTTP, isolation, security, retention
 .venv/bin/python tests/test_evals.py        # 387 — the harness, mostly that it REFUSES
 ```
 
@@ -516,6 +516,30 @@ All five are free, offline, and need no API key. **Live runs cost money and refu
 start without `--yes-spend-credits`, after printing the call count.**
 
 ### The front door, rebuilt for the phone it is actually read on (2026-11-20)
+
+**Then it opened the wrong account.** *See it working* pointed at `demo`, and
+Christine's verdict was blunt and right: *"The primary walkthrough is fucking terrible.
+Barely any analysis from the agents."*
+
+`demo` is the **only** demo account in the database with **zero evidence mappings and
+zero interrogations** — nine observations that attach to nothing — where every one of the
+nine characters carries between 10 and 29 mappings and 4 to 11 questions. I had run the
+query that says so and read past it, because I picked on entry count and assessment
+count: the two measures that do not render as the agents having reasoned.
+
+It now opens `theintentionalist` — 25 observations, 24 mappings across all three
+relations, 9 interrogations, and the two findings that are this product's thesis: a
+Mandatory standard whose definition quietly moved, and a decision postponed three times.
+`demo` keeps a place in the drawer, last, for the one thing it alone demonstrates — the
+same person failing under Husband and passing under One Night Stand. A test now reads the
+featured handle out of `SignIn.tsx` and fails if the account behind it has no analysis.
+
+**And looking at that screen on a phone found twelve more defects.** A `justify-between`
+row with a no-wrap pill beside prose squeezes the prose into a ribbon: a 784-character
+journal entry rendered in **181px**, a pattern statement two words per line, a section
+subtitle at 131px. All twelve are fixed — `Section`, `Patterns`, `Progress` in three
+places, `BrainDump` — by stacking on a phone and going side by side from `sm:` up. The
+re-measure finds **zero** squeezed blocks across all seven screens.
 
 **And it shipped with the primary demo path broken, for about ten minutes.** *See it
 working* opens the `demo` account, and `_seed_on_boot` had only ever built the

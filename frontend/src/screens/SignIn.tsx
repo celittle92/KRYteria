@@ -175,9 +175,27 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
                          text-ink hover:border-muted transition-colors
                          disabled:opacity-50 disabled:cursor-wait"
               disabled={enteringAs !== null}
-              onClick={() => enterDemo({ handle: "demo", name: "the demonstration account" })}
+              /* **Jane, not `demo`.** This pointed at the hand-built walkthrough for
+               * about an hour, and Christine's verdict was exact: *"The primary
+               * walkthrough is fucking terrible. Barely any analysis from the agents."*
+               *
+               * She was right and the number was already in front of me. `demo` is the
+               * ONLY demo account in the database with **zero evidence links and zero
+               * interrogations** — 9 observations that map to nothing. I chose it on
+               * entry count and assessment count and never looked at the tables that
+               * actually render as the agents having reasoned.
+               *
+               * `theintentionalist` has 25 observations, 24 evidence links across all
+               * three relations, 9 interrogations, and the two patterns that are this
+               * product's whole thesis: a Mandatory standard whose definition quietly
+               * moved, and a decision postponed three times.
+               *
+               * `demo` keeps its place in the drawer — it is the only account that shows
+               * one person judged under four profiles — but it is not the thing to lead
+               * with. */
+              onClick={() => enterDemo({ handle: "theintentionalist", name: "Jane" })}
             >
-              {enteringAs === "demo"
+              {enteringAs === "theintentionalist"
                 ? <Spinner label="Opening the demo…" />
                 : (
                   <>
