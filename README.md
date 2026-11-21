@@ -36,7 +36,7 @@ clone and needs no API key.
 | Agent output contracts | built, 224 checks |
 | Seven agents + orchestrator | built, 74 wiring checks |
 | HTTP API, incl. cross-account isolation | built, 333 checks |
-| Evaluation harness | built, 384 checks |
+| Evaluation harness | built, 387 checks |
 | Deterministic demo mode (no API key) | built |
 | Privacy architecture | built — isolation, retention, redaction |
 | Front end (React + Vite + TS) | built, `dist/` committed so no Node is needed |
@@ -44,8 +44,8 @@ clone and needs no API key.
 | Hosted deployment | live at kryteria.onrender.com |
 | `report.html`, `slides.html` | built, self-contained |
 
-**1,597 checks across 164 test functions**, five suites, none of which call a model.
-Measured live model spend to date: **$0.210** over 340 calls across 16 runs. Fifteen reported token counts and fourteen reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
+**1,600 checks across 165 test functions**, five suites, none of which call a model.
+Measured live model spend to date: **$0.241** over 396 calls across 16 runs. Fifteen reported token counts and fourteen reported a cost; the two without one are excluded rather than estimated, so the real figure is a little higher.
 
 ---
 
@@ -185,7 +185,7 @@ PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_api.py
 PYDANTIC_AI_NO_BANNER=1 .venv/bin/python tests/test_evals.py
 ```
 
-1,597 checks in total. The first needs no installed packages at all — it stubs the password
+1,600 checks in total. The first needs no installed packages at all — it stubs the password
 hasher so the data layer can be verified on a bare Python. `test_api` runs the whole HTTP
 layer in demo mode, and its most important test is two accounts trying to reach each
 other's rows every way the API allows.
@@ -230,6 +230,14 @@ In this order:
 
 The second case is deliberate: MGT 409 submissions are cloned side by side under one
 folder with a single shared `.env` one level up. That layout is supported and tested.
+
+> **An environment variable that is already set beats both files.** `load_dotenv` never
+> overwrites one. So if your shell exports `PORTKEY_API_KEY` — from `~/.zshrc`, say — the
+> app uses that and silently ignores whatever you put in `.env`. This cost an hour on
+> 2026-11-20: a rotated key was updated correctly in `.env` and on the host, while five
+> stale `export` lines in `~/.zshrc` kept handing every local command the dead one.
+> `/api/health` reports `env_source` and the last four characters of the key it loaded,
+> which is the fastest way to tell which copy you are actually running on.
 
 Copy `.env.example` to `.env` and fill in `PORTKEY_API_KEY`. The model is pinned to
 `gpt-6-luna`, the only model the course key permits — `OPENAI_MODEL` is read but cannot

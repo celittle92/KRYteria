@@ -84,6 +84,18 @@ def load_pack(name: str) -> dict:
                     f"{name}/{case['id']}: unknown check {spec.get('check')!r}. "
                     f"Known: {', '.join(checks_mod.known_checks())}"
                 )
+            # A `prose_lacks` needle drawn from the user's own sentence is FINE, and
+            # deliberately not refused here. It was, for about ten minutes on
+            # 2026-11-20, after `saf-cooldown-01` failed on `we said we'd leave this` —
+            # a phrase lifted verbatim out of that case's own `user_input`. The suite
+            # refused the whole reasoning pack a moment later over `not his fault` in
+            # `exc-02`, which is the same shape and an entirely legitimate check.
+            #
+            # That is the point: with `transcript._is_quoted` in place, a needle taken
+            # from the user is still meaningful. Quoting her is exempt; restating her
+            # claim unquoted, in the system's own voice, is precisely the failure mode
+            # `exc-02` exists to catch. A load-time refusal would have thrown away a
+            # real check to fix a grader bug that was already fixed elsewhere.
     if ungradable:
         raise PackError(
             f"{name}: {len(ungradable)} case(s) carry no `checks` array and would be "

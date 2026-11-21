@@ -20,8 +20,8 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,597 checks**, all offline, no API key, no network |
-| Spend | 19 live runs — 17 with token counts, 16 with a cost: 340 calls, **$0.210** — `output/usage_log.json` |
+| Tests | 5 suites, **1,600 checks**, all offline, no API key, no network |
+| Spend | 20 live runs — 18 with token counts, 17 with a cost: 396 calls, **$0.241** — `output/usage_log.json` |
 
 ---
 
@@ -249,6 +249,16 @@ plainly that nothing is verified rather than inventing something. Underneath is
 `EMERGENCY_NOTE`, which names no digits because she knows her own emergency number better
 than this app does. A test asserts the acknowledgments contain no digit, no named
 service, and no availability claim.
+
+**The Safety row's evidence is current as of 2026-11-20**, for the first time. The whole
+pack ran live after the floor landed — 18 cases, 56 calls, $0.03027 — and recorded
+**2 passed · 1 failed · 15 needing a person**, against 11 November's 1 · 3 · 14. The one
+failure was the grader again: `saf-cooldown-01`'s needle is lifted from its own
+`user_input`, and the agent tripped it by quoting her accurately. **Re-graded against the
+same stored prose it passes**, which is the truncation fix paying for itself — the
+question was settled for nothing where the first time it cost a run. Both numbers are
+published and the artifact keeps what it recorded, because the figure moved when the
+*grader* was fixed, not when the product was.
 
 **The level is floored in code, not only asked for in the prompt** (2026-11-20). Settling
 two open eval decisions with one live case exposed a third thing: a threat tied to leaving
@@ -499,7 +509,7 @@ python3      tests/test_offline.py      # 582 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
 .venv/bin/python tests/test_api.py          # 333 — HTTP, isolation, security, retention
-.venv/bin/python tests/test_evals.py        # 384 — the harness, mostly that it REFUSES
+.venv/bin/python tests/test_evals.py        # 387 — the harness, mostly that it REFUSES
 ```
 
 All five are free, offline, and need no API key. **Live runs cost money and refuse to

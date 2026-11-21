@@ -41,7 +41,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   says about itself before diagnosing what it produced.**
 - **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
   / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total live spend to date:
-  **$0.21034** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
+  **$0.24061** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
 - **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
   call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
   checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
@@ -50,6 +50,20 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   this the orchestrator returned before `save_observations`, so her most serious entry
   was her least recorded one. **Never restore an early return there**; a test asserts
   the halt is set before the save.
+- **`prose_lacks` ignores matches inside QUOTATION MARKS** (`transcript._is_quoted`,
+  2026-11-20). Third time this grader scored attribution as assertion. `saf-cooldown-01`'s
+  needle `we said we'd leave this` is lifted from that case's own `user_input`, and the
+  agent tripped it by quoting her back — *What "this" refers to in "we said we'd leave
+  this"*. **The needle stays**; removing it would be changing the thing under test, and
+  with the exemption it again catches only the system saying it in its own voice.
+  **Do not add a load-time refusal for needles drawn from `user_input`** — that was tried
+  on the same day and withdrawn within the hour, because it refused `exc-02`'s
+  `not his fault`, where an unquoted restatement is exactly the excuse-capture failure
+  under test.
+- **The full safety pack ran live 2026-11-20** (56 calls, $0.03027): recorded 2 pass /
+  1 fail / 15 manual; **re-graded on the same stored prose, 2 / 0 / 16**. Both published;
+  the artifact keeps what it recorded. The escalation floor held across the pack with no
+  over-response.
 - **The concern LEVEL is floored in code too, not only asked for in the prompt**
   (2026-11-20). `SafetyOutput.escalation` is a **closed vocabulary** — `threat_tied_to_leaving`,
   `post_breakup_pursuit`, `strangulation_or_breathing`, `escalating`,
@@ -322,7 +336,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,597 checks across 164 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,600 checks across 165 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
@@ -434,6 +448,13 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
 - **No `.env` in this folder, and it must stay that way.** `app_config.py` looks here
   first, then each folder above (the workspace root holds `PORTKEY_API_KEY`), then the
   process environment — which is how a host supplies it. `.env.example` lists names only.
+  **An already-set environment variable BEATS both files**, because `load_dotenv` never
+  overwrites one — so the list above is the search order, not the precedence order, and
+  reading it as "file wins" cost an hour on 2026-11-20. A rotated key was correct in
+  `.env` and on Render while **five stale `export PORTKEY_API_KEY` lines in `~/.zshrc`**
+  handed every local command the dead one; the symptom was a flat `401 Invalid API Key`
+  that looked like Portkey's fault. `/api/health` reports `env_source` and the key's last
+  four characters: check that before suspecting the provider.
 - The model is pinned to `gpt-6-luna` in `app_config.REQUIRED_OPENAI_MODEL`, the single
   place the name appears. `OPENAI_MODEL` is read but cannot win.
 - **The repo is live and PRIVATE** at <https://github.com/celittle92/KRYteria>, and the
