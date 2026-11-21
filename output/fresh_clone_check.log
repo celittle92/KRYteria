@@ -1,8 +1,8 @@
 
-[1m== Fresh folder: /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-130343[0m
+[1m== Fresh folder: /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-072420[0m
 
 [1m== The staff .env, one level above the repo[0m
-   [32mPASS[0m wrote /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-130343/.env
+   [32mPASS[0m wrote /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-072420/.env
 
 [1m== Clone[0m
    [32mPASS[0m cloned from /Users/christinelittle/Yale SOM_Old/AI Foundations/KRYteria
@@ -26,19 +26,15 @@
    [32mPASS[0m nine characters
 
 [1m== Does it actually come up, and is the front door populated?[0m
-
-==========================================================================
-  KRYteria is in LIVE mode. Every brain dump spends real credits.
-  Set KRYTERIA_MODE=demo for UI work — it needs no key and bills nothing.
-==========================================================================
+KRYteria is in DEMO mode — nothing is billed.
    [32mPASS[0m /api/health responds
-   [32mPASS[0m it found the .env one level up /private/var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T/kryteria-freshclone-130343/.env
+   [32mPASS[0m it found the .env one level up /private/var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T/kryteria-freshclone-072420/.env
    [32mPASS[0m / serves the front end
    [32mPASS[0m nine demo characters at the front door got 9
    [32mPASS[0m every character signs in []
    [32mPASS[0m the demo account signs in
 
 [1m== Result[0m
-   13 seconds, against a 10-minute limit.
+   10 seconds, against a 10-minute limit.
    [32mA grader following the README gets a working app.[0m
-   Clone left at /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-130343/KRYteria — delete it when you are done.
+   Clone left at /var/folders/kb/d4b_syp50cgghx4ydw9kh4z80000gn/T//kryteria-freshclone-072420/KRYteria — delete it when you are done.
