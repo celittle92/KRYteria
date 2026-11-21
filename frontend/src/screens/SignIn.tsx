@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, type Account } from "../api";
+import { api, type Account, type DemoCharacter } from "../api";
 import { ErrorNote, Spinner } from "../components/ui";
-
-type DemoCharacter = {
-  handle: string;
-  name: string;
-  age?: number;
-  occupation?: string;
-  location?: string;
-  demonstrates?: string[];
-};
 
 /**
  * The front door, and the onboarding moment.
@@ -138,8 +129,77 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
           <p className="text-muted mt-6 max-w-reading leading-relaxed">
             Know what you want. Recognize what you have. Decide what you do next.
             KRYteria compares what you say matters to you against what you are actually
-            experiencing — and leaves every decision to you.
+            experiencing — and leaves every decision to you.{" "}
+            {/* The sentence four testers needed and nobody had written. Two of them
+                feared being judged BY it; Deborah L. read it as matchmaking three times.
+                It is the charter's founding line — the standards are never judged, only
+                the reasoning — said on the first screen instead of kept in a document. */}
+            <strong className="text-ink font-medium">
+              It never scores you, ranks you, or tells you to stay or go.
+            </strong>
           </p>
+
+          {/* **One decision, above the fold.**
+            *
+            * Measured on the build before this one, at 375px: the homepage ran 2,947px —
+            * about nine phone screens — and the only emphasized button on it was *Sign
+            * in*, the one thing a visitor cannot do. The nine demo characters sat below
+            * all of it under "Look around first", listed by age and occupation, saying
+            * nothing about what was inside any of them.
+            *
+            * That matters more than it sounds: every tester so far used a phone, and the
+            * app was designed on a laptop where the two columns sit side by side.
+            *
+            * Christine's call on the order: **starting an account is the goal**, and the
+            * demo is the explainer rather than the destination. */}
+          <div className="mt-9 max-w-reading space-y-3">
+            {/* Not `btn-accent` / `btn-quiet`: those are `inline-flex` pills, which lays a
+                label and its subtext out side by side. These need to stack. */}
+            <button
+              className="w-full text-left rounded-xl px-4 py-3.5 bg-accent text-accent-ink
+                         hover:opacity-90 transition-colors"
+              onClick={() => {
+                setMode("up");
+                document.getElementById("account-panel")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <span className="block font-medium">Start my own</span>
+              <span className="block text-sm opacity-80 mt-0.5">
+                No email needed. Choose a handle only you know.
+              </span>
+            </button>
+
+            <button
+              className="w-full text-left rounded-xl px-4 py-3.5 border border-line
+                         text-ink hover:border-muted transition-colors
+                         disabled:opacity-50 disabled:cursor-wait"
+              disabled={enteringAs !== null}
+              onClick={() => enterDemo({ handle: "demo", name: "the demonstration account" })}
+            >
+              {enteringAs === "demo"
+                ? <Spinner label="Opening the demo…" />
+                : (
+                  <>
+                    <span className="block font-medium">See it working</span>
+                    <span className="block text-sm text-muted mt-0.5">
+                      Learn how KRYteria works with a completed journal.
+                    </span>
+                  </>
+                )}
+            </button>
+
+            <p className="text-sm text-faint">
+              <button className="underline hover:text-muted"
+                      onClick={() => {
+                        setMode("in");
+                        document.getElementById("account-panel")
+                          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}>
+                I already have an account
+              </button>
+            </p>
+          </div>
 
           <div className="mt-10 space-y-4 max-w-reading">
             <h2 className="eyebrow">What this is, and is not</h2>
@@ -227,7 +287,9 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
           </div>
         ) : (
         <div className="rise">
-          <div className="card p-7 sm:p-8 max-w-md lg:ml-auto">
+          {/* Anchored so the hero's buttons can bring it into view: on a phone the two
+              columns stack, and this panel is below the fold. */}
+          <div id="account-panel" className="card p-7 sm:p-8 max-w-md lg:ml-auto scroll-mt-6">
             <h2 className="font-serif text-xl">
               {mode === "up" ? "Create a private account"
                 : mode === "recover" ? "Use a recovery code" : "Sign in"}
@@ -363,45 +425,17 @@ export default function SignIn({ onSignedIn, theme, onToggleTheme }: {
             </div>
           )}
 
+          {/* The nine characters used to be listed here, by age and occupation, under
+              "Look around first". They are now a drawer INSIDE the demo — "Other
+              scenarios" — because a stranger cannot choose between nine people before
+              they know what the product does, and being asked to was the thing four
+              testers actually failed at. See `components/scenarios.tsx`. */}
           {characters !== null && characters.length > 0 && (
-            <div className="card p-7 sm:p-8 max-w-md lg:ml-auto mt-5">
-              <h2 className="font-serif text-xl">Look around first</h2>
-              <p className="text-sm text-muted mt-1.5">
-                {characters.length} invented people, each with their own standards and
-                their own private record. Nothing here describes a real person, and no
-                account can see any other. Open one — no sign-up, nothing to type.
-              </p>
-
-              <ul className="mt-5 space-y-2">
-                {characters.map((c) => (
-                  <li key={c.handle}>
-                    <button
-                      onClick={() => enterDemo(c)}
-                      disabled={enteringAs !== null}
-                      className="w-full text-left rounded-lg px-3.5 py-3 border border-hair
-                                 hover:border-accent hover:bg-accent/5 transition-colors
-                                 disabled:opacity-50 disabled:cursor-wait"
-                    >
-                      <span className="flex items-baseline justify-between gap-3">
-                        <span className="font-medium">{c.name}</span>
-                        <span className="text-xs text-faint">@{c.handle}</span>
-                      </span>
-                      <span className="block text-sm text-muted mt-0.5">
-                        {[c.age, c.occupation, c.location].filter(Boolean).join(" · ")}
-                      </span>
-                      {enteringAs === c.handle && (
-                        <span className="block mt-2"><Spinner label="Opening…" /></span>
-                      )}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-
-              <p className="text-xs text-faint mt-4">
-                Demonstration data. Your own account, if you make one, is separate from
-                these and from everyone else's.
-              </p>
-            </div>
+            <p className="text-xs text-faint mt-5 max-w-md lg:ml-auto leading-relaxed">
+              The demo holds {characters.length + 1} invented people, each with their own
+              standards and their own private record. Open one from inside it. Nothing
+              there describes a real person, and no account can see any other.
+            </p>
           )}
 
           <p className="text-xs text-faint mt-5 max-w-md lg:ml-auto">

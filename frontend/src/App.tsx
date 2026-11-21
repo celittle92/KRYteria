@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { api, type Account } from "./api";
 import { Spinner } from "./components/ui";
+import { ScenarioDrawer } from "./components/scenarios";
 import { MIN_CRITERIA } from "./onboarding";
 import SignIn from "./screens/SignIn";
 import BrainDump from "./screens/BrainDump";
@@ -144,6 +145,7 @@ function useFirstScreen(account: Account | null) {
 export default function App() {
   const [account, setAccount] = useState<Account | null>(null);
   const [checking, setChecking] = useState(true);
+  const [scenariosOpen, setScenariosOpen] = useState(false);
   const { theme, toggle } = useTheme(account);
   const location = useLocation();
   const firstScreen = useFirstScreen(account);
@@ -209,9 +211,23 @@ export default function App() {
             </div>
             <div className="flex items-center gap-3">
               {account.is_demo === 1 && (
-                <span className="hidden sm:inline text-[11px] text-complicate">
-                  Demonstration account — all content is invented
-                </span>
+                <>
+                  <span className="hidden sm:inline text-[11px] text-complicate">
+                    Demonstration account — all content is invented
+                  </span>
+                  {/* **Demo accounts only**, and the gate is the point rather than a
+                    * precaution. The route would 404 on a real account anyway — but this
+                    * product's central promise is that no account can see another, and an
+                    * affordance that LOOKS like account-switching undercuts that even
+                    * where the data is safe. */}
+                  <button
+                    onClick={() => setScenariosOpen(true)}
+                    className="text-complicate hover:text-ink text-[11px] transition-colors
+                               border border-complicate/40 rounded px-2 py-0.5"
+                  >
+                    Other scenarios
+                  </button>
+                </>
               )}
               <button
                 onClick={toggle}
@@ -292,6 +308,19 @@ export default function App() {
           </Routes>
         </div>
       </main>
+
+      {scenariosOpen && account.is_demo === 1 && (
+        <ScenarioDrawer
+          account={account}
+          onSwitched={(a) => {
+            setAccount(a);
+            // A different person's record — start them where that account opens, not on
+            // whichever screen the previous one happened to be showing.
+            window.location.assign("/");
+          }}
+          onClose={() => setScenariosOpen(false)}
+        />
+      )}
 
       <footer className="border-t border-line">
         <div className="mx-auto max-w-5xl px-5 py-6 text-xs text-faint flex flex-wrap gap-x-6 gap-y-2">

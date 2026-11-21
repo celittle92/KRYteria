@@ -157,6 +157,22 @@ export interface Reflection {
   cooldown_would_help: string | null;
 }
 
+/** One demo persona, as `/api/demo/characters` reports it.
+ *
+ *  `demonstrates` is authored beside the character in `data/characters/*.json` and says
+ *  what that account is there to show — *"Counter-evidence against a conclusion the user
+ *  likes"*, *"A thin record producing honest Unknowns rather than invented conclusions"*.
+ *  The API has always sent it; until 2026-11-20 nothing rendered it, and the demo list
+ *  showed age and occupation instead. */
+export interface DemoCharacter {
+  handle: string;
+  name: string;
+  age?: number;
+  occupation?: string;
+  location?: string;
+  demonstrates?: string[];
+}
+
 export interface Resource {
   id: number; name: string; kind: string; phone: string | null;
   text_line: string | null; url: string | null; hours: string | null; note: string | null;
@@ -258,10 +274,7 @@ export const api = {
 
   // The demo front door. No passphrase crosses the wire: the backend refuses any handle
   // that is not a demo account, so this cannot open a real person's journal.
-  demoCharacters: () => get<Array<{
-    handle: string; name: string; age?: number;
-    occupation?: string; location?: string; demonstrates?: string[];
-  }>>("/api/demo/characters"),
+  demoCharacters: () => get<DemoCharacter[]>("/api/demo/characters"),
   demoSignIn: (handle: string) => post<Account>("/api/demo/signin", { handle }),
 
   setPreferences: (

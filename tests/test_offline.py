@@ -286,6 +286,35 @@ def test_a_resource_must_declare_its_country() -> None:
                                       "region": "GB", "url": "https://example.edu/x"}])
 
 
+def test_every_character_says_what_it_demonstrates() -> None:
+    """The drawer prints `demonstrates[0]` under each name, so it may not be missing.
+
+    Until 2026-11-20 the demo list showed age, occupation and location — demographics,
+    telling a visitor nothing about whether opening that account would show them
+    anything. Four testers were asked to choose between nine strangers before they knew
+    what the product did, and none of them got past it.
+
+    The sentences were authored with the characters and shipped in the JSON all along;
+    `/api/demo/characters` has always returned them and the front end threw them away.
+    This pins the data so a character added later cannot arrive unlabelled.
+
+    *(That the demonstration account opens in one click is covered end to end by
+    `tools/fresh_clone_check.sh`, which signs into it and into all nine from a clean
+    clone.)*
+    """
+    import json
+
+    files = sorted((PROJECT_DIR / "data" / "characters").glob("*.json"))
+    check("the character pack is present", len(files) >= 9, str(len(files)))
+    for f in files:
+        char = json.loads(f.read_text(encoding="utf-8"))
+        lines = char.get("demonstrates") or []
+        check(f"{f.name} says what it demonstrates", bool(lines))
+        if lines:
+            check(f"{f.name}'s first line is a sentence, not a label",
+                  len(lines[0]) > 20, lines[0])
+
+
 def test_every_resource_is_dated_and_sourced() -> None:
     """A number you can see was checked — and when — is one you can judge.
 

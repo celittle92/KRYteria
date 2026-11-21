@@ -20,7 +20,7 @@ with you.
 | Backend | FastAPI + SQLite, hand-written repository layer, 41 modules, 34 tables |
 | Agents | 7 PydanticAI agents, 8 runtime prompts in `backend/prompts/` |
 | Front end | React 18 + Vite + TypeScript + Tailwind, 10 screens, `dist/` committed |
-| Tests | 5 suites, **1,600 checks**, all offline, no API key, no network |
+| Tests | 5 suites, **1,619 checks**, all offline, no API key, no network |
 | Spend | 20 live runs — 18 with token counts, 17 with a cost: 396 calls, **$0.241** — `output/usage_log.json` |
 
 ---
@@ -49,7 +49,7 @@ supersedes the old one. This is what lets the product notice that a standard qui
 easier — destroy the history and that insight is gone.
 
 ```bash
-python3 tests/test_offline.py        # 582 checks, needs no packages at all
+python3 tests/test_offline.py        # 601 checks, needs no packages at all
 ```
 
 ---
@@ -505,7 +505,7 @@ from a new browser is the one most likely to lose the race with the boot.
 ## 10. Verifying all of it
 
 ```bash
-python3      tests/test_offline.py      # 582 — store layer, needs no packages
+python3      tests/test_offline.py      # 601 — store layer, needs no packages
 .venv/bin/python tests/test_contracts.py    # 224 — output contracts, demo provider
 .venv/bin/python tests/test_wiring.py       #  74 — Argon2id, provider, budget caps
 .venv/bin/python tests/test_api.py          # 333 — HTTP, isolation, security, retention
@@ -514,6 +514,52 @@ python3      tests/test_offline.py      # 582 — store layer, needs no packages
 
 All five are free, offline, and need no API key. **Live runs cost money and refuse to
 start without `--yes-spend-credits`, after printing the call count.**
+
+### The front door, rebuilt for the phone it is actually read on (2026-11-20)
+
+**Every tester used a phone. The app was built on a laptop**, where the landing page's two
+columns sit side by side and nothing is below the fold. Christine spotted it: *"Everyone
+looked at the app on their phones except me."*
+
+Measured at 375px before the change: the homepage ran **2,692px — 3.3 screens** — and the
+only emphasized button on it was **Sign in**, the one thing a visitor cannot do. The nine
+demo characters sat under "Look around first", **946px of it, 32% of the page**, listed by
+age, occupation and location. Nothing said what was inside any of them, and the richest
+account in the database was not on the list at all.
+
+Four testers had failed at exactly that spot, in four different ways. Asking somebody to
+choose between nine strangers before they know what the product does is not a styling
+problem.
+
+**After: 1,906px, 2.3 screens, and the whole decision above the fold** — *Start my own*
+(primary, Christine's call: starting an account is the goal and the demo is the explainer,
+not the destination), *See it working*, and a sign-in text link. Plus the sentence four
+testers needed, which had never been written down anywhere a visitor would read it:
+**"It never scores you, ranks you, or tells you to stay or go."**
+
+**The nine moved inside the demo as an "Other scenarios" drawer**, which was Christine's
+design. It is **navigation, not data** — each persona keeps her own account, her own
+criteria library, her own profiles. Folding them into one account would collapse the
+three-level model, and an account containing other accounts is the single shape the
+privacy rules forbid. The drawer calls `POST /api/demo/signin`, which already refuses
+anything not flagged `is_demo`.
+
+**It renders only inside a demo account**, and the gate is the point rather than a
+precaution: the route would 404 regardless, but this product's promise is that no account
+can see another, and an affordance that *looks* like account-switching undercuts that even
+where the data is safe. Verified by signing into a real account and confirming the control
+is absent.
+
+**The line under each persona was already written.** `demonstrates` is authored beside each
+character and `/api/demo/characters` has returned it since the ecosystem was built — *"A
+thin record producing honest Unknowns rather than invented conclusions"*, *"Counter-evidence
+against a conclusion the user likes"*. The front end threw it away and printed occupations
+instead. **Computed, sent, discarded — the fourth instance of that shape in this project**,
+after the durability note, the resource decline and the kept-analysis sentence.
+
+**Not fixed, and separate:** My KRYteria has **40 tap targets under 32px**, below the touch
+minimum. The inner screens run 5–7 phone screens deep. Both real; neither is where the
+testers failed.
 
 ### Known limits, stated rather than discovered
 

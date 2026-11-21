@@ -214,6 +214,26 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   per-profile delete route** — nine tables reference a profile, most cascading, and it
   holds the assessments made under it. A test asserts the route does not exist. Account
   deletion remains the way to erase.
+- **The demo characters live INSIDE the demo, not on the landing page** (2026-11-20).
+  `components/scenarios.tsx` is an "Other scenarios" drawer, **gated on
+  `account.is_demo === 1`** — never render it for a real account, because an affordance
+  that looks like account-switching undercuts "no account can see another" even though
+  the route would 404. It is **navigation, not data**: each persona keeps her own account
+  and her own criteria library, and merging them would collapse the three-level model.
+  **Do not put the nine back on the front door** — asking a stranger to choose between
+  nine strangers before they know what the product does is what four testers failed at.
+- **The landing page is designed for a phone.** Every tester used one; the app was built
+  on a laptop where the two columns sit side by side. At 375px it went from 2,692px to
+  1,906px, and the order is **Start my own** (primary — starting an account is the goal),
+  **See it working** (opens `demo`), then a sign-in link. The hero carries *"It never
+  scores you, ranks you, or tells you to stay or go"*, which two testers needed and
+  nobody had written.
+- **`demonstrates[0]` is what the drawer prints under each name.** Authored in
+  `data/characters/*.json`, returned by `/api/demo/characters` since the ecosystem was
+  built, and ignored by the UI until now. `tests/test_offline.py` pins that every
+  character has one.
+- **Known and not fixed:** My KRYteria has **40 tap targets under 32px**, and the inner
+  screens run 5–7 phone screens deep.
 - **Defaults: `frontend/src/choice.ts` is the single statement of the rule.** Exactly one
   profile/person → select it; more than one → select nothing and make the first option a
   **question**. A default is a soft recommendation, and "no profile ranks above another"
@@ -336,7 +356,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   | `tests/test_api.py` | `.venv/bin/python` | the HTTP layer in demo mode, including **data isolation between accounts** and retention |
   | `tests/test_evals.py` | `.venv/bin/python` | the eval harness — mostly that it **refuses** rather than skips |
 
-  1,600 checks across 165 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
+  1,619 checks across 166 test functions as of 2026-11-20, verified by `tools/check_consistency.py --tests`. Run all five after any change to `backend/`.
 
 - **Run the app:** `.venv/bin/python -m uvicorn backend.main:app --port 8000`, then
   `/api/health` (needs no session) and `/docs`. Seed or reset the demo account first with
