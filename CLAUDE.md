@@ -41,7 +41,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   says about itself before diagnosing what it produced.**
 - **Measured cost of a full brain dump: $0.00341** (5 agents incl. reflection, 9,109 in
   / 4,992 out). Reflection is opt-in, so the 4-agent $0.00208 is the common case. Total live spend to date:
-  **$0.24498** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
+  **$0.24698** measured across **16 runs**: 15 reported token counts and 14 reported a cost. The two without one are excluded from the total rather than estimated, so real spend is a little higher (`output/token_report.md`).
 - **A safety halt withholds the ANALYSIS, it does not stop the RECORD** (Christine's
   call, 2026-11-12). On `disclosure` or `immediate_danger` — `WITHHOLD_ANALYSIS_AT`,
   checked in code, **not** read off `suggested_action` — Narrative, themes and Evidence
@@ -536,7 +536,7 @@ not in a standalone clone of this repo. Read that file, plus `AI_prompts.md` and
   overwrites one — so the list above is the search order, not the precedence order, and
   reading it as "file wins" cost an hour on 2026-11-20. A rotated key was correct in
   `.env` and on Render while **five stale `export PORTKEY_API_KEY` lines in `~/.zshrc`**
-  handed every local command the dead one; the symptom was a flat `401 Invalid API Key`
+  handed every local command the dead one; the symptom was a flat `404 Invalid API Key`
   that looked like Portkey's fault. `/api/health` reports `env_source` and the key's last
   four characters: check that before suspecting the provider.
 - The model is pinned to `gpt-6-luna` in `app_config.REQUIRED_OPENAI_MODEL`, the single

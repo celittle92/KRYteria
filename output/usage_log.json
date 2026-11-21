@@ -256,16 +256,28 @@
       "cost_usd": 0.00437,
       "note": "All five agents ran: narrative 3,746/373/6.8s · safety 2,381/60/4.0s · evidence 3,430/2,226/28.0s · reasoning 4,542/2,647/27.2s · reflection 1,881/233/5.6s. Evidence and Reasoning are the expensive pair, which is the shape the tokenomics section argues from. Entry written into a seeded demo account and the database re-seeded afterwards, so the committed demo is unchanged.",
       "evidence": "output/screenshots/trace-dark.jpg"
+    },
+    {
+      "date": "2026-11-21",
+      "run": "video-script-rehearsal",
+      "what": "One brain dump on the hosted app, in Joe's account, to time the wait the demo video has to narrate over and to check which agents actually run.",
+      "calls": 3,
+      "input_tokens": 9260,
+      "cached_input_tokens": null,
+      "output_tokens": 3600,
+      "cost_usd": 0.002,
+      "note": "Two findings, both of which would have made the video wrong on camera. The wall clock was 42.6s, not the 25-35s the script assumed. And only THREE agents ran -- narrative, safety, evidence -- because the entry's conclusion was hedged, so `needs_interrogation` found no stated conclusion and Reasoning never fired; with no probe due, neither did Reflection. A script saying 'five agents run on this' over a three-row trace is a false claim made on tape.",
+      "evidence": "scratchpad demo-video-script.md"
     }
   ],
   "totals": {
-    "live_runs": 21,
-    "runs_with_token_counts": 19,
-    "runs_with_a_cost_figure": 18,
-    "model_calls": 401,
-    "input_tokens": 906712,
-    "output_tokens": 356003,
-    "cost_usd": 0.24498,
+    "live_runs": 22,
+    "runs_with_token_counts": 20,
+    "runs_with_a_cost_figure": 19,
+    "model_calls": 404,
+    "input_tokens": 915972,
+    "output_tokens": 359603,
+    "cost_usd": 0.24698,
     "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 — the figures from before two corrections. A note claiming verification is not verification; the check is."
   },
   "per_interaction": {
