@@ -1,79 +1,103 @@
 # The 2–3 minute demo video
 
 **Optional on the assignment, and worth recording anyway.** The requirements page says a
-demo video can earn the points for *It works* (15) and *Look + feel* (10) if the app will
-not run for the teaching staff. It cannot earn the 5 points for *The teaching staff can
-run it*. So three minutes of recording insures **25 points** against a sleeping free
-instance or a laptop with the wrong Python on it.
+demo video can earn *It works* (15) and *Look + feel* (10). It **cannot** earn the 5 points
+for *The teaching staff can run it* — those are already safe, because the hosted app is up
+and a fresh clone passes in 13 seconds. So the video is not insurance against the app
+failing. It is insurance against the app being **complicated**: six screens, a three-level
+criteria model and five agents is a lot to meet cold, and three minutes of somebody
+competent driving it is the difference between a grader seeing the architecture and a
+grader seeing a form.
+
+Rewritten 2026-11-23 against the current build. The previous version opened on "the
+sign-in screen, nine characters", which has not been the front door since 20 November.
 
 ---
 
 ## Before you press record
 
 1. **Run it locally, not on Render.** The hosted instance sleeps and the first load takes
-   about a minute; that minute is a third of the video. Local is instant.
+   about a minute — a third of your video.
 
    ```bash
    .venv/bin/python -m uvicorn backend.main:app --port 8000
    ```
 
-2. **Live mode, not demo mode.** Demo mode returns fixed, simulated output and every step
-   is labelled `is_simulated` — showing it as though it were the product would be a lie on
-   camera. Live mode is the default on your machine, because `app_config` finds
-   `PORTKEY_API_KEY` in the workspace `.env` one level up. Confirm before recording:
-   <http://localhost:8000/api/health> should say `"mode":"live"`.
-
-   **One brain dump with reflection costs about $0.0034.** Budget two takes: under a cent.
-
-3. **Reset the demo so it looks untouched**, and so the entry you write on camera is the
-   only new one:
+2. **Seed both demo sets**, or *See it working* lands on a 404:
 
    ```bash
-   .venv/bin/python -m backend.seed_characters --reset
+   .venv/bin/python -m backend.seed_demo && .venv/bin/python -m backend.seed_characters
    ```
 
-4. **Have the entry text on your clipboard.** Typing a paragraph on camera is thirty
-   seconds of nothing. Copy this — it is written to make the product do its two most
-   distinctive things, interrogate a stated conclusion and surface counter-evidence:
+3. **Live mode, not demo mode.** Demo mode returns fixed simulated output; showing it as
+   the product would be a lie on camera. Check <http://localhost:8000/api/health> says
+   `"mode":"live"` before you record. **A five-agent run costs $0.0044.** Three takes is
+   about a cent and a half.
 
-   > He cancelled again, an hour before. That is the third time and I think I have to
-   > accept he is just not that interested. I keep making excuses for him. Although he
-   > did text straight away and offered Thursday instead, and he has never once been late
-   > when we have actually met.
+4. **Have the entry text on your clipboard.** Typing a paragraph on camera is thirty dead
+   seconds. Use this one — it is built to make the product do its two most distinctive
+   things, interrogate a flat conclusion and answer it with her own earlier entries:
 
-5. **Screen recording on macOS:** `Cmd + Shift + 5` → *Options* → pick your microphone →
-   *Record Selected Portion*, framed on the browser window only. Full screen captures your
-   dock, your tabs and your notifications.
+   > Greg's second-round interview turned into a third round, so still nothing. I think I
+   > just have to accept this is who he is and it is not going to change. I keep telling
+   > myself I am being patient but honestly I am making an exception I would not make for
+   > anyone else.
 
-6. **Close everything else.** Notifications during a demo about a relationship journal are
+   It states a conclusion, so **Reasoning fires**. Jane's postponement probe is due, so
+   **Reflection fires too** — five agents, which is the run worth filming.
+
+5. **`Cmd + Shift + 5` → Options → pick your microphone → Record Selected Portion**, framed
+   on the browser window only. Full screen captures your dock and your notifications.
+
+6. **Close everything else.** A notification during a demo about a relationship journal is
    a bad look, and one of them will be from this project.
 
 ---
 
-## The shot list — 2:50, narrated
+## The shot list — about 2:50
 
 | Time | On screen | What to say |
 |---|---|---|
-| **0:00–0:15** | The sign-in screen, nine characters | "KRYteria is a decision mirror. Nine invented people, each one click — no sign-up, nothing to type." Click **Catherine**. |
-| **0:15–0:30** | My KRYteria: two profiles | "Her standards live in a library. Each profile selects from it and sets its own importance — the same criterion is Mandatory in one and set aside in another. That is the architecture, not a setting." |
-| **0:30–1:05** | Brain Dump: paste, pick profile and person, submit | "She writes the messy version. No form, no categories." Paste, submit, and **let the spinner run** — do not cut away. "Four agents are running: one reads the narrative, one checks safety on the raw text at the same time, one maps what happened to her criteria, one interrogates the conclusion she just drew." |
-| **1:05–1:40** | The analysis | "It separated what happened from what she concluded." Point at a `reported_event` beside an `interpretation`. "It mapped the evidence — and this one is *complicating*, not good or bad." Then the interrogation: "She said he is not interested. It answered with her own earlier entries." |
-| **1:40–2:00** | The execution trace under the analysis | "Every run shows what each agent did, the tokens it used and what it cost. This one cost a third of a cent." |
-| **2:00–2:20** | Patterns | "A pattern has to name the entries it rests on. Three support this, one cuts against it, and it says so rather than rounding." |
-| **2:20–2:40** | Sign out, open **Vanessa**, her flagged entry | "Safety runs on the raw text, independent of any profile. It recognised this without being told to look — and it never labels anybody. The analysis is still recorded; it is withheld from the screen, and it says so." |
-| **2:40–2:50** | My Progress | "Counts, never scores. No compatibility percentage, ever. Including the one most people have never seen: how their own standards have changed." |
+| **0:00–0:12** | The landing page | "KRYteria is a decision mirror. It compares what you said you wanted against what you have actually been writing down." Point at the line: *it never scores you, ranks you, or tells you to stay or go.* Click **See it working**. |
+| **0:12–0:30** | Jane's My Progress | "This is a finished journal — ten standards, five entries, nothing typed. **Counts, never scores.** No compatibility percentage, ever." |
+| **0:30–0:45** | **My KRYteria** | "Her standards live in a library. Each profile selects from it and sets *its own* importance — the same criterion is Mandatory in one profile and set aside in another. That is the architecture, not a preference." |
+| **0:45–1:35** | **Brain Dump** → paste → submit → **let it run** | "She writes the messy version — no form, no categories." Submit. **The wait is about 40 seconds. Do not cut; narrate it:** "Five agents are running. One reads the narrative. One checks safety on the raw text at the same time — independent of any profile, because you should not have to file a safety concern as a dating criterion. One maps what happened onto her criteria. One interrogates the conclusion she just drew. One writes the reflection." |
+| **1:35–2:05** | The analysis | "It split what happened from what she concluded." Point at a `reported_event` beside an `interpretation`. "It mapped evidence four ways — and this one is **complicating**, not good and not bad, because the app refuses to force a verdict the evidence does not support." Then the interrogation: "She said this is who he is. It answered with her own earlier entries." |
+| **2:05–2:20** | **See what each part of KRYteria did** | "Every run shows what each agent did, its tokens and its latency. This one cost under half a cent. And underneath: *tool names and counts only — nothing you wrote is recorded here.*" |
+| **2:20–2:40** | **Patterns** | "A pattern has to name the entries it rests on. **Three support this, one cuts against it** — and the one cutting against it is the night she laughed so hard she could not breathe. It shows you the contradiction instead of rounding it off." |
+| **2:40–2:50** | **Other scenarios** → **Vanessa** → her 11 November entry | "Nine more people inside the demo. Safety ran on this one without being told to look — and it never labels anybody. The analysis is still recorded; it is withheld from the screen, and the screen says so." |
+
+**If you want a tenth beat and have the time:** My Progress → *How your standards have
+changed*. "Her definition of financial independence moved from *an income comparable to
+mine* to *takes responsibility for his own obligations* — in her own words, with the date.
+Most people have never seen that about themselves."
 
 ---
 
-## What to say if something goes wrong on camera
+## The two things the rehearsal caught
 
-Keep it and say it. A fifteen-second "that is the free instance waking up, here it is" is
-better than a cut, and far better than a fourth take. The one thing worth re-recording is
-a wrong *claim*.
+1. **The wait is ~40 seconds, not 20.** Write the narration for it or you will be filming
+   silence. The agent paragraph above is roughly the right length.
+2. **A hedged entry runs three agents, not five.** The rehearsal entry had no flat
+   conclusion, so Reasoning never fired and the trace had three rows — while the script
+   said "five agents run on this." Use the entry above, in **Jane's** account, or the claim
+   is false on camera.
+
+---
+
+## If something goes wrong while recording
+
+Keep it and say it. Fifteen seconds of "that is the model thinking, here it comes" beats a
+cut and beats a fourth take. The only thing worth re-recording is a wrong **claim**.
+
+**Fallback if the live run misbehaves twice:** skip the brain dump, open the execution
+trace that is already in Jane's account, and narrate that instead. The video is 1:50 and
+loses nothing structural.
 
 ---
 
 ## After
 
-Upload to Canvas with the rest. Check the audio before you close the file — a silent
-screen recording is the most common way this goes wrong.
+Check the audio before you close the file — a silent screen recording is the most common
+way this goes wrong. Then upload to Canvas with the repo link, `report.html` and
+`slides.html`.
