@@ -72,11 +72,12 @@ sign-in screen, nine characters", which has not been the front door since 20 Nov
    It states a conclusion, so **Reasoning fires**. Jane's postponement probe is due, so
    **Reflection fires too** — five agents, which is the run worth filming.
 
-5. **`Cmd + Shift + 5` → Options → pick your microphone → Record Selected Portion**, framed
-   on the browser window only. Full screen captures your dock and your notifications.
+5. **Recording it on a MacBook Pro.** See the full walkthrough below — do the ten-second
+   test take first, because the thing that ruins take one is always permissions or a
+   muted mic.
 
-6. **Close everything else.** A notification during a demo about a relationship journal is
-   a bad look, and one of them will be from this project.
+6. **Close everything else and turn on Do Not Disturb.** A notification during a demo
+   about a relationship journal is a bad look, and one of them will be from this project.
 
 ---
 
@@ -127,3 +128,59 @@ loses nothing structural.
 Check the audio before you close the file — a silent screen recording is the most common
 way this goes wrong. Then upload to Canvas with the repo link, `report.html` and
 `slides.html`.
+
+---
+
+## Recording it on a MacBook Pro
+
+### Set up once
+
+1. **Turn on Do Not Disturb.** Control Centre (menu bar, top right) → Focus → Do Not
+   Disturb. Notifications are the single most common reason a take gets binned.
+2. **Open the slide-free browser window** you will record. One window, one tab. Close the
+   others so no tab titles are readable.
+3. **`Cmd + Shift + 5`** brings up the capture toolbar.
+4. In that toolbar, click **Options** and set:
+   - **Microphone → MacBook Pro Microphone.** This is the step people miss, and it
+     defaults to *None*. The built-in mics are genuinely good; **do not use AirPods** —
+     Bluetooth drops the mic to call quality and it is audible.
+   - **Save to → Desktop** (or wherever you will find it).
+   - **Show Floating Thumbnail → on.** It gives you a preview to click when you stop.
+5. Choose **Record Selected Portion** and drag the frame around the **browser window
+   only** — not the whole screen. Full screen captures your dock, menu bar and clock.
+
+### Do a ten-second test first
+
+Record ten seconds, say something, stop, play it back. You are checking two things:
+
+- **Does it have sound?** If not, the Microphone option reset to None, or macOS has not
+  been granted mic access. A permission prompt appearing mid-take kills the take.
+- **Is the text readable?** If the frame is small, the slides and app text will be
+  unreadable when it is compressed for upload. Zoom the browser to ~110–125% if needed
+  (`Cmd +`) before the real take.
+
+The first time you ever record, macOS asks for **Screen & System Audio Recording**
+permission. Get that prompt out of the way on the test, not on take one.
+
+### Record
+
+- Press **Record**. There is no countdown — pause a beat before you start talking.
+- **Stop** with the ■ in the menu bar, or **`Cmd + Ctrl + Esc`**.
+- The file lands as a **`.mov`** on your Desktop, named by date and time.
+
+### Before you close it
+
+- **Play it back with the volume up.** A silent screen recording is the most common way
+  this goes wrong, and you cannot tell by looking.
+- **Check the size.** Three minutes of Retina screen capture is typically 150–400 MB.
+  If Canvas refuses it, two options:
+  - **Compress:** open in QuickTime Player → File → Export As → **1080p**. Usually cuts
+    it by more than half with no visible loss for this content.
+  - **Or upload to YouTube as Unlisted** and submit the link. Unlisted means nobody finds
+    it without the URL.
+
+### If you would rather have more control
+
+**QuickTime Player → File → New Screen Recording** is the same engine with a calmer
+interface, and it lets you pick the mic from a dropdown before you start. Either is fine;
+`Cmd + Shift + 5` is fewer clicks.
