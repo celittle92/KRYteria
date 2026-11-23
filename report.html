@@ -1387,6 +1387,16 @@ derive from its own source.</p>
   <li><strong>37 of 145 evaluation checks need a human.</strong> An LLM judge would have automated them and would have been this project's own model grading its own output against its own rubric.</li>
   <li><strong>Answers to interrogation questions are recorded but never re-read.</strong> Answering a question writes to the entry's record and shows on it in the Journal; no agent consumes it. Feeding answers into the next analysis is the right next step and changes agent <em>input</em>, which is the one kind of change no offline check can verify — deferred deliberately rather than attempted and left unverified.</li>
   <li><strong>Date Calendar and Cooldown are designed and not built.</strong> P1, deliberately.</li>
+  <li><strong>The touch targets on My KRYteria are too small.</strong> Measured at 375px:
+  <strong>43 interactive elements under 32px</strong>, 27 of them tier pills at 24px tall,
+  against Apple's 44pt guidance. This is a responsive web app rather than a native one and
+  nothing required it to be mobile-first, which is exactly how it happened — it was built
+  and reviewed on a laptop, where those pills are comfortable. Then <strong>every single
+  outside tester opened it on a phone</strong>, which is its own finding and arguably the
+  more useful one: the device the author develops on is not the device the product meets
+  people on. The layout work in §7 fixed what made the app <em>unreadable</em> at that
+  width; the tap targets are what is left, and they are a half-hour of CSS that was not
+  worth risking on the day of submission.</li>
   <li><strong>SQLite on a host is not production-grade encryption</strong>, and the README says so rather than implying otherwise.</li>
   <li><strong>The hosted instance keeps nothing</strong>, and now says so before you type. Durability needs a paid instance with a disk; the demonstration deployment is not one, deliberately.</li>
   <li><strong>Sessions are bounded, not revocable.</strong> They are signed cookies, so signing out deletes the browser's copy and a stolen one stays valid until its fourteen days are up. Revoking on demand needs a server-side session table; the fourteen-day cap is the bound until there is one.</li>
