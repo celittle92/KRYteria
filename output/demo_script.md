@@ -16,23 +16,49 @@ sign-in screen, nine characters", which has not been the front door since 20 Nov
 
 ## Before you press record
 
-1. **Run it locally, not on Render.** The hosted instance sleeps and the first load takes
-   about a minute — a third of your video.
+1. **Record on Render, after waking it — that is the better take.** The URL bar then reads
+   `kryteria.onrender.com`, so a grader watches the deployed app rather than somebody's
+   laptop, which is the whole claim of *It works*. Render's own docs: a free service
+   "spins down" only after "15 minutes without receiving any inbound traffic", and waking
+   "takes about one minute". **Your recording is inbound traffic**, so once it is awake it
+   stays awake for the whole video.
+
+   The warming procedure, about two minutes before you hit record:
 
    ```bash
-   .venv/bin/python -m uvicorn backend.main:app --port 8000
+   curl -s -o /dev/null -w "%{time_total}s\n" https://kryteria.onrender.com/api/health
    ```
 
-2. **Seed both demo sets**, or *See it working* lands on a 404:
+   **Run it twice.** Measured on 23 November: the cold call took **62.8 seconds**, the
+   second **0.51 s**, the third **0.39 s**. Half a second is your signal it is awake. Then
+   click through the app once as a dry pass, which both proves the path and keeps the
+   idle timer reset.
+
+   Two things the docs are explicit about, so decide with them in view. **"Render might
+   restart a Free web service at any time"** — unlikely in three minutes, but if it happens
+   mid-take, the restart re-seeds and you start again. And the disk is ephemeral: the entry
+   you write on camera **survives until the next restart or deploy**, then the demo returns
+   to its seeded state on its own. Nothing to clean up.
+
+   **Local is the fallback**, not the default — use it if the hosted app feels sluggish on
+   the dry pass, or if you would rather not depend on a free instance at all:
 
    ```bash
    .venv/bin/python -m backend.seed_demo && .venv/bin/python -m backend.seed_characters
+   .venv/bin/python -m uvicorn backend.main:app --port 8000
    ```
 
+   On Render both seeders already run at boot, so there is nothing to seed. Locally you
+   must run them, or *See it working* lands on a 404.
+
+2. **The 40-second wait is the same either way.** It is model time, not server time — and
+   the rehearsal that measured it at 42.6 seconds was run against the hosted app, so that
+   figure already includes Render.
+
 3. **Live mode, not demo mode.** Demo mode returns fixed simulated output; showing it as
-   the product would be a lie on camera. Check <http://localhost:8000/api/health> says
-   `"mode":"live"` before you record. **A five-agent run costs $0.0044.** Three takes is
-   about a cent and a half.
+   the product would be a lie on camera. Render is live. Locally, check
+   <http://localhost:8000/api/health> says `"mode":"live"` before you record. **A
+   five-agent run costs $0.0044.** Three takes is about a cent and a half.
 
 4. **Have the entry text on your clipboard.** Typing a paragraph on camera is thirty dead
    seconds. Use this one — it is built to make the product do its two most distinctive
