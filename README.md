@@ -18,13 +18,29 @@ MGT 409 final project · Christine Little · Yale SOM
 
 ## ▸ Open it here: **<https://kryteria.onrender.com>**
 
-Nine demo characters on the sign-in screen, each one click away — no sign-up, nothing to
-type. **A free instance sleeps after about fifteen minutes, so the first load can take a
-minute.** That is the host waking up, not a broken link. If the link is asleep or you
-would rather run it yourself, [Running it](#running-it) below is tested from a fresh
-clone and needs no API key.
+Press **See it working** — it opens a finished journal, no sign-up and nothing to type.
+Nine more demonstration people are inside it under **Other scenarios**. **A free instance
+sleeps after about fifteen minutes, so the first load can take a minute.** That is the host
+waking up, not a broken link. If the link is asleep or you would rather run it yourself,
+[Running it](#running-it) below is tested from a fresh clone and needs no API key.
 
 ---
+
+## A note on the deck
+
+`slides.html` is **not built on reveal.js**, which the requirements page suggests. It is
+ten `<section>` elements and about twenty lines of JavaScript, and it meets every
+behaviour the page actually specifies: ten slides, arrow keys and space to navigate,
+**F** for full screen, screenshots and the agent diagram embedded in the file.
+
+The reason is the requirement one paragraph above it: both HTML files must *"open by
+double-clicking, on any computer, with every screenshot showing."* reveal.js loaded from
+a CDN needs a network at the moment it is opened. A grader on a plane, behind a proxy, or
+on a locked-down machine gets a blank page — and a deck that fails to open is worth less
+than one built the unfashionable way. `slides.html` has **zero external scripts** and
+every image inlined as a data URI, so it opens from a USB stick with the wi-fi off.
+
+Stated here rather than hoped past.
 
 ## Status
 
@@ -80,8 +96,8 @@ python3 -m venv .venv
 ### Start it
 
 Build the demo data. **Both commands** — the first makes the single `demo` account, the
-second makes the nine characters the sign-in screen lists. Running only the first leaves
-the front door empty.
+second makes the nine demonstration people, including the one **See it working** opens.
+Running only the first leaves that button on a 404.
 
 ```bash
 .venv/bin/python -m backend.seed_demo && .venv/bin/python -m backend.seed_characters

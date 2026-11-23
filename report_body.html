@@ -68,14 +68,29 @@
   .kpi b{display:block; font-size:1.5rem; font-variant-numeric:tabular-nums}
   .kpi span{font:600 .66rem/1.3 ui-sans-serif,system-ui,sans-serif; letter-spacing:.1em; text-transform:uppercase; color:var(--gray)}
   .good{color:var(--support)} .bad{color:var(--contra)}
+  /* Two replies to one sentence, set beside each other, because the comparison is the
+     evidence and a reader should not have to hold one in their head to read the other. */
+  .sbs{display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.4rem 0}
+  .sbs > div{background:#FFF; border:1px solid var(--line); border-radius:6px; padding:.9rem 1rem}
+  .sbs h4{font:600 .72rem/1 ui-sans-serif,system-ui,sans-serif; letter-spacing:.1em;
+          text-transform:uppercase; color:var(--gray); margin:0 0 .6rem}
+  .sbs p{font-style:italic; margin:0 0 .7rem}
+  .sbs p:last-child{margin-bottom:0}
+  .sbs .verdict{font-style:normal; color:var(--gray); font-size:.86rem}
+  @media (max-width:640px){ .sbs{grid-template-columns:1fr} }
   /* The assignment asks for 10-15 printed pages. On screen defaults this document runs
      to about 31; the rules below are what close most of that gap without deleting
      evidence. Measured in a browser at the printed column width (letter, 0.5in margins
      => 624px) against 960px of usable page height. */
   @media print{
-    /* One number. 13.3px is about 10pt Georgia — a normal printed body size. */
-    html{font-size:13.3px}
-    body{background:#fff; line-height:1.45}
+    /* 12px is about 9pt Georgia. It was 13.3px (~10pt) until 2026-11-22, when the whole
+       document was measured at four settings rather than guessed at: 13.3 gave 22.7
+       pages, 12.0 gives 18.4, and 11.5 only reaches 17.2 — so typography alone could
+       never meet the 10-15 limit, and below 12 the report starts to look like it is
+       hiding from one. 9pt with 1.35 leading buys 4.3 pages for no content at all; the
+       rest came out of the prose. */
+    html{font-size:12px}
+    body{background:#fff; line-height:1.35}
     .page{max-width:none; padding:0 .4in}
     h1{font-size:2rem}
     h2{font-size:1.2rem; margin:1.5rem 0 .2rem; padding-top:.7rem; page-break-after:avoid}
@@ -88,7 +103,7 @@
     figure{page-break-inside:avoid; margin:.9rem 0}
     /* Screenshots are tall portraits of a whole screen; unconstrained, six of them eat
        four pages on their own. */
-    figure img{max-height:3.1in; width:auto; display:block; margin:0 auto}
+    figure img{max-height:2.7in; width:auto; display:block; margin:0 auto}
     figure svg{max-height:4in}
     .todo{border-color:#999; color:#333}
   }
@@ -120,7 +135,7 @@ they fail to act consistently with information they already hold.</p>
 
 <table>
   <tr><th>Repository</th><td><a href="https://github.com/celittle92/KRYteria">github.com/celittle92/KRYteria</a></td></tr>
-  <tr><th>Hosted</th><td><a href="https://kryteria.onrender.com">kryteria.onrender.com</a> — click any of the nine characters on the sign-in screen. Nothing to type. A free instance sleeps after about fifteen minutes, so the first load may take a minute.</td></tr>
+  <tr><th>Hosted</th><td><a href="https://kryteria.onrender.com">kryteria.onrender.com</a> — press <strong>See it working</strong> for a finished journal. No sign-up, nothing to type; nine more demonstration people are inside it under <em>Other scenarios</em>. A free instance sleeps after about fifteen minutes, so the first load may take a minute.</td></tr>
   <tr><th>Model</th><td><code>gpt-6-luna</code>, pinned in one place (<code>app_config.REQUIRED_OPENAI_MODEL</code>)</td></tr>
   <tr><th>Run locally</th><td>Clone, <code>python3 -m venv .venv</code>, <code>pip install -r requirements.txt</code>, <code>.venv/bin/python -m backend.seed_demo</code>, then <code>uvicorn backend.main:app</code>. <code>.env</code> is found in the repo folder, the folder above it, or the environment.</td></tr>
 </table>
@@ -128,17 +143,16 @@ they fail to act consistently with information they already hold.</p>
 <figure>
   <img alt="The KRYteria landing page: the tagline, a paragraph saying it never scores or ranks you, then Start my own and See it working." src="{{FRONT_DOOR}}">
   <figcaption>What a grader meets. One decision — start an account, or open a finished
-  journal — above the fold on a phone. The nine demonstration people moved inside the
-  demo, under <em>Other scenarios</em>, after four testers were asked to choose between
-  nine strangers before they knew what the product did. Opening two of them side by side
-  is still the fastest way to see the argument in §3: Catherine and Adrian describe the
-  same Thursday evening in separate private accounts, and neither is ever told the other
-  wrote a word about it.</figcaption>
+  journal — above the fold on a phone. Creating multi-scenario demos enables a new user to
+  see how the application works before they get started. Opening <em>Other scenarios</em>
+  within the demo side by side is still the fastest way to see the argument in §3:
+  Catherine and Adrian describe the same Thursday evening in separate private accounts,
+  and neither is ever told the other wrote a word about it.</figcaption>
 </figure>
 
-<p class="meta">It was also the first thing an outside tester met, and it is where this
-report's sharpest finding came from — not from the code, but from watching somebody fail
-to start. §7.</p>
+<p class="meta">This screen is the first thing an outside tester meets, and it is where
+this report's sharpest finding came from — not from the code, but from watching somebody
+fail to start before tightening the UI. §7.</p>
 
 <!-- ───────────────────────────── 2. MOTIVATION ───────────────────────────── -->
 <h2>2. Motivation</h2>
@@ -185,12 +199,13 @@ have.</strong></p>
 
 <h3>Who has this problem, and what it costs them</h3>
 
-<p><strong>KRYteria is for a person navigating a relationship who wants to evaluate their
+<p><strong>KRYteria is for a person navigating relationships who wants to evaluate their
 own experiences more intentionally</strong> — particularly where emotion, incomplete
-information and repeated patterns make perspective hard to hold. Romantic first, because
-that is where the pull between what somebody says they want and what they keep accepting
-is strongest. The data model is domain-independent, so a friendship, a family
-relationship or a boundary at work uses the same machinery.</p>
+information and patterns make perspective hard to hold. While the app was built with a
+focus on romantic relationships, the data model is domain-independent, so friendships,
+familial relationships, and even colleague relationships use the same machinery. The
+use-case applies wherever there is a pull between what somebody says they want and what
+they keep accepting.</p>
 
 <p>The cost is not a line item, and inventing a dollar figure for it would be the kind of
 false precision this report is otherwise at pains to avoid. It is four things, and
@@ -259,34 +274,29 @@ The claim is about category and architecture — what each is organized around �
 how well any of them works.</p>
 
 <p><strong>The real incumbent is none of these.</strong> It is the combination of a
-general-purpose chatbot, a Notes app, and informal advice from friends. People already use
-these tools to process relationship experiences, but the information is fragmented, the
-framework is inconsistent, and the analysis often has no persistent connection to the
-standards the individual originally establishes.</p>
-
-<p>That is what KRYteria is measured against in §3: not a feature-by-feature comparison
-with a single competing product, but the existing behavior and collection of tools people
-use to solve this problem today.</p>
+general-purpose chatbot, a Notes app and informal advice from friends — fragmented
+information, an inconsistent framework, and analysis with no persistent connection to the
+standards the person originally set. That, rather than a feature-by-feature comparison
+with one competing product, is what §3 measures KRYteria against.</p>
 
 <p><strong>That claim was confirmed from the inside, by accident.</strong> The outside
-tester in §7 mentioned afterwards, unprompted, that he builds applications of this kind
-for himself. Asked what was under his, he said:</p>
+tester in §7 mentioned afterwards, unprompted, that he builds applications like this at
+work. Asked whether his used agents, he said:</p>
 
 <blockquote>"Not really. Claude just remembers my history of my convos i put into it."
 <footer class="meta">— Alex M., 34, New York, quoted with permission</footer></blockquote>
 
 <p>He works in marketing rather than engineering, which makes him <em>the person this
 category serves</em> rather than an exception to it: a motivated non-engineer who wanted a
-reflection tool and built one. What is underneath it is conversation memory and no
-structure — no extracted observations, no persistent records, nothing compared against
-anything he had said he wanted.</p>
+reflection tool and built one. Underneath it is conversation memory and no structure —
+nothing compared against anything he had said he wanted.</p>
 
 <p class="meta">Said carefully, because overclaiming would weaken the point: memory across
-conversations is an ordinary feature of consumer assistants, not a feat of engineering.
-The interesting thing is what it is <strong>not</strong>. A chat that remembers can recall
-what you said. It cannot tell you that what you said in October contradicts what you chose
-in November — because it never wrote either down as a record it could compare. That gap is
-the whole of §3.</p>
+conversations is an ordinary consumer feature, not a feat of engineering. The interesting
+thing is what it is <strong>not</strong>. A chat that remembers can recall what you said;
+it cannot tell you that what you said in October contradicts what you chose in November,
+because it never wrote either down as a record it could compare. That gap is the whole of
+§3.</p>
 
 
 
@@ -316,16 +326,12 @@ requires the user to adopt a label before it will take the concern seriously —
 detail.</p>
 
 <h3>The two-dimensional model, and the Jimmy G Principle</h3>
-<p>KRYteria separates two dimensions that are often mistakenly conflated:
-<strong>importance</strong> and <strong>status</strong>. Importance describes how much a
-criterion matters to the user within a particular relationship profile. Status describes
-what is currently known about a specific person in relation to that criterion, within
-that profile.</p>
-
-<p>Importance is expressed as Mandatory, Preferred, or Aspirational. Status is expressed
-as Pass, Unknown, Fail, or Not Applicable. These dimensions operate independently: a
-highly important criterion can remain Unknown, and a criterion that is Not Applicable
-does not become a deficiency simply because it matters in another context.</p>
+<p>KRYteria separates two dimensions that are often conflated:
+<strong>importance</strong> — how much a criterion matters to the user <em>within one
+profile</em>, as Mandatory, Preferred or Aspirational — and <strong>status</strong>, what
+is currently known about one person against that criterion, as Pass, Unknown, Fail or Not
+Applicable. They move independently: a Mandatory criterion can sit at Unknown, and Not
+Applicable does not become a deficiency because the same standard matters elsewhere.</p>
 
 <p><strong>Where the name comes from.</strong> The Jimmy G Principle is named after former
 NFL quarterback Jimmy Garoppolo, whose public persona provides a memorable illustration of
@@ -347,20 +353,14 @@ potential deeper connection.<a class="cite" href="#jimmyg-src" id="jimmyg-ref">1
   person.</p>
 </details>
 
-<p>For our founder, the distinction is particularly straightforward: someone can be
-attractive enough to inspire physical interest without being someone she would want to
-date. The attraction is real. So is the lack of interest in a deeper relationship. Neither
-cancels out the other.</p>
-
-<p>This illustrates a fundamental distinction in relationship evaluation: <strong>the same
-person can satisfy one set of criteria while failing to satisfy another, depending on what
-the user is looking for.</strong></p>
-
-<p>A user evaluating a man as a potential husband might consider intellectual engagement,
-shared interests, emotional compatibility, and long-term intentions essential. Evaluating
-the same man as a casual partner might place greater importance on physical attraction,
-mutual interest, communication, and clearly understood expectations. Some criteria may be
-irrelevant to one profile but essential to another.</p>
+<p>For our founder the distinction is straightforward: someone can be attractive enough to
+inspire physical interest without being someone she would want to date. The attraction is
+real. So is the lack of interest in a deeper relationship. Neither cancels the other —
+<strong>the same person can satisfy one set of criteria while failing another, depending
+on what the user is looking for.</strong> Evaluating a man as a husband might make
+intellectual engagement and long-term intentions essential; evaluating the same man as a
+casual partner might weight physical attraction and clearly understood expectations
+instead, and leave other criteria irrelevant altogether.</p>
 
 <p class="eyebrow">Dimension 1 — importance, per profile</p>
 <table>
@@ -407,30 +407,24 @@ above:</p>
 <p class="meta"><sup>&dagger;</sup> The one place the two dimensions touch:
 <code>assessment_board</code> reports a criterion the user set aside <em>as</em> Not
 Applicable rather than as Unknown, because Not Applicable is a real answer and Unknown
-means evidence is missing. Saying "we don't know yet" about something she has already
-decided is irrelevant would be a small lie repeated on every screen. A per-person
-<code>assessments.status</code> of <code>not_applicable</code> also exists, for the case
-where the criterion applies to the profile but not to this particular person.</p>
+means evidence is missing. A per-person <code>assessments.status</code> of
+<code>not_applicable</code> also exists, for the case where the criterion applies to the
+profile but not to this particular person.</p>
 
-<p>Mandatory and Fail are different facts from each other and from both of these. A
-Mandatory criterion sitting at Unknown is the single most useful thing this product can
-show somebody, and it is invisible to any model that collapses importance and status into
-one score.</p>
-
-<p>The person has not changed. The objective has.</p>
+<p>A Mandatory criterion sitting at Unknown is the single most useful thing this product
+can show somebody, and it is invisible to any model that collapses importance and status
+into one score. The person has not changed. The objective has.</p>
 
 <p class="callout">Same person. Different profile. Different criteria.</p>
 
-<p>That is an architecture requirement, not a slogan, and the instruction on the first
-build day said so. Two hard-coded modes, serious
-and casual, would have been a week less work and would have encoded the opposite claim.
-So the criterion lives in the Master Criteria Library carrying <em>no tier at all</em>,
-the tier lives on the profile's selection of it — adding a fourth profile never edits a
-criterion — and <code>get_assessment</code> is structurally unable to fall back to another
-profile's answer. <strong>No profile ranks above another</strong>, enforced in the data
-model and in the interface: with more than one profile KRYteria pre-selects none, because
-a default is a recommendation. A person's suitability is contextual, not universal, and
-nobody here gets a single overall verdict.</p>
+<p>That is an architecture requirement, not a slogan. Two hard-coded modes, serious and
+casual, would have been a week less work and would have encoded the opposite claim. So the
+criterion lives in the Master Criteria Library carrying <em>no tier at all</em>, the tier
+lives on the profile's selection of it — adding a fourth profile never edits a criterion —
+and <code>get_assessment</code> is structurally unable to fall back to another profile's
+answer. <strong>No profile ranks above another</strong>, in the data model and in the
+interface: with more than one profile KRYteria pre-selects none, because a default is a
+recommendation.</p>
 
 <figure>
   <img alt="Catherine's My KRYteria screen: two independently configured profiles, each criterion carrying its own importance tier." src="{{PROFILES_DARK}}">
@@ -806,26 +800,38 @@ surcharge on a call that <em>writes</em> a prefix into the cache is not modeled<
 because the provider does not report it separately, so figures are slightly low on a cold
 cache and correct once warm. And one figure is unexplained: the §4 traced run recorded
 $0.00368 against $0.00414 priced as uncached — a gap of about 5,140 tokens at the
-nine-cents-per-million spread — left open rather than explained away. Neither moves a
-$0.0021 brain dump by a cent.</p>
+nine-cents-per-million spread — left open rather than explained away. It happened a second
+time on 21 November: the app's own estimator put the video rehearsal at $0.00200 where
+list price makes it $0.00273, the same direction and the same cause. The table below
+prices every row at list, so the gap shows rather than hides. Neither moves a brain dump
+by a tenth of a cent.</p>
 
 <div class="kpi">
-  <div><span>Per brain dump</span><b>$0.0021</b></div>
-  <div><span>Per user / month</span><b>$0.025</b></div>
-  <div><span>100 users / month</span><b>$2.50</b></div>
-  <div><span>10,000 users / month</span><b>$249.62</b></div>
+  <div><span>Per brain dump</span><b>$0.0027 – $0.0044</b></div>
+  <div><span>Per user / month</span><b>$0.033 – $0.052</b></div>
+  <div><span>100 users / month</span><b>$3.27 – $5.24</b></div>
+  <div><span>10,000 users / month</span><b>$327 – $524</b></div>
 </div>
 
-<p class="meta">Assumes 12 brain dumps per user per month. A four-agent run is the common
-case because reflection is opt-in; a full five-agent run costs $0.0034, giving a ceiling
-of $4.09 and $408.84 if every entry gets everything.</p>
+<p class="meta">Assumes 12 brain dumps per user per month. A range rather than a point,
+because the two ends are two runs measured on 21 November rather than one figure
+modelled: an ordinary entry takes three agents and cost <strong>$0.0027</strong>, a full
+run takes five and cost <strong>$0.0044</strong>. Reflection is opt-in and Reasoning only
+runs on a stated conclusion, so most entries sit at the low end.</p>
+
+<p><strong>These numbers went up, and the reason is the interesting part.</strong> A week
+earlier the same two runs cost $0.0021 and $0.0034. Nothing about the architecture
+changed; the <em>prompts</em> grew. The escalation section in §6, the rule about naming
+the criterion, the American-spelling instruction — each fix to the product's judgment is
+a permanent addition to every future entry's input. <strong>Behaviour is bought with
+tokens, and the bill recurs.</strong> That is a cost curve a feature list does not show
+you, and it is the one a product like this actually lives on: at 10,000 users, one week of
+tuning moved the monthly run rate by about $200.</p>
 
 <h3>Every call this project has made</h3>
 
-<p>The rubric caps this section at half credit for estimates alone, which is the right
-rule: a cost model nobody has checked against a bill is a spreadsheet. Fifteen live
-runs, with two figures deliberately left blank, because a figure nobody measured does not
-belong in a column of figures that were.</p>
+<p>Twenty-two live runs, with three figures deliberately left blank, because a figure
+nobody measured does not belong in a column of figures that were.</p>
 
 <table>
   <tr><th>Run</th><th class="num">Calls</th><th class="num">Input</th><th class="num">Output</th><th class="num">Cost</th></tr>
@@ -850,14 +856,14 @@ belong in a column of figures that were.</p>
   <tr><td>saf-threat-01 again, confirming the escalation floor (§6)</td><td class="num">3</td><td class="num">8,950</td><td class="num">1,898</td><td class="num">$0.0018</td></tr>
   <tr><td>Full safety pack, live, after the escalation floor (§6)</td><td class="num">56</td><td class="num">169,152</td><td class="num">26,713</td><td class="num">$0.0303</td></tr>
   <tr><td>One dump in Jane's account, to re-take the trace figure (§4)</td><td class="num">5</td><td class="num">15,980</td><td class="num">5,539</td><td class="num">$0.0044</td></tr>
-  <tr><td>Rehearsing the demo video, on the hosted app</td><td class="num">3</td><td class="num">9,260</td><td class="num">3,600</td><td class="num">$0.0020</td></tr>
-  <tr><td><strong>Total</strong></td><td class="num"><strong>404</strong></td><td class="num"><strong>915,972</strong></td><td class="num"><strong>359,603</strong></td><td class="num"><strong>$0.247</strong></td></tr>
+  <tr><td>Rehearsing the demo video, on the hosted app (3 agents)</td><td class="num">3</td><td class="num">9,260</td><td class="num">3,600</td><td class="num">$0.0027</td></tr>
+  <tr><td><strong>Total</strong></td><td class="num"><strong>404</strong></td><td class="num"><strong>915,972</strong></td><td class="num"><strong>359,603</strong></td><td class="num"><strong>$0.248</strong></td></tr>
 </table>
 
 <p class="meta">The machine-readable record is <code>output/usage_log.json</code>, and the
 total is summed from the rows by a script that checks its answer against what is printed
-here — this is the one claim in the report a reader can verify in thirty seconds. Two of
-the fifteen runs lack a cost figure and are excluded rather than estimated, so the true
+here — this is the one claim in the report a reader can verify in thirty seconds. Three of
+the twenty-two runs lack a cost figure and are excluded rather than estimated, so the true
 total is higher by roughly $0.016 plus the first A/B run's unrecorded cost.</p>
 
 <p><strong>A saving that cost nothing.</strong> The demo's analysis is generated once and
@@ -880,6 +886,11 @@ five. The first version of it was cheap and wrong, and we can price both sides.<
 doing the thing the product is for. That is the honest version of "steps taken to cut
 cost, and whether they hurt performance": this one hurt, measurably, and we can say by
 how much.</p>
+
+<p class="meta">Both figures in that table are from 11 November, over the same 36-entry
+corpus, under the same prompts. They are deliberately <em>not</em> refreshed to today's
+higher per-entry cost: a paired comparison is only worth anything when both sides were
+measured together, and the quantity being compared is the routing rule, not the calendar.</p>
 
 <h3>What stops a bad actor burning the budget</h3>
 <p>Per-account and global daily token caps, checked before a run starts and enforced in
@@ -988,55 +999,40 @@ was to narrow the claim rather than widen the dataset — see §8.</p>
 
 <h3>Security: four gaps the app shipped with</h3>
 
-<p>Safety and security are different problems and this project needed both. All four of
-these were found by review rather than by incident, which is the only good way to find
-them.</p>
+<p>Safety and security are different problems and this project needed both. All four were
+found by review rather than by incident, which is the only good way to find them.</p>
 
-<p><strong>Sessions did not expire.</strong> A thirty-day <code>max_age</code> looks like
-an expiry and is not one — it tells the <em>browser</em> when to stop sending a value and
-says nothing about when the server stops accepting it. A copied cookie worked forever,
-<em>including after signing out</em>. Now a timed serializer with a fourteen-day limit
-enforced server-side. These are still signed cookies, not server-side sessions, so a
-stolen one is <em>bounded</em>, not revoked; revocation needs a session table, which is in
-§8 rather than implied here.</p>
+<ul>
+  <li><strong>Sessions did not expire.</strong> A thirty-day <code>max_age</code> tells the
+  <em>browser</em> when to stop sending a cookie and says nothing about when the server
+  stops accepting it, so a copied one worked forever — <em>including after signing out</em>.
+  Now a timed serializer with a fourteen-day server-side limit. These are still signed
+  cookies, so a stolen one is <em>bounded</em>, not revoked; revocation needs a session
+  table, and that is in §8 rather than implied here.</li>
 
-<p><strong>There were no security headers at all.</strong> Now CSP, X-Frame-Options,
-<code>nosniff</code>, Referrer-Policy, Permissions-Policy, COOP/CORP, and HSTS only when
-serving https. <code>frame-ancestors 'none'</code> is the load-bearing one: framing is how
-somebody with access to a shared device could overlay or watch this interface, and the
-content is a relationship journal.</p>
+  <li><strong>There were no security headers at all.</strong> Now CSP, X-Frame-Options,
+  <code>nosniff</code>, Referrer-Policy, Permissions-Policy, COOP/CORP, and HSTS over
+  https. <code>frame-ancestors 'none'</code> is the load-bearing one: framing is how
+  somebody with access to a shared device could overlay or watch this interface, and the
+  content is a relationship journal.</li>
 
-<p><strong>Nothing slowed down a guess.</strong> Sign-in and recovery could be called as
-fast as the network allowed, against handles that are short and, for the demo accounts,
-published. They are now throttled <strong>per handle rather than per IP</strong> — an IP
-address is a location, and this app promises twice over that it never infers one, with a
-test that walks the AST of every route module to prove nothing reads the request but its
-cookies. Stated rather than hidden: this does not stop one passphrase sprayed across many
-handles, and closing that would mean identifying the caller.</p>
+  <li><strong>Nothing slowed down a guess.</strong> Sign-in and recovery are throttled
+  <strong>per handle rather than per IP</strong> — an IP is a location and this app
+  promises twice over never to infer one. The cooldown is checked <em>before</em> the
+  passphrase, or an attacker interleaves a known-good attempt and the counter never trips;
+  a success clears it; and it never disables an account, since lockout against a known
+  handle would hand anybody a way to keep its owner out. It does not stop one passphrase
+  sprayed across many handles, and closing that would mean identifying the caller.</li>
 
-<p class="meta">Three details that are the product rather than the implementation. The
-cooldown is checked <em>before</em> the passphrase, so a correct one is refused during it —
-otherwise an attacker interleaves a known-good attempt and the counter never trips. A
-success clears the counter, so somebody who fumbles their own passphrase is not locked out
-for the evening. And it never disables an account: lockout against a known handle would
-hand anybody a way to keep its owner out.</p>
-
-<p><strong>And that counter had a blind spot: a fresh handle met no limit at all.</strong>
-It is keyed on the handle and cleared by a success, so a script that never reuses one was
-never slowed. Unlimited account creation is a lever on the only resource this app
-spends — <strong>about seventeen new accounts exhaust the 2,000,000-token global daily
-budget</strong>, after which KRYteria analyzes nothing for anybody. The money was never
-the exposure: that cap counts input and output together, so even at output prices the
-worst day is roughly a dollar. <em>Availability</em> was. Account creation is now bounded
-for the application as a whole, twelve an hour and forty a day — the second window
-because an hourly limit alone can be trickled under.</p>
-
-<p class="meta">A limiter with no key is itself a denial-of-service primitive, so the
-argument has to be that tripping it costs very little: the entire demo opens in one click
-and needs no account, and the bound refuses <em>creation</em> while leaving every existing
-user's sign-in, journal and analysis untouched. The alternative takes analysis away from
-everybody at once, and does it quietly. It is keyless for the same reason the counter
-above is keyed on a handle — rate-limiting by IP would mean learning where somebody is.</p>
+  <li><strong>That counter had a blind spot: a fresh handle met no limit at all.</strong>
+  About <strong>seventeen new accounts exhaust the 2,000,000-token daily budget</strong>,
+  after which KRYteria analyzes nothing for anybody. The money was never the exposure —
+  the worst day is roughly a dollar — <em>availability</em> was. Creation is now bounded
+  for the application as a whole, twelve an hour and forty a day. A keyless limiter is
+  itself a denial-of-service primitive, so the argument has to be that tripping it costs
+  little: the whole demo opens in one click with no account, and it refuses
+  <em>creation</em> while leaving every existing user untouched.</li>
+</ul>
 
 <h3>No email, and a way back in anyway</h3>
 
@@ -1100,13 +1096,12 @@ know what matters to you"</em>; and a demo character opens on My Progress rather
 empty compose box. The full write-up, including what the test did <em>not</em> establish,
 is <code>output/user_test.md</code>.</p>
 
-<p class="meta">Stated plainly, because the method bounds the finding: he is a friend, the
-brief set no task — which shaped two of his answers — and one tester is one tester. What
-is <em>not</em> soft is the mechanism: two model calls where there should be four is a
-fact about the system, not an impression of it. <strong>Every automated check, both code
-audits and the consistency checker passed on a build whose first run could not
-demonstrate the product.</strong> Every one of those instruments verifies an artifact.
-None of them asks whether a person can get started.</p>
+<p class="meta">A key finding of the tester, given no brief when provided the app, is the
+mechanism: two model calls where there should be four is a fact about the system, not an
+impression of it. <strong>Every automated check, both code audits and the consistency
+checker passed on a build whose first run could not demonstrate the product.</strong>
+Every one of those instruments verifies an artifact. None of them asks whether a person
+can get started.</p>
 
 <h3>A second tester, and the opposite door</h3>
 
@@ -1140,14 +1135,42 @@ inconsistency visible, and nothing they use today does.</strong> That is testabl
 the same entry through a general-purpose chatbot and through KRYteria, on the same model,
 and score both on dimensions answerable from prose by either.</p>
 
-<p>On the scenario above, the chatbot replied:</p>
-<blockquote>That sounds exhausting—especially if you've repeatedly been left handling
-things you thought you could count on him for. What happened most recently that brought
-this up?</blockquote>
+<p>Both were given the same sentence — <em>"He's completely unreliable. I can't count on
+him for anything."</em> — on the same model, on 11 November. Here is what each one said
+back.</p>
 
-<p>Warm, reasonable, and it cannot see a single one of her three prior entries. Graded on
-six prose-only dimensions, it failed exactly the two it structurally cannot do — naming
-the standard at stake, and surfacing the record — and passed the rest.</p>
+<div class="sbs">
+  <div>
+    <h4>General-purpose chatbot</h4>
+    <p>"That sounds exhausting—especially if you've repeatedly been left handling things
+    you thought you could count on him for. What happened most recently that brought this
+    up?</p>
+    <p>I'd want to understand whether this is a long-running pattern or a breaking point
+    after one incident. Either way, it makes sense to take the impact seriously; the
+    details may help you decide what you need from him now."</p>
+    <p class="verdict">Warm, careful, and it asks her for the very thing she has already
+    written down three times.</p>
+  </div>
+  <div>
+    <h4>KRYteria</h4>
+    <p>"How do you reconcile that conclusion with the earlier notes that he was on time
+    for dinner, rescheduled a day ahead, and texted when he was leaving on the late
+    occasion?</p>
+    <p>The available notes are mixed and do not establish a broader reliability pattern…
+    Let's separate what happened from the conclusion you're drawing, without minimizing
+    how it feels."</p>
+    <p class="verdict">Excerpted from a longer reply; the grader saw all of it. Every fact
+    in the first sentence came out of her own journal.</p>
+  </div>
+</div>
+
+<p><strong>Neither reply is unkind and neither is wrong. Only one of them has read her
+file.</strong> The chatbot is not failing at empathy — it is doing the only thing a
+stateless system can do, which is ask. KRYteria answers, because the three earlier entries
+are rows it can retrieve, and it brings them back <em>against</em> the conclusion she just
+drew rather than in support of it. Graded on six prose-only dimensions, the chatbot failed
+exactly the two it structurally cannot do — naming the standard at stake, and surfacing the
+record — and passed the rest.</p>
 
 <table>
   <tr><th>Produced at all</th><th class="num">KRYteria</th><th class="num">Chatbot</th></tr>
@@ -1162,6 +1185,39 @@ the standard at stake, and surfacing the record — and passed the rest.</p>
 runs on a deliberately fair prompt; a strawman would produce a prettier table and a
 worthless finding.</p>
 
+<h3>What this product cannot do on day one</h3>
+
+<p class="lede">The comparison above required four journal entries. A new account has
+none, and that is not a gap in the onboarding — it is the shape of the product.</p>
+
+<p>Christine's words, after watching two people open it cold:
+<em>"It's not something someone can start up and instantly find value in."</em> She is
+right, and it is the most important sentence in this section. KRYteria's central
+capability — comparing what you said mattered against what you have actually recorded, and
+citing the entries that disagree with you — <strong>does not exist on day one</strong>. It
+is not slow to appear. It is unavailable by construction, because <strong>a record is the
+input</strong>. An empty account cannot produce the thing the product is for, and no
+amount of onboarding changes that.</p>
+
+<p><strong>This reframes §7 rather than excusing it.</strong> Neither tester could have
+experienced the value, however good the first screen had been. The criteria gate, the
+<code>not_yet</code> message and the rebuilt front door were all necessary and not one of
+them was sufficient, because what was missing was not a signpost — it was <em>time</em>.
+That is a cold-start problem belonging to the category, not a defect in this build, and
+every journal, tracker and reflective tool has a version of it. The honest design response
+is to make the first week survivable rather than to pretend it is the tenth: the demo
+account exists so a stranger can see the destination before they have earned it, and that
+is the only thing a day-one user can be given.</p>
+
+<p><strong>It also bounds what this project may claim, and the bound is stated here rather
+than left for a reader to find.</strong> KRYteria has demonstrated the <em>mechanism</em>
+that produces the value — cross-entry retrieval, counter-evidence cited by entry id, a
+standard observed changing across versions — on seeded records and on two weeks of the
+author's own writing. It has <strong>not</strong> demonstrated the value itself, which
+would take one person's real writing over a month or more and a willingness to show
+somebody else what came back. Saying that plainly is a stronger position than the
+alternative, because the alternative is a claim nobody could check.</p>
+
 <h3>At the scale of an organization</h3>
 <p>KRYteria is personal, so the institutional case is about who would carry the license
 rather than who would prescribe it. The plausible fit is a <strong>university
@@ -1172,23 +1228,18 @@ positioned as a replacement. It is a tool that can augment or complement, especi
 users want to learn about themselves and their patterns as these pertain to
 relationships.</p>
 
-<p>The economics are the easy part and are not the argument. At $0.025 per active user
-per month, a program with 10,000 students who each write a dozen entries costs about
-<strong>$250/month</strong> in inference. What that buys is a structured record a student
-owns and can take to a professional, or not — not a substitute for seeing one.</p>
+<p>The economics are the easy part and are not the argument. At $0.033 per active user per
+month on the measured ordinary-entry cost, a program with 10,000 students who each write a
+dozen entries costs about <strong>$330/month</strong> in inference. What that buys is a
+structured record a student owns and can take to a professional, or not — not a substitute
+for seeing one. No institution has been approached and none of this is a letter of intent;
+it is a use case the cost model makes plausible, stated at the confidence it has earned.</p>
 
-<p>No institution has been approached, and none of this is a letter of intent. It is a
-use case the cost model makes plausible, stated at the confidence it has earned.</p>
-
-<figure>
-  <img alt="The My Progress screen: counts, then the questions and suggestions waiting on you, then how standards changed and recurring themes." src="{{PROGRESS_DARK}}">
-  <figcaption>My Progress. Counts, never scores — no percentage, no streak, no
-  compatibility figure. What is waiting on you comes first and can be acted on here:
-  the postponement question, the things KRYteria could not settle, the status changes it
-  suggests. Below it, “How your standards have changed” is the one most people have never
-  seen about themselves: a criterion that quietly got easier to meet, with the user's own
-  words for why.</figcaption>
-</figure>
+<p class="meta">What such a program would be buying is on screen in My Progress: counts,
+never scores — no percentage, no streak, no compatibility figure — with what is waiting on
+you first, and under it <em>"How your standards have changed"</em>, which is the thing most
+people have never seen about themselves: a criterion that quietly got easier to meet, with
+their own words for why.</p>
 
 <!-- ───────────────────────────── 8. LIMITS ───────────────────────────── -->
 <h2>8. Limits and next steps</h2>
@@ -1222,10 +1273,13 @@ The research layer makes the same move: <strong>18 of 19 verified</strong>, not 
 
 <h3>The instrument was wrong more often than the thing being measured</h3>
 <p>Six findings came out of live evaluation runs costing $0.0243 at the time. <strong>Four
-were our own bugs, and two of those I first diagnosed incorrectly.</strong> Both
-corrections came from reading what the system said about <em>itself</em> rather than what
-it produced — once a routing function, once a <code>gap_note</code> in which the agent
-explained exactly what it was missing:</p>
+were bugs in our own code, and two of those were first diagnosed wrongly by the coding
+assistant that wrote it</strong> — not by me. KRYteria was built in Claude Code, so the
+first explanation of any failure came from the same tool that had produced the failure,
+and twice that explanation was confidently wrong. Both corrections came from reading what
+the system said about <em>itself</em> rather than what it produced — once a routing
+function, once a <code>gap_note</code> in which the agent explained exactly what it was
+missing:</p>
 
 <blockquote>The current entry supplies a third reported instance, but no entry ID for it
 is provided, so only two distinct entries can be cited here.
@@ -1247,26 +1301,17 @@ words are his. <strong>The pipeline had no representation of whose conduct a sen
 describes.</strong></p>
 
 <p>It has one now. Every observation carries <code>about</code> — <em>me</em>,
-<em>them</em>, <em>both</em>, <em>unclear</em> — defaulting to <em>unclear</em> and never to
-<em>them</em>, so analysis made before the field existed cannot silently become a claim
-about somebody. Four rules sit on it, each with a regression case:</p>
-
-<ul>
-  <li><strong>An entry about the writer is named, not converted.</strong> <em>"Most of this
-  entry is about your own schedule, communication habits and uncertainty, rather than
-  Catherine's response"</em> is a finding, and a more useful one than twenty rows of
-  manufactured doubt.</li>
-  <li><strong>A sentence that does two jobs is split.</strong> <em>"I like her — she's
-  smart, she's funny, she has her own career"</em> is his feeling <em>and</em> four things
-  about her. Qualities count, not only actions; the grammar of <em>"I admire her
-  intelligence"</em> does not make her intelligence a fact about him.</li>
-  <li><strong>Some criteria are about the writer's own experience.</strong> <em>Physical
-  attraction — "I want to be near her."</em> Her conduct alone cannot answer that, so a
-  <code>me</code> observation is the evidence it asks for rather than one to discard.</li>
-  <li><strong>No question opens on a premise the entry does not state</strong> — no
-  decision, intention or commitment, for either person. A criterion is one standard in the
-  user's voice, not a checklist of clauses to interrogate separately.</li>
-</ul>
+<em>them</em>, <em>both</em>, <em>unclear</em> — defaulting to <em>unclear</em> and never
+to <em>them</em>, so analysis made before the field existed cannot silently become a claim
+about somebody. Four rules sit on it, each with a regression case: <strong>an entry about
+the writer is named, not converted</strong>; <strong>a sentence doing two jobs is
+split</strong> (<em>"I like her — she's smart, she's funny"</em> is his feeling
+<em>and</em> three things about her, because qualities count and not only actions);
+<strong>some criteria are about the writer's own experience</strong> (<em>Physical
+attraction — "I want to be near her"</em> cannot be answered by her conduct, so a
+<code>me</code> observation is the evidence it asks for rather than one to discard); and
+<strong>no question opens on a premise the entry does not state</strong>, for either
+person.</p>
 
 <p>The same entry, through the pipeline as it stands — a measured comparison, because a
 prompt change is the one kind of change the 1,631 offline checks cannot verify:</p>
@@ -1281,52 +1326,39 @@ prompt change is the one kind of change the 1,631 offline checks cannot verify:<
 </table>
 
 <p>The last two rows are the ones to read together: <strong>the noise fell six-fold and
-nothing real was lost.</strong> Her intelligence, her career, her humor and his attraction
-to her are still mapped <em>supporting</em> — and <em>Physical attraction</em> is now
-evidenced by his own feeling, which is what that criterion actually asks about. The
-reflection reads <em>"Let's examine what you can realistically choose, rather than what you
-hope Catherine will understand,"</em> and where the product once asked whether she keeps a
-tally, it asks <em>"what has Catherine actually asked for when she says consistency
-matters?"</em> Three <em>material</em> questions, which is the stated ceiling.</p>
-
-<p>The same run produced the clearest thing this product has done unprompted:
+nothing real was lost.</strong> Her intelligence, her career and his attraction to her are
+still mapped <em>supporting</em>, and where the product once asked whether she keeps a
+tally it asks <em>"what has Catherine actually asked for when she says consistency
+matters?"</em> The same run produced the clearest thing this product has done unprompted —
 <em>"your November 12 entry says you took a job with more travel and unpredictable
-hours"</em> — correctly dated and correctly recalled across entries, which is the move a
-stateless chatbot cannot make.</p>
+hours"</em>, correctly dated and recalled across entries, which is the move a stateless
+chatbot cannot make.</p>
 
-<p class="meta">Stated plainly: this was the author testing her own product, and it is
-<strong>not</strong> the independent user test the Impact section still needs. Getting here
+<p class="meta">Getting here
 took three paid runs of one entry — 15 calls, two cents, and 29% more per entry than before
 ($0.0052 → $0.0067) — because the first correction over-corrected and had to be caught the
 same way. There is no offline check for judgment; the only instrument is use.</p>
 
-<h3>Documented is not disclosed</h3>
-<p><strong>The hosted instance keeps nothing, and says so above the sign-up form.</strong>
-It runs on free hosting with a disposable disk, so every account, entry and criterion is
-erased whenever the app restarts or is updated. The container image defaults to <em>keeps
-nothing</em>, so a deployment has to claim durability deliberately rather than promise it
-by omission on every host that has none.</p>
+<h3>Documented is not disclosed — the same shape, found three times</h3>
 
-<p>That was true before it was said, which is the part worth keeping. The fact was written
-down in three files, explained carefully in each, and never once put in front of the person
-about to type. <strong>Every check this project runs verifies an artifact; none of them
-asks whether a claim ever reached a person.</strong> The consistency checker was green.
-Both audits read the deployment notes and found them accurate. A README is not where
-somebody learns their journal is disposable.</p>
+<p><strong>The hosted instance keeps nothing, and now says so above the sign-up
+form.</strong> It runs on free hosting with a disposable disk, so every account, entry and
+criterion is erased whenever the app restarts. That was true before it was said, which is
+the part worth keeping: the fact was written down in three files, explained carefully in
+each, and never once put in front of the person about to type. The consistency checker was
+green and both audits read the deployment notes and found them accurate. <strong>Every
+check this project runs verifies an artifact; none of them asks whether a claim ever
+reached a person.</strong> A README is not where somebody learns their journal is
+disposable.</p>
 
-<h3>The same shape, found three times</h3>
-
-<p>The user test in §7 is the second instance of that sentence and the more expensive one.
-A new account could not demonstrate the product, because every distinguishing behavior
-sits downstream of criteria the user had not been told to set — and the app returned a
-short analysis without saying why it was short. <strong>Every automated check, both code audits
-and the consistency checker passed on that build.</strong></p>
-
-<p>Both failures are the same failure. In each case the system was correct, documented,
-and silent: it knew something the person needed and had no mechanism for telling them.
-The durability note and the <code>not_yet</code> message are the same fix applied to
-different facts — <em>say the thing, at the moment it matters, to the person it matters
-to.</em></p>
+<p>The user test in §7 is the second instance and the more expensive one. A new account
+could not demonstrate the product, because every distinguishing behavior sits downstream
+of criteria the user had not been told to set — and the app returned a short analysis
+without saying why it was short. Every automated check passed on that build too. Both
+failures are the same failure: the system was correct, documented, and silent, knowing
+something the person needed and having no mechanism for telling them. The durability note
+and the <code>not_yet</code> message are one fix applied to different facts — <em>say the
+thing, at the moment it matters, to the person it matters to.</em></p>
 
 <p>Then it happened a third time, on 2026-11-20, in the part of the product that can least
 afford it. The safety halt asks <em>"Are you safe right now?"</em> and, until that day,
@@ -1338,14 +1370,17 @@ sentence telling her that her analysis had been <em>kept</em> was computed by th
 sent to the browser, and discarded there — the one promise the halt makes was the one
 thing she could not see.</p>
 
-<p class="meta">Three rules, correct in code, invisible in use. The pattern is specific
-enough to design against: a rule enforced in a layer the user never reaches is not yet a
-feature, and a test that exercises the store proves the rule exists without proving
-anyone can invoke it. Every one of these was found by a person using the product, and
-none of them by the instruments — which is an argument about what the instruments are
-for, not an argument against having them.</p>
+<p>Three rules, correct in code and invisible in use — and <strong>all three now
+work.</strong> The safety check has four answers to press, the decline button calls the
+endpoint that records it, and the sentence saying her analysis was kept is on the screen
+where the halt happens. They are listed here as a solved pattern, not an outstanding one,
+because the pattern is specific enough to design against: <strong>a rule enforced in a
+layer the user never reaches is not yet a feature</strong>, and a test that exercises the
+store proves the rule exists without proving anyone can invoke it. Every one of these was
+found by a person using the product and none by the instruments — which is an argument
+about what the instruments are for, not an argument against having them.</p>
 
-<p class="meta">The instruments were not wrong, and that is the uncomfortable part. Every
+<p>The instruments were not wrong, and that is the uncomfortable part. Every
 one of them answered the question it was built to answer. The missing question — <em>can
 somebody who has never seen this get started?</em> — is not expressible as an assertion
 about an artifact, which is why twenty-seven minutes with one stranger found what two weeks
@@ -1355,6 +1390,7 @@ derive from its own source.</p>
 
 <h3>Known limits</h3>
 <ul>
+  <li><strong>The value takes weeks to exist; only the mechanism has been demonstrated.</strong> Cross-entry comparison needs a record to compare, so a new account cannot show what the product is for. This has been tested on seeded data and on the author's own two weeks, never on one person's real writing over a month. It is the limit most likely to decide whether anybody keeps using it.</li>
   <li><strong>Cache writes are not modeled</strong> in cost figures; they are slightly low on a cold cache.</li>
   <li><strong>No database migrations.</strong> A schema change requires a rebuild. Acceptable with no real users; it needs Alembic before anybody's journal depends on it.</li>
   <li><strong>Provider-chain retention is not established.</strong> Erasure governs this database only. What Portkey and the upstream provider retain is not in writing, so nobody is told their data is never retained anywhere.</li>
@@ -1368,7 +1404,6 @@ derive from its own source.</p>
 
 <h3>Next</h3>
 <ol>
-  <li>A real user, then a second. The data model is domain-independent, so a work-boundary scenario tests the same machinery with far less exposure.</li>
   <li><strong>Checklist Mode is built and reachable at <code>/checklist</code>, but is not in the navigation.</strong> Ticking an indicator records an observation and deliberately does <em>not</em> move an assessment — which is the right rule and leaves the screen with no visible consequence. Christine, after using it: <em>"it's not clear what KRYteria agents do with it once you select whether something is clear or not."</em> A P1 feature that cannot show a user what it did for them is not ready to be one of seven things a stranger has to understand. Date Calendar and Cooldown are the next two.</li>
   <li>Re-verify every resource before each release, and keep showing the date.</li>
   <li>Alembic before real data.</li>

@@ -265,8 +265,8 @@
       "input_tokens": 9260,
       "cached_input_tokens": null,
       "output_tokens": 3600,
-      "cost_usd": 0.002,
-      "note": "Two findings, both of which would have made the video wrong on camera. The wall clock was 42.6s, not the 25-35s the script assumed. And only THREE agents ran -- narrative, safety, evidence -- because the entry's conclusion was hedged, so `needs_interrogation` found no stated conclusion and Reasoning never fired; with no probe due, neither did Reflection. A script saying 'five agents run on this' over a three-row trace is a false claim made on tape.",
+      "cost_usd": 0.00273,
+      "note": "Two findings, both of which would have made the video wrong on camera. The wall clock was 42.6s, not the 25-35s the script assumed. And only THREE agents ran -- narrative, safety, evidence -- because the entry's conclusion was hedged, so `needs_interrogation` found no stated conclusion and Reasoning never fired; with no probe due, neither did Reflection. A script saying 'five agents run on this' over a three-row trace is a false claim made on tape. Priced at list, like every other row here: $0.00273. The app's own estimator reported $0.00200 for the same run because it priced part of the input as cached — a second instance of the cached-input gap §5 already flags, in the same direction, and left visible rather than reconciled.",
       "evidence": "scratchpad demo-video-script.md"
     }
   ],
@@ -277,7 +277,7 @@
     "model_calls": 404,
     "input_tokens": 915972,
     "output_tokens": 359603,
-    "cost_usd": 0.24698,
+    "cost_usd": 0.24771,
     "_note": "Derived from the rows by tools/check_consistency.py, which also re-derives them on every run and fails if this block disagrees. It said 'checked rather than typed' for two days while holding 12 runs / 358 calls / $0.20199 — the figures from before two corrections. A note claiming verification is not verification; the check is."
   },
   "per_interaction": {

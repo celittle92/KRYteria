@@ -37,10 +37,16 @@ this workspace's HW6 data pack. Two sources, same numbers.
 | 11-20 | saf-threat-01 again, confirming the escalation floor | 3 | 8,950 | 1,898 | $0.00184 |
 | 11-20 | Full safety pack, live, after the escalation floor | 56 | 169,152 | 26,713 | $0.03027 |
 | 11-21 | One dump in Jane's account, to re-take the trace figure | 5 | 15,980 | 5,539 | $0.00437 |
-| 11-21 | Rehearsing the demo video, on the hosted app | 3 | 9,260 | 3,600 | $0.00200 |
-| | **Total** | **404** | **915,972** | **359,603** | **$0.24698** |
+| 11-21 | Rehearsing the demo video, on the hosted app (3 agents) | 3 | 9,260 | 3,600 | $0.00273 |
+| | **Total** | **404** | **915,972** | **359,603** | **$0.24771** |
 
-**Three of the twenty-two runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. A third, on 19 November, was lost to my own error: `/api/usage` nests its numbers under `today`, I filtered for top-level keys, and by the time I noticed, the throwaway account was deleted — which cascades to `usage_daily`. It is recorded as **unmeasured, never estimated**. So the real spend is **higher than $0.21034 by roughly $0.016 plus two runs' cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
+**Three of the twenty-two runs are not fully measured, and the total excludes what is missing rather than estimating it.** The first A/B run reported tokens but not cost. The first reasoning-eval run reported neither: the second run overwrote its artifact an hour later. A third, on 19 November, was lost to my own error: `/api/usage` nests its numbers under `today`, I filtered for top-level keys, and by the time I noticed, the throwaway account was deleted — which cascades to `usage_daily`. It is recorded as **unmeasured, never estimated**. So the real spend is **higher than $0.24771 by roughly $0.016 plus two runs' cost** — stated as a bound rather than filled in, because this file's first line is *measured, never modeled*.
+
+**Every row is priced at list** ($0.10/M in, $0.50/M out), including the two runs where the
+app's own estimator reported less because it billed part of the input as cached. The video
+rehearsal on 21 November is the clearest case: the estimator said $0.00200, list price says
+$0.00273, and the row carries $0.00273. Mixing the two methods inside one column would make
+the total unverifiable, and the gap is more useful visible than reconciled away.
 
 **A note on how that total was produced.** The first version of this table was
 hand-totaled and came out $0.0064 too high. It is now summed from the rows by a script

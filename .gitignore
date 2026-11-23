@@ -43,3 +43,22 @@ output/demo_runs/
 
 # TypeScript build cache. Regenerated on every build; no reason to ship it.
 frontend/tsconfig.tsbuildinfo
+
+# The prompt log stays on disk and out of the repo.
+#
+# AI_prompts.md records Christine's own prompts verbatim — including a personal
+# disclosure, her mother's text messages, and candid working language. The repo went
+# public on 2026-11-23 so the teaching staff could clone it, and the course
+# requirements never asked for a prompt log: it is a workspace convention from
+# AGENTS.md, not a final-project deliverable. It was removed from all 91 commits of
+# history at the same time, not just untracked going forward, because making a repo
+# public publishes every commit.
+#
+# The file itself still lives beside this one. Keep writing it.
+AI_prompts.md
+.prompt-log-backup/
+
+# A 620 KB SQLite file the _seed_on_boot test left in the repo root on 2026-11-20 and
+# that got swept into commit cd7df34. Synthetic demo data only, no secrets — clutter
+# rather than a leak, but not something a grader should clone.
+tmp*/

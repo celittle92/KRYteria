@@ -111,6 +111,12 @@ pack. In `data/prices.json`.
 | | per brain dump | per user/month | 100 users | 10,000 users |
 |---|---|---|---|---|
 | measured, full run | **$0.00341** | **$0.0409** | **$4.09** | **$408.84** |
+
+> **Superseded 2026-11-21.** Re-measured on the current prompts: an ordinary
+> three-agent entry is **$0.0027** and a full five-agent run **$0.0044** — about 28%
+> higher, because a week of judgment fixes grew the prompts. The report and slides now
+> carry the range $0.0027–$0.0044 and $327–$524 at 10,000 users. The 11-11 routing
+> comparison is deliberately *not* refreshed: both of its sides were measured together.
 | 4-agent run (no reflection) | $0.00208 | $0.0250 | $2.50 | $249.62 |
 | before the routing fix | $0.00136 | $0.0163 | $1.63 | $162.88 |
 
@@ -852,6 +858,26 @@ across five files the moment they moved.
 
 ---
 
+## Christine's cold-start takeaway — WRITTEN IN 2026-11-21
+
+Her words: *"It's not something someone can start up and instantly find value in."*
+
+**Now in `report_body.html` in three places**, which is how a finding this size should
+land rather than as one buried sentence:
+
+1. **§7, its own subsection** — *"What this product cannot do on day one"*, placed
+   directly after the A/B capability table so the bound arrives attached to the claim it
+   bounds. It states that the central capability does not exist on day one, is unavailable
+   by construction because a record is the input, and that this reframes both user tests
+   rather than excusing them — what was missing was not a signpost, it was *time*.
+2. **§8 Known limits, first bullet** — promoted above the cost and migration caveats,
+   because it is the limit most likely to decide whether anybody keeps using it.
+3. **The claim's own bound** — the project has demonstrated the *mechanism* on seeded
+   records and two weeks of Christine's writing, and has **not** demonstrated the value,
+   which needs one person's real writing over a month.
+
+Her instruction was that it not be lost while she drafted her edits. It went in with them.
+
 ## Still missing — the actual to-do list
 
 **As of 2026-11-21, before submission, this is the whole list.**
@@ -897,3 +923,210 @@ Everything else below is history, kept because the reasoning is the record.
    `data/resources_international.json` is **done** — nine entries across five countries
    plus EU-wide 112, each dated and sourced (2026-11-12). Re-check before the demo.
 10. ~~Add `zlisto` as collaborator~~ **done 2026-11-17.**
+
+## Printed length — re-measured 2026-11-22, with a costed plan
+
+**22.7 printed pages against the assignment's 10-15.** Measured in a browser at the exact
+print geometry the stylesheet targets (letter, 0.5in margins -> a 624px content column,
+`html{font-size:13.3px}`, screenshots capped at 298px), with the `@media print` block
+forced on and total height divided by 960px of usable page height.
+
+Section weights, measured the same way:
+
+| section | pages | the heavy parts inside it |
+|---|---|---|
+| front matter + section 1 | 0.8 | landing-page figure 0.42 |
+| 2. Motivation | 2.45 | *What exists today* 1.16 (competitor table 0.52) |
+| 3. What is new here | 2.99 | *Two-dimensional model / Jimmy G* **2.17** (3 tables, 1 figure) |
+| 4. The agents | 4.51 | *One real run, traced* 1.42 (2 figures); near-synonym audit 0.88 |
+| 5. Tokenomics | 2.16 | *Every call this project has made* 0.91 (the 22-row table 0.63) |
+| 6. Safety | 2.29 | *Security: four gaps* 0.78 (pure prose, no evidence artifact) |
+| 7. Impact | 3.30 | *The measurable claim* 0.83; *At the scale of an organization* 0.73 |
+| 8. Limits and next steps | 3.82 | *Whose conduct is this?* 1.00; *The same shape* 0.65 |
+
+**It was already over before the 21 Nov revisions.** 18.3 on 2026-11-16, then 17.8 after
+Christine's four cuts (Prompt 58); her 21-22 Nov notes added about one page net. The
+overshoot is long-standing. The finding from Prompt 58 still holds and is why prose cuts
+barely moved it then: **the figures and tables fill this report** — eight figures total
+about 3.4 pages and the tables another 2.5 — and most of them are evidence a rubric row
+is capped at half credit without.
+
+### Typography first, because it costs no content — measured, not predicted
+
+The print block was re-measured at four settings by overriding them live in the browser:
+
+| font | line-height | image cap | pages |
+|---|---|---|---|
+| 13.3px (~10pt, current) | 1.45 | 298px | **22.7** |
+| 12.5px | 1.40 | 280px | 20.2 |
+| **12.0px (~9pt)** | **1.35** | **260px** | **18.4** |
+| 11.5px (~8.6pt) | 1.35 | 240px | 17.2 |
+
+**Typography alone cannot get there**, which is the useful half of this measurement —
+even an uncomfortable 8.6pt leaves it 2.2 pages over. The recommended setting is
+**12.0px / 1.35 / 260px**, which buys **4.3 pages for zero content** and is an ordinary
+printed size. Below that the report starts to look like it is hiding from a limit.
+
+### Then about 3.4 pages of content, ranked by evidence lost per page saved
+
+Nothing here touches a rubric-capped artifact: the traced run and its figures (Agent
+design, 10), the 22-row spend table (Tokenomics, 8), the defense-stopping-something
+screenshots (Safety, 8), the competitor table (Motivation, 8), the user tests (Impact, 5)
+and one screenshot of each theme (Look and feel, 10) all survive intact.
+
+| # | cut | saves | what is lost |
+|---|---|---|---|
+| 1 | *Jimmy G* section: keep the figure and the tier table, fold the status and relation tables into prose, tighten 16 paragraphs to about 9 | ~1.0 | two vocabulary tables that are also on slide 3 and in the rules doc |
+| 2 | *Security: four gaps* down to one paragraph plus the list | ~0.6 | narrative only; the section carries no artifact and the Safety row is evidenced elsewhere |
+| 3 | *Whose conduct is this?* condensed to about 0.4 | ~0.6 | detail of one story; section 8 tells three versions of the same shape |
+| 4 | *What exists today*: keep the table, cut the prose around it by half | ~0.4 | commentary; the table is the rubric evidence |
+| 5 | Merge *Documented is not disclosed* into *The same shape, found three times* | ~0.4 | one heading and the repetition between them |
+| 6 | Drop the **My Progress** screenshot under *At the scale of an organization* | ~0.42 | the one UI figure not tied to a capped row |
+
+**4.3 + 3.4 = 7.7, landing at about 15.0.** The order matters: do the typography first and
+re-measure, because the six cuts are sized against the 18.4 baseline and a different font
+setting changes what is still needed.
+
+### What actually happened, 2026-11-22 — 22.7 to 17.4, not to 15
+
+Christine approved the plan with one exception: **keep all three tables in the Jimmy G
+section.** She was right to — they *are* the two-dimensional model, which is §3's novelty
+claim, so that page came out of the prose around them instead.
+
+| | measured |
+|---|---|
+| before | **22.7** |
+| after typography alone (12px / 1.35 / 2.7in) | 18.4 |
+| after the six cuts | **17.4** |
+
+**The cuts delivered 1.0 page where the proposal projected 3.4**, and the overestimate is
+worth recording rather than quietly absorbing: section height was used as a proxy for how
+much a section could *lose*, and most of a tight section is already load-bearing. Prose
+trimming returns roughly a third of what the section-weight table implies. The typography
+figure, which was measured directly rather than projected, came in exactly right.
+
+Section weights now: §2 1.85 · §3 2.33 · §4 3.73 · §5 1.88 · §6 1.77 · §7 2.35 · §8 2.82.
+Nothing is fat any more; the remaining 2.4 pages would have to come from compression
+spread across a dozen sections rather than from any one of them.
+
+**A caveat on the absolute number.** This method is total document height divided by 960px
+of page, which **ignores the gaps `page-break-inside:avoid` leaves** around seven figures
+and fifteen tables, so real printed output is somewhat higher than 17.4. It also disagrees
+with the 17.8 recorded on 2026-11-16, which was measured section by section — so the
+**delta (-23%) is sound and the absolute carries method uncertainty**. Print to PDF and
+count before trusting either figure to the decimal.
+
+### What the last 2.4 pages would cost, if she wants them
+
+No argument needs to be dropped; it is compression, not deletion.
+
+| | saves |
+|---|---|
+| 15% tightening across the twelve sections of 0.35-0.67 pages | ~1.2 |
+| §4 near-synonym audit: drop the Journal History figure, halve the prose | ~0.55 |
+| §5 *Input, cached input and output*: trim the reconciliation narrative (the 22-row table is the rubric evidence) | ~0.3 |
+| §2 framing before the competitor table, trimmed by a third | ~0.35 |
+
+Given the overestimate above, treat those as optimistic too — expect ~1.6 of the 2.4.
+Reaching exactly 15 may need an eighth figure dropped or 11.5px type.
+
+### Cuts made, for the record
+
+1. **Jimmy G** - all three tables and the figure kept; prose 994 -> 880 words.
+2. **Security: four gaps** - seven paragraphs -> one paragraph plus a four-item list;
+   0.78 -> 0.40.
+3. **Whose conduct is this?** - four-bullet list folded into a sentence, the closing two
+   paragraphs merged; 1.00 -> 0.62. Table and measured before/after kept.
+4. **What exists today** - competitor table untouched, surrounding prose cut; 1.16 -> 0.81.
+5. **Documented is not disclosed** merged into **The same shape, found three times**;
+   0.87 -> 0.56 under one heading.
+6. **My Progress screenshot dropped**, its claim folded into a sentence so the
+   counts-never-scores point survives the figure.
+
+**Caught while cutting:** §7's institutional economics still read *"$0.025 per active user
+... about $250/month"* from the superseded tokenomics, and slide 9 said $250 too. Both are
+now $0.033 and **$330/month**, from the measured ordinary-entry cost. That one was a real
+inconsistency, not a length edit.
+
+## Requirements audit against the course page, 2026-11-22
+
+Checked every line of <https://zlisto.github.io/mgt_409_fa26/project_requirements.html>
+against the report, the deck, the repo and the running app.
+
+### Three things were wrong, and one of them is serious
+
+**1. `zlisto` has never accepted the collaborator invitation. The repo is private, so the
+teaching staff cannot clone it at all.** Verified against the GitHub API, not from the
+project's own notes:
+
+- `repos/celittle92/KRYteria/collaborators` → `celittle92` only.
+- `repos/celittle92/KRYteria/invitations` → zlisto, created `2026-11-18T01:34:24Z`,
+  `expired: false`, unaccepted.
+
+This project's own rules file recorded it as *"added as a collaborator, done, not an open
+item, should not be raised again"* — **it recorded the action, not the outcome**, and the
+"do not raise again" is precisely what would stop anybody checking. Corrected there.
+What it puts at risk is the 5-point *teaching staff can run it* row and, in practice,
+every row that needs them to read code. The requirements allow **public or private with
+zlisto added**; making it public removes the dependency on somebody else's inbox. The repo
+holds only synthetic demo data (all ten seeded accounts are `is_demo = 1`) and no secrets.
+**Christine's call.**
+
+**2. The front door was described as it used to be, in the first thing a grader reads.**
+The report's title block said *"click any of the nine characters on the sign-in screen"*
+and the README's opening said *"Nine demo characters on the sign-in screen, each one click
+away"*. The landing page was rebuilt on 2026-11-20 — it is **Start my own** / **See it
+working**, and the nine moved inside the demo under *Other scenarios*. Both corrected,
+plus the README's seeding step, which explained the second seeder as making "the nine
+characters the sign-in screen lists".
+
+**3. `tmp80p_dyo5/boot.db` is committed** — a 620 KB SQLite file left by the `_seed_on_boot`
+test on 2026-11-20 and swept into commit `cd7df34`. Inspected: ten accounts, all
+`is_demo = 1`, synthetic demo content only, no secrets. So it is clutter rather than a
+leak, but it sits at the top level of the repo a grader clones, against *"clean repo"* in
+the 15-point row. **Not removed — deleting committed files is Christine's call.**
+
+### The deck is not reveal.js, deliberately
+
+The page says the deck should be built with reveal.js from a CDN. `slides.html` is not.
+It meets every *behaviour* the page specifies, verified in a browser at 1280×720:
+
+| requirement | verified |
+|---|---|
+| 10 slides max | 10 |
+| arrow keys navigate | Home→1, →2, →3, →4, →5, ←4, ←3, End→10 |
+| **F** for full screen | handler present and correct |
+| screenshots + diagram embedded | 3 images, all `data:` URIs; 1 inline SVG |
+| opens by double-click anywhere | **zero external scripts** |
+
+The conflict is in the requirements themselves: both HTML files must *"open by
+double-clicking, on any computer, with every screenshot showing"*, and a CDN script needs
+a network at the moment it is opened. Recommendation: **keep it**, and say so — a note is
+now in the README explaining the deviation and the reason. Rebuilding on reveal.js the day
+before submission would risk a working 8-point deck to satisfy an implementation detail
+that neither slide row lists as evidence.
+
+### Everything else passes
+
+| requirement | state |
+|---|---|
+| Report is `report.html`, single file, 10–15 printed pages | **12**, measured by Christine's own print-to-PDF |
+| Report section order (title/motivation/new/agents/tokenomics/safety/impact/limits) | matches |
+| Title block: name, author, repo link, app link, one-sentence description | all present |
+| Named existing products compared against (Motivation evidence) | Lasting, Paired, Relish, Day One, Journey, Reflectly, Replika, BetterHelp |
+| One real run traced with screenshots (Agent design evidence) | §4, trace screenshot from a live run |
+| Diagram | inline SVG, in both report and deck |
+| Real token counts, input / **cached input** / output (Tokenomics evidence) | §5, 22 logged runs, reconciled to the log by a script |
+| Cost per run, per user, at 100 and 10,000 | $0.0027–$0.0044 · $0.033–$0.052 · $3.27–$5.24 · $327–$524 |
+| Cost cuts, and whether they hurt performance, with evidence | the routing change, +53% measured both ways |
+| **Test** of a defense stopping an attack (Safety evidence) | `inj-01` live, 2 PASS / 1 FAIL published |
+| A real user tried it (Impact evidence) | Alex M. and Deborah L., quoted with permission |
+| Deck ≤ 10 slides, self-contained | 10, 1.6 MB, no network |
+| `README.md` with step-by-step run instructions | yes, hosted link at the top |
+| `.env.example` listing every key, no values | `PORTKEY_API_KEY` |
+| App reads `.env` in its folder, then the folder above, then the environment | yes, and tested by moving the file |
+| Key names limited to `PORTKEY_API_KEY` / `OPENAI_API_KEY` | only `PORTKEY_API_KEY` |
+| gpt-6-luna only | pinned in `app_config.REQUIRED_OPENAI_MODEL`; `OPENAI_MODEL` is read and cannot win |
+| No real `.env` or key committed | verified by scanning every tracked file |
+| 10-minute rule / fresh clone | `tools/fresh_clone_check.sh`, 18/18 |
+| App online and awake | `/api/health` 200, `mode: live`, 57 s cold start — the README warns about exactly that |
