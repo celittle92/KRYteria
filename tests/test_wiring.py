@@ -17,6 +17,7 @@ Covers the things the other two suites deliberately stub:
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -272,6 +273,78 @@ def test_orchestrator_has_no_path_to_set_assessment() -> None:
         calls = calls_in(agents_dir / f"{name}.py")
         check(f"{name} cannot set an assessment", "set_assessment" not in calls)
         check(f"{name} cannot resolve a proposal", "resolve_proposal" not in calls)
+
+
+def test_either_accepted_key_name_can_drive_the_model() -> None:
+    """The requirements say the staff `.env` carries PORTKEY_API_KEY and OPENAI_API_KEY.
+
+    On 2026-11-23 the shared course Portkey key started returning 401 for every key
+    tried, on the host and on a laptop alike, and the teaching staff handed out an
+    OPENAI_API_KEY instead. An app that reads only one of the two names cannot be run by
+    anybody holding the other, which is the 5-point "teaching staff can run it" row.
+
+    So: Portkey stays the default, KRYTERIA_PROVIDER forces a route, and a forced route
+    with no key is an error rather than a silent fall-through to a gateway nobody chose.
+    """
+    import app_config
+
+    saved = {k: os.environ.get(k) for k in
+             ("PORTKEY_API_KEY", "OPENAI_API_KEY", "KRYTERIA_PROVIDER")}
+    try:
+        for k in saved:
+            os.environ.pop(k, None)
+
+        os.environ["PORTKEY_API_KEY"] = "pk-test"
+        os.environ["OPENAI_API_KEY"] = "sk-test"
+        s = app_config.load_settings()
+        check("with both keys, Portkey wins", s.provider_route == "portkey", s.provider_route)
+        check("and it reports which name it used",
+              s.key_name_in_use == "PORTKEY_API_KEY", s.key_name_in_use)
+        client = app_config.build_portkey_client(s)
+        check("the Portkey route targets the gateway",
+              "portkey" in str(client.base_url), str(client.base_url))
+
+        os.environ.pop("PORTKEY_API_KEY")
+        s = app_config.load_settings()
+        check("with only OPENAI_API_KEY it routes direct",
+              s.provider_route == "openai", s.provider_route)
+        client = app_config.build_portkey_client(s)
+        check("the direct route does NOT go through Portkey",
+              "portkey" not in str(client.base_url), str(client.base_url))
+        # Sending a Portkey header to OpenAI would hand a key to a service that has no
+        # business holding it.
+        hdrs = {k.lower() for k in (client.default_headers or {})}
+        check("and sends no x-portkey-api-key header",
+              "x-portkey-api-key" not in hdrs)
+
+        os.environ["PORTKEY_API_KEY"] = "pk-test"
+        os.environ["KRYTERIA_PROVIDER"] = "openai"
+        s = app_config.load_settings()
+        check("KRYTERIA_PROVIDER=openai overrides a present Portkey key",
+              s.provider_route == "openai", s.provider_route)
+
+        os.environ.pop("OPENAI_API_KEY")
+        try:
+            app_config.load_settings()
+            check("a forced route with no key is refused", False, "it was allowed")
+        except RuntimeError:
+            check("a forced route with no key is refused", True)
+
+        os.environ.pop("KRYTERIA_PROVIDER")
+        os.environ.pop("PORTKEY_API_KEY")
+        try:
+            app_config.load_settings()
+            check("with neither key it refuses", False, "it was allowed")
+        except RuntimeError as e:
+            check("with neither key it refuses", True)
+            check("and the message names both accepted names",
+                  "PORTKEY_API_KEY" in str(e) and "OPENAI_API_KEY" in str(e))
+    finally:
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
 
 
 def main() -> int:

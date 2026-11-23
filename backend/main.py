@@ -167,10 +167,16 @@ def health():
     _, info = get_provider()
 
     key_found, env_source, key_error = True, None, None
+    provider_route = key_name_in_use = None
     try:
         settings = app_config.load_settings()
         env_source = settings.env_source
         model_override_ignored = settings.model_override_ignored
+        # Which gateway and which of the two accepted key names is actually in play.
+        # A key can be present and still rejected — that happened to the shared course
+        # Portkey key on 2026-11-23 — so "found" alone does not tell anybody enough.
+        provider_route = settings.provider_route
+        key_name_in_use = settings.key_name_in_use
     except RuntimeError as e:
         key_found, model_override_ignored = False, None
         key_error = str(e).splitlines()[0]
@@ -185,6 +191,8 @@ def health():
         "model": info.model_name,
         "simulated": info.simulated,
         "api_key_found": key_found,
+        "provider_route": provider_route,
+        "key_name_in_use": key_name_in_use,
         "env_source": env_source,
         "key_error": key_error,
         "model_override_ignored": model_override_ignored,
