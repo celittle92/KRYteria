@@ -1130,3 +1130,51 @@ that neither slide row lists as evidence.
 | No real `.env` or key committed | verified by scanning every tracked file |
 | 10-minute rule / fresh clone | `tools/fresh_clone_check.sh`, 18/18 |
 | App online and awake | `/api/health` 200, `mode: live`, 57 s cold start — the README warns about exactly that |
+
+## The repo went public, 2026-11-23
+
+**The problem:** the repo was private and `zlisto` had never accepted the 2026-11-18
+collaborator invitation, so the teaching staff could not clone it. Christine chose public,
+which the requirements page allows outright.
+
+**What going public actually means, and why it needed a rewrite first.** It publishes
+every commit, not the current tree. `AI_prompts.md` was committed and touched **43 of the
+92 commits** — and it holds her prompts verbatim, including a personal disclosure, her
+mother's text messages, and candid working language, under her real name, permanently
+searchable. The course requirements **never ask for a prompt log**; it is a workspace
+convention from `AGENTS.md` for homework, not a final-project deliverable, and no rubric
+row touches it.
+
+So the order was: strip, push while still private, *then* publish.
+
+| step | result |
+|---|---|
+| back up `AI_prompts.md` twice, outside git | 3,962 lines, verified identical afterwards |
+| untrack it and `tmp80p_dyo5/boot.db`, commit the pending fixes | `1d66985` |
+| `git filter-branch` over all 92 commits | `303f832`, 0 commits touch either path |
+| `.git` size | **134 MB → 20 MB** |
+| force-push while private, then `gh repo edit --visibility public` | PUBLIC |
+| fresh clone of the public repo | 170 files, no `AI_prompts.md`, history clean |
+
+`git-filter-repo` is not installed on this machine, so `filter-branch` did the work —
+fine at this size, and the script verified the result rather than assuming it.
+
+**Two things the scripts caught rather than the author.** `--force-with-lease` was rejected
+with *"stale info"*, because `filter-branch` had rewritten the remote-tracking ref too, so
+the lease had nothing true to compare against; re-fetching made the lease meaningful again
+instead of reaching for a bare `--force`. And an earlier run of the publish script stopped
+before pushing anything because `grep` finding **no** secrets exits non-zero and
+`set -o pipefail` read that as failure — a fail-safe failing safe.
+
+**Verified after publishing:**
+
+- `tools/fresh_clone_check.sh` against `https://github.com/celittle92/KRYteria.git` —
+  **13 seconds** against the 10-minute rule, every check PASS, including the staff's
+  `.env`-one-level-up case from a real clone.
+- The push triggered a Render redeploy: `/api/health` is `ok`, `mode: live`,
+  `api_key_found`, `frontend_built`, and `/api/demo/characters` returns all nine with
+  `theintentionalist` — the account **See it working** opens — present.
+
+**Still true and still gitignored:** `AI_prompts.md` lives on at
+`KRYteria/AI_prompts.md`, with a copy in `.prompt-log-backup/`. Keep writing it; never
+re-add it to the repo.

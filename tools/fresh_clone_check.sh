@@ -85,7 +85,7 @@ step "Seed, exactly as the README says — both commands"
 .venv/bin/python -m backend.seed_demo >/dev/null 2>&1       && ok "demo account"   || bad "seed_demo failed"
 .venv/bin/python -m backend.seed_characters >/dev/null 2>&1 && ok "nine characters" || bad "seed_characters failed"
 
-step "Does it actually come up, and is the front door populated?"
+step "Does it actually come up, and is the demo populated?"
 .venv/bin/python - <<'PROBE'
 import sys
 from fastapi.testclient import TestClient
@@ -106,7 +106,7 @@ check("/ serves the front end", c.get("/").status_code == 200)
 r = c.get("/api/demo/characters")
 ch = r.json()
 ch = ch.get("characters", ch) if isinstance(ch, dict) else ch
-check("nine demo characters at the front door", isinstance(ch, list) and len(ch) == 9,
+check("nine demo people inside the demo drawer", isinstance(ch, list) and len(ch) == 9,
       "got %s" % (len(ch) if isinstance(ch, list) else ch))
 
 if isinstance(ch, list) and ch:
