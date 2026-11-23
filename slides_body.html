@@ -93,7 +93,7 @@
   .slide.dense .lede.sm{font-size:clamp(12.5px,1.14vw,15px); line-height:1.38}
   .slide.dense .cap{font-size:12px; line-height:1.4; margin-top:9px}
   .slide.dense table{font-size:12.5px; margin-top:10px}
-  .slide.dense th,.slide.dense td{padding:4px 9px}
+  .slide.dense th,.slide.dense td{padding:3px 9px}
   .slide.dense li{margin:.3em 0}
   .slide.dense ul{margin-top:8px}
   .slide.dense h2{font-size:clamp(22px,2.7vw,34px)}
@@ -389,37 +389,24 @@
 <section class="slide dense" id="s8">
   <div class="tag">Safety</div>
   <h2>Record everything. Withhold the analysis.</h2>
-  <div class="cols wide-right">
+  <!-- Two kinds of safety, one per column. Keeping the user-facing story whole on the
+       left and the attack surface whole on the right: they are different problems, and
+       interleaving them read as clutter rather than as coverage. -->
+  <div class="cols">
     <div>
-      <p class="eyebrow" style="margin-top:10px">What the layer found, unprompted</p>
+      <p class="eyebrow" style="margin-top:10px">Safety <i>for the user</i> — what the layer found, unprompted</p>
       <p class="lede sm">An ordinary demo entry — no criterion mentions safety. Classified
       <b>physical / potential / note&nbsp;only</b>:</p>
-      <p class="quote" style="font-size:13.5px; line-height:1.4">He repeatedly pressed
-      after you said you needed to leave and stood between you and your bag, using humor to
-      make objecting feel difficult… That is worth taking seriously; <b>you do not have to
+      <p class="quote" style="font-size:13px; line-height:1.38">He repeatedly pressed after
+      you said you needed to leave and stood between you and your bag, using humor to make
+      objecting feel difficult… That is worth taking seriously; <b>you do not have to
       decide what to call it.</b></p>
       <p class="cap" style="margin-top:5px">No diagnosis, no legal conclusion, nobody
-      labeled. Over-response is graded as a failure here exactly as minimization is.</p>
+      labeled. Over-response is graded as a failure exactly as minimization is.</p>
 
-      <div class="callout-sec">
-        <p class="eyebrow" style="margin:0 0 6px">The other kind of safety — the attack surface</p>
-        <table style="margin:0">
-          <tr><td><b>Prompt injection</b></td><td class="yes">tested live, stopped</td></tr>
-          <tr><td><b>Cross-account access</b></td><td>404, never 403 — a 403 confirms the row</td></tr>
-          <tr><td><b>Credentials · headers</b></td><td>Argon2id · CSP, <code>frame-ancestors 'none'</code></td></tr>
-          <tr><td><b>Budget exhaustion</b></td><td class="no">found by review, now bounded</td></tr>
-        </table>
-        <p class="cap" style="margin-top:6px"><b>The last one is the instructive
-        failure.</b> The throttle cleared on success, so a script using a fresh handle each
-        time met no limit — and <b>~17 new accounts exhaust the daily token budget for
-        everybody.</b> The money was never the exposure. <b>Availability was.</b></p>
-      </div>
-    </div>
-    <div>
-      <p class="eyebrow" style="margin-top:10px">The defense, and the test holding it</p>
-      <p class="lede sm">A halt is a <b>presentation</b> decision, not a recording one.
-      Being grabbed and prevented from leaving is a behavior; refusing to write it down
-      leaves the record emptiest where it matters most.</p>
+      <p class="lede sm" style="margin-top:11px">A halt is a <b>presentation</b> decision,
+      not a recording one. Being grabbed and prevented from leaving is a behavior; refusing
+      to write it down leaves the record emptiest where it matters most.</p>
       <table>
         <tr><td>Narrative, themes, Evidence</td><td class="yes">run and persist</td></tr>
         <tr><td>Reasoning</td><td class="no">skipped — a deposition</td></tr>
@@ -428,8 +415,25 @@
       </table>
       <p class="cap"><b>It shipped the other way once:</b> the orchestrator returned before
       the save, so the entry a user was most serious about was the one KRYteria recorded
-      least. A test now asserts the halt is set <i>before</i> the save, and read from code
-      — never off the model's own suggested action.</p>
+      least. A test now asserts the halt is set <i>before</i> the save.</p>
+    </div>
+
+    <div>
+      <p class="eyebrow" style="margin-top:10px">Safety <i>of the app</i> — the attack surface</p>
+      <p class="lede sm">A different problem, and this project needed both. <b>All four were
+      found by review rather than by incident</b>, which is the only good way to find
+      them.</p>
+      <table>
+        <tr><td><b>Prompt injection</b></td><td class="yes">tested live, stopped</td></tr>
+        <tr><td><b>Cross-account access</b></td><td>404, never 403 — a 403 confirms the row exists</td></tr>
+        <tr><td><b>Credentials · headers</b></td><td>Argon2id, never logged · CSP, <code>frame-ancestors 'none'</code>, HSTS</td></tr>
+        <tr><td><b>Budget exhaustion</b></td><td class="no">found by review, now bounded</td></tr>
+      </table>
+      <p class="cap"><b>The last one is the instructive failure.</b> The sign-in throttle
+      was keyed on the handle and cleared on success, so a script using a fresh handle each
+      time met no limit at all — and <b>~17 new accounts exhaust the 2,000,000-token daily
+      budget for every user.</b> The money was never the exposure; the worst day is about a
+      dollar. <b>Availability was.</b></p>
     </div>
   </div>
   <div class="pg">8</div>
