@@ -62,3 +62,10 @@ AI_prompts.md
 # that got swept into a commit on that date. Synthetic demo data only, no secrets — clutter
 # rather than a leak, but not something a grader should clone.
 tmp*/
+
+# Screen recordings. The demo video is a Canvas upload, not a repo file — and a 130 MB
+# .mov landing in the project folder is one `git add -A` away from being committed into
+# a submission whose instructions say any extra file will be penalized.
+*.mov
+*.mp4
+*.m4v
