@@ -1081,7 +1081,7 @@ plus the README's seeding step, which explained the second seeder as making "the
 characters the sign-in screen lists".
 
 **3. `tmp80p_dyo5/boot.db` is committed** — a 620 KB SQLite file left by the `_seed_on_boot`
-test on 2026-11-20 and swept into commit `cd7df34`. Inspected: ten accounts, all
+test on 2026-11-20 and swept into a commit that day. Inspected: ten accounts, all
 `is_demo = 1`, synthetic demo content only, no secrets. So it is clutter rather than a
 leak, but it sits at the top level of the repo a grader clones, against *"clean repo"* in
 the 15-point row. **Not removed — deleting committed files is Christine's call.**
@@ -1150,8 +1150,8 @@ So the order was: strip, push while still private, *then* publish.
 | step | result |
 |---|---|
 | back up `AI_prompts.md` twice, outside git | 3,962 lines, verified identical afterwards |
-| untrack it and `tmp80p_dyo5/boot.db`, commit the pending fixes | `1d66985` |
-| `git filter-branch` over all 92 commits | `303f832`, 0 commits touch either path |
+| untrack it and `tmp80p_dyo5/boot.db`, commit the pending fixes | done |
+| `git filter-branch` over all 92 commits | 0 commits touch either path |
 | `.git` size | **134 MB → 20 MB** |
 | force-push while private, then `gh repo edit --visibility public` | PUBLIC |
 | fresh clone of the public repo | 170 files, no `AI_prompts.md`, history clean |

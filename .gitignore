@@ -59,6 +59,6 @@ AI_prompts.md
 .prompt-log-backup/
 
 # A 620 KB SQLite file the _seed_on_boot test left in the repo root on 2026-11-20 and
-# that got swept into commit cd7df34. Synthetic demo data only, no secrets — clutter
+# that got swept into a commit on that date. Synthetic demo data only, no secrets — clutter
 # rather than a leak, but not something a grader should clone.
 tmp*/
