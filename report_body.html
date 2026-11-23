@@ -807,17 +807,27 @@ prices every row at list, so the gap shows rather than hides. Neither moves a br
 by a tenth of a cent.</p>
 
 <div class="kpi">
-  <div><span>Per brain dump</span><b>$0.0027 – $0.0044</b></div>
-  <div><span>Per user / month</span><b>$0.033 – $0.052</b></div>
-  <div><span>100 users / month</span><b>$3.27 – $5.24</b></div>
-  <div><span>10,000 users / month</span><b>$327 – $524</b></div>
+  <div><span>Full run, 5 agents</span><b>$0.0044</b></div>
+  <div><span>Per user / month</span><b>$0.052</b></div>
+  <div><span>100 users / month</span><b>$5.24</b></div>
+  <div><span>10,000 users / month</span><b>$524</b></div>
 </div>
 
-<p class="meta">Assumes 12 brain dumps per user per month. A range rather than a point,
-because the two ends are two runs measured on 21 November rather than one figure
-modelled: an ordinary entry takes three agents and cost <strong>$0.0027</strong>, a full
-run takes five and cost <strong>$0.0044</strong>. Reflection is opt-in and Reasoning only
-runs on a stated conclusion, so most entries sit at the low end.</p>
+<p><strong>Every figure above is the ceiling, and the arithmetic is here rather than
+behind a spreadsheet.</strong> One measured five-agent run on 21 November —
+<strong>15,980 input tokens</strong> at $0.10/M = $0.001598, plus <strong>5,539
+output</strong> at $0.50/M = $0.002769 — is <strong>$0.004367</strong> for one brain dump.
+At 12 brain dumps per user per month that is <strong>$0.052</strong> a user, <strong>$5.24
+</strong> at 100 users and <strong>$524</strong> at 10,000. Nothing here is modelled or
+blended: it is one real run multiplied out, and a reader can redo it in their head.</p>
+
+<p class="meta">It is a ceiling because <strong>not every entry needs five agents.</strong>
+Reasoning runs only when the user states a conclusion and Reflection is opt-in, so an
+ordinary entry is three agents — measured the same day at <strong>$0.0027</strong>, which
+is $0.033 a user and <strong>$327</strong> at 10,000. The real bill sits between the two
+and nearer the bottom. The headline quotes the full run anyway, because a cost model
+should assume the expensive case: budgeting from the average is how a service discovers
+its ceiling in production.</p>
 
 <p><strong>These numbers went up, and the reason is the interesting part.</strong> A week
 earlier the same two runs cost $0.0021 and $0.0034. Nothing about the architecture
@@ -1228,9 +1238,10 @@ positioned as a replacement. It is a tool that can augment or complement, especi
 users want to learn about themselves and their patterns as these pertain to
 relationships.</p>
 
-<p>The economics are the easy part and are not the argument. At $0.033 per active user per
-month on the measured ordinary-entry cost, a program with 10,000 students who each write a
-dozen entries costs about <strong>$330/month</strong> in inference. What that buys is a
+<p>The economics are the easy part and are not the argument. At $0.052 per active user per
+month — the full five-agent run, the ceiling rather than the average — a program with
+10,000 students who each write a dozen entries costs about <strong>$525/month</strong> in
+inference. What that buys is a
 structured record a student owns and can take to a professional, or not — not a substitute
 for seeing one. No institution has been approached and none of this is a letter of intent;
 it is a use case the cost model makes plausible, stated at the confidence it has earned.</p>

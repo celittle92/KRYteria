@@ -14,7 +14,16 @@
   .slide{ scroll-margin:28px;
     width:min(1120px,96vw); aspect-ratio:16/9; background:var(--ground);
     border-radius:10px; padding:48px 72px 42px; position:relative; overflow:hidden;
-    display:flex; flex-direction:column; justify-content:center;
+    display:flex; flex-direction:column;
+    /* Centred while the content fits. `safe` is the load-bearing word: without it, a
+       slide whose content is taller than the frame centres by overflowing BOTH edges,
+       which slides the heading up underneath the absolutely-positioned .tag — the bug
+       on the Safety and Impact slides. `safe` makes it fall back to flex-start the
+       moment content would overflow, so the heading can never climb under the tag.
+       Browsers that do not know `safe` keep the plain `center` above it. */
+    justify-content:center;
+    justify-content:safe center;
+    padding-top:56px;
     box-shadow:0 10px 40px rgba(0,0,0,.35);
   }
   .slide.dark{background:var(--ink); color:var(--ground)}
@@ -71,6 +80,32 @@
   .diagram svg{max-width:100%; max-height:100%; height:auto}
   .todo{border:2px dashed var(--contra); border-radius:8px; padding:12px 16px;
         margin-top:18px; font-size:13.5px; color:var(--contra); max-width:70ch}
+  /* A called-out block for the part of a slide that would otherwise read as a footnote.
+     Used for "the other kind of safety", which is the attack-surface half of the Safety
+     row and should not look like an afterthought beside the survivor-facing half. */
+  /* Three slides carry more than a 1120x630 frame holds — Safety, Impact and Limits each
+     have two columns, a table and a callout. Before `safe center` they centred by
+     overflowing BOTH edges, which is what put the heading under the tag; now they would
+     simply clip at the bottom. Rather than cut the evidence out of the three rows that
+     are evidence-capped, these slides tighten type and spacing by roughly a tenth. Still
+     well above the size this deck uses for captions elsewhere. */
+  .slide.dense .lede{font-size:clamp(14px,1.33vw,17.5px); line-height:1.42}
+  .slide.dense .lede.sm{font-size:clamp(12.5px,1.14vw,15px); line-height:1.38}
+  .slide.dense .cap{font-size:12px; line-height:1.4; margin-top:9px}
+  .slide.dense table{font-size:12.5px; margin-top:10px}
+  .slide.dense th,.slide.dense td{padding:4px 9px}
+  .slide.dense li{margin:.3em 0}
+  .slide.dense ul{margin-top:8px}
+  .slide.dense h2{font-size:clamp(22px,2.7vw,34px)}
+  .slide.dense .quote{margin-top:10px; padding:2px 0 2px 14px}
+  .slide.dense .eyebrow{margin-bottom:7px}
+  .slide.dense .callout-sec{padding:9px 13px; margin-top:11px}
+  .callout-sec{border:1px solid var(--line); border-left:3px solid var(--sage);
+               border-radius:6px; background:rgba(164,178,159,.09);
+               padding:11px 14px; margin-top:13px}
+  .slide.dark .callout-sec{border-color:rgba(255,255,255,.14);
+                           border-left-color:var(--sage);
+                           background:rgba(255,255,255,.05)}
   .pg{position:absolute; right:26px; bottom:20px; font-size:12px; color:var(--gray)}
   .tag{position:absolute; left:72px; top:28px; font-size:12px; letter-spacing:.14em;
        text-transform:uppercase; color:var(--sage); font-weight:600}
@@ -97,15 +132,16 @@
 <!-- ─────────────────────────── 2. THE PROBLEM ─────────────────────────── -->
 <section class="slide" id="s2">
   <div class="tag">The problem</div>
-  <p class="big">Somebody deciding whether to keep going.</p>
-  <p class="lede" style="margin-top:22px">Four months into dating someone. A friendship
-  that has started costing more than it gives. A boundary at work that keeps getting
-  crossed. The question is always the same one: <i>was that a problem, or was it me?</i></p>
+  <p class="big">Losing sight of what you were looking for.</p>
+  <p class="lede" style="margin-top:22px">Most people cannot say precisely what matters to
+  them — and the ones who can watch it move. <b>Chemistry is the loudest signal in the
+  room</b>, and it drowns out the quieter standard you set before you met anyone. Four
+  months in, the question is not <i>what do I want</i>. It is <i>when did I stop asking?</i></p>
   <p class="lede"><b>They are not short of information.</b> The evidence is scattered
-  across months of memory, the standard they set in January has quietly moved by June, and
-  the friend they keep asking has started agreeing with them to end the conversation.</p>
-  <p class="lede">The failure is not knowing. It is <b>acting consistently with what you
-  already know.</b></p>
+  across months of memory, the standard set in January has quietly moved by June, and the
+  friend they keep asking has started agreeing with them to end the conversation.</p>
+  <p class="lede">The failure is not knowing. It is <b>articulating what you want, and then
+  acting consistently with it.</b></p>
   <div class="pg">2</div>
 </section>
 
@@ -113,8 +149,8 @@
 <section class="slide" id="s3">
   <div class="tag">What it is</div>
   <h2>A decision mirror</h2>
-  <p class="lede">It compares three things: what you say you want, what you are actually
-  experiencing, and what you are choosing to do about it.</p>
+  <p class="lede">KRYteria compares three things: what you say you want, what you are
+  actually experiencing, and what you are choosing to do about it.</p>
   <div class="cols wide-right" style="margin-top:16px">
     <div>
       <p class="eyebrow">1 — Hold the standard</p>
@@ -141,7 +177,7 @@
 </section>
 
 <!-- ─────────────────────────── 4. WHAT IS DIFFERENT ─────────────────────────── -->
-<section class="slide" id="s4">
+<section class="slide dense" id="s4">
   <div class="tag">What is different</div>
   <h2>The real incumbent is not a product</h2>
   <div class="cols wide-left">
@@ -319,94 +355,109 @@
 </section>
 
 <!-- ─────────────────────────── 7. TOKENOMICS ─────────────────────────── -->
-<section class="slide dark" id="s7">
+<section class="slide dark dense" id="s7">
   <div class="tag">Tokenomics</div>
-  <h2>Measured, not estimated</h2>
+  <h2 style="margin-top:10px">Measured, not estimated</h2>
   <div class="kpis">
-    <div class="kpi"><span>Per brain dump</span><b>$0.0027</b></div>
-    <div class="kpi"><span>100 users / mo</span><b>$3.27</b></div>
-    <div class="kpi"><span>10,000 users / mo</span><b>$327</b></div>
-    <div class="kpi"><span>Spent building it</span><b>$0.248</b></div>
+    <div class="kpi"><span>Full run, 5 agents</span><b>$0.0044</b></div>
+    <div class="kpi"><span>Per user / mo</span><b>$0.052</b></div>
+    <div class="kpi"><span>100 users / mo</span><b>$5.24</b></div>
+    <div class="kpi"><span>10,000 users / mo</span><b>$524</b></div>
   </div>
-  <p class="lede" style="margin-top:24px"><b>The cost-cutting step, and what it cost us.</b>
-  Routing <i>is</i> the cost control. The first version keyed on a keyword list and saved
-  money by not doing the thing the product is for: across 36 corpus entries it fired 4
-  times, and only 3 of 13 adversarial cases reached the agent written to test them.</p>
-  <p class="lede">Routing on <b>stated conclusions</b> instead costs <b>+53% per
-  entry</b> — $162.88 to $249.62 at 10,000 users. Worth it.</p>
-  <p class="cap">An ordinary entry is three agents; a full run is five, at $0.0044 — $524 at 10,000 users.
-  Both ends measured 21 Nov, and both went up about 28% in a week because every fix to the
-  product’s judgment is a permanent addition to the prompt. <b>Behavior is bought with tokens,
-  and the bill recurs.</b> 22 live runs · 404 measured calls · 915,972 input / 359,603 output tokens, at
-  $0.10/$0.50 per 1M. Per-account and global daily token caps are enforced in the
-  orchestrator, in code. Cache writes are not modeled, so figures are slightly low on a
-  cold cache.</p>
+  <p class="cap" style="margin-top:12px"><b>The arithmetic, not a model.</b> One measured
+  five-agent run, 21 Nov: <b>15,980 in</b> × $0.10/M + <b>5,539 out</b> × $0.50/M =
+  <b>$0.004367</b> per entry. × 12 entries/user/month = <b>$0.052</b>. × 10,000 users =
+  <b>$524</b>. One real run multiplied out — a reader can redo it in their head.</p>
+  <p class="cap" style="margin-top:7px"><b>It is the ceiling on purpose.</b> Reasoning runs
+  only on a stated conclusion and Reflection is opt-in, so an ordinary entry is three
+  agents and $0.0027 — $327 at the same scale. The real bill sits between. A cost model
+  should assume the expensive case.</p>
+  <p class="lede sm" style="margin-top:13px"><b>The cost-cutting step, and what it cost
+  us.</b> Routing <i>is</i> the cost control, and the first version was cheap and wrong: a
+  keyword list fired on 4 of 36 corpus entries, and only 3 of 13 adversarial cases reached
+  the agent written to test them. Routing on <b>stated conclusions</b> costs <b>+53% per
+  entry</b>. Worth it.</p>
+  <p class="cap" style="margin-top:9px">Spent building it <b>$0.248</b> · 22 live runs ·
+  404 calls · 915,972 input / 359,603 output tokens. Per-entry cost rose ~28% in a week, because every
+  fix to the product’s judgment is a permanent addition to the prompt — <b>behavior is
+  bought with tokens, and the bill recurs.</b> Daily caps per account and globally are
+  enforced in code. Cache writes are not modeled.</p>
   <div class="pg">7</div>
 </section>
 
 <!-- ─────────────────────────── 8. SAFETY ─────────────────────────── -->
-<section class="slide" id="s8">
+<section class="slide dense" id="s8">
   <div class="tag">Safety</div>
   <h2>Record everything. Withhold the analysis.</h2>
   <div class="cols wide-right">
     <div>
-      <p class="eyebrow" style="margin-top:14px">What the layer found, unprompted</p>
-      <p class="lede sm">An ordinary demo entry. Nobody labeled anything, and no criterion
-      mentions safety. Classified <b>physical / potential / note&nbsp;only</b>:</p>
-      <p class="quote">He repeatedly pressed after you said you needed to leave and stood
-      between you and your bag, using humor to make objecting feel difficult… That is worth
-      taking seriously; <b>you do not have to decide what to call it.</b></p>
-      <p class="cap">No diagnosis, no legal conclusion, nobody labeled. Over-response is
-      graded as a failure here exactly as minimization is.</p>
-      <p class="eyebrow" style="margin-top:14px">The other kind of safety</p>
-      <p class="cap" style="margin-top:5px"><b>Argon2id, CSP, cross-account rows that 404
-      rather than 403</b> — and account creation bounded for the whole app, because the
-      per-handle throttle cleared on success, so a fresh handle met no limit and
-      <b>~17 of them exhaust the daily token budget for everybody.</b></p>
+      <p class="eyebrow" style="margin-top:10px">What the layer found, unprompted</p>
+      <p class="lede sm">An ordinary demo entry — no criterion mentions safety. Classified
+      <b>physical / potential / note&nbsp;only</b>:</p>
+      <p class="quote" style="font-size:13.5px; line-height:1.4">He repeatedly pressed
+      after you said you needed to leave and stood between you and your bag, using humor to
+      make objecting feel difficult… That is worth taking seriously; <b>you do not have to
+      decide what to call it.</b></p>
+      <p class="cap" style="margin-top:5px">No diagnosis, no legal conclusion, nobody
+      labeled. Over-response is graded as a failure here exactly as minimization is.</p>
+
+      <div class="callout-sec">
+        <p class="eyebrow" style="margin:0 0 6px">The other kind of safety — the attack surface</p>
+        <table style="margin:0">
+          <tr><td><b>Prompt injection</b></td><td class="yes">tested live, stopped</td></tr>
+          <tr><td><b>Cross-account access</b></td><td>404, never 403 — a 403 confirms the row</td></tr>
+          <tr><td><b>Credentials · headers</b></td><td>Argon2id · CSP, <code>frame-ancestors 'none'</code></td></tr>
+          <tr><td><b>Budget exhaustion</b></td><td class="no">found by review, now bounded</td></tr>
+        </table>
+        <p class="cap" style="margin-top:6px"><b>The last one is the instructive
+        failure.</b> The throttle cleared on success, so a script using a fresh handle each
+        time met no limit — and <b>~17 new accounts exhaust the daily token budget for
+        everybody.</b> The money was never the exposure. <b>Availability was.</b></p>
+      </div>
     </div>
     <div>
-      <p class="eyebrow" style="margin-top:14px">The defense, and the test holding it</p>
+      <p class="eyebrow" style="margin-top:10px">The defense, and the test holding it</p>
       <p class="lede sm">A halt is a <b>presentation</b> decision, not a recording one.
       Being grabbed and prevented from leaving is a behavior; refusing to write it down
-      leaves the record emptiest at the point it matters most.</p>
+      leaves the record emptiest where it matters most.</p>
       <table>
         <tr><td>Narrative, themes, Evidence</td><td class="yes">run and persist</td></tr>
         <tr><td>Reasoning</td><td class="no">skipped — a deposition</td></tr>
         <tr><td>Reflection</td><td class="no">skipped — not reflective here</td></tr>
         <tr><td>The screen</td><td>acknowledgment, a safety check <i>you can answer</i>, resources — nothing else</td></tr>
       </table>
-      <p class="cap"><b>The code shipped the other way once:</b> the orchestrator returned
-      before the save, so the entry a user was most serious about was the one KRYteria
-      recorded least. A test now asserts the halt is set <i>before</i> the save, and that
-      it is read from code — never off the model's own suggested action, which comes from
-      the same call that classified the concern.</p>
+      <p class="cap"><b>It shipped the other way once:</b> the orchestrator returned before
+      the save, so the entry a user was most serious about was the one KRYteria recorded
+      least. A test now asserts the halt is set <i>before</i> the save, and read from code
+      — never off the model's own suggested action.</p>
     </div>
   </div>
   <div class="pg">8</div>
 </section>
 
 <!-- ─────────────────────────── 9. IMPACT ─────────────────────────── -->
-<section class="slide" id="s9">
+<section class="slide dense" id="s9">
   <div class="tag">Impact</div>
   <h2>Measured against how this is done today</h2>
-  <p class="lede sm" style="max-width:none">Not "users felt better". The claim: <b>KRYteria
-  makes a person's own inconsistency visible, and nothing they use today does</b> — same
-  entries, same model, prose only, so our structure earns no points.</p>
+  <p class="lede sm" style="max-width:none; margin-top:2px">Not "users felt better". The
+  claim: <b>KRYteria makes a person's own inconsistency visible, and nothing they use today
+  does</b> — same entries, same model, prose only, so our structure earns no points.</p>
   <div class="cols" style="margin-top:0">
     <div>
       <p class="eyebrow" style="margin-bottom:0">A general-purpose chatbot, fair prompt</p>
-      <p class="quote them" style="margin-top:10px">That sounds exhausting — especially if
-      you've repeatedly been left handling things you thought you could count on him for.
-      What happened most recently that brought this up?</p>
-      <p class="cap" style="margin-top:6px">Warm, reasonable, blind to all three of her
+      <p class="quote them" style="margin-top:8px; font-size:13px; line-height:1.38">That
+      sounds exhausting — especially if you've repeatedly been left handling things you
+      thought you could count on him for. What happened most recently that brought this
+      up?</p>
+      <p class="cap" style="margin-top:5px">Warm, reasonable, blind to all three of her
       prior entries.</p>
     </div>
     <div>
       <p class="eyebrow" style="margin-bottom:0">KRYteria, same entry</p>
-      <p class="quote" style="margin-top:10px">How do you reconcile that conclusion with
-      the earlier notes that he was on time for dinner, rescheduled a day ahead, and texted
-      when he was leaving on the late occasion?</p>
-      <p class="cap" style="margin-top:6px">Counter-evidence from her own record, by entry
+      <p class="quote" style="margin-top:8px; font-size:13px; line-height:1.38">How do you
+      reconcile that conclusion with the earlier notes that he was on time for dinner,
+      rescheduled a day ahead, and texted when he was leaving on the late occasion?</p>
+      <p class="cap" style="margin-top:5px">Counter-evidence from her own record, by entry
       id, unprompted.</p>
     </div>
   </div>
@@ -414,56 +465,65 @@
     <tr><th>Produced at all</th><th class="n">KRYteria</th><th class="n">Chatbot</th>
         <th style="text-transform:none; letter-spacing:0; font-size:13px; color:var(--gray)">Prose score across six dimensions</th></tr>
     <tr><td>Evidence mappings · contradicting or complicating</td><td class="n">2 · 2</td><td class="n">0 · 0</td>
-        <td rowspan="2" style="font-size:13.5px"><b>5–3</b> on the contradiction scenario,
+        <td rowspan="2" style="font-size:13px"><b>5–3</b> on the contradiction scenario,
         <b>4–4</b> on the flattering one. The chatbot failed the two dimensions it
-        structurally cannot do: naming the standard at stake, and surfacing the record.</td></tr>
+        structurally cannot do: naming the standard, and surfacing the record.</td></tr>
     <tr><td>Questions raised · traceable to entry ids</td><td class="n">2 · yes</td><td class="n">0 · no</td></tr>
   </table>
   <p class="cap" style="margin-top:0; max-width:none"><b>Who would carry it:</b> a
-  university <b>student-support or wellbeing program</b>, as one optional
-  self-reflection tool. <b>Not therapy, not a crisis service, not a counselor.</b>
-  10,000 students &asymp; <b>$330/month</b>.</p>
+  university <b>student-support or wellbeing program</b>, as one optional self-reflection
+  tool — <b>not therapy, not a crisis service, not a counselor.</b> 10,000 students
+  &asymp; <b>$525/month</b> at the full-run ceiling.</p>
 
-  <p class="cap" style="margin-top:2px; max-width:none"><b>Then real people opened it.</b>
-  <i>"I've clicked through all of them. But I don't really know where to start."</i> — Alex
-  M., 34, New York. With no criteria, <b>Evidence never runs</b> — his two entries came
-  back with nothing to act on. <b>Every check passed on that build.</b> Deborah L., 70,
-  Massachusetts, found the opposite door: she could not get <i>out</i> of a demo, because
-  signing out lived in Settings. <b>Neither is a missing feature — both are a route that
-  existed and was never shown.</b></p>
+  <div class="callout-sec" style="margin-top:8px">
+    <p class="eyebrow" style="margin:0 0 6px">Then real people opened it — and it shipped</p>
+    <p class="lede sm" style="max-width:none"><i>"I've clicked through all of them. But I
+    don't really know where to start."</i> — <b>Alex M., 34.</b> With no criteria set,
+    <b>Evidence never runs</b>, so his entries came back with nothing to act on — and
+    <b>every automated check passed on that build.</b> <b>Deborah L., 70</b> found the
+    opposite door: she could not get <i>out</i> of a demo, because signing out lived in
+    Settings.</p>
+    <p class="lede sm" style="max-width:none; margin-top:6px"><b>Neither was a missing
+    feature — both were a route that existed and was never shown. Both are fixed and
+    live:</b> a new account opens on criteria, an entry that cannot be weighed says why,
+    and the way out is in the header on every screen. <b>Two testers, four shipped
+    changes.</b></p>
+  </div>
   <div class="pg">9</div>
 </section>
 
 <!-- ─────────────────────────── 10. LIMITS ─────────────────────────── -->
-<section class="slide dark" id="s10">
+<section class="slide dark dense" id="s10">
   <div class="tag">Limits &amp; next steps</div>
   <h2>Stated, not discovered</h2>
   <div class="cols">
     <div>
       <ul>
-        <li><b>Governments cannot keep their own hotlines accurate.</b> One service
+        <li><b>The value takes weeks to exist.</b> Comparing what you said you wanted
+        against what you recorded needs a record, so it <i>cannot</i> exist on day one.
+        The mechanism is demonstrated; the value needs a month. <b>No onboarding fixes
+        that.</b></li>
+        <li><b>Governments cannot keep their own hotlines accurate</b> — one service
         contradicted itself about its own number. If accuracy is the value proposition,
-        that is our decay rate too.</li>
-        <li><b>Observations record whose conduct they describe.</b> An entry about his own
-        habits once returned 25 rows of doubt about <i>her</i>, lifted from his own
-        criteria. Now 4, nothing lost.</li>
-        <li><b>One research entry stays pending.</b> Rounding the number up would be the
-        most corrosive thing anyone could do to that layer.</li>
-        <li><b>The hosted instance keeps nothing, and says so above the sign-up form.</b>
-        It was in three files and said to nobody — <b>documented is not disclosed.</b></li>
+        that is our decay rate too. <b>One research entry stays pending</b> for the same
+        reason: rounding it up would be the most corrosive thing we could do.</li>
+        <li><b>Touch targets on My KRYteria are too small</b> — 43 under 32px at phone
+        width. Built on a laptop; every tester opened it on a phone.</li>
+        <li><b>The hosted instance keeps nothing, and now says so above the sign-up
+        form.</b> It was in three files and said to nobody — <b>documented is not
+        disclosed.</b></li>
       </ul>
-      <p class="eyebrow" style="margin-top:20px">Next</p>
+      <p class="eyebrow" style="margin-top:14px">Next</p>
       <ul style="margin-top:6px">
-        <li>The user test, then a second on a non-romantic domain.</li>
+        <li>Testing the application capabilities on non-romantic domains.</li>
         <li>Migrations before anybody's journal depends on it; resources re-verified on a
         schedule, not before a deadline.</li>
       </ul>
     </div>
     <div style="display:flex; flex-direction:column; min-height:0">
-      <img class="shot" alt="The KRYteria sign-in screen, listing nine demo characters each openable in one click." src="{{FRONT_DOOR}}" style="max-height:188px; object-position:center bottom">
-      <p class="cap" style="margin-top:9px">Nothing to type: click a character and you are
-      in. A free instance sleeps after fifteen minutes, so the first load takes about a
-      minute — the screen says so rather than looking broken.</p>
+      <img class="shot" alt="The KRYteria landing page: the tagline, a line saying it never scores or ranks you, then Start my own and See it working." src="{{FRONT_DOOR}}" style="max-height:188px; object-position:center bottom">
+      <p class="cap" style="margin-top:7px">A free instance sleeps after fifteen
+      minutes, so the first load takes about a minute — the screen says so.</p>
       <p class="quote" style="margin-top:18px">KRYteria does not validate conclusions. It
       validates your right to examine them.</p>
       <p class="cap" style="margin-top:16px">kryteria.onrender.com<br>github.com/celittle92/KRYteria<br>
