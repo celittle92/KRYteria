@@ -255,9 +255,35 @@ folder with a single shared `.env` one level up. That layout is supported and te
 > `/api/health` reports `env_source` and the last four characters of the key it loaded,
 > which is the fastest way to tell which copy you are actually running on.
 
-Copy `.env.example` to `.env` and fill in `PORTKEY_API_KEY`. The model is pinned to
-`gpt-6-luna`, the only model the course key permits — `OPENAI_MODEL` is read but cannot
-override it, and an ignored value is reported rather than silently substituted.
+Copy `.env.example` to `.env` and fill in **either** `PORTKEY_API_KEY` **or**
+`OPENAI_API_KEY`. The model is pinned to `gpt-6-luna`, the only model the course key
+permits — `OPENAI_MODEL` is read but cannot override it, and an ignored value is reported
+rather than silently substituted.
+
+### If the Portkey key is rejected, use the OpenAI one
+
+**Read this before concluding the app is broken.** On 2026-11-23 the shared course Portkey
+key began returning `401 Invalid API Key. Error Code: 03` — for every key tried, on the
+host and on a laptop alike — and an `OPENAI_API_KEY` was handed out instead. KRYteria
+takes either.
+
+| Keys present | What happens |
+|---|---|
+| `PORTKEY_API_KEY` only | Portkey gateway. The default; nothing to configure. |
+| `OPENAI_API_KEY` only | Calls OpenAI directly. Same model, no gateway. |
+| **Both** | Portkey wins — set `KRYTERIA_PROVIDER=openai` to force the other. |
+
+That last row is the one that bites: if a **dead** Portkey key is sitting beside a working
+OpenAI one, the default still picks the dead one. Then:
+
+```bash
+KRYTERIA_PROVIDER=openai
+```
+
+in your `.env`, or exported in the shell. `/api/health` reports `provider_route` and
+`key_name_in_use`, so you can see which key is actually in play rather than guessing — "a
+key was found" was never enough on its own, because the key that failed that day was
+present the whole time.
 
 ### Demo mode needs no key at all
 
@@ -293,6 +319,8 @@ service and documents each variable's reasoning.
 | Variable | What it does |
 |---|---|
 | `PORTKEY_API_KEY` | The model key. Supplied by the host as an environment variable, never committed or baked into an image layer. |
+| `OPENAI_API_KEY` | The alternative key. Used when `PORTKEY_API_KEY` is absent, or when `KRYTERIA_PROVIDER=openai` forces it. Same model, called directly. |
+| `KRYTERIA_PROVIDER` | `portkey` \| `openai` \| `auto` (default). Forces a route when both keys are present and one of them is dead. |
 | `PORT` | Assigned by the host; the container honors it. |
 | `KRYTERIA_HOST` | Bind address. `0.0.0.0` in a container, `127.0.0.1` on a laptop. |
 | `KRYTERIA_DB_PATH` | Where the SQLite file lives. Set it outside the source tree so a redeploy cannot replace somebody's journal. |
